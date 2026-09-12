@@ -2,8 +2,6 @@
 
 This directory contains architecture decisions for PriceGenerator modernization.
 
-The internal engineering audit is intentionally **not** published in the repository. Public ADRs capture only durable decisions and their rationale.
-
 ## Status values
 
 - **Proposed** — under review; implementation should not assume final approval.
