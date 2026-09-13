@@ -1,6 +1,6 @@
 # ADR-0008: Packaging and release strategy
 
-- **Status:** Proposed
+- **Status:** Accepted
 - **Date:** 2026-09-12
 - **Roadmap:** #28
 - **Related Features:** #40, #41
