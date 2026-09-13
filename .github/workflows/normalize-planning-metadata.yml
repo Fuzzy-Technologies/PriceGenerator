@@ -4,6 +4,10 @@ on:
   pull_request:
     types: [opened, synchronize, reopened]
 
+concurrency:
+  group: pricegenerator-planning-normalization
+  cancel-in-progress: true
+
 permissions:
   contents: write
   issues: write
