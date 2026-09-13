@@ -1,6 +1,6 @@
 # ADR-0007: v2 breaking-change and migration policy
 
-- **Status:** Proposed
+- **Status:** Accepted
 - **Date:** 2026-09-12
 - **Roadmap:** #28
 - **Related Features:** #35, #37
