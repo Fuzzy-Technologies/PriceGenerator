@@ -1,6 +1,6 @@
 # ADR-0004: Versioned stochastic generator models
 
-- **Status:** Proposed
+- **Status:** Accepted
 - **Date:** 2026-09-12
 - **Roadmap:** #28
 - **Related Features:** #35, #36, #43
