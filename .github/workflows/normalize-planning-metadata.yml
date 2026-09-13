@@ -1,0 +1,243 @@
+name: Normalize PriceGenerator planning metadata
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+permissions:
+  contents: write
+  issues: write
+  pull-requests: write
+
+jobs:
+  normalize:
+    if: github.actor == 'Tim55667757G && github.head_ref == 'ops/normalize-planning-metadata'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Normalize and verify planning metadata
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        shell: bash
+        run: |
+          python <<'PY'
+          import json
+          import os
+          import re
+          import subprocess
+          import time
+
+          repo = os.environ["GH_REPO"]
+          api_version = "2026-03-10"
+          priority_field = 22639629
+          effort_field = 22639632
+          assignee = "Tim55667757"
+
+          feature_meta = {
+              29:("Urgent","High"), 30:("High","Medium"), 31:("High","High"), 32:("Urgent","High"),
+              33:("High","High"), 34:("High","High"), 35:("High","Medium"), 36:("High","High"),
+              37:("High","High"), 38:("Medium","Medium"), 39:("Medium","High"), 40:("High","Medium"),
+              41:("High","High"), 42:("Medium","High"), 43:("Low","High"),
+          }
+          task_meta = {
+              26:("Medium","Low"), 27:("High","Medium"),
+              44:("High","Medium"), 45:("Urgent","Medium"), 46:("Urgent","Medium"), 47:("High","Medium"), 48:("Medium","Medium"),
+              49:("High","Medium"), 50:("High","Medium"), 51:("High","Medium"), 52:("Urgent","Medium"), 53:("High","Medium"),
+              54:("High","Medium"), 55:("High","Medium"), 56:("High","Medium"), 57:("High","High"), 58:("High","High"), 59:("Medium","Low"),
+              60:("High","Medium"), 61:("High","Medium"), 62:("Medium","Medium"), 63:("High","High"), 64:("High","Medium"), 65:("High","High"),
+              66:("High","High"), 67:("High","High"), 68:("High","High"), 69:("Medium","Medium"), 70:("Medium","Medium"), 71:("Medium","Low"),
+              72:("High","Medium"), 73:("Medium","High"), 74:("Medium","High"),
+              75:("High","High"), 76:("High","Medium"), 77:("High","Medium"), 78:("High","High"), 79:("High","Medium"), 80:("Medium","Medium"),
+              81:("Medium","High"), 82:("High","High"), 83:("Medium","High"), 84:("Low","High"), 85:("Low","High"), 86:("Medium","Medium"),
+          }
+
+          milestone_issues = {
+              5: [29,30,44,45,46,47,48],
+              6: [31,32,26,27,49,50,51,52,53],
+              7: [33,34,54,55,56,57,58,59],
+              8: [35,36,60,61,62,63,64,65],
+              9: [37,38,66,67,68,69,70,71],
+              10:[39,72,73,74],
+              11:[40,41,75,76,77,78,79,80],
+              12:[42,43,81,82,83,84,85,86],
+          }
+          milestone_for = {issue: milestone for milestone, issues in milestone_issues.items() for issue in issues}
+
+          children = {
+              29:[44,45,46], 30:[47,48], 31:[49,50,51], 32:[52,53,26,27],
+              33:[54,55,56], 34:[57,58,59], 35:[60,61,62], 36:[63,64,65],
+              37:[66,67,68], 38:[69,70,71], 39:[72,73,74], 40:[75,76,77],
+              41:[78,79,80], 42:[81,82,83], 43:[84,85,86],
+          }
+          expected_parent = {child: parent for parent, items in children.items() for child in items}
+
+          milestone_descriptions = {
+              5: """## Goal\n\nEstablish the reproducible engineering baseline for PriceGenerator 2.x before behavior-changing work. Target release: **v2.0**.\n\n## Scope\n\n- Snapshot repository, package, release and transfer state.\n- Characterize published 1.x generator behavior.\n- Codify existing invariants and known defects.\n- Establish clean-install, test and benchmark evidence.\n\n## Exit Criteria\n\n- The baseline is reproducibly identified and executable.\n- Characterization/invariant tests provide a trusted comparison point.\n- Clean installation and baseline performance evidence are recorded.\n- No production generator semantics are changed as part of baseline establishment.""",
+              6: """## Goal\n\nEstablish deterministic scenario identity and a canonical cross-language market-data contract. Target release: **v2.1**.\n\n## Scope\n\n- Explicit RNG ownership, seed and model identity.\n- Scenario manifests and deterministic fingerprints.\n- Canonical OHLCV validation.\n- Datetime, timezone, timeframe and CSV semantics.\n\n## Exit Criteria\n\n- Same supported model/config/seed identity is reproducible.\n- Generated and loaded OHLCV share one executable validation contract.\n- Python/CSV/MQL5 interchange semantics are explicit.\n- Host-local time or process-global RNG state is not an implicit deterministic input.""",
+              7: """## Goal\n\nMake synthetic market-data quality quantitatively measurable and public claims evidence-based. Target release: **v2.2**.\n\n## Scope\n\n- Return, candle, volume, dependence and drawdown diagnostics.\n- Reproducible real-vs-synthetic comparison.\n- Statistical tolerance/confidence policy.\n- Realism levels and suitability limits.\n\n## Exit Criteria\n\n- Validation metrics have precise definitions and deterministic tests.\n- Comparison reports are reproducible and machine-readable.\n- Realism/similarity claims map to named evidence.\n- Unsupported marketing wording is removed or qualified.""",
+              8: """## Goal\n\nEstablish correct, versioned stochastic-model semantics. Target release: **v2.3**.\n\n## Scope\n\n- Preserve historical stochastic behavior as an explicitly named reference model.\n- Define direction, doji, boundary and rounding semantics.\n- Replace endpoint-forced trend behavior in a new model.\n- Define outlier, negative-price and volume-process semantics.\n\n## Exit Criteria\n\n- Model parameters have explicit measurable meanings.\n- Model-specific invariant/statistical tests pass.\n- Trend generation does not violate declared candle constraints.\n- Behaviorally different models have distinct model identities.""",
+              9: """## Goal\n\nEstablish the intentional PriceGenerator 2.x public architecture. Target release: **v2.4**.\n\n## Scope\n\n- Explicit v2 configuration and public API.\n- Pure generation core and market-data validation boundary.\n- Separate I/O and analysis boundaries.\n- Optional rendering/indicator integrations.\n- Remove import-time and shell/process side effects.\n\n## Exit Criteria\n\n- Core generation is independent of optional rendering/TA dependencies.\n- v2 public contracts are documented and tested.\n- Analysis does not unexpectedly mutate canonical OHLCV data.\n- 1.x compatibility helpers exist only where they provide concrete migration value.""",
+              10: """## Goal\n\nMake large deterministic scenario generation measurable and efficient. Target release: **v2.5**.\n\n## Scope\n\n- Benchmark the actual package from small samples through 100k/1M rows.\n- Reduce avoidable generation allocation overhead.\n- Add chunked or streaming generation/export where justified.\n\n## Exit Criteria\n\n- Runtime and peak-memory evidence is reproducible.\n- Optimizations demonstrate material improvement against the baseline.\n- Promised seeded sequence semantics are preserved.\n- Large-series workflows do not require excessive high-overhead intermediates.""",
+              11: """## Goal\n\nModernize packaging, CI and release delivery for the 2.x line. Target release: **v2.6**.\n\n## Scope\n\n- pyproject-based packaging and one canonical version source.\n- Explicit supported Python matrix.\n- Core/optional dependency classification.\n- GitHub Actions PR quality gate.\n- Human-gated release artifact verification/publication.\n- Current Fuzzy Technologies project metadata.\n\n## Exit Criteria\n\n- Supported environments build, install and test cleanly.\n- PR quality gates are deterministic and blocking.\n- sdist/wheel artifacts are verified before publication.\n- Release publication requires explicit human approval.\n- Active metadata no longer presents obsolete Travis/personal-account infrastructure as current.""",
+              12: """## Goal\n\nAdd evidence-driven calibration and extended scenario families for quantitative R&D. Target release: **v2.7**.\n\n## Scope\n\n- Real-data statistical profile extraction.\n- Calibration/training/holdout semantics.\n- Serializable fit and validation reports.\n- Evaluate empirical/block-bootstrap, scripted shock and regime scenarios.\n- Maintain model registry and suitability matrix.\n## Exit Criteria\n\n- Calibration artifacts are reproducible and versioned.\n- Fit and validation evidence are separated where required.\n- Each added model has a concrete use case, stochastic contract and validation evidence.\n- No model is admitted merely because it is a familiar finance technique.""",
+          }
+
+          assert len(feature_meta) == 15
+          assert len(task_meta) == 45
+          assert set(feature_meta) | set(task_meta) == set(milestone_for)
+          assert set(task_meta) == set(expected_parent)
+
+          def gh(method, path, payload=None, check=True):
+              cmd = ["gh", "api", "--method", method,
+                     "-H", "Accept: application/vnd.github+json",
+                     "-H", f"X-GitHub-Api-Version: {api_version}", path]
+              data = None
+              if payload is not None:
+                  cmd += ["--input", "-"]
+                  data = json.dumps(payload)
+              proc = subprocess.run(cmd, input=data, text=True, capture_output=True)
+              if check and proc.returncode != 0:
+                  raise RuntimeError(f"{method} {path} failed: {proc.stderr or proc.stdout}")
+              if proc.returncode != 0:
+                  return None
+              out = proc.stdout.strip()
+              if not out:
+                  return {}
+              try:
+                  return json.loads(out)
+              except json.JSONDecodeError:
+                  return out
+
+          def mutate(method, path, payload=None):
+              result = gh(method, path, payload)
+              time.sleep(0.65)
+              return result
+
+          def clean_title(title):
+              return re.sub(r"^\[M\d+\]\[(?:Feature|Task)\]\s*", "", title).strip()
+
+          def normalize_issue(number, issue_type, priority, effort):
+              current = gh("GET", f"repos/{repo}/issues/{number}")
+              title = clean_title(current["title"])
+              mutate("PATCH", f"repos/{repo}/issues/{number}", {
+                  "title": title,
+                  "type": issue_type,
+                  "milestone": milestone_for[number],
+                  "assignees": [assignee],
+              })
+              mutate("POST", f"repos/{repo}/issues/{number}/issue-field-values", {
+                  "issue_field_values": [
+                      {"field_id": priority_field, "value": priority},
+                      {"field_id": effort_field, "value": effort},
+                  ]
+              })
+
+          def update_milestone(number):
+              mutate("PATCH", f"repos/{repo}/milestones/{number}", {
+                  "description": milestone_descriptions[number],
+                  "state": "open",
+              })
+
+          def get_parent(number):
+              return gh("GET", f"repos/{repo}/issues/{number}/parent", check=False)
+
+          def attach(parent, child):
+              existing = get_parent(child)
+              if isinstance(existing, dict) and existing.get("number") == parent:
+                  return
+              child_issue = gh("GET", f"repos/{repo}/issues/{child}")
+              mutate("POST", f"repos/{repo}/issues/{parent}/sub_issues", {
+                  "sub_issue_id": child_issue["id"],
+                  "replace_parent": True,
+              })
+
+          def field_map(number):
+              values = gh("GET", f"repos/{repo}/issues/{number}/issue-field-values")
+              return {v["issue_field_name"]: v.get("single_select_option", {}).get("name") for v in values}
+
+          def verify_issue(number, issue_type, priority, effort, expected_parent_number=None):
+              issue = gh("GET", f"repos/{repo}/issues/{number}")
+              assert clean_title(issue["title"]) == issue["title"], (number, issue["title"])
+              assert issue.get("type", {}).get("name") == issue_type, (number, issue.get("type"))
+              assert issue.get("milestone", {}).get("number") == milestone_for[number], (number, issue.get("milestone"))
+              assert assignee in {a["login"] for a in issue.get("assignees", [])}, (number, issue.get("assignees"))
+              fields = field_map(number)
+              assert fields.get("Priority") == priority, (number, fields)
+              assert fields.get("Effort") == effort, (number, fields)
+              if expected_parent_number is not None:
+                  parent = get_parent(number)
+                  assert isinstance(parent, dict) and parent.get("number") == expected_parent_number, (number, parent)
+
+          def verify_milestone(number):
+              m = gh("GET", f"repos/{repo}/milestones/{number}")
+              assert m["state"] == "open"
+              assert m.get("due_on") is None
+              assert m.get("description") == milestone_descriptions[number]
+
+          print("Canary: milestone #5, Feature #29, Task #44")
+          update_milestone(5)
+          normalize_issue(29, "Feature", *feature_meta[29])
+          normalize_issue(44, "Task", *task_meta[44])
+          attach(29, 44)
+          verify_milestone(5)
+          verify_issue(29, "Feature", *feature_meta[29])
+          verify_issue(44, "Task", *task_meta[44], expected_parent_number=29)
+          print("CANARY PASS")
+
+          print("Batch: milestone descriptions")
+          for milestone in range(6, 13):
+              update_milestone(milestone)
+
+          print("Batch: Features")
+          for number, meta in sorted(feature_meta.items()):
+              if number == 29:
+                  continue
+              normalize_issue(number, "Feature", *meta)
+
+          print("Batch: Tasks")
+          for number, meta in sorted(task_meta.items()):
+              if number == 44:
+                  continue
+              normalize_issue(number, "Task", *meta)
+
+          print("Batch: native Feature -> Task hierarchy")
+          for parent, items in children.items():
+              for child in items:
+                  if parent == 29 and child == 4:
+                      continue
+                  attach(parent, child)
+
+          print("Independent verification pass")
+          for milestone in range(5, 13):
+              verify_milestone(milestone)
+
+          for number, meta in sorted(feature_meta.items()):
+              verify_issue(number, "Feature", *meta)
+              parent_issue = gh("GET", f"repos/{repo}/issues/{number}")
+              summary = parent_issue.get("sub_issues_summary", {})
+              assert summary.get("total") == len(children[number]), (number, summary, children[number])
+
+          for number, meta in sorted(task_meta.items()):
+              verify_issue(number, "Task", *meta, expected_parent_number=expected_parent[number])
+
+          print("PLANNING NORMALIZATION PASS")
+          print(f"Verified {len(feature_meta)} Features, {len(task_meta)} Tasks, 8 milestones and {len(task_meta)} native parent relations")
+          PY
+
+      - name: Remove one-shot ops branch after PASS
+        if: success()
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        shell: bash
+        run: |
+          gh api --method PATCH \
+            -H "Accept: application/vnd.github+json" \
+            -H "X-GitHub-Api-Version: 2026-03-10" \
+            "repos/$GH_REPO/pulls/$PR_NUMBER" \
+            -f state=closed
+          gh api --method DELETE \
+            -H "Accept: application/vnd.github+json" \
+            -H "X-GitHub-Api-Version: 2026-03-10" \
+            "repos/$GH_REPO/git/refs/heads/ops/normalize-planning-metadata"
