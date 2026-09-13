@@ -1,6 +1,6 @@
 # ADR-0005: Statistical validation and realism claims
 
-- **Status:** Proposed
+- **Status:** Accepted
 - **Date:** 2026-09-12
 - **Roadmap:** #28
 - **Related Features:** #33, #34
