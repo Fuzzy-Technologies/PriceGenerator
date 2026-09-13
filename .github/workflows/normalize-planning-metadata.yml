@@ -11,7 +11,7 @@ permissions:
 
 jobs:
   normalize:
-    if: github.actor == 'Tim55667757G && github.head_ref == 'ops/normalize-planning-metadata'
+    if: github.actor == 'Tim55667757' && github.head_ref == 'ops/normalize-planning-metadata'
     runs-on: ubuntu-latest
     steps:
       - name: Normalize and verify planning metadata
