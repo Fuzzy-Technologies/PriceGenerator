@@ -1,6 +1,6 @@
 # ADR-0002: Canonical OHLCV market-data contract
 
-- **Status:** Proposed
+- **Status:** Accepted
 - **Date:** 2026-09-12
 - **Roadmap:** #28
 - **Related Feature:** #32
