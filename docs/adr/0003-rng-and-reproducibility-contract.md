@@ -1,6 +1,6 @@
 # ADR-0003: RNG ownership and reproducibility contract
 
-- **Status:** Proposed
+- **Status:** Accepted
 - **Date:** 2026-09-12
 - **Roadmap:** #28
 - **Related Feature:** #31
