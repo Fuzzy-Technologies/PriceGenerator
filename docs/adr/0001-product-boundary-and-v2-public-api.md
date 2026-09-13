@@ -1,6 +1,6 @@
 # ADR-0001: Product boundary and v2 public API
 
-- **Status:** Proposed
+- **Status:** Accepted
 - **Date:** 2026-09-12
 - **Roadmap:** #28
 - **Related Features:** #37, #38
