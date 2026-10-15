@@ -1,0 +1,328 @@
+{
+  "collection_version": 1,
+  "commands": [
+    [
+      "python",
+      "tools/benchmark.py",
+      "--sizes",
+      "100",
+      "1000",
+      "10000",
+      "100000",
+      "--seed",
+      "0",
+      "--output",
+      "benchmark-range.json"
+    ],
+    [
+      "python",
+      "tools/benchmark.py",
+      "--sizes",
+      "1000000",
+      "--seed",
+      "0",
+      "--timeout",
+      "90",
+      "--output",
+      "benchmark-million.json"
+    ]
+  ],
+  "description": "Observed legacy_v1 diagnostic baseline; both reports use identical source hashes. The million-row run began before the benchmark implementation commit, so its Git commit is the initial checkout revision.",
+  "reports": [
+    {
+      "benchmark": "legacy-generation-v1",
+      "cases": [
+        {
+          "configuration": {
+            "columns": [
+              "datetime",
+              "open",
+              "high",
+              "low",
+              "close",
+              "volume"
+            ],
+            "horizon": 100,
+            "init_close": 75.0,
+            "max_candle_body": 2.7,
+            "max_close": 90.0,
+            "max_outlier": 3.0,
+            "max_volume": 100000,
+            "min_close": 60.0,
+            "outliers_prob": 0.03,
+            "precision": 2,
+            "split_count": [],
+            "ticker": "BENCHMARK",
+            "time_start": "2020-01-01T00:00:00+00:00",
+            "timeframe_seconds": 60,
+            "timezone": "UTC",
+            "trend_deviation": 0.005,
+            "trend_split": "",
+            "up_candles_prob": 0.5
+          },
+          "elapsed_seconds": 0.018090074,
+          "error": null,
+          "generated_rows": 100,
+          "model": "legacy_v1",
+          "process_peak_rss_bytes": 106733568,
+          "repetition": 1,
+          "requested_rows": 100,
+          "rng": "python.random.MT19937; seed before constructor",
+          "row_sha256": "1527685d051e42810f9cf3fb90f1e4d7bb6657bec4db6b662890e4e701091fef",
+          "seed": 0,
+          "status": "ok",
+          "tracemalloc_peak_bytes": 116776
+        },
+        {
+          "configuration": {
+            "columns": [
+              "datetime",
+              "open",
+              "high",
+              "low",
+              "close",
+              "volume"
+            ],
+            "horizon": 1000,
+            "init_close": 75.0,
+            "max_candle_body": 2.7,
+            "max_close": 90.0,
+            "max_outlier": 3.0,
+            "max_volume": 100000,
+            "min_close": 60.0,
+            "outliers_prob": 0.03,
+            "precision": 2,
+            "split_count": [],
+            "ticker": "BENCHMARK",
+            "time_start": "2020-01-01T00:00:00+00:00",
+            "timeframe_seconds": 60,
+            "timezone": "UTC",
+            "trend_deviation": 0.005,
+            "trend_split": "",
+            "up_candles_prob": 0.5
+          },
+          "elapsed_seconds": 0.042480548,
+          "error": null,
+          "generated_rows": 1000,
+          "model": "legacy_v1",
+          "process_peak_rss_bytes": 107606016,
+          "repetition": 1,
+          "requested_rows": 1000,
+          "rng": "python.random.MT19937; seed before constructor",
+          "row_sha256": "136423ddb0ddfe258768651eda6ab798601d7230299fe6c052ad5b70e1f3d043",
+          "seed": 0,
+          "status": "ok",
+          "tracemalloc_peak_bytes": 478060
+        },
+        {
+          "configuration": {
+            "columns": [
+              "datetime",
+              "open",
+              "high",
+              "low",
+              "close",
+              "volume"
+            ],
+            "horizon": 10000,
+            "init_close": 75.0,
+            "max_candle_body": 2.7,
+            "max_close": 90.0,
+            "max_outlier": 3.0,
+            "max_volume": 100000,
+            "min_close": 60.0,
+            "outliers_prob": 0.03,
+            "precision": 2,
+            "split_count": [],
+            "ticker": "BENCHMARK",
+            "time_start": "2020-01-01T00:00:00+00:00",
+            "timeframe_seconds": 60,
+            "timezone": "UTC",
+            "trend_deviation": 0.005,
+            "trend_split": "",
+            "up_candles_prob": 0.5
+          },
+          "elapsed_seconds": 0.342837904,
+          "error": null,
+          "generated_rows": 10000,
+          "model": "legacy_v1",
+          "process_peak_rss_bytes": 117141504,
+          "repetition": 1,
+          "requested_rows": 10000,
+          "rng": "python.random.MT19937; seed before constructor",
+          "row_sha256": "5b261fe726ea26899a066fc64c8d4403b6cb92998b787fe5276fda71f6edacbd",
+          "seed": 0,
+          "status": "ok",
+          "tracemalloc_peak_bytes": 4364633
+        },
+        {
+          "configuration": {
+            "columns": [
+              "datetime",
+              "open",
+              "high",
+              "low",
+              "close",
+              "volume"
+            ],
+            "horizon": 100000,
+            "init_close": 75.0,
+            "max_candle_body": 2.7,
+            "max_close": 90.0,
+            "max_outlier": 3.0,
+            "max_volume": 100000,
+            "min_close": 60.0,
+            "outliers_prob": 0.03,
+            "precision": 2,
+            "split_count": [],
+            "ticker": "BENCHMARK",
+            "time_start": "2020-01-01T00:00:00+00:00",
+            "timeframe_seconds": 60,
+            "timezone": "UTC",
+            "trend_deviation": 0.005,
+            "trend_split": "",
+            "up_candles_prob": 0.5
+          },
+          "elapsed_seconds": 3.607929752,
+          "error": null,
+          "generated_rows": 100000,
+          "model": "legacy_v1",
+          "process_peak_rss_bytes": 218234880,
+          "repetition": 1,
+          "requested_rows": 100000,
+          "rng": "python.random.MT19937; seed before constructor",
+          "row_sha256": "705b6bf1a10bec26b86eaf41dbf7676f131046a60a0baf22241666c279bbd65c",
+          "seed": 0,
+          "status": "ok",
+          "tracemalloc_peak_bytes": 43420357
+        }
+      ],
+      "created_at": "2026-10-15T22:03:05.734063+00:00",
+      "environment": {
+        "cpu_count": 9,
+        "dependencies": {
+          "Jinja2": "3.1.6",
+          "bokeh": "3.0.3",
+          "numpy": "1.24.4",
+          "pandas": "1.5.3",
+          "pandas-ta": "0.3.14b0",
+          "pandas-ta-classic": null,
+          "python-dateutil": "2.9.0.post0"
+        },
+        "machine": "x86_64",
+        "platform": "Linux-6.18.44-x86_64-with-glibc2.39",
+        "processor": "x86_64",
+        "python_implementation": "CPython",
+        "python_version": "3.11.17"
+      },
+      "measurement": {
+        "allocation_scope": "tracemalloc peak during elapsed_scope; tracer overhead is included in runtime",
+        "elapsed_scope": "constructor, explicit configuration and Generate; imports and fingerprint excluded",
+        "fingerprint": "SHA-256 of UTF-8 compact JSON row arrays followed by LF; timestamp ISO-8601, float OHLC, int volume",
+        "performance_gate": false,
+        "rss_scope": "isolated process lifetime peak through generation; includes imports; null if unavailable",
+        "timeout_seconds_per_case": 120
+      },
+      "schema_version": 1,
+      "source": {
+        "declared_source_version": "1.4",
+        "git_commit": "6d61e1868c652b7aaa37eb6ca7b6e070246748ea",
+        "source_sha256": {
+          "pricegenerator/PriceGenerator.py": "ed2bcc1ca80fa9f7663299c891c9935e61983b03980619aaf73f8b389dc91316",
+          "pricegenerator/UniLogger.py": "a3313c2a96eab5b8622f883ec5a298164fa48c188f32f856aa838f38aa1176d1",
+          "pricegenerator/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "pricegenerator/__main__.py": "b9dd1100461331646c4661fa1785cecc50e434a790a7fb3b7cc2156e29b3ec82",
+          "setup.py": "25ffcbcd8c02457ec31426f37a5efc41df8ec06ef1b714453b91e8dce6215d9d",
+          "tools/benchmark.py": "f6e06fbc0fd1a678614e08376bb818e3cfeac22864c7171dd706cbfd1f0e05b0"
+        }
+      },
+      "status": "ok"
+    },
+    {
+      "benchmark": "legacy-generation-v1",
+      "cases": [
+        {
+          "configuration": {
+            "columns": [
+              "datetime",
+              "open",
+              "high",
+              "low",
+              "close",
+              "volume"
+            ],
+            "horizon": 1000000,
+            "init_close": 75.0,
+            "max_candle_body": 2.7,
+            "max_close": 90.0,
+            "max_outlier": 3.0,
+            "max_volume": 100000,
+            "min_close": 60.0,
+            "outliers_prob": 0.03,
+            "precision": 2,
+            "split_count": [],
+            "ticker": "BENCHMARK",
+            "time_start": "2020-01-01T00:00:00+00:00",
+            "timeframe_seconds": 60,
+            "timezone": "UTC",
+            "trend_deviation": 0.005,
+            "trend_split": "",
+            "up_candles_prob": 0.5
+          },
+          "elapsed_seconds": 38.156035022,
+          "error": null,
+          "generated_rows": 1000000,
+          "model": "legacy_v1",
+          "process_peak_rss_bytes": 1185656832,
+          "repetition": 1,
+          "requested_rows": 1000000,
+          "rng": "python.random.MT19937; seed before constructor",
+          "row_sha256": "78619ec8c45cf885efda3ac7128d6b94f2affba7da1f64cc157991f5b71374b9",
+          "seed": 0,
+          "status": "ok",
+          "tracemalloc_peak_bytes": 434467955
+        }
+      ],
+      "created_at": "2026-10-15T22:01:17.544671+00:00",
+      "environment": {
+        "cpu_count": 9,
+        "dependencies": {
+          "Jinja2": "3.1.6",
+          "bokeh": "3.0.3",
+          "numpy": "1.24.4",
+          "pandas": "1.5.3",
+          "pandas-ta": "0.3.14b0",
+          "pandas-ta-classic": null,
+          "python-dateutil": "2.9.0.post0"
+        },
+        "machine": "x86_64",
+        "platform": "Linux-6.18.44-x86_64-with-glibc2.39",
+        "processor": "x86_64",
+        "python_implementation": "CPython",
+        "python_version": "3.11.17"
+      },
+      "measurement": {
+        "allocation_scope": "tracemalloc peak during elapsed_scope; tracer overhead is included in runtime",
+        "elapsed_scope": "constructor, explicit configuration and Generate; imports and fingerprint excluded",
+        "fingerprint": "SHA-256 of UTF-8 compact JSON row arrays followed by LF; timestamp ISO-8601, float OHLC, int volume",
+        "performance_gate": false,
+        "rss_scope": "isolated process lifetime peak through generation; includes imports; null if unavailable",
+        "timeout_seconds_per_case": 90.0
+      },
+      "schema_version": 1,
+      "source": {
+        "declared_source_version": "1.4",
+        "git_commit": "a97e84829ebee121c411a273845cba871ce07890",
+        "source_sha256": {
+          "pricegenerator/PriceGenerator.py": "ed2bcc1ca80fa9f7663299c891c9935e61983b03980619aaf73f8b389dc91316",
+          "pricegenerator/UniLogger.py": "a3313c2a96eab5b8622f883ec5a298164fa48c188f32f856aa838f38aa1176d1",
+          "pricegenerator/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "pricegenerator/__main__.py": "b9dd1100461331646c4661fa1785cecc50e434a790a7fb3b7cc2156e29b3ec82",
+          "setup.py": "25ffcbcd8c02457ec31426f37a5efc41df8ec06ef1b714453b91e8dce6215d9d",
+          "tools/benchmark.py": "f6e06fbc0fd1a678614e08376bb818e3cfeac22864c7171dd706cbfd1f0e05b0"
+        }
+      },
+      "status": "ok"
+    }
+  ]
+}
