@@ -19,5 +19,6 @@ This directory contains architecture decisions for PriceGenerator modernization.
 6. [ADR-0006 — Core vs optional analysis/rendering dependencies](0006-core-vs-optional-analysis-rendering-dependencies.md)
 7. [ADR-0007 — v2 breaking-change and migration policy](0007-v2-breaking-change-and-migration-policy.md)
 8. [ADR-0008 — Packaging and release strategy](0008-packaging-and-release-strategy.md)
+9. [ADR-0009 — Modern static and interactive chart rendering](0009-modern-chart-rendering.md)
 
 Roadmap: #28.
