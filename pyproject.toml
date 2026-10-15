@@ -1,0 +1,69 @@
+[build-system]
+requires = ["setuptools==81.0.0", "wheel==0.48.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pricegenerator"
+dynamic = ["version"]
+description = "Configurable synthetic OHLCV candlesticks for reproducible research and software testing."
+readme = "README.md"
+requires-python = ">=3.10,<3.14"
+license = "Apache-2.0"
+license-files = ["LICENSE"]
+authors = [{name = "Timur Gilmullin", email = "tim55667757@gmail.com"}]
+keywords = ["synthetic-data", "OHLCV", "candlesticks", "testing", "prices"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Environment :: Console",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "Natural Language :: English",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+]
+dependencies = [
+    "numpy>=2.0,<2.3",
+    "pandas>=2.2,<2.3",
+    "python-dateutil>=2.9,<3",
+]
+
+[project.urls]
+Homepage = "https://github.com/Fuzzy-Technologies/PriceGenerator"
+Documentation = "https://github.com/Fuzzy-Technologies/PriceGenerator/blob/develop/README.md"
+Repository = "https://github.com/Fuzzy-Technologies/PriceGenerator"
+Issues = "https://github.com/Fuzzy-Technologies/PriceGenerator/issues"
+
+[project.scripts]
+pricegenerator = "pricegenerator.PriceGenerator:Main"
+
+[project.optional-dependencies]
+render = ["bokeh>=3.6,<3.7", "Jinja2>=3.1.6,<4"]
+indicators = ["pandas-ta-classic==0.3.78"]
+notebook = ["ipython>=8.30,<9", "ipykernel>=6.29,<7"]
+test = ["pytest>=8.3,<9", "tomli>=2.2,<3; python_version < '3.11'"]
+docs = ["pdoc>=15,<16"]
+release = ["build>=1.2,<2", "twine>=6,<7"]
+dev = [
+    "pytest>=8.3,<9",
+    "tomli>=2.2,<3; python_version < '3.11'",
+    "build>=1.2,<2",
+    "twine>=6,<7",
+    "ruff>=0.9,<1",
+]
+
+[tool.setuptools]
+include-package-data = true
+
+[tool.setuptools.packages.find]
+include = ["pricegenerator*"]
+namespaces = false
+
+[tool.setuptools.dynamic]
+version = {attr = "pricegenerator._version.__version__"}
+
+[tool.setuptools.package-data]
+pricegenerator = ["*.j2", "assets/**/*"]
+"pricegenerator.rendering" = ["assets/**/*"]
