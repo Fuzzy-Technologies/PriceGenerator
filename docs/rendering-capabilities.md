@@ -74,7 +74,7 @@ Both supplied corporate images are embedded once per SVG. Definitions are reused
 
 ## Asset provenance
 
-The user supplied both source images on 2026-10-16. Original files are not regenerated. The emblem's source filename says `2048`, but its actual dimensions are 1254×1254.
+The user supplied both source images during the 2026-10-15 UTC session. Original files are not regenerated. The emblem's source filename says `2048`, but its actual dimensions are 1254×1254.
 
 | Asset | Actual dimensions | Bytes | SHA-256 |
 | --- | --- | ---: | --- |
@@ -124,6 +124,46 @@ The custom comparison bundle SHA-256 is `9fa1dd7561b5d086a07281ba9a8faa95c7932c3
 | [#92](https://github.com/Fuzzy-Technologies/PriceGenerator/issues/92) | Immutable validated specification; offline branded SVG; finite/flat/gapped data, text safety, package resources and no-heavy-import tests |
 | [#93](https://github.com/Fuzzy-Technologies/PriceGenerator/issues/93) | Pinned minimal ECharts runtime; linked financial views; tested controls, arbitrary annotations, offline HTML, PNG export, licenses and final bundle footprint |
 | [#94](https://github.com/Fuzzy-Technologies/PriceGenerator/issues/94) | Indicator/report adapter, CLI/notebook/migration docs, matching workload benchmark and evidence for every retained capability before legacy retirement |
+
+## Integrated replacement evidence
+
+The [migration guide](chart-migration.md) maps each historical indicator and
+public workflow to its explicit replacement. The implementation evidence is:
+
+| Contract | Executable evidence |
+| --- | --- |
+| Immutable snapshots, UTC precision, invalid input and safe JSON | `tests/test_chart_spec.py` |
+| Exact candle geometry, gaps, static labels, reports and two-panel branding | `tests/test_static_charts.py` and the reproducible SVG examples |
+| Offline HTML, embedded assets, escaping and propagated output failures | `tests/test_interactive_charts.py` |
+| Actual linked axes, visibility, navigation, reset and uneven time intervals | `tests/javascript/test_interactive_charts.cjs` |
+| Actual PNG pixels, complete initial frame, bounded annotations and logos | `tests/javascript/test_interactive_canvas.cjs` |
+| All historical vectors/report, explicit HMA5 choice, custom data, notebook and CSV | `tests/test_chart_migration.py` |
+| Wheel/sdist resources and installed core-only API/CLI operation | `tests/test_packaging.py`, run outside the checkout with Python isolated mode |
+| Matched 1k/10k/100k export and Canvas workload | [Performance commands, scopes and recorded results](chart-performance.md) |
+
+These APIs are the documented modern route. `RenderGoogle`, `RenderBokeh` and
+their explicitly named CLI flags remain optional compatibility entry points;
+their existence does not add Bokeh or Google services to new rendering. Removing
+them is a separate deliberate retirement decision. The historical arbitrary
+Jinja template/model hooks migrate to trusted outer-report composition.
+
+SVG, full HTML and Markdown retain the supplied report. Interactive PNG contains
+the chart viewport and branding, excluding the separate HTML report and controls.
+This is an explicit export-scope change from Bokeh's in-canvas statistics legend.
+The native Python static API exports SVG; the interactive export supplies PNG.
+
+Interactive snapshots above 5,000 rows initially display the latest 1,000 while
+retaining every source row; Full range explicitly displays all data. When an
+extreme numeric domain needs normalization (maximum magnitude above `1e100` or
+nonzero maximum below `1e-100`), mixed nonzero price/overlay scales spanning more
+than 12 orders are rejected with an actionable error instead of
+silently losing visible data. This renderer-specific limit includes hidden
+outlier overlays and does not restrict static SVG's shared specification.
+
+The maintained Python code is linted in the supported-runtime matrix. A separate
+mandatory Canvas workflow rebuilds the pinned runtime and executes real engine
+and raster tests. The performance observations do not claim browser FPS or
+universal superiority for every workload.
 
 The static implementation is covered by targeted specification/SVG tests, including immutable snapshots, UTC duplicates, invalid candles, gaps, script delimiters, logo reuse, I/O failures, and extreme finite price ranges. Local SVG visual inspection covers 1280×760 and 480×360 chart regions with two overlays, three marker positions, and report text. This is static-layout evidence, not a browser interaction test.
 

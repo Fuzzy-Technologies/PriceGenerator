@@ -1,5 +1,20 @@
 # PriceGenerator
 
+## Modern offline charts on the development branch
+
+Use the new **SVG and interactive Canvas renderers** for branded, offline
+financial charts with linked volume, annotations and grouped indicators:
+
+```bash
+python -m pricegenerator.rendering prices.csv --svg prices.svg --html prices.html
+```
+
+Existing DataFrames use `FromDataFrame`; existing generator instances use the
+nonmutating `BuildLegacyChart` adapter. See the
+[chart quickstart, migration guide and illustrated examples](docs/chart-migration.md).
+The historical Google/Bokeh examples below remain compatibility documentation.
+The new APIs are on `develop` and do not imply a new PyPI release.
+
 **[PriceGenerator](https://github.com/Tim55667757/PriceGenerator)** is the platform for generating prices similar to real stock prices, but you can control the statistics of their distribution. Generates chain of candlesticks with predefined statistical parameters, return Pandas DataFrame or saving as .CSV-file with OHLCV-candlestick in every string. Use PriceGenerator to generate synthetic data to test your trading strategy.
 
 [![Build Status](https://travis-ci.com/Tim55667757/PriceGenerator.svg?branch=master)](https://travis-ci.com/Tim55667757/PriceGenerator)

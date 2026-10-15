@@ -59,6 +59,34 @@ docstring checks without rewriting unrelated legacy formatting. No automatic
 `quality (3.11)` check to make failures block merge; a workflow alone cannot
 change repository merge policy.
 
+## Modern chart gate
+
+The Python matrix also lints the maintained chart modules, adapters, benchmark
+and example commands, and their tests with the repository's docstring rules.
+Installed core-only smoke actually renders SVG and offline HTML, writes their
+explicit output paths, checks embedded runtime hashes and license notices, and
+executes the CSV chart CLI without Bokeh or an indicator backend.
+
+The separate `Interactive chart runtime gate` installs exact developer-only npm
+dependencies with lifecycle scripts disabled, rebuilds the vendored JavaScript
+and rejects a changed artifact. It runs real ECharts behavior and native Canvas
+tests, including immediate PNG export and official logo pixels on both panels.
+It does not replace those gates with a mocked renderer or an HTML-existence test.
+Run the same checks locally with:
+
+```bash
+npm ci --ignore-scripts --no-audit --no-fund --prefix tools/chart_runtime
+npm run build --prefix tools/chart_runtime
+git diff --exit-code -- pricegenerator/rendering/assets/echarts
+node --test tests/javascript/test_interactive_charts.cjs tests/javascript/test_interactive_canvas.cjs
+```
+
+Canvas observations are not browser FPS measurements. The diagnostic
+`tools/benchmark_charts.py` command and its exact timing scope are documented in
+[chart performance](chart-performance.md). Its measurements have no flaky
+wall-clock threshold in the PR gate. Repository protection should require the
+supported Python quality jobs and `canvas-and-runtime` for chart changes.
+
 ## Linked Task completion
 
 Write an explicit completion instruction on its own PR-body line:
