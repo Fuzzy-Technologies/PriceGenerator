@@ -1,5 +1,10 @@
 # PriceGenerator
 
+**Development update:** [Modern offline SVG/Canvas charts, migration APIs and
+illustrated examples](docs/chart-migration.md) are available on `develop`.
+The historical Google/Bokeh examples below remain compatibility documentation;
+the modern command is `python -m pricegenerator.rendering`.
+
 **[PriceGenerator](https://github.com/Tim55667757/PriceGenerator)** — это платформа для генерации цен, похожих на настоящие биржевые цены, но вы можете контролировать статистику их распределения. Создаёт цепочку свечей с заранее предопределенными статистическими параметрами, возвращает Pandas DataFrame или сохраняет данные в .CSV-файл с OHLCV-свечой в каждой строке. Используйте PriceGenerator для генерации синтетических данных для тестирования вашей торговой стратегии.
 
 [![Build Status](https://travis-ci.com/Tim55667757/PriceGenerator.svg?branch=master)](https://travis-ci.com/Tim55667757/PriceGenerator)

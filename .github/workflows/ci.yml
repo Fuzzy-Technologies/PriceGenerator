@@ -58,10 +58,11 @@ jobs:
           python -m pip install -r requirements/ci.txt
           python --version
           python -m pip --version
-      - name: Compile and lint the automation contract
+      - name: Compile sources and lint maintained modules
         run: |
           python -m compileall -q pricegenerator tools tests
           python -m ruff check --select E4,E7,E9,F,D --ignore D202,D203,D213 tools/pr_merge_links.py tests/test_pr_merge_links.py
+          python -m ruff check --select E4,E7,E9,F,D --ignore D202,D203,D213 pricegenerator/rendering tools/benchmark.py tools/benchmark_charts.py tools/chart_examples.py tests/test_chart_spec.py tests/test_static_charts.py tests/test_interactive_charts.py tests/test_chart_migration.py tests/test_chart_performance.py tests/test_packaging.py
       - name: Test Task lifecycle and failure paths
         run: |
           python -m pytest -q tests/test_pr_merge_links.py --cov=tools.pr_merge_links --cov-branch --cov-fail-under=95 --cov-report=term-missing --junitxml=ci-reports/lifecycle.xml

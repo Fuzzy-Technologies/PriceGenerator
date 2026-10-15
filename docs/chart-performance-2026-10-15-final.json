@@ -1,0 +1,448 @@
+{
+  "benchmark": "chart-performance-v1",
+  "cases": [
+    {
+      "canvas": {
+        "actions": {
+          "full_range": {
+            "milliseconds": 43.13920500000006,
+            "visible_rows": {
+              "price": 1000,
+              "volume": 1000
+            }
+          },
+          "pan": {
+            "milliseconds": 45.41977499999996,
+            "visible_rows": {
+              "price": 250,
+              "volume": 250
+            }
+          },
+          "reset": {
+            "milliseconds": 84.73906799999997,
+            "visible_rows": {
+              "price": 1000,
+              "volume": 1000
+            }
+          },
+          "update": {
+            "milliseconds": 36.4064239999999,
+            "visible_rows": {
+              "price": 1000,
+              "volume": 1000
+            }
+          },
+          "zoom": {
+            "milliseconds": 49.73241400000006,
+            "visible_rows": {
+              "price": 250,
+              "volume": 250
+            }
+          }
+        },
+        "environment": {
+          "architecture": "x64",
+          "canvas": "0.1.100",
+          "cpu_count": 9,
+          "cpu_model": "AMD EPYC 9V74 80-Core Processor",
+          "echarts": "6.1.0",
+          "node": "v24.19.0",
+          "os_release": "6.18.44",
+          "pixel_ratio": 2,
+          "platform": "linux",
+          "renderer": "native Canvas, ssr=true",
+          "timers": "ECharts animation timers suppressed by shared raster harness; animation and progressive rendering disabled"
+        },
+        "html_json_parse_ms": 0.9751749999999788,
+        "initial_visible_rows": {
+          "price": 1000,
+          "volume": 1000
+        },
+        "mount_ms": 166.13635299999999,
+        "png": {
+          "bytes": 360886,
+          "height": 1520,
+          "sha256": "49e02190e484dd7546ef0ca572d297008f43914d349640c081d1ae393c889e02",
+          "width": 2560
+        },
+        "png_export_ms": 257.771309,
+        "process_peak_rss_bytes": 269180928,
+        "scope": {
+          "actions": "Synchronous real ECharts dispatch/setOption plus Canvas raster flush; excludes OS input, DOM layout and display frames",
+          "mount": "Brand image decode/tint, real ECharts init and setOption, control binding shim and raster flush",
+          "png": "Actual controller ExportPNG at pixel ratio 2; decoding and hashing excluded",
+          "update": "Replace complete candle data array after increasing final high by 0.01; array preparation excluded"
+        },
+        "status": "ok",
+        "total_rows": 1000
+      },
+      "fixture": {
+        "automatic_statistics": false,
+        "chart_spec_sha256": "e966d23cdc9e63b57972eaea9ba0580d85ddffd2dfd97ef476fa38be438384ef",
+        "height": 760,
+        "markers": 1,
+        "overlays": 1,
+        "recipe": "arithmetic-ohlcv-v1",
+        "rows": 1000,
+        "seed": null,
+        "start": "2020-01-01T00:00:00Z",
+        "timeframe_seconds": 60,
+        "timezone": "UTC",
+        "width": 1280
+      },
+      "requested_rows": 1000,
+      "stages": {
+        "adapter_seconds": 0.016732003,
+        "interactive_html": {
+          "bytes": 907629,
+          "gzip_bytes": 307152,
+          "render_seconds": 0.011987059,
+          "sha256": "4db022a2253249143c64bd6623312003f930eb20a713932662d39aa351b96320",
+          "write_seconds": 0.000222514
+        },
+        "legacy_bokeh_html": {
+          "automatic_statistics": false,
+          "bytes": 1298884,
+          "gzip_bytes": 358044,
+          "model_seconds": 0.087419091,
+          "resources": "INLINE",
+          "serialization_seconds": 0.09336874,
+          "sha256": "8e35967c1ce12e22baa20ac2ebf1e79960dab8c21c7cef180caf1917100d09cb",
+          "status": "ok",
+          "write_seconds": 0.000282475
+        },
+        "spec_json_bytes": 131267,
+        "spec_serialization_seconds": 0.007606231,
+        "static_svg": {
+          "bytes": 488899,
+          "gzip_bytes": 119995,
+          "render_seconds": 0.017412035,
+          "sha256": "d19739febbda8f8cc4375b2288f5051b8d90b2804f719b251c0cac988f2c2210",
+          "write_seconds": 0.000294382
+        }
+      },
+      "status": "ok"
+    },
+    {
+      "canvas": {
+        "actions": {
+          "full_range": {
+            "milliseconds": 320.2698439999999,
+            "visible_rows": {
+              "price": 10000,
+              "volume": 10000
+            }
+          },
+          "pan": {
+            "milliseconds": 39.543989999999894,
+            "visible_rows": {
+              "price": 250,
+              "volume": 250
+            }
+          },
+          "reset": {
+            "milliseconds": 116.19666799999982,
+            "visible_rows": {
+              "price": 1000,
+              "volume": 1000
+            }
+          },
+          "update": {
+            "milliseconds": 50.81408400000009,
+            "visible_rows": {
+              "price": 1000,
+              "volume": 1000
+            }
+          },
+          "zoom": {
+            "milliseconds": 65.11289600000009,
+            "visible_rows": {
+              "price": 250,
+              "volume": 250
+            }
+          }
+        },
+        "environment": {
+          "architecture": "x64",
+          "canvas": "0.1.100",
+          "cpu_count": 9,
+          "cpu_model": "AMD EPYC 9V74 80-Core Processor",
+          "echarts": "6.1.0",
+          "node": "v24.19.0",
+          "os_release": "6.18.44",
+          "pixel_ratio": 2,
+          "platform": "linux",
+          "renderer": "native Canvas, ssr=true",
+          "timers": "ECharts animation timers suppressed by shared raster harness; animation and progressive rendering disabled"
+        },
+        "html_json_parse_ms": 9.783020000000022,
+        "initial_visible_rows": {
+          "price": 1000,
+          "volume": 1000
+        },
+        "mount_ms": 259.895244,
+        "png": {
+          "bytes": 417593,
+          "height": 1520,
+          "sha256": "49bb7e2d6d105a9bf0b966ee02ca6b85b6eb5d42191e04929533a06b55840df4",
+          "width": 2560
+        },
+        "png_export_ms": 215.706771,
+        "process_peak_rss_bytes": 401293312,
+        "scope": {
+          "actions": "Synchronous real ECharts dispatch/setOption plus Canvas raster flush; excludes OS input, DOM layout and display frames",
+          "mount": "Brand image decode/tint, real ECharts init and setOption, control binding shim and raster flush",
+          "png": "Actual controller ExportPNG at pixel ratio 2; decoding and hashing excluded",
+          "update": "Replace complete candle data array after increasing final high by 0.01; array preparation excluded"
+        },
+        "status": "ok",
+        "total_rows": 10000
+      },
+      "fixture": {
+        "automatic_statistics": false,
+        "chart_spec_sha256": "642d83c571e244a4993217d33ed4bbcac18627bc526c7eb6fec5f1f0ecd4fc5e",
+        "height": 760,
+        "markers": 1,
+        "overlays": 1,
+        "recipe": "arithmetic-ohlcv-v1",
+        "rows": 10000,
+        "seed": null,
+        "start": "2020-01-01T00:00:00Z",
+        "timeframe_seconds": 60,
+        "timezone": "UTC",
+        "width": 1280
+      },
+      "requested_rows": 10000,
+      "stages": {
+        "adapter_seconds": 0.117635723,
+        "interactive_html": {
+          "bytes": 2086964,
+          "gzip_bytes": 383004,
+          "render_seconds": 0.097651637,
+          "sha256": "82996ab7ec20f18854aeb03a8a42cf18718cec1531b34b093985999804743658",
+          "write_seconds": 0.000435163
+        },
+        "legacy_bokeh_html": {
+          "automatic_statistics": false,
+          "bytes": 2939907,
+          "gzip_bytes": 625660,
+          "model_seconds": 0.221237654,
+          "resources": "INLINE",
+          "serialization_seconds": 0.228488375,
+          "sha256": "e268393ffd2bdf16e30b90e7b842d3f1cbf43de8a87bc834619042a609df8f09",
+          "status": "ok",
+          "write_seconds": 0.000418238
+        },
+        "spec_json_bytes": 1310602,
+        "spec_serialization_seconds": 0.083567804,
+        "static_svg": {
+          "bytes": 4167292,
+          "gzip_bytes": 620268,
+          "render_seconds": 0.175030993,
+          "sha256": "411b9dfc386d9a7a641eae50e22b49b08b3cd9d0225dce1cf688aaf10bbc48f5",
+          "write_seconds": 0.000650346
+        }
+      },
+      "status": "ok"
+    },
+    {
+      "canvas": {
+        "actions": {
+          "full_range": {
+            "milliseconds": 1824.5900899999997,
+            "visible_rows": {
+              "price": 100000,
+              "volume": 100000
+            }
+          },
+          "pan": {
+            "milliseconds": 50.890490999999884,
+            "visible_rows": {
+              "price": 250,
+              "volume": 250
+            }
+          },
+          "reset": {
+            "milliseconds": 461.6762429999999,
+            "visible_rows": {
+              "price": 1000,
+              "volume": 1000
+            }
+          },
+          "update": {
+            "milliseconds": 235.28285899999992,
+            "visible_rows": {
+              "price": 1000,
+              "volume": 1000
+            }
+          },
+          "zoom": {
+            "milliseconds": 57.73910599999999,
+            "visible_rows": {
+              "price": 250,
+              "volume": 250
+            }
+          }
+        },
+        "environment": {
+          "architecture": "x64",
+          "canvas": "0.1.100",
+          "cpu_count": 9,
+          "cpu_model": "AMD EPYC 9V74 80-Core Processor",
+          "echarts": "6.1.0",
+          "node": "v24.19.0",
+          "os_release": "6.18.44",
+          "pixel_ratio": 2,
+          "platform": "linux",
+          "renderer": "native Canvas, ssr=true",
+          "timers": "ECharts animation timers suppressed by shared raster harness; animation and progressive rendering disabled"
+        },
+        "html_json_parse_ms": 70.46807100000001,
+        "initial_visible_rows": {
+          "price": 1000,
+          "volume": 1000
+        },
+        "mount_ms": 798.0846240000001,
+        "png": {
+          "bytes": 420605,
+          "height": 1520,
+          "sha256": "dd5e20d7e4cfb9b1c1c20d1ae7b44537d24b6a5b9ce92096f4800da6e0fe94b5",
+          "width": 2560
+        },
+        "png_export_ms": 266.957537,
+        "process_peak_rss_bytes": 1188581376,
+        "scope": {
+          "actions": "Synchronous real ECharts dispatch/setOption plus Canvas raster flush; excludes OS input, DOM layout and display frames",
+          "mount": "Brand image decode/tint, real ECharts init and setOption, control binding shim and raster flush",
+          "png": "Actual controller ExportPNG at pixel ratio 2; decoding and hashing excluded",
+          "update": "Replace complete candle data array after increasing final high by 0.01; array preparation excluded"
+        },
+        "status": "ok",
+        "total_rows": 100000
+      },
+      "fixture": {
+        "automatic_statistics": false,
+        "chart_spec_sha256": "84d72e0acd06964e23a46e7595a80390eb989472ed756e14ff142b52b547ab3d",
+        "height": 760,
+        "markers": 1,
+        "overlays": 1,
+        "recipe": "arithmetic-ohlcv-v1",
+        "rows": 100000,
+        "seed": null,
+        "start": "2020-01-01T00:00:00Z",
+        "timeframe_seconds": 60,
+        "timezone": "UTC",
+        "width": 1280
+      },
+      "requested_rows": 100000,
+      "stages": {
+        "adapter_seconds": 1.336686817,
+        "interactive_html": {
+          "bytes": 13879248,
+          "gzip_bytes": 1126434,
+          "render_seconds": 0.850546883,
+          "sha256": "730c4bdaf05e62f31973db639740d31c17ee979d3311232fa5ed284db3350ac0",
+          "write_seconds": 0.002332532
+        },
+        "legacy_bokeh_html": {
+          "automatic_statistics": false,
+          "bytes": 19529930,
+          "gzip_bytes": 2897229,
+          "model_seconds": 1.094291233,
+          "resources": "INLINE",
+          "serialization_seconds": 1.99612838,
+          "sha256": "cca703264a5d0d89e367240a18bc213b589831eb9fdebeef7ac7a7f538ff29b0",
+          "status": "ok",
+          "write_seconds": 0.002371422
+        },
+        "spec_json_bytes": 13102886,
+        "spec_serialization_seconds": 0.817062401,
+        "static_svg": {
+          "bytes": 41125531,
+          "gzip_bytes": 5610810,
+          "render_seconds": 1.605137142,
+          "sha256": "bac2ef2e473915201c897845b1c08f7140f26542d7932975c510e97c33b211c5",
+          "write_seconds": 0.0055007
+        }
+      },
+      "status": "ok"
+    }
+  ],
+  "created_at": "2026-10-15T22:32:28.900680+00:00",
+  "environment": {
+    "cpu_count": 9,
+    "dependencies": {
+      "Jinja2": "3.1.6",
+      "bokeh": "3.6.3",
+      "numpy": "2.2.6",
+      "pandas": "2.2.3",
+      "pandas-ta": null,
+      "pandas-ta-classic": "0.3.78"
+    },
+    "machine": "x86_64",
+    "platform": "Linux-6.18.44-x86_64-with-glibc2.39",
+    "python": "3.11.17",
+    "python_executable": "/workspace/scratch/5c8c2915c4a6/packaging-matrix-3.11/bin/python"
+  },
+  "invocation": {
+    "canvas_module": "/workspace/scratch/5c8c2915c4a6/pg-interactive/tools/chart_runtime/node_modules/@napi-rs/canvas",
+    "node": "node",
+    "sizes": [
+      1000,
+      10000,
+      100000
+    ],
+    "source_root": "/workspace/scratch/5c8c2915c4a6/pg-chart-integration",
+    "timeout_seconds": 60.0
+  },
+  "schema_version": 1,
+  "scope": {
+    "canvas": "Real vendored ECharts and native raster Canvas with DOM/lifecycle shim; no browser, DOM layout, input delivery or display FPS measurement",
+    "comparison": "New chart initial viewport may display fewer candles; full-range timings and visible counts recorded separately; no speed ratio implied",
+    "fixture": "Shared arithmetic OHLCV, one custom overlay with 19 leading gaps, one above-candle marker; automatic indicators disabled in both paths",
+    "legacy": "Real RenderBokeh model construction plus offline INLINE file_html serialization and explicit UTF-8 file write; no legacy browser timing",
+    "performance_gate": false,
+    "python": "Fixture and imports excluded; adapter, serialization, renderer construction and file writes measured separately; gzip and hashes excluded",
+    "repetitions": "One observation per size in a fresh Python and Node process; no warmup or statistical aggregation",
+    "timeout_seconds_per_worker": 60.0
+  },
+  "source": {
+    "git_commit": "e61bb9f4d1c42db99510302d0210e77616b1cc1c",
+    "recipe_sha256": {
+      "benchmark_charts.cjs": "e168f2c9092964247262f3d8ddf3a450485e262d644bd78fe1cbb43cb33cf65c",
+      "benchmark_charts.py": "f17224a9623489b82044bf9edef4f0f2a2b7b8e7a724c6da8f581c6ac56047c0"
+    },
+    "source_sha256": {
+      "pricegenerator/PriceGenerator.py": "9b565c5bef4cdc6b4f2367ae4962f32ba1924ca69ad5505898182a46414b7cb0",
+      "pricegenerator/UniLogger.py": "2f3d5ed5122970cd80edc1b074a414a858ae42be609fa0a586b2c293f2996bea",
+      "pricegenerator/__init__.py": "7327427841e789243221ad12721bfd22d153fc37cd8e47216c8d39ca70a11027",
+      "pricegenerator/__main__.py": "b9dd1100461331646c4661fa1785cecc50e434a790a7fb3b7cc2156e29b3ec82",
+      "pricegenerator/_version.py": "6d0450cbab21e5738db07bd7fef0605656f3853e293049d06f23a50f51e60c91",
+      "pricegenerator/google_template_example.j2": "c14369ed8fbd70fa435b10465dde15ea6e41597f4e0ddd002191f5d7130c51ce",
+      "pricegenerator/rendering/__init__.py": "abb08c1e4e0212ba18d00e25caf8879392ff3d2c1d280fd5a4c865ea26e8a55d",
+      "pricegenerator/rendering/__main__.py": "7ed4f143f0361dd42a9d1450c7b25687e05dcba9e708d1268793200cbac76e2f",
+      "pricegenerator/rendering/adapters.py": "f8d38474d679a79d56513de4a8b3d5558274aebaf0962820c9d7995e7a655527",
+      "pricegenerator/rendering/assets/branding/FuzzyTechnologies-Logo-transp.png": "d359c5ec7a949f6133508aab59dac97dfea77872ed43b6c6df3c4a10def46103",
+      "pricegenerator/rendering/assets/branding/ftech-emblem-192.png": "b0f03918847db13a6b7d3cdcd53b739362478f370a2f795a93b2996ab7720a28",
+      "pricegenerator/rendering/assets/echarts/LICENSE-APACHE-2.0.txt": "634293835b43a6dd2094fa39182a3d9a6b9ca43b7fdb9ac354e8037af2a3093a",
+      "pricegenerator/rendering/assets/echarts/LICENSE-TSLIB-0BSD.txt": "210b19e543130388c68654b7497e967119ce17145f66ab7d85688fbd70f08751",
+      "pricegenerator/rendering/assets/echarts/LICENSE-ZRENDER-BSD-3.txt": "a681e9d183c72b4af4856935893805eb48c08f0f5a3f260203db7444c20fb98a",
+      "pricegenerator/rendering/assets/echarts/NOTICE.txt": "d491d358344f842685c1b1585970999db65fe30ecf7ef3867af8814f4016c016",
+      "pricegenerator/rendering/assets/echarts/THIRD_PARTY_NOTICES.md": "ba1424f3c09ac016cc3f42a73b9392e4bd328c3189ba352e20f2159eda89cff0",
+      "pricegenerator/rendering/assets/echarts/build.json": "33eac29c49bf66eb5361d42b8415fde6b2a75daf10a5829d408458b79aa107e2",
+      "pricegenerator/rendering/assets/echarts/echarts-financial.min.js": "b124fe8ea624740666cb76e1d3322299b1411120f97bd438850951692f07b6b6",
+      "pricegenerator/rendering/assets/interactive.js": "4b4fc1fbb58dafc7e8ec79573c8d8713bab7eae0fd360ecfda0d6dc3ef5d9325",
+      "pricegenerator/rendering/interactive.py": "98d0648cb99058186e1930458ccfac3c76a25743038c78b4ce5499e2d937fc3c",
+      "pricegenerator/rendering/spec.py": "ed43c6a911ef0e50f03fe4862d201b51f74431d8adb5cf6ea7cfe24d3e6968ec",
+      "pricegenerator/rendering/static.py": "5f1baeaa873c01c888e536b178aac43fd34472a1444e9185e9cd65d0ff151ad8",
+      "pricegenerator/rendering/theme.py": "789169b5104a3cfa9dcb3a95aadc77a1b2a92664a0b684f0bc925de0daf1ad86",
+      "pyproject.toml": "357ba41f58a8669e06b85a74656a028f3404777f9dab30e51fc46e9090dcc632",
+      "setup.py": "b955f4d501f4f8cf656aa1b5c14316767e9856ab1652f2e4d3b60d7f454e61ed",
+      "tools/chart_runtime/canvas_environment.cjs": "670a76d7c8374ea45f1c883a152010bc24633ffd7de3ef70d1af25a9e4e8291f",
+      "tools/chart_runtime/package-lock.json": "57c01bf03ae681c3c3656b6bbcc47147da0dd6fb06f996b4084938633f035d09",
+      "tools/chart_runtime/package.json": "304524cb30be90dd8c78119ed60ce310cf9b123903e61ba32d5c4d1b897aac9f"
+    }
+  },
+  "source_tree_stable": true,
+  "status": "ok"
+}

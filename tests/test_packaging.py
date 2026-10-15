@@ -2,13 +2,16 @@
 
 import argparse
 import ast
+import hashlib
 import json
 import re
 import subprocess
 import sys
 import tempfile
+from html import unescape
 from importlib import metadata, resources, util
 from pathlib import Path
+from xml.etree import ElementTree
 
 SOURCE_ROOT = Path(__file__).resolve().parents[1]
 OPTIONAL_MODULES = ("bokeh", "jinja2", "pandas_ta", "pandas_ta_classic", "notebook", "IPython")
@@ -71,6 +74,82 @@ def test_PythonMetadataMatchesTestedRuntimeWindow():
         )
 
 
+def SmokeInstalledCharts(output_directory):
+    """Execute landed chart APIs and CLI from an installed artifact with its resources."""
+
+    from pricegenerator.rendering import ChartCandle, ChartSpec, RenderSVG, SaveSVG
+
+    spec = ChartSpec((
+        ChartCandle("2026-01-01T00:00:00Z", 10, 13, 9, 12, 100),
+        ChartCandle("2026-01-01T01:00:00Z", 12, 13, 10, 11, 120),
+        ChartCandle("2026-01-01T02:00:00Z", 11, 14, 10, 13, 150),
+    ), title="Installed artifact <offline>", summary=("No indicator calculation requested.",))
+    svg = RenderSVG(spec)
+    root = ElementTree.fromstring(svg)
+    assert root.tag == "{http://www.w3.org/2000/svg}svg", "Installed static API did not produce SVG"
+    assert len(root.findall('.//{http://www.w3.org/2000/svg}g[@data-candle-index]')) == 3, (
+        "Installed static renderer lost the supplied candles"
+    )
+    assert "data:image/png;base64," in svg, "Installed SVG failed to embed corporate logo resources"
+    svg_path = output_directory / "api chart.svg"
+    assert SaveSVG(spec, svg_path) == svg_path, "SaveSVG did not return its explicit destination"
+    assert svg_path.read_text(encoding="utf-8") == svg, "Installed SaveSVG changed the rendered document"
+    interactive_present = (SOURCE_ROOT / "pricegenerator/rendering/interactive.py").is_file()
+
+    if interactive_present:
+        from pricegenerator.rendering.interactive import (
+            RenderInteractive,
+            SaveInteractive,
+        )
+
+        html = RenderInteractive(spec)
+        assert "PriceGeneratorView.Mount" in html, "Installed interactive API did not include its chart runtime"
+        assert "data:image/png;base64," in html, "Installed HTML failed to embed corporate logo resources"
+        asset_root = resources.files("pricegenerator.rendering").joinpath("assets", "echarts")
+        runtime = asset_root.joinpath("echarts-financial.min.js").read_bytes()
+        build = json.loads(asset_root.joinpath("build.json").read_text(encoding="utf-8"))
+        assert hashlib.sha256(runtime).hexdigest() == build["sha256"], "Installed chart runtime differs from its reviewed hash"
+        unescaped_html = unescape(html)
+
+        for name in ("NOTICE.txt", "LICENSE-APACHE-2.0.txt", "LICENSE-ZRENDER-BSD-3.txt", "LICENSE-TSLIB-0BSD.txt"):
+            notice = asset_root.joinpath(name).read_text(encoding="utf-8")
+            assert notice in unescaped_html, f"Generated HTML lost the installed third-party notice: {name}"
+
+        html_path = output_directory / "api chart.html"
+        assert SaveInteractive(spec, html_path) == html_path, "SaveInteractive did not return its explicit destination"
+        assert html_path.read_text(encoding="utf-8") == html, "Installed SaveInteractive changed the rendered document"
+
+    if not (SOURCE_ROOT / "pricegenerator/rendering/__main__.py").is_file():
+        return
+
+    csv_path = output_directory / "chart input.csv"
+    csv_path.write_text(
+        "datetime,open,high,low,close,volume\n"
+        "2026-01-01T00:00:00Z,10,13,9,12,100\n"
+        "2026-01-01T01:00:00Z,12,13,10,11,120\n"
+        "2026-01-01T02:00:00Z,11,14,10,13,150\n", encoding="utf-8",
+    )
+    cli_svg = output_directory / "cli chart.svg"
+    cli_html = output_directory / "cli chart.html"
+    cli_report = output_directory / "cli report.md"
+    command = [sys.executable, "-I", "-m", "pricegenerator.rendering", str(csv_path),
+               "--svg", str(cli_svg), "--report", str(cli_report),
+               "--summary", "Installed chart CLI without legacy dependencies."]
+
+    if interactive_present:
+        command.extend(("--html", str(cli_html)))
+
+    result = subprocess.run(command, cwd=output_directory, capture_output=True, text=True, check=False)
+    assert result.returncode == 0, f"Installed offline chart CLI failed: {result.stderr}"
+    assert ElementTree.parse(cli_svg).getroot().tag == root.tag, "Installed chart CLI failed to write SVG"
+    assert "Installed chart CLI without legacy dependencies." in cli_report.read_text(encoding="utf-8"), (
+        "Installed chart CLI lost the requested Markdown report"
+    )
+
+    if interactive_present:
+        assert "PriceGeneratorView.Mount" in cli_html.read_text(encoding="utf-8"), "Installed chart CLI omitted its interactive runtime"
+
+
 def SmokeInstalledArtifact(mode):
     """Check installed metadata, resources, CLI, generation and the requested extra set."""
 
@@ -117,6 +196,9 @@ def SmokeInstalledArtifact(mode):
         )
         assert result.returncode == 0, f"Installed CLI generation failed: {result.stderr}"
         assert len(output_file.read_text().splitlines()) == 8, "Installed CLI failed to write eight CSV rows"
+
+        if source_assets.is_dir():
+            SmokeInstalledCharts(output_directory)
 
         if mode == "core":
             for name in OPTIONAL_MODULES:
