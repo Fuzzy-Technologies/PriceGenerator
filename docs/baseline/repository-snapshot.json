@@ -1,0 +1,1032 @@
+{
+  "schema_version": 1,
+  "snapshot_date_utc": "2026-10-15",
+  "repository": {
+    "id": 326965391,
+    "full_name": "Fuzzy-Technologies/PriceGenerator",
+    "visibility": "public",
+    "default_branch": "master",
+    "url": "https://github.com/Fuzzy-Technologies/PriceGenerator"
+  },
+  "branches": [
+    {
+      "name": "develop",
+      "sha": "a97e84829ebee121c411a273845cba871ce07890",
+      "protected": false
+    },
+    {
+      "name": "master",
+      "sha": "23c44d1f6eef822770f672e645a451a00c11d02c",
+      "protected": true
+    }
+  ],
+  "divergence": {
+    "base": "master",
+    "head": "develop",
+    "ahead": 26,
+    "behind": 0
+  },
+  "releases": [
+    {
+      "id": 131433812,
+      "tag": "v1.4.93",
+      "target_commitish": "master",
+      "name": "release-1.4.93",
+      "published_at": "2023-11-25T14:27:08Z",
+      "prerelease": false,
+      "draft": false,
+      "url": "https://github.com/Fuzzy-Technologies/PriceGenerator/releases/tag/v1.4.93",
+      "assets": [],
+      "body": "[**All release notes in english**](https://github.com/Tim55667757/PriceGenerator/blob/develop/CHANGELOG.md)\r\n[**All release notes in russian / \u0412\u0441\u0435 \u0440\u0435\u043b\u0438\u0437-\u043d\u043e\u0442\u044b \u043d\u0430 \u0440\u0443\u0441\u0441\u043a\u043e\u043c**](https://github.com/Tim55667757/PriceGenerator/blob/develop/CHANGELOG_RU.md)\r\n[**Issues included in the release**](https://github.com/Tim55667757/PriceGenerator/milestone/3?closed=1)\r\n[**PriceGenerator API-doc**](https://tim55667757.github.io/PriceGenerator/docs/pricegenerator/PriceGenerator.html)\r\n\r\n### PyPI: [1.4.93 (2023-11-25)](https://pypi.org/project/pricegenerator/1.4.93/)\r\n\r\n### Digest\r\n\r\nNow the volume values depends on the previous value and outliers probability and looks more realistic. The generator algorithm creates a series of candles better for difficult trends, include differ outliers for upper and lower shadows of candles and its bodies. Also, bugs with negative numbers in series should no longer appear.\r\n\r\nExample of the long-time series with realistic dispersion of volume values and differ trends:\r\n\r\n![image](https://raw.githubusercontent.com/Tim55667757/PriceGenerator/develop/media/long-series-example-with-realistic-volumes.png)\r\n\r\n### New features\r\n\r\n* The generator algorithm now creates a series of candles better for difficult trends, include differ outliers for upper and lower shadows of candles.\r\n\r\n### Improvements\r\n\r\n* [#22](https://github.com/Tim55667757/PriceGenerator/issues/22) Type of `ZigZagFilter()` was changed to Pandas Dataframe instead of dict.\r\n* [#25](https://github.com/Tim55667757/PriceGenerator/issues/25) Volume values now depend on the previous value and outliers probability.\r\n\r\n### Bug fixes\r\n\r\n* [#24](https://github.com/Tim55667757/PriceGenerator/issues/24) Bug fix with negative numbers in series."
+    },
+    {
+      "id": 88054549,
+      "tag": "1.3.81",
+      "target_commitish": "master",
+      "name": "release-1.3.81",
+      "published_at": "2023-01-05T20:10:55Z",
+      "prerelease": false,
+      "draft": false,
+      "url": "https://github.com/Fuzzy-Technologies/PriceGenerator/releases/tag/1.3.81",
+      "assets": [],
+      "body": "[**Release notes in english**](https://github.com/Tim55667757/PriceGenerator/blob/develop/CHANGELOG.md)\r\n[**Release notes in russian**](https://github.com/Tim55667757/PriceGenerator/blob/develop/CHANGELOG_RU.md)\r\n[**Issues included in the release**](https://github.com/Tim55667757/PriceGenerator/milestone/2?closed=1)\r\n[**API-doc**](https://tim55667757.github.io/PriceGenerator/docs/pricegenerator/PriceGenerator.html)\r\n\r\n### PyPI: [1.3.81 (2023-01-05)](https://pypi.org/project/pricegenerator/1.3.81/)\r\n\r\n### Digest\r\n\r\n**WARNING!** Python supported version was changed to 3.9.\r\n \r\nNow you can draw an additional custom lines and markers on main chart with candles (using `RenderBokeh()` method). You can specify trend directions with simple words: `up`, `down`, `no` or chars: `u`, `d`, `n`, when using `--split-trend` key (in addition to the existing ability to identify trend with symbols `/\\-`), e.g. `--split-trend=up-down-no-up`, `--split-trend=u-d-n-u` etc. Also, you can choose themes for charts drawn by `RenderBokeh()` method with the new parameter `darkTheme` (if `True` then using dark theme, else light theme).\r\n\r\nLight style example (with some custom markers and new average line):\r\n\r\n![image](https://user-images.githubusercontent.com/7660870/210442177-a7d9f2bd-e426-43bb-bf5d-bf66339ea56e.png)\r\n\r\nDark style example (with some custom markers):\r\n\r\n![image](https://user-images.githubusercontent.com/7660870/210591393-3f36cb5f-a8fd-4c3c-a085-23177c8c464d.png)\r\n\r\n\r\n### New features\r\n\r\n* **WARNING!** Python supported version was changed to 3.9.\r\n* [#17](https://github.com/Tim55667757/PriceGenerator/issues/17) Into the `RenderBokeh()` method was added `layouts` parameter. You can add new Bokeh Chart-objects on the Main Chart with that parameter. Also, `darkTheme` parameter was added. If it `True`, then will be used dark theme, `False` (by default) mean light theme. Also, you can manipulate with chart and adding lines or markers to the main chart. Use `markers` and `lines` parameters for it. `markers` is a Pandas Dataframe with custom series, where additional markers will place on main series. `None` by default. One marker is a custom symbol, e.g. \u00d7, \u2193 or \u2191 or anyone else. Marker data must contain at least two columns. There are `datetime` with date and time and some markers columns (`markersUpper`, `markersCenter` or `markersLower`). Length of marker dataframes must be equal to the length of main candle series. `lines` is a list with custom series, where additional chart-lines will place on main series. `None` by default. Line data must contain at least two columns. There are `datetime` with date and time and `custom_line_name` with y-coordinates. Length of the chart-line dataframes must be equal to the length of main candle series.\r\n* [#10](https://github.com/Tim55667757/PriceGenerator/issues/10) Ability to specify directions with words or chars was added. Words may be next: `up`, `down`, `no` or chars: `u`, `d`, `n` for the `--split-trend` key, in addition to the existing ability to set up of the trend with symbols `/\\-`. To separate words or chars use the hyphen symbol, e.g. `--split-trend=up-down-no-up`, `--split-trend=u-d-n-u` etc.\r\n* [#13](https://github.com/Tim55667757/PriceGenerator/issues/13) [API-doc](https://tim55667757.github.io/PriceGenerator/docs/pricegenerator/PriceGenerator.html) on module `PriceGenerator` was added.\r\n\r\n### Improvements\r\n\r\n* [#15](https://github.com/Tim55667757/PriceGenerator/issues/15) Statistic block view was improvement.\r\n* [#16](https://github.com/Tim55667757/PriceGenerator/issues/16) Examples were added: [how to generate prices chain without candles](https://github.com/Tim55667757/PriceGenerator/issues/16#issuecomment-1287875048).\r\n\r\n### Bug fixes\r\n\r\n* [#19](https://github.com/Tim55667757/PriceGenerator/issues/19) Bug fix with incorrect high and low values when trend is set.\r\n* [#18](https://github.com/Tim55667757/PriceGenerator/issues/18) Bug fix with incorrect multiple tips on chart and incorrect width of visible area.\r\n* [#11](https://github.com/Tim55667757/PriceGenerator/issues/11) Incorrect warnings were disabled."
+    },
+    {
+      "id": 54910397,
+      "tag": "1.2.58",
+      "target_commitish": "master",
+      "name": "release-1.2.58",
+      "published_at": "2021-12-08T22:20:08Z",
+      "prerelease": false,
+      "draft": false,
+      "url": "https://github.com/Fuzzy-Technologies/PriceGenerator/releases/tag/1.2.58",
+      "assets": [],
+      "body": "New feature: split data by some trends.\r\n\r\nIt was implemented two additional keys: `--split-trend` and `--split-count`. These keys affect the appearance of the trend and the number of candles in each trend.\r\n\r\nThe `--split-trend` key shows trends movements, e.g. `--split-trend=/\\-` means that generated candles has up trend at first part, next down trend and then no trend.\r\n\r\nThe `--split-count` key set count of candles of difference periods, e.g. `--split-count 5 10 15` means that generated candles has 3 trends with 5, 10 and 15 candles in chain.\r\n\r\nTo understand how it works, try one of these examples:\r\n\r\n```commandline\r\npricegenerator --horizon 300 --render-bokeh index.html --split-trend=/\\- --split-count 50 100 150 --generate\r\npricegenerator --horizon 300 --render-bokeh index.html --split-trend=\\/\\ --split-count 50 100 150 --generate\r\npricegenerator --horizon 300 --render-bokeh index.html --split-trend=\\-/ --split-count 50 100 150 --generate\r\npricegenerator --horizon 100 --render-bokeh index.html --split-trend=/\\/\\ --split-count 20 30 30 20 --generate\r\n```\r\n\r\nFor the last example, you can get a picture like this:\r\n\r\n![index_with_trends html](https://github.com/Tim55667757/PriceGenerator/blob/1.2.58/media/index_with_trends.html.png)"
+    },
+    {
+      "id": 39018321,
+      "tag": "1.2.46",
+      "target_commitish": "master",
+      "name": "release-1.2.46",
+      "published_at": "2021-02-28T17:36:10Z",
+      "prerelease": false,
+      "draft": false,
+      "url": "https://github.com/Fuzzy-Technologies/PriceGenerator/releases/tag/1.2.46",
+      "assets": [],
+      "body": "1. Some moving averages were added to Bokeh chart with pandas_ta library:\r\n- Simple Moving Averages (5, 20, 50, 200),\r\n- Hull Moving Averages (5, 20),\r\n- Volume Weighted Moving Averages (5, 20),\r\nAlso, only \"Max_close / Min_close / Trend line\" is showing by default.\r\n\r\n2. Volatility indicators were implements:\r\n- Bollinger Bands.\r\n- Parabolic Stop and Reverse,\r\n- Alligator (based on HMAs 13, 8, 5),\r\n- ZigZag with 3% deviation by default.\r\n\r\n3. Volume chart was added.\r\n\r\n4. Candle's tooltips were added on main and volume charts.\r\n\r\n5. The key `--horizon` when loading from a file is used to specify loading of the last N=horizon candles.\r\n\r\n6. The `--precision` key is used to specify the signs after comma.\r\n\r\n7. Bug fix with not detected timeframe when rendering from pandas dataframe without loading from file.\r\n\r\n8. More tests and examples were added. Also, little refactor. All used libraries were updated.\r\n\r\n![](https://github.com/Tim55667757/PriceGenerator/blob/1.2.46/media/index.html.png)\r\n\r\n![](https://github.com/Tim55667757/PriceGenerator/blob/1.2.46/media/index_google.html.png)"
+    },
+    {
+      "id": 38340594,
+      "tag": "1.1.30",
+      "target_commitish": "master",
+      "name": "release-1.1.30",
+      "published_at": "2021-02-19T22:54:01Z",
+      "prerelease": false,
+      "draft": false,
+      "url": "https://github.com/Fuzzy-Technologies/PriceGenerator/releases/tag/1.1.30",
+      "assets": [],
+      "body": "Added new features:\r\n- A lot of keys were added for CLI: `--ticker`, `--timeframe`, `--start`, `--horizon`, `--max-close`, `--min-close`, `--init-close`, `--max-outlier`, `--max-body`, `--max-volume`, `--up-candles-prob`, `--outliers-prob`, `--trend-deviation`. That keys are overriding default parameters.\r\n- Implements new method `RenderGoogle()` and a `--render-google` key that can be draw not interactive Google Candlestick chart.\r\n- Extended examples were added. See examples in README.md (english) and README_RU.md (russian)."
+    },
+    {
+      "id": 37382613,
+      "tag": "1.0.19",
+      "target_commitish": "master",
+      "name": "release-1.0.19",
+      "published_at": "2021-02-04T23:23:46Z",
+      "prerelease": false,
+      "draft": false,
+      "url": "https://github.com/Fuzzy-Technologies/PriceGenerator/releases/tag/1.0.19",
+      "assets": [],
+      "body": "The PriceGenerator library allows you to:\r\n\r\n- save generated prices in .csv-format (example: [./media/test.csv](./media/test.csv));\r\n- save the generated prices to a Pandas DataFrame variable for further use in automation scripts;\r\n- automatically calculate some statistical and probabilistic characteristics of the generated prices and save them in markdown format (example: [./media/index.html.md](./media/index.html.md));\r\n- load the prices of real instruments according to the OHLCV-candlesticks model from the .csv file and carry out their statistical analysis;\r\n  - draw a chart of generated or loaded real prices and save it in html-format (example: [./media/index.html](./media/index.html));\r\ngenerated prices, a chart and some data on price behavior can be saved as a regular png-image (example: [./media/index.html.png](./media/index.html.png)).\r\n\r\n"
+    }
+  ],
+  "historical_repository": {
+    "url": "https://github.com/Tim55667757/PriceGenerator",
+    "api_response": {
+      "message": "Moved Permanently",
+      "url": "https://api.github.com/repositories/326965391"
+    }
+  },
+  "sources": [
+    "https://api.github.com/repos/Fuzzy-Technologies/PriceGenerator",
+    "https://api.github.com/repos/Fuzzy-Technologies/PriceGenerator/branches?per_page=100",
+    "https://api.github.com/repos/Fuzzy-Technologies/PriceGenerator/releases?per_page=100",
+    "https://api.github.com/repos/Tim55667757/PriceGenerator",
+    "https://pypi.org/pypi/pricegenerator/json"
+  ],
+  "pypi": {
+    "name": "pricegenerator",
+    "latest": "1.4.93",
+    "requires_python": "",
+    "project_urls": {
+      "Download": "https://github.com/Tim55667757/PriceGenerator.git",
+      "Homepage": "https://github.com/Tim55667757/PriceGenerator/"
+    },
+    "requires_dist": [
+      "requests (>=2.25.1)",
+      "pandas (>=1.5.2)",
+      "bokeh (>=3.0.3)",
+      "bkcharts (>=0.2)",
+      "numpy (>=1.23.5)",
+      "matplotlib (>=3.3.4)",
+      "python-dateutil (>=2.8.1)",
+      "jinja2 (>=2.11.3)",
+      "pandas-ta (>=0.2.45b0)",
+      "notebook (>=6.5.2)"
+    ],
+    "releases": {
+      "1.0.19": [
+        {
+          "filename": "pricegenerator-1.0.19-py3-none-any.whl",
+          "packagetype": "bdist_wheel",
+          "python_version": "py3",
+          "size": 12629,
+          "url": "https://files.pythonhosted.org/packages/cb/e1/86fab742123acabd87cef367d51fe8e3a8c4fa3992d7b0069d2c98853264/pricegenerator-1.0.19-py3-none-any.whl",
+          "digests": {
+            "blake2b_256": "cbe186fab742123acabd87cef367d51fe8e3a8c4fa3992d7b0069d2c98853264",
+            "md5": "ab31d1e166444a33f6ac6b872c3bbbb2",
+            "sha256": "f784e792e5e831e4de44aa595a5f1a91437524866d562cc71b72b380a86ef7e2"
+          },
+          "upload_time_iso_8601": "2021-02-04T18:57:44.354069Z",
+          "yanked": false
+        },
+        {
+          "filename": "pricegenerator-1.0.19.tar.gz",
+          "packagetype": "sdist",
+          "python_version": "source",
+          "size": 16043,
+          "url": "https://files.pythonhosted.org/packages/eb/56/6320e478c798cfbe7b0e508bfb15a2623a9d43bfed484ecbcf5c9697741d/pricegenerator-1.0.19.tar.gz",
+          "digests": {
+            "blake2b_256": "eb566320e478c798cfbe7b0e508bfb15a2623a9d43bfed484ecbcf5c9697741d",
+            "md5": "18cb6f9b4cb7f02f50944a9d6a0bb03b",
+            "sha256": "9e41aae9a55df5786e54a9790b288418a30344d56da173ca0eaaf031555d0945"
+          },
+          "upload_time_iso_8601": "2021-02-04T18:57:45.763180Z",
+          "yanked": false
+        }
+      ],
+      "1.0.dev14": [
+        {
+          "filename": "pricegenerator-1.0.dev14-py3-none-any.whl",
+          "packagetype": "bdist_wheel",
+          "python_version": "py3",
+          "size": 12681,
+          "url": "https://files.pythonhosted.org/packages/65/23/802d6de6be5e680116b709d0d4ff4d137932defe900401055f31eb379c7f/pricegenerator-1.0.dev14-py3-none-any.whl",
+          "digests": {
+            "blake2b_256": "6523802d6de6be5e680116b709d0d4ff4d137932defe900401055f31eb379c7f",
+            "md5": "d4c136888d98264f3ac46701b5e6dee7",
+            "sha256": "eb93451abb893e7905c7099402dbb86f18f9497abf0e5133dc1f3ae92ea8595b"
+          },
+          "upload_time_iso_8601": "2021-02-04T14:16:44.323910Z",
+          "yanked": false
+        },
+        {
+          "filename": "pricegenerator-1.0.dev14.tar.gz",
+          "packagetype": "sdist",
+          "python_version": "source",
+          "size": 16065,
+          "url": "https://files.pythonhosted.org/packages/22/81/6839c8673ec49bd6c33e1b8c42dffe78ea7fb687ae338eb78e640cd36936/pricegenerator-1.0.dev14.tar.gz",
+          "digests": {
+            "blake2b_256": "22816839c8673ec49bd6c33e1b8c42dffe78ea7fb687ae338eb78e640cd36936",
+            "md5": "26a8eb34ad220d8ac898acc041579d14",
+            "sha256": "8a18d5ec5c6c791bd49082f36c715e546ad8c15065365680d4e014b9ba5c6b04"
+          },
+          "upload_time_iso_8601": "2021-02-04T14:16:45.619088Z",
+          "yanked": false
+        }
+      ],
+      "1.0.dev15": [
+        {
+          "filename": "pricegenerator-1.0.dev15-py3-none-any.whl",
+          "packagetype": "bdist_wheel",
+          "python_version": "py3",
+          "size": 12669,
+          "url": "https://files.pythonhosted.org/packages/fc/07/33f7d7980d20bd735837d9074cb6cbf7116455c5de81af78ea1652235db9/pricegenerator-1.0.dev15-py3-none-any.whl",
+          "digests": {
+            "blake2b_256": "fc0733f7d7980d20bd735837d9074cb6cbf7116455c5de81af78ea1652235db9",
+            "md5": "6d6559c35a8224b3196a043c44ef8074",
+            "sha256": "b58959cba3170a9e1cdbd8664c16c42e9d93a4fcd7d80ad4630c2643f0c33cf5"
+          },
+          "upload_time_iso_8601": "2021-02-04T15:02:10.635881Z",
+          "yanked": false
+        },
+        {
+          "filename": "pricegenerator-1.0.dev15.tar.gz",
+          "packagetype": "sdist",
+          "python_version": "source",
+          "size": 16049,
+          "url": "https://files.pythonhosted.org/packages/ec/fa/b42d17fc4454a696b89b4f3c68a0a39fe0f92bc1349789ec4c2e767b9b03/pricegenerator-1.0.dev15.tar.gz",
+          "digests": {
+            "blake2b_256": "ecfab42d17fc4454a696b89b4f3c68a0a39fe0f92bc1349789ec4c2e767b9b03",
+            "md5": "49a34e06e3e8449ae0509a7c004a0783",
+            "sha256": "d1c48a8a860203083736931b5c6e52d047aea4d43d33067736254d24cf518be9"
+          },
+          "upload_time_iso_8601": "2021-02-04T15:02:11.682486Z",
+          "yanked": false
+        }
+      ],
+      "1.0.dev17": [
+        {
+          "filename": "pricegenerator-1.0.dev17-py3-none-any.whl",
+          "packagetype": "bdist_wheel",
+          "python_version": "py3",
+          "size": 12668,
+          "url": "https://files.pythonhosted.org/packages/a0/f8/c0eae55da0c4161a8dc3ebd5e797521f08b434253d06d62a56dceca37c71/pricegenerator-1.0.dev17-py3-none-any.whl",
+          "digests": {
+            "blake2b_256": "a0f8c0eae55da0c4161a8dc3ebd5e797521f08b434253d06d62a56dceca37c71",
+            "md5": "d6e34fa72bb90a7676a64b903be640c8",
+            "sha256": "63d27be7bb151d2e7e47b4a554859944966a839d5cf3f4f7d4a251dc67dbaf4e"
+          },
+          "upload_time_iso_8601": "2021-02-04T16:34:47.546354Z",
+          "yanked": false
+        },
+        {
+          "filename": "pricegenerator-1.0.dev17.tar.gz",
+          "packagetype": "sdist",
+          "python_version": "source",
+          "size": 16053,
+          "url": "https://files.pythonhosted.org/packages/eb/fd/d508ee8f3e1f3259548c0895f052b1ac1190b93ee1beb0e31e55db780474/pricegenerator-1.0.dev17.tar.gz",
+          "digests": {
+            "blake2b_256": "ebfdd508ee8f3e1f3259548c0895f052b1ac1190b93ee1beb0e31e55db780474",
+            "md5": "0cd07e4c749eda1ccf1d6803a60f62c2",
+            "sha256": "e00a3dd7006ad82ed743541ab7bf85a85ab95f19d18ef7009f170a9a783ca856"
+          },
+          "upload_time_iso_8601": "2021-02-04T16:34:48.542003Z",
+          "yanked": false
+        }
+      ],
+      "1.0.dev20": [
+        {
+          "filename": "pricegenerator-1.0.dev20-py3-none-any.whl",
+          "packagetype": "bdist_wheel",
+          "python_version": "py3",
+          "size": 13317,
+          "url": "https://files.pythonhosted.org/packages/ec/44/8ecb4af922150ff171717306905c20633171a78dd63884194c59d6930206/pricegenerator-1.0.dev20-py3-none-any.whl",
+          "digests": {
+            "blake2b_256": "ec448ecb4af922150ff171717306905c20633171a78dd63884194c59d6930206",
+            "md5": "4fa0f46e7817d65fb9897895c7b101b9",
+            "sha256": "7ee1ffebaa9c6ac481683e787262c73b59bfb1e677152319718f0360cf6a9608"
+          },
+          "upload_time_iso_8601": "2021-02-06T15:48:20.279567Z",
+          "yanked": false
+        },
+        {
+          "filename": "pricegenerator-1.0.dev20.tar.gz",
+          "packagetype": "sdist",
+          "python_version": "source",
+          "size": 17778,
+          "url": "https://files.pythonhosted.org/packages/a3/09/316789b6c33425132ea314aed14679e508beb85ae8c480836a612e68a41f/pricegenerator-1.0.dev20.tar.gz",
+          "digests": {
+            "blake2b_256": "a309316789b6c33425132ea314aed14679e508beb85ae8c480836a612e68a41f",
+            "md5": "225e8ba3cc427ae5632bc6bf1efbc0c9",
+            "sha256": "5c40ab3c888794e8659effb92d2b083902c45e4955e66bcf90c2c8b5d07b16db"
+          },
+          "upload_time_iso_8601": "2021-02-06T15:48:21.295989Z",
+          "yanked": false
+        }
+      ],
+      "1.1.30": [
+        {
+          "filename": "pricegenerator-1.1.30-py3-none-any.whl",
+          "packagetype": "bdist_wheel",
+          "python_version": "py3",
+          "size": 16906,
+          "url": "https://files.pythonhosted.org/packages/05/b7/a52022dbfa8e20e2a6f5e6cc964b3db96bef6d058f7ab881772e4f663dfd/pricegenerator-1.1.30-py3-none-any.whl",
+          "digests": {
+            "blake2b_256": "05b7a52022dbfa8e20e2a6f5e6cc964b3db96bef6d058f7ab881772e4f663dfd",
+            "md5": "ad0690f391856e0d761f201b63939786",
+            "sha256": "437d85ec415760497574705cdf252d8f3080b72a5e819ee9c6f526f78a52c602"
+          },
+          "upload_time_iso_8601": "2021-02-19T22:51:42.788123Z",
+          "yanked": false
+        },
+        {
+          "filename": "pricegenerator-1.1.30.tar.gz",
+          "packagetype": "sdist",
+          "python_version": "source",
+          "size": 20051,
+          "url": "https://files.pythonhosted.org/packages/c5/1f/28fe930b9aa0bedb60a2fe3d8a46074b99d5d4b0474dedbe60076a2cd1c1/pricegenerator-1.1.30.tar.gz",
+          "digests": {
+            "blake2b_256": "c51f28fe930b9aa0bedb60a2fe3d8a46074b99d5d4b0474dedbe60076a2cd1c1",
+            "md5": "254f1841974748645657ee23fc1e494c",
+            "sha256": "0f0c0c67e3faf0d9fa0d452d6727ba4bd9f722248a50a47c67239ae5540099c5"
+          },
+          "upload_time_iso_8601": "2021-02-19T22:51:43.811899Z",
+          "yanked": false
+        }
+      ],
+      "1.1.dev28": [
+        {
+          "filename": "pricegenerator-1.1.dev28-py3-none-any.whl",
+          "packagetype": "bdist_wheel",
+          "python_version": "py3",
+          "size": 16948,
+          "url": "https://files.pythonhosted.org/packages/e1/79/20363b77ee836a93ace9d0cb58623de7a4646112efee01e4a90d607a0243/pricegenerator-1.1.dev28-py3-none-any.whl",
+          "digests": {
+            "blake2b_256": "e17920363b77ee836a93ace9d0cb58623de7a4646112efee01e4a90d607a0243",
+            "md5": "94c7ae0f55baac507c394cb2c1a2ce92",
+            "sha256": "61610c94b410814688efc003f7d155e089a360551d9c6dc981cddfdf95e53959"
+          },
+          "upload_time_iso_8601": "2021-02-19T22:19:26.498274Z",
+          "yanked": false
+        },
+        {
+          "filename": "pricegenerator-1.1.dev28.tar.gz",
+          "packagetype": "sdist",
+          "python_version": "source",
+          "size": 20058,
+          "url": "https://files.pythonhosted.org/packages/8f/32/9e7d831ec6c4a44580a1119eb142d2c44db9567bbca8c4f22cd22f131309/pricegenerator-1.1.dev28.tar.gz",
+          "digests": {
+            "blake2b_256": "8f329e7d831ec6c4a44580a1119eb142d2c44db9567bbca8c4f22cd22f131309",
+            "md5": "fcbb056e826844c8f475225a09a21391",
+            "sha256": "83b6551672040aa7c9a20dd97e249a59c4e5bb7e91edeb8284f735f52cbd3927"
+          },
+          "upload_time_iso_8601": "2021-02-19T22:19:27.452919Z",
+          "yanked": false
+        }
+      ],
+      "1.2.36": [
+        {
+          "filename": "pricegenerator-1.2.36-py3-none-any.whl",
+          "packagetype": "bdist_wheel",
+          "python_version": "py3",
+          "size": 19564,
+          "url": "https://files.pythonhosted.org/packages/4f/6a/184ac9d4a11d5cd82d048c26e3b863e9fbc9c726cb4e7a3647688f3696b7/pricegenerator-1.2.36-py3-none-any.whl",
+          "digests": {
+            "blake2b_256": "4f6a184ac9d4a11d5cd82d048c26e3b863e9fbc9c726cb4e7a3647688f3696b7",
+            "md5": "39c7c9933fb3e7a41cacdfc61fcffd4b",
+            "sha256": "d75c1ea1be3ba435c22eec0b8491a947ee7cc29cc02bd27ba6aeb7e307210241"
+          },
+          "upload_time_iso_8601": "2021-02-28T17:23:41.985012Z",
+          "yanked": false
+        },
+        {
+          "filename": "pricegenerator-1.2.36.tar.gz",
+          "packagetype": "sdist",
+          "python_version": "source",
+          "size": 22959,
+          "url": "https://files.pythonhosted.org/packages/1c/a4/1c382c35eeb8f9bfc098b2eda4bc7265e2e735772f84c2b9ea8629e47762/pricegenerator-1.2.36.tar.gz",
+          "digests": {
+            "blake2b_256": "1ca41c382c35eeb8f9bfc098b2eda4bc7265e2e735772f84c2b9ea8629e47762",
+            "md5": "01cd5a0b27b1b3327160171cb217aad4",
+            "sha256": "bf7fa4f8f7c69c2469958620d9598912720efaab1b0e8779dd4bb508cd5f49f5"
+          },
+          "upload_time_iso_8601": "2021-02-28T17:23:42.990769Z",
+          "yanked": false
+        }
+      ],
+      "1.2.43": [
+        {
+          "filename": "pricegenerator-1.2.43-py3-none-any.whl",
+          "packagetype": "bdist_wheel",
+          "python_version": "py3",
+          "size": 19605,
+          "url": "https://files.pythonhosted.org/packages/e3/b4/72e1aa54e3aa5ec9bbda76ea3f29ade044f44e4ced6b02c113b6145db4c1/pricegenerator-1.2.43-py3-none-any.whl",
+          "digests": {
+            "blake2b_256": "e3b472e1aa54e3aa5ec9bbda76ea3f29ade044f44e4ced6b02c113b6145db4c1",
+            "md5": "7f1e04f7b081765ee7ac5cd564273000",
+            "sha256": "919dda42dbd410964521cff3d444f835d77e3c0de7315715c1ac4b0aec1f8fba"
+          },
+          "upload_time_iso_8601": "2021-03-10T22:06:39.540979Z",
+          "yanked": false
+        },
+        {
+          "filename": "pricegenerator-1.2.43.tar.gz",
+          "packagetype": "sdist",
+          "python_version": "source",
+          "size": 23014,
+          "url": "https://files.pythonhosted.org/packages/e7/3f/dd3d00f7274cc2dabc21c2501f75fedcb11187a6cc110d22f78fe0037cf9/pricegenerator-1.2.43.tar.gz",
+          "digests": {
+            "blake2b_256": "e73fdd3d00f7274cc2dabc21c2501f75fedcb11187a6cc110d22f78fe0037cf9",
+            "md5": "72165d8f739357ab18a9cce253d82135",
+            "sha256": "f26b733c7f49c93e403c222fcdf55dfc821667f81a40ed5874b3a98115df8df1"
+          },
+          "upload_time_iso_8601": "2021-03-10T22:06:40.724042Z",
+          "yanked": false
+        }
+      ],
+      "1.2.46": [
+        {
+          "filename": "pricegenerator-1.2.46-py3-none-any.whl",
+          "packagetype": "bdist_wheel",
+          "python_version": "py3",
+          "size": 19601,
+          "url": "https://files.pythonhosted.org/packages/bb/0b/b1f85704956cb99f93caa561f040fb9ef0a18333735d433cad07e43c0752/pricegenerator-1.2.46-py3-none-any.whl",
+          "digests": {
+            "blake2b_256": "bb0bb1f85704956cb99f93caa561f040fb9ef0a18333735d433cad07e43c0752",
+            "md5": "17fbedda2901561cbf250681b15bc99b",
+            "sha256": "e487d73efa187a2bd233d1464d51b1c4788b685db5e119d13e096d2f9b4642eb"
+          },
+          "upload_time_iso_8601": "2021-03-10T22:25:18.157429Z",
+          "yanked": false
+        },
+        {
+          "filename": "pricegenerator-1.2.46.tar.gz",
+          "packagetype": "sdist",
+          "python_version": "source",
+          "size": 23005,
+          "url": "https://files.pythonhosted.org/packages/18/56/b72433ad65c47fa1aa8092faf8d1742404d4fcf6b8c27e3d3a005bb5ffd1/pricegenerator-1.2.46.tar.gz",
+          "digests": {
+            "blake2b_256": "1856b72433ad65c47fa1aa8092faf8d1742404d4fcf6b8c27e3d3a005bb5ffd1",
+            "md5": "e1cf84c73e2444d545c23e9d05f8bd6e",
+            "sha256": "28f6f689226c4dc3b9725110a7452a54471aa65a2ae36cad83fb4288c2776304"
+          },
+          "upload_time_iso_8601": "2021-03-10T22:25:18.988481Z",
+          "yanked": false
+        }
+      ],
+      "1.2.56": [
+        {
+          "filename": "pricegenerator-1.2.56-py3-none-any.whl",
+          "packagetype": "bdist_wheel",
+          "python_version": "py3",
+          "size": 20646,
+          "url": "https://files.pythonhosted.org/packages/a6/1a/cab6783563f98692392a6070380281237d02562782e5e0531400d4f9496a/pricegenerator-1.2.56-py3-none-any.whl",
+          "digests": {
+            "blake2b_256": "a61acab6783563f98692392a6070380281237d02562782e5e0531400d4f9496a",
+            "md5": "9dbbf20238020c99bb6b23e0e66eeda6",
+            "sha256": "3c2881c43dd3cb3a4c903cd12f2517765f047239fc4796b7c000105a4b43faaa"
+          },
+          "upload_time_iso_8601": "2021-12-08T21:36:26.959881Z",
+          "yanked": false
+        },
+        {
+          "filename": "pricegenerator-1.2.56.tar.gz",
+          "packagetype": "sdist",
+          "python_version": "source",
+          "size": 591210,
+          "url": "https://files.pythonhosted.org/packages/a3/8f/0fb8ca6ef988b9ac06112343e97df5bdea0afae04773b594b987eb32ab99/pricegenerator-1.2.56.tar.gz",
+          "digests": {
+            "blake2b_256": "a38f0fb8ca6ef988b9ac06112343e97df5bdea0afae04773b594b987eb32ab99",
+            "md5": "29111f499bdf7fa8c53724d1f4d39a2e",
+            "sha256": "150fc4fbd1a2ad17d688407ceb815cb0c2280ed9ad52da095c2850f9f1434966"
+          },
+          "upload_time_iso_8601": "2021-12-08T21:36:28.215350Z",
+          "yanked": false
+        }
+      ],
+      "1.2.58": [
+        {
+          "filename": "pricegenerator-1.2.58-py3-none-any.whl",
+          "packagetype": "bdist_wheel",
+          "python_version": "py3",
+          "size": 20644,
+          "url": "https://files.pythonhosted.org/packages/08/03/ef30f04cb3de0cb2a6a1cc9d1b2f3a1bf181dfb38aa8dfafc44cf323ecc5/pricegenerator-1.2.58-py3-none-any.whl",
+          "digests": {
+            "blake2b_256": "0803ef30f04cb3de0cb2a6a1cc9d1b2f3a1bf181dfb38aa8dfafc44cf323ecc5",
+            "md5": "e6935e79fd1dc0b87715eb8d8f39d740",
+            "sha256": "c6aedfee7ac3e810ca321cc122144a1d1d381dd4a6d93178a744d91e660beee7"
+          },
+          "upload_time_iso_8601": "2021-12-08T22:14:23.288565Z",
+          "yanked": false
+        },
+        {
+          "filename": "pricegenerator-1.2.58.tar.gz",
+          "packagetype": "sdist",
+          "python_version": "source",
+          "size": 592463,
+          "url": "https://files.pythonhosted.org/packages/9a/78/481eccd19a21b6e3ca6144a10db49cb18819ffc14c6cea18dea9593532f4/pricegenerator-1.2.58.tar.gz",
+          "digests": {
+            "blake2b_256": "9a78481eccd19a21b6e3ca6144a10db49cb18819ffc14c6cea18dea9593532f4",
+            "md5": "c7680d6fe0d6bf329afc26da3a73445f",
+            "sha256": "e1e41247a7caf82aca5fa2dbba241fe321ac5dbb4ec5fcea331a1d16bd5d8a8d"
+          },
+          "upload_time_iso_8601": "2021-12-08T22:14:24.696416Z",
+          "yanked": false
+        }
+      ],
+      "1.2.74": [
+        {
+          "filename": "pricegenerator-1.2.74-py3-none-any.whl",
+          "packagetype": "bdist_wheel",
+          "python_version": "py3",
+          "size": 24771,
+          "url": "https://files.pythonhosted.org/packages/33/a2/c1d6530751520cc3f11b8cad21be7958a0734af7d2273b6aa9a0c3e43508/pricegenerator-1.2.74-py3-none-any.whl",
+          "digests": {
+            "blake2b_256": "33a2c1d6530751520cc3f11b8cad21be7958a0734af7d2273b6aa9a0c3e43508",
+            "md5": "9fe2c1192ea75e276f05e15f3f66f9a0",
+            "sha256": "b488d2ba9f2eac561506c545f34097fefc4137784406e1491187af280df4c529"
+          },
+          "upload_time_iso_8601": "2022-07-20T16:45:51.708049Z",
+          "yanked": false
+        },
+        {
+          "filename": "pricegenerator-1.2.74.tar.gz",
+          "packagetype": "sdist",
+          "python_version": "source",
+          "size": 30589,
+          "url": "https://files.pythonhosted.org/packages/e8/0a/0d6345ceb970975c48b606a891eefbf93d75426fa87a2ef252e6b77763d9/pricegenerator-1.2.74.tar.gz",
+          "digests": {
+            "blake2b_256": "e80a0d6345ceb970975c48b606a891eefbf93d75426fa87a2ef252e6b77763d9",
+            "md5": "ec4e8b704ea992d67c0095f1326f2847",
+            "sha256": "64428430e0f4926a9902c8a81b532f418f1735ff40f0cb67b9f411e5500a6a1d"
+          },
+          "upload_time_iso_8601": "2022-07-20T16:45:53.170271Z",
+          "yanked": false
+        }
+      ],
+      "1.2.dev31": [
+        {
+          "filename": "pricegenerator-1.2.dev31-py3-none-any.whl",
+          "packagetype": "bdist_wheel",
+          "python_version": "py3",
+          "size": 17848,
+          "url": "https://files.pythonhosted.org/packages/de/c7/b696212d6b61dd80dee058bf2c7517b0e5c3b0e50daada35a6311852f417/pricegenerator-1.2.dev31-py3-none-any.whl",
+          "digests": {
+            "blake2b_256": "dec7b696212d6b61dd80dee058bf2c7517b0e5c3b0e50daada35a6311852f417",
+            "md5": "a115c4c1fa1e63518a4f660c8981e984",
+            "sha256": "902652cbb1a1138280dc48dc16b007ed930ee76a3aef938d1831b12ad9fbe10e"
+          },
+          "upload_time_iso_8601": "2021-02-23T23:27:13.895469Z",
+          "yanked": false
+        },
+        {
+          "filename": "pricegenerator-1.2.dev31.tar.gz",
+          "packagetype": "sdist",
+          "python_version": "source",
+          "size": 20987,
+          "url": "https://files.pythonhosted.org/packages/26/69/4e1d67005b13b8f180bd0b6cc8883a640490510f5df22fc8e5e5b3e3a9e5/pricegenerator-1.2.dev31.tar.gz",
+          "digests": {
+            "blake2b_256": "26694e1d67005b13b8f180bd0b6cc8883a640490510f5df22fc8e5e5b3e3a9e5",
+            "md5": "1117e90e1184811201ba4f0ae5b3e8d2",
+            "sha256": "d752c2b734961027b12d020cdf3256b60d6efbd90af3f04764be25f12342955d"
+          },
+          "upload_time_iso_8601": "2021-02-23T23:27:14.861665Z",
+          "yanked": false
+        }
+      ],
+      "1.2.dev33": [
+        {
+          "filename": "pricegenerator-1.2.dev33-py3-none-any.whl",
+          "packagetype": "bdist_wheel",
+          "python_version": "py3",
+          "size": 18134,
+          "url": "https://files.pythonhosted.org/packages/79/af/b65f44685510c1e1889533a03d590828557f8c894f7d029b740fa6d2faf9/pricegenerator-1.2.dev33-py3-none-any.whl",
+          "digests": {
+            "blake2b_256": "79afb65f44685510c1e1889533a03d590828557f8c894f7d029b740fa6d2faf9",
+            "md5": "d968b668c21b6d2878419fd0003b242b",
+            "sha256": "c83d73dee97941f2f97bcd359c0b07212ec336b0de66b269a7c4751331a85d25"
+          },
+          "upload_time_iso_8601": "2021-02-25T20:42:15.244601Z",
+          "yanked": false
+        },
+        {
+          "filename": "pricegenerator-1.2.dev33.tar.gz",
+          "packagetype": "sdist",
+          "python_version": "source",
+          "size": 21325,
+          "url": "https://files.pythonhosted.org/packages/11/60/7d02842e85c4ab80fe2df434b2409278fecc0860a2947a09a19513d33683/pricegenerator-1.2.dev33.tar.gz",
+          "digests": {
+            "blake2b_256": "11607d02842e85c4ab80fe2df434b2409278fecc0860a2947a09a19513d33683",
+            "md5": "62c35e94bceb19c801a1efa29d4e175c",
+            "sha256": "4f0602fed3a3ab0e4938d7f0bc079646b0ca1af5f9c4c8223e420d58ced0ebe8"
+          },
+          "upload_time_iso_8601": "2021-02-25T20:42:16.139663Z",
+          "yanked": false
+        }
+      ],
+      "1.2.dev34": [
+        {
+          "filename": "pricegenerator-1.2.dev34-py3-none-any.whl",
+          "packagetype": "bdist_wheel",
+          "python_version": "py3",
+          "size": 19602,
+          "url": "https://files.pythonhosted.org/packages/89/e2/e4d953ecb403be96f5673ecbcda95a818f1a772edfaee94738d0c08b5745/pricegenerator-1.2.dev34-py3-none-any.whl",
+          "digests": {
+            "blake2b_256": "89e2e4d953ecb403be96f5673ecbcda95a818f1a772edfaee94738d0c08b5745",
+            "md5": "b5d5c380d0512411e77fc5c495ea5f7c",
+            "sha256": "b2fd3bcfceff4d95fff697c5368f3f1113fcf941403b5ef55f13232b65a20931"
+          },
+          "upload_time_iso_8601": "2021-02-28T15:31:37.191321Z",
+          "yanked": false
+        },
+        {
+          "filename": "pricegenerator-1.2.dev34.tar.gz",
+          "packagetype": "sdist",
+          "python_version": "source",
+          "size": 22967,
+          "url": "https://files.pythonhosted.org/packages/aa/26/e46deca8e98b4f4ab62a16de884d5e7708deeb725463a4821d68c581a8b6/pricegenerator-1.2.dev34.tar.gz",
+          "digests": {
+            "blake2b_256": "aa26e46deca8e98b4f4ab62a16de884d5e7708deeb725463a4821d68c581a8b6",
+            "md5": "f84a8d6f921ee778a9f83c13fbb3d04a",
+            "sha256": "384d2ae347fe58268ef16477a2cb4820e2a1fe91aab0233269810172b8fd692b"
+          },
+          "upload_time_iso_8601": "2021-02-28T15:31:38.719512Z",
+          "yanked": false
+        }
+      ],
+      "1.2.dev41": [
+        {
+          "filename": "pricegenerator-1.2.dev41-py3-none-any.whl",
+          "packagetype": "bdist_wheel",
+          "python_version": "py3",
+          "size": 19646,
+          "url": "https://files.pythonhosted.org/packages/f4/bd/7725647232ae422252f2769364cea55541f4702c23e6dc44f497476241ba/pricegenerator-1.2.dev41-py3-none-any.whl",
+          "digests": {
+            "blake2b_256": "f4bd7725647232ae422252f2769364cea55541f4702c23e6dc44f497476241ba",
+            "md5": "7b7f8b1845dcbb64797b6d27b26f1a15",
+            "sha256": "d751524511f65bcdd0f07c662deff015f7abbf48a67aa4e5147203522f9b68d5"
+          },
+          "upload_time_iso_8601": "2021-03-10T21:59:26.835793Z",
+          "yanked": false
+        },
+        {
+          "filename": "pricegenerator-1.2.dev41.tar.gz",
+          "packagetype": "sdist",
+          "python_version": "source",
+          "size": 23019,
+          "url": "https://files.pythonhosted.org/packages/5c/e9/8d58e9ab37342f4bdaeebe20f51f99cfe41ff9777bf0539e4cbe8da29ea9/pricegenerator-1.2.dev41.tar.gz",
+          "digests": {
+            "blake2b_256": "5ce98d58e9ab37342f4bdaeebe20f51f99cfe41ff9777bf0539e4cbe8da29ea9",
+            "md5": "1b2a6353cb566f6ee31c1380e3c3aece",
+            "sha256": "9eeaaa126a3bd9c974746091a911c9d058366043247cf574c01fd53e698f7ed7"
+          },
+          "upload_time_iso_8601": "2021-03-10T21:59:27.571797Z",
+          "yanked": false
+        }
+      ],
+      "1.2.dev44": [
+        {
+          "filename": "pricegenerator-1.2.dev44-py3-none-any.whl",
+          "packagetype": "bdist_wheel",
+          "python_version": "py3",
+          "size": 19641,
+          "url": "https://files.pythonhosted.org/packages/5d/ae/9066e1b5e99a3852626e70ff152b329a0ae86e1384e716edb6a2b207692e/pricegenerator-1.2.dev44-py3-none-any.whl",
+          "digests": {
+            "blake2b_256": "5dae9066e1b5e99a3852626e70ff152b329a0ae86e1384e716edb6a2b207692e",
+            "md5": "9d5699363daaa264988e3f91dce04920",
+            "sha256": "4366364edd39a58f4234b4a89cfa492fe706d8992ea21f77f80e2bb647460de4"
+          },
+          "upload_time_iso_8601": "2021-03-10T22:20:44.785692Z",
+          "yanked": false
+        },
+        {
+          "filename": "pricegenerator-1.2.dev44.tar.gz",
+          "packagetype": "sdist",
+          "python_version": "source",
+          "size": 23009,
+          "url": "https://files.pythonhosted.org/packages/2a/37/ef78e31258fc58712e9de0e8b0f9a26370374ff97d16393eaea3b1b30534/pricegenerator-1.2.dev44.tar.gz",
+          "digests": {
+            "blake2b_256": "2a37ef78e31258fc58712e9de0e8b0f9a26370374ff97d16393eaea3b1b30534",
+            "md5": "7835c252f310c5bebfaa68278350b655",
+            "sha256": "d33d7f89db0a8676d71a6f9d46e63a9b7c80c6c6f65aa1a567e583ec331b7b2f"
+          },
+          "upload_time_iso_8601": "2021-03-10T22:20:46.126784Z",
+          "yanked": false
+        }
+      ],
+      "1.2.dev53": [
+        {
+          "filename": "pricegenerator-1.2.dev53-py3-none-any.whl",
+          "packagetype": "bdist_wheel",
+          "python_version": "py3",
+          "size": 20687,
+          "url": "https://files.pythonhosted.org/packages/a8/f3/6cde9f0c5d6f1ddfb3f8f3dd4a3563885a79a79aa7c6561c369303481783/pricegenerator-1.2.dev53-py3-none-any.whl",
+          "digests": {
+            "blake2b_256": "a8f36cde9f0c5d6f1ddfb3f8f3dd4a3563885a79a79aa7c6561c369303481783",
+            "md5": "7fdf766d70057415bc58f018e37d37bb",
+            "sha256": "3c566a836bb461ecb9e8a5cdea1943d560dda9931718477f73880c7437fa7f88"
+          },
+          "upload_time_iso_8601": "2021-11-23T23:40:57.035146Z",
+          "yanked": false
+        },
+        {
+          "filename": "pricegenerator-1.2.dev53.tar.gz",
+          "packagetype": "sdist",
+          "python_version": "source",
+          "size": 498275,
+          "url": "https://files.pythonhosted.org/packages/be/e9/57d36f378357fa6fed1b7965ae37484ba0bc72948ae856463cc62723f09c/pricegenerator-1.2.dev53.tar.gz",
+          "digests": {
+            "blake2b_256": "bee957d36f378357fa6fed1b7965ae37484ba0bc72948ae856463cc62723f09c",
+            "md5": "9999773ef40d3b8e328a9b30dacacbc1",
+            "sha256": "9c7751f4539d5b81e4d55faf2d602210c09dc75ce2c1e8dff677b8f39cfe9dec"
+          },
+          "upload_time_iso_8601": "2021-11-23T23:40:58.491055Z",
+          "yanked": false
+        }
+      ],
+      "1.2.dev57": [
+        {
+          "filename": "pricegenerator-1.2.dev57-py3-none-any.whl",
+          "packagetype": "bdist_wheel",
+          "python_version": "py3",
+          "size": 20688,
+          "url": "https://files.pythonhosted.org/packages/50/f0/52cbfa8f643dc1544ce470e26734f5681cfc8e66f269c3e4e1a6c85221d0/pricegenerator-1.2.dev57-py3-none-any.whl",
+          "digests": {
+            "blake2b_256": "50f052cbfa8f643dc1544ce470e26734f5681cfc8e66f269c3e4e1a6c85221d0",
+            "md5": "4a455850d75a635845230d4bffee93df",
+            "sha256": "fe7d95b9dc4b1ed45eb2c505a1ce1a8884634a0449bfc01fa05c8ffc75b4e55c"
+          },
+          "upload_time_iso_8601": "2021-12-08T22:09:24.955889Z",
+          "yanked": false
+        },
+        {
+          "filename": "pricegenerator-1.2.dev57.tar.gz",
+          "packagetype": "sdist",
+          "python_version": "source",
+          "size": 592484,
+          "url": "https://files.pythonhosted.org/packages/f6/68/2b06204f952bfbc512346fe41628aa075dc0d0f4837ac8a44ca6fd128deb/pricegenerator-1.2.dev57.tar.gz",
+          "digests": {
+            "blake2b_256": "f6682b06204f952bfbc512346fe41628aa075dc0d0f4837ac8a44ca6fd128deb",
+            "md5": "5198ecee98d868c45b3df0e6d3afc0ac",
+            "sha256": "f870d8e22eea8195c3fd5b75af1929de735308755317ff5d30703d0595b66ae3"
+          },
+          "upload_time_iso_8601": "2021-12-08T22:09:26.143460Z",
+          "yanked": false
+        }
+      ],
+      "1.2.dev72": [
+        {
+          "filename": "pricegenerator-1.2.dev72-py3-none-any.whl",
+          "packagetype": "bdist_wheel",
+          "python_version": "py3",
+          "size": 24811,
+          "url": "https://files.pythonhosted.org/packages/a9/c1/3eb69f7f7a17c7a5f0da50fe65135a75dabf57efa42b976cfb77ee17df7d/pricegenerator-1.2.dev72-py3-none-any.whl",
+          "digests": {
+            "blake2b_256": "a9c13eb69f7f7a17c7a5f0da50fe65135a75dabf57efa42b976cfb77ee17df7d",
+            "md5": "6f8b5f1d3468781578774c9dad62895f",
+            "sha256": "294725c197562819ade5bd8ceb825e4d404ebf9ff01fea4bc57df9bbe623c906"
+          },
+          "upload_time_iso_8601": "2022-07-20T16:37:32.345454Z",
+          "yanked": false
+        },
+        {
+          "filename": "pricegenerator-1.2.dev72.tar.gz",
+          "packagetype": "sdist",
+          "python_version": "source",
+          "size": 30585,
+          "url": "https://files.pythonhosted.org/packages/b9/e9/cafb675e42feb9b43059c306a0f40bd181476fab7ea5df891254b9193de4/pricegenerator-1.2.dev72.tar.gz",
+          "digests": {
+            "blake2b_256": "b9e9cafb675e42feb9b43059c306a0f40bd181476fab7ea5df891254b9193de4",
+            "md5": "e436770a74cb5ab23f7471687b893669",
+            "sha256": "0544a3344fdd36fa8a09ba4b64c563a3803c86a04833d3d46baae92b7c26ace4"
+          },
+          "upload_time_iso_8601": "2022-07-20T16:37:33.370194Z",
+          "yanked": false
+        }
+      ],
+      "1.2.dev77": [
+        {
+          "filename": "pricegenerator-1.2.dev77-py3-none-any.whl",
+          "packagetype": "bdist_wheel",
+          "python_version": "py3",
+          "size": 26479,
+          "url": "https://files.pythonhosted.org/packages/b2/f5/2d93255510a3095a1a2fb0ba60f011d939df54fcea358aea126460ad4992/pricegenerator-1.2.dev77-py3-none-any.whl",
+          "digests": {
+            "blake2b_256": "b2f52d93255510a3095a1a2fb0ba60f011d939df54fcea358aea126460ad4992",
+            "md5": "da573acce2c1b839ec6c21d8ebd37831",
+            "sha256": "b248687219e3f852b26405fc4eb9a64b3fe93ac347a9ae5adc67850ea53ffd60"
+          },
+          "upload_time_iso_8601": "2023-01-02T14:12:46.549108Z",
+          "yanked": false
+        },
+        {
+          "filename": "pricegenerator-1.2.dev77.tar.gz",
+          "packagetype": "sdist",
+          "python_version": "source",
+          "size": 33748,
+          "url": "https://files.pythonhosted.org/packages/05/13/5ed242923010eae17a4a397648273f2ad6ed3fd7f40ed4e3c156627bc359/pricegenerator-1.2.dev77.tar.gz",
+          "digests": {
+            "blake2b_256": "05135ed242923010eae17a4a397648273f2ad6ed3fd7f40ed4e3c156627bc359",
+            "md5": "5b3b35d3bda0839a2b35c351ffcd2ca9",
+            "sha256": "f6fcac5d9d82e2964732ced17b5e6449143e76a78f79dce4002a373d15239df8"
+          },
+          "upload_time_iso_8601": "2023-01-02T14:12:47.943034Z",
+          "yanked": false
+        }
+      ],
+      "1.3.81": [
+        {
+          "filename": "pricegenerator-1.3.81-py3-none-any.whl",
+          "packagetype": "bdist_wheel",
+          "python_version": "py3",
+          "size": 28632,
+          "url": "https://files.pythonhosted.org/packages/48/7f/49a06a436d8597f089e9a2ba1ae6d6917d8c18aa07ed37aa2ca146703073/pricegenerator-1.3.81-py3-none-any.whl",
+          "digests": {
+            "blake2b_256": "487f49a06a436d8597f089e9a2ba1ae6d6917d8c18aa07ed37aa2ca146703073",
+            "md5": "71ad3e96ec5f71a97eedc3fa75e0e3fc",
+            "sha256": "c89a3c3ad37ff9baf116638b8e84486602ea6cd7c05c9c9563eef5e78fdeddee"
+          },
+          "upload_time_iso_8601": "2023-01-05T19:16:19.174952Z",
+          "yanked": false
+        },
+        {
+          "filename": "pricegenerator-1.3.81.tar.gz",
+          "packagetype": "sdist",
+          "python_version": "source",
+          "size": 36127,
+          "url": "https://files.pythonhosted.org/packages/f3/05/84c6a8a359a5ae744d7ef19677fcdf0391a1dba8077b9978aa78ccc64d3d/pricegenerator-1.3.81.tar.gz",
+          "digests": {
+            "blake2b_256": "f30584c6a8a359a5ae744d7ef19677fcdf0391a1dba8077b9978aa78ccc64d3d",
+            "md5": "bf0b82836e6606a8dab55642cdcd8355",
+            "sha256": "622fbfafa492b4194856c3237829ae87549cfea8848a5c033cf0c4d077218eee"
+          },
+          "upload_time_iso_8601": "2023-01-05T19:16:20.562759Z",
+          "yanked": false
+        }
+      ],
+      "1.3.dev78": [
+        {
+          "filename": "pricegenerator-1.3.dev78-py3-none-any.whl",
+          "packagetype": "bdist_wheel",
+          "python_version": "py3",
+          "size": 28367,
+          "url": "https://files.pythonhosted.org/packages/30/b8/1e01754075879fbc04d440f0cf7df3ccfd61a087b71ca9f75a5a8fb72a4f/pricegenerator-1.3.dev78-py3-none-any.whl",
+          "digests": {
+            "blake2b_256": "30b81e01754075879fbc04d440f0cf7df3ccfd61a087b71ca9f75a5a8fb72a4f",
+            "md5": "f1d990f654c8ee4444da0c53a3ece7f1",
+            "sha256": "f84bdef68f15c61b80487d0e65a352e3b94abaa81f5b23023be489f81f4c5802"
+          },
+          "upload_time_iso_8601": "2023-01-05T15:04:46.102145Z",
+          "yanked": false
+        },
+        {
+          "filename": "pricegenerator-1.3.dev78.tar.gz",
+          "packagetype": "sdist",
+          "python_version": "source",
+          "size": 35667,
+          "url": "https://files.pythonhosted.org/packages/d1/90/1291f3a9bfd3411f8784288a2748b336f9379504c9e54ab65de0fe1ee233/pricegenerator-1.3.dev78.tar.gz",
+          "digests": {
+            "blake2b_256": "d1901291f3a9bfd3411f8784288a2748b336f9379504c9e54ab65de0fe1ee233",
+            "md5": "4e5efabda1a4362e882cf27f1a53edc7",
+            "sha256": "ac954bacf9170970cdbcf4b34da4fe7c61ee685ccf7f695ee1cd0a0d214b6f75"
+          },
+          "upload_time_iso_8601": "2023-01-05T15:04:47.388500Z",
+          "yanked": false
+        }
+      ],
+      "1.3.dev79": [
+        {
+          "filename": "pricegenerator-1.3.dev79-py3-none-any.whl",
+          "packagetype": "bdist_wheel",
+          "python_version": "py3",
+          "size": 28674,
+          "url": "https://files.pythonhosted.org/packages/46/74/6deb1a929b192698d31f501ef1b947d9d25796149737aec380de1f6e4493/pricegenerator-1.3.dev79-py3-none-any.whl",
+          "digests": {
+            "blake2b_256": "46746deb1a929b192698d31f501ef1b947d9d25796149737aec380de1f6e4493",
+            "md5": "724f2e6257b9e7c0d9648cc56e67ceeb",
+            "sha256": "6d4206373764091b93b9dd7c884d59d9f686ae4d186fdb2e41214a1eebeb17f3"
+          },
+          "upload_time_iso_8601": "2023-01-05T18:16:30.881265Z",
+          "yanked": false
+        },
+        {
+          "filename": "pricegenerator-1.3.dev79.tar.gz",
+          "packagetype": "sdist",
+          "python_version": "source",
+          "size": 36138,
+          "url": "https://files.pythonhosted.org/packages/04/7c/a7d2ccc835efab3f255e61486e4e759fc50c84b765bf23d470a638ebcab3/pricegenerator-1.3.dev79.tar.gz",
+          "digests": {
+            "blake2b_256": "047ca7d2ccc835efab3f255e61486e4e759fc50c84b765bf23d470a638ebcab3",
+            "md5": "f3ae0e871ef49914a85d504d52f51aa8",
+            "sha256": "4de6db6a61d686d1380327ae0408923a09947f12a23df251997dfe7410481692"
+          },
+          "upload_time_iso_8601": "2023-01-05T18:16:32.163803Z",
+          "yanked": false
+        }
+      ],
+      "1.4.93": [
+        {
+          "filename": "pricegenerator-1.4.93-py3-none-any.whl",
+          "packagetype": "bdist_wheel",
+          "python_version": "py3",
+          "size": 29106,
+          "url": "https://files.pythonhosted.org/packages/25/64/5b8a29d06822639f6d6985fd88a234cc205bb9ecd409c4a9e23f1d159ec2/pricegenerator-1.4.93-py3-none-any.whl",
+          "digests": {
+            "blake2b_256": "25645b8a29d06822639f6d6985fd88a234cc205bb9ecd409c4a9e23f1d159ec2",
+            "md5": "e3ef734a343fa17f1b1bc10558e40695",
+            "sha256": "44c1e43db96265d01d184d8260fd873c21e6bd9b16e89379a921f1e6b74e686b"
+          },
+          "upload_time_iso_8601": "2023-11-25T14:19:36.158580Z",
+          "yanked": false
+        },
+        {
+          "filename": "pricegenerator-1.4.93.tar.gz",
+          "packagetype": "sdist",
+          "python_version": "source",
+          "size": 36419,
+          "url": "https://files.pythonhosted.org/packages/1a/48/d8cf7002e1968c983000fed5b561f81dc79c910ab6108ad27764378badd8/pricegenerator-1.4.93.tar.gz",
+          "digests": {
+            "blake2b_256": "1a48d8cf7002e1968c983000fed5b561f81dc79c910ab6108ad27764378badd8",
+            "md5": "050a206b02729981578f0fcabfdd619c",
+            "sha256": "1ecb572b0d387bda44f33394bdf4ceb99244c7b6c5a91888c4fdba9b81c5e95c"
+          },
+          "upload_time_iso_8601": "2023-11-25T14:19:38.103675Z",
+          "yanked": false
+        }
+      ],
+      "1.4.dev90": [
+        {
+          "filename": "pricegenerator-1.4.dev90-py3-none-any.whl",
+          "packagetype": "bdist_wheel",
+          "python_version": "py3",
+          "size": 29123,
+          "url": "https://files.pythonhosted.org/packages/8c/e2/03a00bb1f4de6a02d3b0174788a78ed345df6a41f9eb9a8c28907282a3e7/pricegenerator-1.4.dev90-py3-none-any.whl",
+          "digests": {
+            "blake2b_256": "8ce203a00bb1f4de6a02d3b0174788a78ed345df6a41f9eb9a8c28907282a3e7",
+            "md5": "c026f686446a6de1cb632f753d2e5837",
+            "sha256": "1bb3e560a19e6251820e646b8c687683dfbffd23b77dae3a84b10b46fa96740d"
+          },
+          "upload_time_iso_8601": "2023-10-06T12:28:34.277311Z",
+          "yanked": false
+        },
+        {
+          "filename": "pricegenerator-1.4.dev90.tar.gz",
+          "packagetype": "sdist",
+          "python_version": "source",
+          "size": 36371,
+          "url": "https://files.pythonhosted.org/packages/b9/d6/479157f9841a06b6b918b2f2cdad04559168986e0d3088906c4637e52021/pricegenerator-1.4.dev90.tar.gz",
+          "digests": {
+            "blake2b_256": "b9d6479157f9841a06b6b918b2f2cdad04559168986e0d3088906c4637e52021",
+            "md5": "6f9e96acd3595ed687bfa74df2a3d6f2",
+            "sha256": "3fc8dc627e79722948510f8ee22974bf29828c82b842bae06d7758d0646d2954"
+          },
+          "upload_time_iso_8601": "2023-10-06T12:28:35.357048Z",
+          "yanked": false
+        }
+      ],
+      "1.4.dev91": [
+        {
+          "filename": "pricegenerator-1.4.dev91-py3-none-any.whl",
+          "packagetype": "bdist_wheel",
+          "python_version": "py3",
+          "size": 29136,
+          "url": "https://files.pythonhosted.org/packages/29/0d/6e3e0ac96027c88a6fe286f10534f309a668facc0ff2b6bc90eb9385dcde/pricegenerator-1.4.dev91-py3-none-any.whl",
+          "digests": {
+            "blake2b_256": "290d6e3e0ac96027c88a6fe286f10534f309a668facc0ff2b6bc90eb9385dcde",
+            "md5": "259a37e4ab59917808a4299c5ca70d5b",
+            "sha256": "88974e05ac95734f044c74a6404f6e78c5dcbd270cb1d2b2b65f4e4548b7b39c"
+          },
+          "upload_time_iso_8601": "2023-10-06T12:44:29.071964Z",
+          "yanked": false
+        },
+        {
+          "filename": "pricegenerator-1.4.dev91.tar.gz",
+          "packagetype": "sdist",
+          "python_version": "source",
+          "size": 36394,
+          "url": "https://files.pythonhosted.org/packages/29/be/31b4eb030776f4bec9ebbe40a44a1afb2f8426b8cecba12884feae6092ca/pricegenerator-1.4.dev91.tar.gz",
+          "digests": {
+            "blake2b_256": "29be31b4eb030776f4bec9ebbe40a44a1afb2f8426b8cecba12884feae6092ca",
+            "md5": "d960f4c543f215eed3560422ab7bc82f",
+            "sha256": "099f5b34de6687a7449a63bd86e6937d075beeac98f0182af55f5e0628b2c9bb"
+          },
+          "upload_time_iso_8601": "2023-10-06T12:44:30.682313Z",
+          "yanked": false
+        }
+      ]
+    }
+  },
+  "tags": [
+    {
+      "name": "1.0.19",
+      "sha": "5c88b78b0c096db2477c4500c3a436f560528ec4"
+    },
+    {
+      "name": "1.1.30",
+      "sha": "08a43f9f3d4b4abc799dafad2f82ca3398a21fbf"
+    },
+    {
+      "name": "1.2.46",
+      "sha": "ef8c3a919ab439144408f6bdc4d07721e91a0d11"
+    },
+    {
+      "name": "1.2.58",
+      "sha": "8fb0ce06b2c97c25bdb1874cb1d0f3c26569ad3c"
+    },
+    {
+      "name": "1.3.81",
+      "sha": "728398e06ceefcf1021544788b9900e0bc9137a4"
+    },
+    {
+      "name": "v1.4.93",
+      "sha": "0ace3635910d08cf0b1b8f07f95be20f9a8e0636"
+    }
+  ],
+  "captured_at_utc": "2026-10-15T21:58:41.618669+00:00",
+  "source_verification": {
+    "baseline_commit": "a97e84829ebee121c411a273845cba871ce07890",
+    "release_tag": "v1.4.93",
+    "release_commit": "0ace3635910d08cf0b1b8f07f95be20f9a8e0636",
+    "production_diff": "empty",
+    "historical_tests_diff": "empty",
+    "wheel_files_byte_identical": {
+      "pricegenerator/__main__.py": "b9dd1100461331646c4661fa1785cecc50e434a790a7fb3b7cc2156e29b3ec82",
+      "pricegenerator/PriceGenerator.py": "ed2bcc1ca80fa9f7663299c891c9935e61983b03980619aaf73f8b389dc91316",
+      "pricegenerator/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "pricegenerator/google_template_example.j2": "c14369ed8fbd70fa435b10465dde15ea6e41597f4e0ddd002191f5d7130c51ce",
+      "pricegenerator/UniLogger.py": "a3313c2a96eab5b8622f883ec5a298164fa48c188f32f856aa838f38aa1176d1"
+    }
+  },
+  "baseline_dependency": {
+    "distribution": "pandas-ta",
+    "version": "0.3.14b0",
+    "origin": "https://github.com/ovuncdinc/Pandas-ta",
+    "commit": "2a24fdc1b69110332db39eda9723a628f75eaf7a",
+    "license": "MIT",
+    "pypi_available_versions_at_capture": [
+      "0.4.67b0",
+      "0.4.71b0"
+    ]
+  }
+}
