@@ -30,7 +30,10 @@ Sample example:
 
 import os
 import sys
-from typing import Optional, Union
+import webbrowser
+from importlib import import_module
+from pathlib import Path
+from typing import TYPE_CHECKING, Optional, Union
 from datetime import datetime, timedelta
 
 import numpy as np
@@ -41,17 +44,30 @@ from math import pi
 from statistics import mode, pstdev, StatisticsError
 from itertools import groupby
 import pandas as pd
-import pandas_ta as ta
 import random
-from bokeh.plotting import figure, save, output_file, ColumnDataSource
-from bokeh.models import Legend, HoverTool, Range1d, NumeralTickFormatter
-from bokeh.layouts import gridplot
-from bokeh.io import output_notebook, show
-from bokeh.resources import INLINE
-import jinja2
 
 import pricegenerator.UniLogger as uLog
 import traceback as tb
+
+
+if TYPE_CHECKING:
+    from bokeh.models import LayoutDOM
+
+
+def _LoadOptionalDependency(module_name: str, extra: str, feature: str):
+    """Load a requested integration without concealing broken installations."""
+
+    try:
+        return import_module(module_name)
+
+    except ModuleNotFoundError as error:
+        if error.name != module_name:
+            raise
+
+        raise ImportError(
+            f"{feature} requires optional dependencies. "
+            f'Install them with: python -m pip install "pricegenerator[{extra}]"'
+        ) from error
 
 
 # --- Common technical parameters:
@@ -571,6 +587,9 @@ class PriceGenerator:
 
         :return: list with text in Markdown format with statistics.
         """
+
+        ta = _LoadOptionalDependency("pandas_ta_classic", "indicators", "GetStatistics")
+
         uLogger.debug("Calculating column with deltas between high and low values...")
         self.prices["delta"] = self.prices.high.values - self.prices.low.values
 
@@ -905,7 +924,7 @@ class PriceGenerator:
             darkTheme: bool = False, markers: Optional[pd.DataFrame] = None, lines: Optional[list[pd.DataFrame]] = None,
             title: Optional[str] = None, width: Optional[int] = 1800, height: Optional[int] = 940,
             showControlsOnChart: bool = True, showStatOnChart: bool = True, inline: bool = False,
-    ) -> Optional[gridplot]:
+    ) -> Optional["LayoutDOM"]:
         """
         Rendering prices from Pandas DataFrame as OHLCV Bokeh chart of candlesticks and save it to HTML-file.
         Pandas DataFrame in `prices` variable must contain "datetime", "open", "high", "low", "close" and "volume" columns.
@@ -934,6 +953,18 @@ class PriceGenerator:
         :param inline: if `True`, then output chart in Jupyter Notebook cell. `False` by default.
         :return: bokeh.layouts.gridplot with all layouts objects or None.
         """
+
+        _LoadOptionalDependency("bokeh", "render", "RenderBokeh")
+        from bokeh.plotting import figure, save, output_file, ColumnDataSource
+        from bokeh.models import Legend, HoverTool, Range1d, NumeralTickFormatter
+        from bokeh.layouts import gridplot
+        from bokeh.io import output_notebook, show
+        from bokeh.resources import INLINE
+
+        if inline:
+            _LoadOptionalDependency("IPython", "notebook", "RenderBokeh(inline=True)")
+            _LoadOptionalDependency("ipykernel", "notebook", "RenderBokeh(inline=True)")
+
         if self.prices is None or self.prices.empty:
             raise Exception("Empty price data! Generate or load prices before show as Bokeh chart!")
 
@@ -1418,15 +1449,15 @@ class PriceGenerator:
                     else:
                         uLogger.info("Pandas DataFrame saved as HTML-file [{}]".format(os.path.abspath(fileName)))
 
+                        if viewInBrowser:
+                            webbrowser.open(Path(fileName).resolve().as_uri())
+
                     if showStatOnChart:
                         mdFile = "{}.md".format(fileName)
                         with open(mdFile, "w", encoding="UTF-8") as fH:
                             fH.write("\n".join(infoBlock))
 
                             uLogger.info("Statistics saved to [{}]".format(os.path.abspath(mdFile)))
-
-                    if viewInBrowser:
-                        os.system(os.path.abspath(fileName))  # view forecast chart in default browser immediately
 
             return unionChart
 
@@ -1440,6 +1471,9 @@ class PriceGenerator:
         :param viewInBrowser: If `True`, then immediately opens html in browser after rendering.
         :param title: specific chart title. If `None`, then used auto-generated title. `None` by default.
         """
+
+        jinja2 = _LoadOptionalDependency("jinja2", "render", "RenderGoogle")
+
         if self.prices is None or self.prices.empty:
             raise Exception("Empty price data! Generate or load prices before show as Google Candlestick chart!")
 
@@ -1476,7 +1510,7 @@ class PriceGenerator:
                 fH.write("\n".join(infoBlock))
 
             if viewInBrowser:
-                os.system(os.path.abspath(fileName))  # view forecast chart in default browser immediately
+                webbrowser.open(Path(fileName).resolve().as_uri())
 
             uLogger.info("Pandas DataFrame rendered as HTML-file [{}]".format(os.path.abspath(fileName)))
 

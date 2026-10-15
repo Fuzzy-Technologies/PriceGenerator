@@ -32,7 +32,6 @@ import logging.handlers
 UniLogger = logging.getLogger("PriceGenerator-UniLogger")
 formatString = "%(filename)-20sL:%(lineno)-5d%(levelname)-8s[%(asctime)s] %(message)s"
 formatter = logging.Formatter(formatString)
-sys.stderr = sys.stdout
 
 
 def SetLevel(vLevel='ERROR'):
@@ -108,7 +107,7 @@ def DisableLogger(handler, parentHandler=UniLogger):
 
 SetLevel('DEBUG')  # set up DEBUG verbosity level by default for UniLogger
 
-streamHandler = logging.StreamHandler()  # initialize STDOUT UniLogger
+streamHandler = logging.StreamHandler(sys.stdout)  # keep CLI output on stdout without redirecting host stderr
 streamHandler.setFormatter(formatter)  # set formatter for STDOUT UniLogger
 streamHandler.level = logging.INFO  # set up INFO verbosity level by default for STDOUT UniLogger
 UniLogger.addHandler(streamHandler)  # adding STDOUT UniLogger handler to Parent UniLogger
