@@ -1,0 +1,13 @@
+{
+  "name": "pricegenerator-chart-runtime",
+  "private": true,
+  "version": "1.0.0",
+  "scripts": {
+    "build": "node build.mjs"
+  },
+  "devDependencies": {
+    "@napi-rs/canvas": "0.1.100",
+    "echarts": "6.1.0",
+    "esbuild": "0.25.12"
+  }
+}
