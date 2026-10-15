@@ -93,6 +93,22 @@ test("time gaps and candle-volume pixel positions survive zoom", () => {
     chart.dispose();
 });
 
+test("uneven millisecond and daily gaps cannot shrink the volume panel independently", () => {
+    const spec = Spec();
+    spec.candles[0].datetime = "2026-10-15T00:00:00.000Z";
+    spec.candles[1].datetime = "2026-10-15T00:00:00.001Z";
+    spec.candles[2].datetime = "2026-10-16T00:00:00.000Z";
+    const chart = NewChart(spec);
+    for (const candle of spec.candles) {
+        const value = Date.parse(candle.datetime);
+        assert.equal(chart.convertToPixel({xAxisIndex: 0}, value), chart.convertToPixel({xAxisIndex: 1}, value));
+    }
+    const grids = chart.getModel();
+    assert.equal(grids.getComponent("grid", 0).coordinateSystem.getRect().width,
+        grids.getComponent("grid", 1).coordinateSystem.getRect().width);
+    chart.dispose();
+});
+
 test("a 100k snapshot retains every row and initially renders its latest 1000", () => {
     const spec = Spec(100000);
     spec.series = [];

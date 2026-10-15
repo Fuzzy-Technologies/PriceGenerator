@@ -64,9 +64,9 @@
                 textStyle: {fontSize: 19, fontWeight: 600, color: theme.text,
                     width: Math.max(120, width - (width >= 700 ? 310 : 110)), overflow: "truncate"}},
             grid: [{left: layout.left, right: layout.right, top: layout.top,
-                height: layout.priceHeight, backgroundColor: theme.panel, show: true, borderWidth: 0},
+                height: layout.priceHeight, backgroundColor: theme.panel, show: true, borderWidth: 0, outerBoundsMode: "none"},
             {left: layout.left, right: layout.right, top: layout.volumeTop,
-                height: layout.volumeHeight, backgroundColor: theme.panel, show: true, borderWidth: 0}],
+                height: layout.volumeHeight, backgroundColor: theme.panel, show: true, borderWidth: 0, outerBoundsMode: "none"}],
             graphic: BrandingGraphics(branding, layout),
             legend: {left: layout.left, right: layout.right + 70},
             dataZoom: [{id: "time-slider", left: layout.left, right: layout.right}],
@@ -194,6 +194,7 @@
             min: timestamps[0] - interval / 2, max: timestamps[timestamps.length - 1] + interval / 2,
             axisLine: {lineStyle: {color: theme.grid}}, axisTick: {show: false},
             axisLabel: {show: gridIndex === 1, hideOverlap: true, color: theme.muted, lineHeight: 15, fontSize: 10,
+                alignMinLabel: "left", alignMaxLabel: "right",
                 formatter: (value) => {
                     const [date, time] = new Date(value).toISOString().split("T");
                     return date + "\n" + time.slice(0, interval < 1000 ? 12 : 8) + " UTC";
