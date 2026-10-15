@@ -1,0 +1,87 @@
+name: Complete verified engineering baseline milestone
+
+on:
+  pull_request:
+    types: [opened]
+
+permissions:
+  contents: write
+  issues: write
+  pull-requests: write
+
+jobs:
+  complete:
+    if: github.repository == 'Fuzzy-Technologies/PriceGenerator' && github.actor == 'Tim55667757' && github.head_ref == 'ops/complete-engineering-baseline' && github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-24.04
+    timeout-minutes: 3
+    steps:
+      - name: Verify completed work, close only milestone 5, and remove this temporary PR
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          PR_HEAD: ${{ github.event.pull_request.head.sha }}
+        shell: bash
+        run: |
+          python <<'PY'
+          """Close the completed baseline milestone through the official API."""
+
+          import json
+          import os
+          import subprocess
+
+          repository = os.environ["GH_REPO"]
+          prefix = f"repos/{repository}"
+          branch = "ops/complete-engineering-baseline"
+
+
+          def Api(method, path, payload=None):
+              """Call the official API without printing authentication material."""
+
+              command = ["gh", "api", "--method", method, "-H", "Accept: application/vnd.github+json",
+                         "-H", "X-GitHub-Api-Version: 2026-03-10", f"{prefix}/{path}"]
+              data = None
+
+              if payload is not None:
+                  command.extend(["--input", "-"])
+                  data = json.dumps(payload)
+
+              result = subprocess.run(command, input=data, text=True, capture_output=True, check=True)
+
+              return json.loads(result.stdout) if result.stdout.strip() else None
+
+
+          def Main():
+              """Verify all milestone children and merged evidence before completion."""
+
+              for number in (29, 30, 44, 45, 46, 47, 48):
+                  issue = Api("GET", f"issues/{number}")
+                  assert issue["state"] == "closed" and issue["state_reason"] == "completed", number
+                  assert issue["milestone"]["number"] == 5, number
+                  assert issue["type"]["name"] == ("Feature" if number in (29, 30) else "Task"), number
+
+              for number in (98, 99):
+                  pull = Api("GET", f"pulls/{number}")
+                  assert pull["merged"] and pull["base"]["ref"] == "develop", number
+
+              assert not Api("GET", "issues?milestone=5&state=open&per_page=100"), "Milestone has open work"
+              milestone = Api("GET", "milestones/5")
+              assert milestone["title"] == "Engineering Baseline", "Unexpected milestone"
+
+              if milestone["state"] != "closed":
+                  Api("PATCH", "milestones/5", {"state": "closed"})
+
+              verified = Api("GET", "milestones/5")
+              assert verified["state"] == "closed", "Milestone completion did not persist"
+              assert verified["due_on"] == milestone["due_on"], "Deadline changed unexpectedly"
+              print("PASS: baseline children, merged PRs, empty open-work list and native milestone closure verified")
+              Api("PATCH", f"pulls/{os.environ['PR_NUMBER']}", {"state": "closed"})
+              head = Api("GET", f"git/ref/heads/{branch}")
+              assert head["object"]["sha"] == os.environ["PR_HEAD"], "Temporary branch moved; refusing cleanup"
+              Api("DELETE", f"git/refs/heads/{branch}")
+              print("PASS: temporary PR closed unmerged and branch removed")
+
+
+          if __name__ == "__main__":
+              Main()
+          PY
