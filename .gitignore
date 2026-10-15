@@ -1,0 +1,27 @@
+# Local environments and Python caches.
+.venv/
+.venv-*/
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.coverage
+.coverage.*
+htmlcov/
+coverage.xml
+
+# Generated packages and frontend dependencies.
+build/
+dist/
+*.egg-info/
+node_modules/
+
+# Historical tests write these disposable outputs into their working directory.
+/test*.csv
+/test_render*.html
+/test_render*.html.md
+
+# CI reports are uploaded as artifacts; curated baseline evidence remains tracked.
+/ci-reports/
