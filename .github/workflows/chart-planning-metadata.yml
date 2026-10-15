@@ -1,0 +1,131 @@
+name: Apply approved chart planning metadata
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+permissions:
+  contents: write
+  issues: write
+  pull-requests: write
+concurrency:
+  group: pricegenerator-chart-planning
+  cancel-in-progress: false
+jobs:
+  normalize:
+    if: github.repository == 'Fuzzy-Technologies/PriceGenerator' && github.actor == 'Tim55667757' && github.head_ref == 'ops/chart-planning-metadata' && github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    steps:
+      - name: Canary, apply and verify native metadata
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        shell: bash
+        run: |
+          python <<'PY'
+          """Normalize only the newly approved PriceGenerator work items."""
+          import json
+          import os
+          import subprocess
+          import time
+          
+          REPOSITORY = os.environ["GH_REPO"]
+          PR_NUMBER = os.environ["PR_NUMBER"]
+          BRANCH = "ops/chart-planning-metadata"
+          SPECS = {
+              90: ("Feature", "High", "High", 9, None),
+              91: ("Task", "High", "Medium", 9, 90),
+              92: ("Task", "High", "High", 9, 90),
+              93: ("Task", "High", "High", 9, 90),
+              94: ("Task", "High", "High", 9, 90),
+              95: ("Task", "Urgent", "Medium", 11, 41),
+          }
+          
+          
+          def Api(method, path, payload=None):
+              """Use the official authenticated API without exposing credentials."""
+          
+              command = ["gh", "api", "--method", method, "-H", "Accept: application/vnd.github+json",
+                         "-H", "X-GitHub-Api-Version: 2026-03-10", path]
+              data = None
+          
+              if payload is not None:
+                  command.extend(["--input", "-"])
+                  data = json.dumps(payload)
+          
+              result = subprocess.run(command, input=data, text=True, capture_output=True, check=True)
+          
+              if method != "GET":
+                  time.sleep(0.65)
+          
+              return json.loads(result.stdout) if result.stdout.strip() else None
+          
+          
+          def Verify(number):
+              """Read back each native field and hierarchy invariant."""
+          
+              kind, priority, effort, milestone, parent = SPECS[number]
+              issue = Api("GET", f"repos/{REPOSITORY}/issues/{number}")
+              fields = {item["issue_field_name"]: item.get("single_select_option", {}).get("name")
+                        for item in Api("GET", f"repos/{REPOSITORY}/issues/{number}/issue-field-values")}
+              assert issue["type"]["name"] == kind, (number, "type")
+              assert issue["milestone"]["number"] == milestone, (number, "milestone")
+              assert "Tim55667757" in [item["login"] for item in issue["assignees"]], (number, "assignee")
+              assert fields["Priority"] == priority and fields["Effort"] == effort, (number, fields)
+          
+              if parent is not None:
+                  actual = Api("GET", f"repos/{REPOSITORY}/issues/{number}/parent")
+                  assert actual["number"] == parent, (number, "parent")
+          
+              print(f"Verified #{number}: {kind}, {priority}/{effort}, milestone {milestone}, parent {parent}")
+          
+          
+          def Normalize(number, field_ids):
+              """Set explicit native metadata for one work item."""
+          
+              kind, priority, effort, milestone, parent = SPECS[number]
+              issue = Api("PATCH", f"repos/{REPOSITORY}/issues/{number}", {
+                  "type": kind, "milestone": milestone, "assignees": ["Tim55667757"], "labels": [kind]})
+              Api("POST", f"repos/{REPOSITORY}/issues/{number}/issue-field-values", {
+                  "issue_field_values": [
+                      {"field_id": field_ids["Priority"], "value": priority},
+                      {"field_id": field_ids["Effort"], "value": effort}]})
+          
+              if parent is not None and issue.get("parent_issue_url") != f"https://api.github.com/repos/{REPOSITORY}/issues/{parent}":
+                  assert not issue.get("parent_issue_url"), (number, "unexpected existing parent")
+                  Api("POST", f"repos/{REPOSITORY}/issues/{parent}/sub_issues", {"sub_issue_id": issue["id"]})
+          
+              Verify(number)
+          
+          
+          def Main():
+              """Verify a canary before completing the narrow metadata batch."""
+          
+              existing = Api("GET", f"repos/{REPOSITORY}/issues/44/issue-field-values")
+              field_ids = {item["issue_field_name"]: item["issue_field_id"] for item in existing}
+              assert field_ids["Priority"] == 22639629 and field_ids["Effort"] == 22639632
+              Normalize(90, field_ids)
+              print("CANARY PASS")
+          
+              for number in list(SPECS)[1:]:
+                  Normalize(number, field_ids)
+          
+              milestone = Api("GET", f"repos/{REPOSITORY}/milestones/9")
+              description = milestone["description"]
+              addition = "\n\n## Modern chart rendering\n\nFeature #90 replaces Google Charts/Bokeh with verified MIT/Apache-2.0 static and interactive rendering, capability parity, measured performance, offline assets and the official Fuzzy Technologies neon theme and logo watermarks. Tasks #91–#94 define architecture, static output, interactive output and migration/performance evidence."
+          
+              if "Feature #90 replaces" not in description:
+                  Api("PATCH", f"repos/{REPOSITORY}/milestones/9", {"description": description + addition})
+          
+              for number in SPECS:
+                  Verify(number)
+          
+              assert "Feature #90 replaces" in Api("GET", f"repos/{REPOSITORY}/milestones/9")["description"]
+              print("PLANNING PASS: six issues and milestone verified")
+              Api("PATCH", f"repos/{REPOSITORY}/pulls/{PR_NUMBER}", {"state": "closed"})
+              Api("DELETE", f"repos/{REPOSITORY}/git/refs/heads/{BRANCH}")
+          
+          
+          if __name__ == "__main__":
+              Main()
+          
+          PY
