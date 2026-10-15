@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "python": "3.11.17",
+  "platform": "Linux x86_64",
+  "source": {
+    "commit": "a97e84829ebee121c411a273845cba871ce07890",
+    "version": "1.4.dev0",
+    "dependency_check": "pass",
+    "tests_report": "source-test-results.json"
+  },
+  "published_wheel": {
+    "version": "1.4.93",
+    "sha256": "44c1e43db96265d01d184d8260fd873c21e6bd9b16e89379a921f1e6b74e686b",
+    "dependency_check": "pass",
+    "tests_report": "published-test-results.json"
+  },
+  "unconstrained_resolver": {
+    "command": "uv pip install --python <empty-python-3.11.17-environment>/bin/python --dry-run pricegenerator==1.4.93",
+    "exit_code": 1,
+    "error": "No solution found: available pandas-ta releases require Python >=3.12; current Python is 3.11.17.",
+    "installed": false
+  },
+  "untested": [
+    "Python 3.9",
+    "Python 3.10",
+    "Python 3.12+",
+    "Windows",
+    "macOS",
+    "Latest dependency combinations"
+  ]
+}

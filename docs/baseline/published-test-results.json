@@ -1,0 +1,245 @@
+{
+  "schema_version": 1,
+  "runtime": {
+    "python": "3.11.17",
+    "platform": "Linux-6.18.44-x86_64-with-glibc2.39",
+    "module_path": "/workspace/scratch/5c8c2915c4a6/pg-published-venv/lib/python3.11/site-packages/pricegenerator/PriceGenerator.py",
+    "packages": {
+      "pricegenerator": "1.4.93",
+      "numpy": "1.24.4",
+      "pandas": "1.5.3",
+      "pandas-ta": "0.3.14b0",
+      "bokeh": "3.0.3",
+      "pytest": "8.3.5"
+    }
+  },
+  "legacy_rng_seed": 0,
+  "pytest_exit_code": 0,
+  "command": [
+    "/workspace/scratch/5c8c2915c4a6/pg-published-venv/bin/python",
+    "-I",
+    "-c",
+    "\"\"\"Seed the unmodified historical tests before their normal collection.\"\"\"\nimport random\nimport sys\nimport pytest\n\nrandom.seed(0)\nraise SystemExit(pytest.main(sys.argv[1:]))\n",
+    "-q",
+    "tests/test_PriceGenerator.py",
+    "tests/test_legacy_baseline.py",
+    "-rxX",
+    "--junitxml=baseline-results.xml"
+  ],
+  "stdout": "......................................xx                                 [100%]\n=============================== warnings summary ===============================\n../../workspace/scratch/5c8c2915c4a6/pg-published-venv/lib/python3.11/site-packages/pandas_ta/__init__.py:7\n  /workspace/scratch/5c8c2915c4a6/pg-published-venv/lib/python3.11/site-packages/pandas_ta/__init__.py:7: DeprecationWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html\n    from pkg_resources import get_distribution, DistributionNotFound\n\n../../workspace/scratch/5c8c2915c4a6/pg-published-venv/lib/python3.11/site-packages/pkg_resources/__init__.py:3147\n  /workspace/scratch/5c8c2915c4a6/pg-published-venv/lib/python3.11/site-packages/pkg_resources/__init__.py:3147: DeprecationWarning: Deprecated call to `pkg_resources.declare_namespace('mpl_toolkits')`.\n  Implementing implicit namespace packages (as specified in PEP 420) is preferred to `pkg_resources.declare_namespace`. See https://setuptools.pypa.io/en/latest/references/keywords.html#keyword-namespace-packages\n    declare_namespace(pkg)\n\n../../workspace/scratch/5c8c2915c4a6/pg-published-venv/lib/python3.11/site-packages/bokeh/core/property/primitive.py:37\n  /workspace/scratch/5c8c2915c4a6/pg-published-venv/lib/python3.11/site-packages/bokeh/core/property/primitive.py:37: DeprecationWarning: `np.bool8` is a deprecated alias for `np.bool_`.  (Deprecated NumPy 1.24)\n    bokeh_bool_types = (bool, np.bool8)\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n- generated xml file: /tmp/pricegenerator-baseline-g09u1tah/baseline-results.xml -\n=========================== short test summary info ============================\nXFAIL tests/test_legacy_baseline.py::test_KnownNegativeLowDefect - https://github.com/Fuzzy-Technologies/PriceGenerator/issues/64 (characterized in #46): legacy wick sampling can produce a negative low\nXFAIL tests/test_legacy_baseline.py::test_KnownTrendBodyBoundDefect - https://github.com/Fuzzy-Technologies/PriceGenerator/issues/63 (characterized in #46): trend endpoint correction bypasses maxCandleBody\n38 passed, 2 xfailed, 3 warnings in 3.57s\n",
+  "stderr": "",
+  "suites": [
+    {
+      "name": "pytest",
+      "errors": "0",
+      "failures": "0",
+      "skipped": "2",
+      "tests": "40",
+      "time": "3.571",
+      "timestamp": "2026-10-16T01:01:53.179326+03:00",
+      "hostname": "1c961d7cc56c"
+    }
+  ],
+  "testcases": [
+    {
+      "name": "test_Generate",
+      "class": "tests.test_PriceGenerator.TestFeatures",
+      "outcome": "passed"
+    },
+    {
+      "name": "test_GenerateWithSomeTrends",
+      "class": "tests.test_PriceGenerator.TestFeatures",
+      "outcome": "passed"
+    },
+    {
+      "name": "test_LoadFromFile",
+      "class": "tests.test_PriceGenerator.TestFeatures",
+      "outcome": "passed"
+    },
+    {
+      "name": "test_SaveToFile",
+      "class": "tests.test_PriceGenerator.TestFeatures",
+      "outcome": "passed"
+    },
+    {
+      "name": "test_RenderBokeh",
+      "class": "tests.test_PriceGenerator.TestFeatures",
+      "outcome": "passed"
+    },
+    {
+      "name": "test_RenderBokehWithSomeTrends",
+      "class": "tests.test_PriceGenerator.TestFeatures",
+      "outcome": "passed"
+    },
+    {
+      "name": "test_RenderGoogleDefault",
+      "class": "tests.test_PriceGenerator.TestFeatures",
+      "outcome": "passed"
+    },
+    {
+      "name": "test_RenderGoogleDefaultWithSomeTrends",
+      "class": "tests.test_PriceGenerator.TestFeatures",
+      "outcome": "passed"
+    },
+    {
+      "name": "test_RenderGoogleFromFileTemplate",
+      "class": "tests.test_PriceGenerator.TestFeatures",
+      "outcome": "passed"
+    },
+    {
+      "name": "test_PandasDFheaders",
+      "class": "tests.test_PriceGenerator.TestFeatures",
+      "outcome": "passed"
+    },
+    {
+      "name": "test_DetectPrecision",
+      "class": "tests.test_PriceGenerator.TestFeatures",
+      "outcome": "passed"
+    },
+    {
+      "name": "test_DetectTimeframe",
+      "class": "tests.test_PriceGenerator.TestFeatures",
+      "outcome": "passed"
+    },
+    {
+      "name": "test_precision",
+      "class": "tests.test_PriceGenerator.TestFeatures",
+      "outcome": "passed"
+    },
+    {
+      "name": "test_zigZagDeviation",
+      "class": "tests.test_PriceGenerator.TestFeatures",
+      "outcome": "passed"
+    },
+    {
+      "name": "test_ZigZagFilter",
+      "class": "tests.test_PriceGenerator.TestFeatures",
+      "outcome": "passed"
+    },
+    {
+      "name": "test_timeframe",
+      "class": "tests.test_PriceGenerator.TestFeatures",
+      "outcome": "passed"
+    },
+    {
+      "name": "test_timeStart",
+      "class": "tests.test_PriceGenerator.TestFeatures",
+      "outcome": "passed"
+    },
+    {
+      "name": "test_horizon",
+      "class": "tests.test_PriceGenerator.TestFeatures",
+      "outcome": "passed"
+    },
+    {
+      "name": "test_minClose_maxClose",
+      "class": "tests.test_PriceGenerator.TestFeatures",
+      "outcome": "passed"
+    },
+    {
+      "name": "test_initClose",
+      "class": "tests.test_PriceGenerator.TestFeatures",
+      "outcome": "passed"
+    },
+    {
+      "name": "test_maxOutlier",
+      "class": "tests.test_PriceGenerator.TestFeatures",
+      "outcome": "passed"
+    },
+    {
+      "name": "test_maxCandleBody",
+      "class": "tests.test_PriceGenerator.TestFeatures",
+      "outcome": "passed"
+    },
+    {
+      "name": "test_maxVolume",
+      "class": "tests.test_PriceGenerator.TestFeatures",
+      "outcome": "passed"
+    },
+    {
+      "name": "test_PublishedGoldenRows[defaults]",
+      "class": "tests.test_legacy_baseline",
+      "outcome": "passed"
+    },
+    {
+      "name": "test_PublishedGoldenRows[bounded]",
+      "class": "tests.test_legacy_baseline",
+      "outcome": "passed"
+    },
+    {
+      "name": "test_PublishedGoldenRows[trend]",
+      "class": "tests.test_legacy_baseline",
+      "outcome": "passed"
+    },
+    {
+      "name": "test_OhlcvAndContinuityInvariants[0-defaults]",
+      "class": "tests.test_legacy_baseline",
+      "outcome": "passed"
+    },
+    {
+      "name": "test_OhlcvAndContinuityInvariants[0-bounded]",
+      "class": "tests.test_legacy_baseline",
+      "outcome": "passed"
+    },
+    {
+      "name": "test_OhlcvAndContinuityInvariants[0-trend]",
+      "class": "tests.test_legacy_baseline",
+      "outcome": "passed"
+    },
+    {
+      "name": "test_OhlcvAndContinuityInvariants[17-defaults]",
+      "class": "tests.test_legacy_baseline",
+      "outcome": "passed"
+    },
+    {
+      "name": "test_OhlcvAndContinuityInvariants[17-bounded]",
+      "class": "tests.test_legacy_baseline",
+      "outcome": "passed"
+    },
+    {
+      "name": "test_OhlcvAndContinuityInvariants[17-trend]",
+      "class": "tests.test_legacy_baseline",
+      "outcome": "passed"
+    },
+    {
+      "name": "test_OhlcvAndContinuityInvariants[42-defaults]",
+      "class": "tests.test_legacy_baseline",
+      "outcome": "passed"
+    },
+    {
+      "name": "test_OhlcvAndContinuityInvariants[42-bounded]",
+      "class": "tests.test_legacy_baseline",
+      "outcome": "passed"
+    },
+    {
+      "name": "test_OhlcvAndContinuityInvariants[42-trend]",
+      "class": "tests.test_legacy_baseline",
+      "outcome": "passed"
+    },
+    {
+      "name": "test_ReplayRestoresGlobalState",
+      "class": "tests.test_legacy_baseline",
+      "outcome": "passed"
+    },
+    {
+      "name": "test_PublishedIndicatorVectors",
+      "class": "tests.test_legacy_baseline",
+      "outcome": "passed"
+    },
+    {
+      "name": "test_RuntimeRestoresStateAfterFailure",
+      "class": "tests.test_legacy_baseline",
+      "outcome": "passed"
+    },
+    {
+      "name": "test_KnownNegativeLowDefect",
+      "class": "tests.test_legacy_baseline",
+      "outcome": "skipped"
+    },
+    {
+      "name": "test_KnownTrendBodyBoundDefect",
+      "class": "tests.test_legacy_baseline",
+      "outcome": "skipped"
+    }
+  ]
+}
