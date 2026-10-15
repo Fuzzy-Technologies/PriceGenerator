@@ -149,6 +149,30 @@ def test_RendererRequiresValidatedContract() -> None:
         RenderInteractive({"candles": []})
 
 
+def test_HiddenExtremeOverlayFailsBeforeWritingHTML(tmp_path: Path) -> None:
+    """A hidden outlier must not silently flatten all ordinary candle geometry."""
+
+    spec = SampleSpec(series=(ChartSeries("outlier", "Hidden extreme", (1e308, 1e308, 1e308), visible=False),))
+
+    with pytest.raises(ValueError, match="rescale prices/overlays"):
+        RenderInteractive(spec)
+
+    path = tmp_path / "chart.html"
+
+    with pytest.raises(ValueError, match="rescale prices/overlays"):
+        SaveInteractive(spec, path)
+
+    assert not path.exists(), "An unsupported numerical domain must not create a misleading chart"
+
+
+@pytest.mark.parametrize("value", [1e-308, 1e308, -1e308])
+def test_HomogeneousExtremePricesRemainSupported(value: float) -> None:
+    """The numerical capability guard must not reject valid small or large prices."""
+
+    spec = ChartSpec((ChartCandle("2026-01-01T00:00:00Z", value, value, value, value, 1),))
+    assert "<!doctype html>" in RenderInteractive(spec)
+
+
 def test_VendoredRuntimeMatchesRecordedIntegrity() -> None:
     """The vendored artifact must match its official-source and build manifest."""
 

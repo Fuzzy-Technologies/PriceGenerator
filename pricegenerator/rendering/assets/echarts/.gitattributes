@@ -1,3 +1,0 @@
-# Retain upstream license text and generated legal comments verbatim.
-LICENSE-*.txt -whitespace
-echarts-financial.min.js -whitespace

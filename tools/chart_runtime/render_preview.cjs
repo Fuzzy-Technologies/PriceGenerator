@@ -44,7 +44,11 @@ function ChangedPixels(first, second, width, rectangle) {
     const theme = ReadBlock("chart-theme");
     const images = await adapter.LoadBranding(ReadBlock("chart-branding"), environment);
     images.watermark = adapter.TintWatermark(images.wordmark, theme, environment);
-    runtime.setPlatformAPI({createCanvas: Canvas});
+    const measurement = Canvas().getContext("2d");
+    runtime.setPlatformAPI({createCanvas: Canvas, measureText(text, font) {
+        measurement.font = font;
+        return measurement.measureText(text.replace(/\0/g, "\ufffd"));
+    }});
     const canvas = Canvas(spec.width, spec.height);
     const chart = runtime.init(canvas, null, {renderer: "canvas", ssr: true,
         width: spec.width, height: spec.height});

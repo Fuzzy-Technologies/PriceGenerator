@@ -72,6 +72,8 @@ test("real ECharts accepts the complete options and correct OHLC order", () => {
     assert.equal(candle.count(), 3);
     assert.deepEqual(Array.from(candle.getValues([1, 2, 3, 4], 0)), [100, 102, 98, 105]);
     assert.equal(chart.getOption().animation, false);
+    assert.equal(chart.getOption().series[0].itemStyle.color, theme.panel);
+    assert.equal(chart.getOption().series[0].itemStyle.color0, theme.down);
     assert.ok(chart.getOption().series.every((series) => series.progressive === 0));
     assert.equal(chart.getOption().legend[0].selected.__pg_overlay_sma, false);
     chart.dispose();
@@ -160,7 +162,8 @@ test("missing overlays and annotation positions preserve their data semantics", 
     const options = adapter.BuildOptions(spec, theme, branding, 1280, 760);
     assert.equal(options.series[2].data[0][1], null);
     assert.equal(options.series[2].connectNulls, false);
-    assert.deepEqual(options.series[3].data.map((marker) => marker.value[1]), [105, 101, 98]);
+    assert.deepEqual(options.series[3].data.map((marker) => marker.value[1]), [105, 101.5, 98]);
+    assert.equal(options.series[3].data[1].label.position, "inside");
     assert.equal(options.tooltip.renderMode, "richText");
     const tooltip = options.tooltip.formatter([{axisValue: Date.parse(spec.candles[1].datetime), seriesName: "__pg_overlay_sma"}]);
     assert.match(tooltip, /O 101\.00/);
@@ -217,6 +220,22 @@ test("constant extreme domains label padded ticks without Infinity or false zero
 
 test("unknown schemas fail closed before chart configuration", () => {
     assert.throws(() => adapter.BuildOptions({...Spec(), schema_version: 99}, theme, branding, 1280, 760), /schema/);
+});
+
+test("a hidden extreme overlay fails clearly instead of blanking ordinary prices", () => {
+    const spec = Spec();
+    spec.series[0].values = [1e308, 1e308, 1e308];
+    assert.throws(() => adapter.BuildOptions(spec, theme, branding, 1280, 760), /rescale prices\/overlays/);
+});
+
+test("date labels preserve extended years and millisecond input precision", () => {
+    const spec = Spec();
+    spec.candles[1].datetime = "2026-01-01T00:00:00.001Z";
+    spec.candles[2].datetime = "2026-01-01T00:00:00.002Z";
+    const options = adapter.BuildOptions(spec, theme, branding, 1280, 760);
+    const formatter = options.xAxis[1].axisLabel.formatter;
+    assert.equal(formatter(Date.parse(spec.candles[1].datetime)), "2026-01-01\n00:00:00.001 UTC");
+    assert.equal(formatter(Date.parse("+010000-01-01T00:00:00.000Z")), "+010000-01-01\n00:00:00.000 UTC");
 });
 
 test("accessible buttons wire real actions and group names stay plain text", () => {

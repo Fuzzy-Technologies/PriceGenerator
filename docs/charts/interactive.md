@@ -34,14 +34,14 @@ produce identical document bytes.
 
 | Capability | Behavior |
 | --- | --- |
-| OHLC and volume | Two synchronized panels; candle order is explicitly encoded as open, close, low, high for ECharts. |
+| OHLC and volume | Two synchronized panels; rising bodies are hollow, falling bodies filled. Candle order is explicitly encoded as open, close, low, high for ECharts. |
 | Time axis | UTC elapsed time, including gaps. Both panels share the same domain and zoom range. No implicit session compression. |
 | Hover | Linked crosshair and plain-text Canvas tooltip with original OHLCV and visible aligned overlays. |
 | Navigation | Wheel zoom, drag pan, overview slider, box zoom, previous-zoom toolbox icon, Reset view, Full range. |
 | Overlays | Aligned line or point series, explicit `None` gaps, color/width/dash settings, independent initial visibility. |
 | Groups | Named group buttons toggle related overlays; legend entries toggle individual series without label collisions. |
 | Bands | Upper/middle/lower lines preserve historical Bokeh Bollinger-band behavior. A filled-band primitive is not part of schema 1. |
-| Markers | Text anchored above, below, or at the candle-body midpoint. Arbitrary user strings remain text. |
+| Markers | Text anchored above, below, or centered at the candle's high–low midpoint. Arbitrary user strings remain text; long labels are truncated visually and preserved in the hover text. |
 | Statistics | `ChartSpec.summary` appears as an HTML text block. This renderer does not calculate indicators or statistics. |
 | Image export | PNG at 2× pixel density, containing the current viewport, selected series, official header logo, and both panels' watermarks. The separate HTML summary/control block is not part of the PNG. |
 | Responsive layout | ResizeObserver updates panels and graphics while preserving zoom and legend state; window resize is the fallback. |
@@ -66,6 +66,13 @@ Small nonzero values use scientific notation when decimal precision would
 otherwise turn them into zero. This does not add precision beyond the
 validated IEEE-754 input values.
 
+When extreme normalization is needed, mixed nonzero price/overlay magnitudes
+spanning more than 12 orders are rejected explicitly, including hidden
+overlays. Such a snapshot can otherwise silently collapse the visible price
+panel under the backend's tick precision. The error asks the caller to rescale
+values or remove extreme outlier series; it is a renderer capability limit,
+not a rejection of the shared `ChartSpec` by the static renderer.
+
 ## Theme, branding, and safety
 
 Both dark and light corporate palettes come from the shared `theme.py`.
@@ -87,7 +94,7 @@ Apache-2.0 license and NOTICE. Permissive transitive dependencies ZRender
 (BSD-3-Clause) and tslib (0BSD) are disclosed and their full licenses are
 embedded in every HTML export. See
 [`THIRD_PARTY_NOTICES.md`](../../pricegenerator/rendering/assets/echarts/THIRD_PARTY_NOTICES.md).
-The bundled runtime is 645,924 bytes uncompressed and 219,528 bytes gzip at
+The bundled runtime is 658,040 bytes uncompressed and 224,045 bytes gzip at
 level 9. These are runtime-bundle sizes, not the total HTML size or an estimate
 of render speed. HTML size also includes data and branding.
 
@@ -113,6 +120,9 @@ pixels in the emblem, header wordmark, and every watermark region. It also
 mounts a 100,000-row snapshot and checks the initial 1,000-row visible window.
 Native Canvas is test tooling; it is not shipped inside the Python runtime
 or generated HTML. No browser is needed for either suite.
+The native test bridge substitutes a replacement glyph for ECharts' internal
+NUL-width probe because the native CString interface rejects NUL. Browser
+Canvas accepts that probe; production text and the adapter are unchanged.
 
 For a local raster preview of a generated document:
 

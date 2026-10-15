@@ -26,7 +26,13 @@ function CreateHarness(canvasModule = path.join(__dirname, "node_modules/@napi-r
     const source = readFileSync(path.resolve(__dirname,
         "../../pricegenerator/rendering/assets/echarts/echarts-financial.min.js"), "utf8");
     const engine = Function("setTimeout", "clearTimeout", source + ";return PriceGeneratorCharts;")(() => 0, () => {});
-    engine.setPlatformAPI({createCanvas: Canvas});
+    const measurement = Canvas().getContext("2d");
+    engine.setPlatformAPI({createCanvas: Canvas, measureText(text, font) {
+        measurement.font = font;
+        // ECharts probes the NUL glyph when truncating. Native CString rejects NUL;
+        // browser Canvas accepts it. Use a replacement glyph only in this test bridge.
+        return measurement.measureText(text.replace(/\0/g, "\ufffd"));
+    }});
     const runtime = {init(canvas, theme, options) {
         return engine.init(canvas, theme, {...options, ssr: true, width: canvas.width, height: canvas.height});
     }};

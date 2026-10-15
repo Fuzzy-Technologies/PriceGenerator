@@ -70,7 +70,18 @@
             graphic: BrandingGraphics(branding, layout),
             legend: {left: layout.left, right: layout.right + 70},
             dataZoom: [{id: "time-slider", left: layout.left, right: layout.right}],
+            series: spec.markers.length ? [{id: MARKERS, labelLayout: MarkerLayout(layout)}] : [],
         };
+    }
+
+    function MarkerLayout(layout) {
+        return (parameters) => ({
+            x: Math.min(Math.max(parameters.labelRect.x, layout.left + 4),
+                layout.width - layout.right - parameters.labelRect.width - 4),
+            y: Math.min(Math.max(parameters.labelRect.y, layout.top + 4),
+                layout.top + layout.priceHeight - parameters.labelRect.height - 4),
+            align: "left", verticalAlign: "top",
+        });
     }
 
     function TooltipFormatter(spec, labels) {
@@ -107,18 +118,28 @@
         const timestamps = spec.candles.map((candle) => Date.parse(candle.datetime));
         let interval = Infinity;
         let magnitude = 0;
+        let minimumMagnitude = Infinity;
         let volumeMagnitude = 0;
         spec.candles.forEach((candle, index) => {
             if (index) interval = Math.min(interval, timestamps[index] - timestamps[index - 1]);
             magnitude = Math.max(magnitude, Math.abs(candle.low), Math.abs(candle.high));
+            [candle.open, candle.close, candle.low, candle.high].forEach((value) => {
+                if (value !== 0) minimumMagnitude = Math.min(minimumMagnitude, Math.abs(value));
+            });
             volumeMagnitude = Math.max(volumeMagnitude, candle.volume);
         });
         spec.series.forEach((overlay) => overlay.values.forEach((value) => {
-            if (value !== null) magnitude = Math.max(magnitude, Math.abs(value));
+            if (value !== null) {
+                magnitude = Math.max(magnitude, Math.abs(value));
+                if (value !== 0) minimumMagnitude = Math.min(minimumMagnitude, Math.abs(value));
+            }
         }));
         if (!Number.isFinite(interval)) interval = 3600000;
         // Extreme finite domains need normalization before ECharts computes differences/ticks.
         const priceScale = magnitude > 1e100 || (magnitude > 0 && magnitude < 1e-100) ? magnitude : 1;
+        if (priceScale !== 1 && minimumMagnitude / magnitude < 1e-12) {
+            throw new RangeError("Interactive charts cannot preserve this mixed numeric range; rescale prices/overlays or remove extreme outlier series");
+        }
         const volumeScale = volumeMagnitude > 1e100 || (volumeMagnitude > 0 && volumeMagnitude < 1e-100) ? volumeMagnitude : 1;
         const firstVisible = spec.candles.length > 5000 ? spec.candles.length - 1000 : 0;
         const initialWindow = {startValue: timestamps[firstVisible] - interval / 2,
@@ -134,7 +155,7 @@
             encode: {x: 0, y: [1, 2, 3, 4]},
             data: spec.candles.map((candle, index) => [timestamps[index], candle.open / priceScale,
                 candle.close / priceScale, candle.low / priceScale, candle.high / priceScale]),
-            itemStyle: {color: theme.up, color0: theme.down, borderColor: theme.up, borderColor0: theme.down},
+            itemStyle: {color: theme.panel, color0: theme.down, borderColor: theme.up, borderColor0: theme.down},
             emphasis: {itemStyle: {borderWidth: 2}}, barMaxWidth: 20},
         {id: VOLUME, name: VOLUME, type: "bar", xAxisIndex: 1, yAxisIndex: 1, progressive: 0,
             itemStyle: {color: theme.up, opacity: 0.62},
@@ -144,7 +165,7 @@
             barMaxWidth: 20}];
         spec.series.forEach((overlay, index) => {
             const name = SeriesName(overlay);
-            const color = overlay.color || [theme.accent, theme.secondary, theme.warning][index % 3];
+            const color = overlay.color || [theme.accent, theme.secondary, theme.warning, theme.up, theme.down][index % 5];
             labels[name] = overlay.label;
             selected[name] = overlay.visible;
             series.push({id: name, name, type: overlay.kind === "points" ? "scatter" : "line", progressive: 0,
@@ -157,14 +178,14 @@
         if (spec.markers.length) {
             selected[MARKERS] = true;
             series.push({id: MARKERS, name: MARKERS, type: "scatter", xAxisIndex: 0, yAxisIndex: 0, progressive: 0,
-                symbolSize: 5, z: 6, itemStyle: {color: theme.warning},
+                symbolSize: 5, z: 6, itemStyle: {color: theme.warning}, labelLayout: MarkerLayout(layout),
                 data: spec.markers.map((marker) => {
                     const candle = spec.candles[marker.candle_index];
                     const price = marker.position === "above" ? candle.high : marker.position === "below" ?
-                        candle.low : candle.open / 2 + candle.close / 2;
+                        candle.low : candle.high / 2 + candle.low / 2;
                     return {value: [timestamps[marker.candle_index], price / priceScale], itemStyle: {color: marker.color || theme.warning},
                         label: {show: true, formatter: () => marker.text,
-                            position: marker.position === "below" ? "bottom" : "top",
+                            position: marker.position === "below" ? "bottom" : marker.position === "center" ? "inside" : "top",
                             color: marker.color || theme.warning, fontSize: 11, distance: 5,
                             width: 180, overflow: "truncate"}};
                 })});
@@ -173,7 +194,10 @@
             min: timestamps[0] - interval / 2, max: timestamps[timestamps.length - 1] + interval / 2,
             axisLine: {lineStyle: {color: theme.grid}}, axisTick: {show: false},
             axisLabel: {show: gridIndex === 1, hideOverlap: true, color: theme.muted, lineHeight: 15, fontSize: 10,
-                formatter: (value) => {const date = new Date(value).toISOString(); return date.slice(0, 10) + "\n" + date.slice(11, 19) + " UTC";}},
+                formatter: (value) => {
+                    const [date, time] = new Date(value).toISOString().split("T");
+                    return date + "\n" + time.slice(0, interval < 1000 ? 12 : 8) + " UTC";
+                }},
             axisPointer: {show: true, label: {backgroundColor: theme.panel, color: theme.text}},
             splitLine: {show: false}});
         return {

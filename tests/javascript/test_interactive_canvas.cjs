@@ -84,3 +84,36 @@ test("100k rows mount through the real engine with an immediately complete 1000-
         controller.Dispose();
     }
 });
+
+test("long text exports and edge annotations stay within the price panel", async () => {
+    const harness = CreateHarness();
+    const spec = Spec(10);
+    spec.width = 480;
+    spec.height = 360;
+    spec.title = "Long title ".repeat(30);
+    spec.markers = [
+        {candle_index: 0, text: "First-candle annotation", position: "below", color: null},
+        {candle_index: 5, text: "Centered label", position: "center", color: null},
+        {candle_index: 9, text: "Trailing marker annotation ".repeat(15), position: "above", color: null},
+    ];
+    const controller = await adapter.Mount(harness.Canvas(spec.width, spec.height), spec, theme, branding,
+        null, {textContent: ""}, harness.runtime, harness.environment);
+    try {
+        const output = await harness.DecodePNG(controller.ExportPNG());
+        assert.equal(output.width, 960);
+        const labels = controller.chart.getZr().storage.getDisplayList().filter((item) =>
+            item.type === "tspan" && item.style.fill === theme.warning);
+        assert.ok(labels.length >= 3, "Every annotation must render a visible label");
+        for (const label of labels) {
+            const rectangle = label.getBoundingRect().clone();
+            const transform = label.getComputedTransform();
+            if (transform) rectangle.applyTransform(transform);
+            assert.ok(rectangle.x >= 65 && rectangle.x + rectangle.width <= 449,
+                "Annotation text must not clip at either price-panel edge");
+            assert.ok(rectangle.y >= 115 && rectangle.y + rectangle.height <= 217,
+                "Annotation text must remain inside the price panel vertically");
+        }
+    } finally {
+        controller.Dispose();
+    }
+});

@@ -4,6 +4,7 @@ from functools import lru_cache
 from html import escape
 from importlib.resources import files
 import json
+import math
 from pathlib import Path
 
 from .spec import ChartSpec
@@ -38,12 +39,35 @@ def _JSON(value: object) -> str:
     return serialized.replace("&", "\\u0026").replace("<", "\\u003c").replace(">", "\\u003e").replace("\u2028", "\\u2028").replace("\u2029", "\\u2029")
 
 
+def _CheckPriceScale(spec: ChartSpec) -> None:
+    """Reject mixed extreme scales which ECharts cannot display faithfully."""
+
+    maximum = 0.0
+    minimum = math.inf
+    values = (value for candle in spec.candles for value in (candle.open, candle.high, candle.low, candle.close))
+    overlays = (value for series in spec.series for value in series.values if value is not None)
+
+    for collection in (values, overlays):
+        for value in collection:
+            magnitude = abs(value)
+            maximum = max(maximum, magnitude)
+
+            if magnitude > 0:
+                minimum = min(minimum, magnitude)
+
+    needs_scaling = maximum > 1e100 or 0 < maximum < 1e-100
+
+    if needs_scaling and minimum / maximum < 1e-12:
+        raise ValueError("Interactive charts cannot preserve this mixed numeric range; rescale prices/overlays or remove extreme outlier series")
+
+
 def RenderInteractive(spec: ChartSpec) -> str:
     """Return complete offline HTML without opening a browser or writing files."""
 
     if not isinstance(spec, ChartSpec):
         raise TypeError("spec must be a validated ChartSpec")
 
+    _CheckPriceScale(spec)
     runtime, adapter, notices = _RuntimeAssets()
     theme = dict(THEMES[spec.theme])
     title = escape(spec.title)
