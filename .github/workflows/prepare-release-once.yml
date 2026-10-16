@@ -1,0 +1,69 @@
+name: Prepare reviewed release candidate once
+
+on:
+  pull_request:
+    types: [opened, edited]
+    branches: [develop]
+
+permissions: {}
+
+jobs:
+  prepare:
+    if: >-
+      github.event.pull_request.head.repo.full_name == github.repository &&
+      github.event.pull_request.head.ref == 'ops/prepare-release' &&
+      contains(github.event.pull_request.body, 'Operations reviewed: yes')
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    permissions:
+      contents: write
+      actions: write
+      pull-requests: write
+    env:
+      GH_TOKEN: ${{ github.token }}
+      GH_REPO: ${{ github.repository }}
+      PR_NUMBER: ${{ github.event.pull_request.number }}
+      OPS_SHA: ${{ github.event.pull_request.head.sha }}
+      EXPECTED_MASTER: 83b1b75a99be06947a93314d6c2509a257ed6b3e
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09
+        with:
+          ref: 83b1b75a99be06947a93314d6c2509a257ed6b3e
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Require account review and exact green master
+        shell: bash
+        run: |
+          set -euo pipefail
+          reviews=$(gh api --paginate "repos/$GH_REPO/pulls/$PR_NUMBER/reviews" --jq ".[] | select(.user.login == \"Tim55667757\" and .commit_id == \"$OPS_SHA\" and .body == \"Reviewed\") | .id")
+          test -n "$reviews"
+          actual_master=$(gh api "repos/$GH_REPO/git/ref/heads/master" --jq .object.sha)
+          test "$actual_master" = "$EXPECTED_MASTER"
+          test "$(git rev-parse HEAD)" = "$EXPECTED_MASTER"
+          python -c 'from tools.release_verify import ReadVersion; assert ReadVersion("pricegenerator/_version.py") == "2.0.0"'
+          gh api --paginate --slurp "repos/$GH_REPO/actions/runs?head_sha=$EXPECTED_MASTER&per_page=100" > "$RUNNER_TEMP/ci.json"
+          python tools/release_verify.py --ci-runs "$RUNNER_TEMP/ci.json" --commit "$EXPECTED_MASTER"
+      - name: Create exact tag without overwriting an existing identity
+        shell: bash
+        run: |
+          set -euo pipefail
+          existing=$(gh api "repos/$GH_REPO/git/ref/tags/v2.0.0" --jq .object.sha 2>/dev/null || true)
+          if [ -n "$existing" ]; then
+            test "$existing" = "$EXPECTED_MASTER"
+          else
+            gh api --method POST "repos/$GH_REPO/git/refs" -f ref=refs/tags/v2.0.0 -f sha="$EXPECTED_MASTER"
+          fi
+          tagged=$(gh api "repos/$GH_REPO/git/ref/tags/v2.0.0" --jq .object.sha)
+          test "$tagged" = "$EXPECTED_MASTER"
+          git update-ref refs/tags/v2.0.0 "$tagged"
+          python tools/release_verify.py --tag v2.0.0
+      - name: Dispatch verification only and record the operation
+        shell: bash
+        run: |
+          set -euo pipefail
+          gh api --method POST "repos/$GH_REPO/actions/workflows/release.yml/dispatches" --input - <<'JSON'
+          {"ref":"master","inputs":{"tag":"v2.0.0","publish":false}}
+          JSON
+          gh api --method POST "repos/$GH_REPO/issues/$PR_NUMBER/comments" -f body="Created/read back tag v2.0.0 at reviewed master $EXPECTED_MASTER and dispatched release.yml with publish=false. No PyPI upload was enabled. This temporary operations PR is closed unmerged and its branch is removed."
+          gh api --method PATCH "repos/$GH_REPO/pulls/$PR_NUMBER" -f state=closed
+          gh api --method DELETE "repos/$GH_REPO/git/refs/heads/ops/prepare-release"
