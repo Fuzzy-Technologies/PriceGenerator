@@ -44,6 +44,7 @@ def TimeframeNanoseconds(timeframe_seconds):
     return int(nanoseconds)
 
 
+
 def TimestampRange(start, periods, timeframe_seconds):
     """Build UTC nanosecond timestamps without overflowing interval arithmetic.
 
@@ -83,7 +84,6 @@ def TimestampRange(start, periods, timeframe_seconds):
         )
 
     return pd.to_datetime(instants, utc=True)
-
 
 def _DatetimeColumn(values, assume_timezone):
     """Normalize explicit datetimes to UTC without guessing timezone or units."""
