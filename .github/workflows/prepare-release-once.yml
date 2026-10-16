@@ -47,7 +47,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          existing=$(gh api "repos/$GH_REPO/git/ref/tags/v2.0.0" --jq .object.sha 2>/dev/null || true)
+          existing=$(gh api "repos/$GH_REPO/git/matching-refs/tags/v2.0.0" --jq '.[] | select(.ref == "refs/tags/v2.0.0") | .object.sha')
           if [ -n "$existing" ]; then
             test "$existing" = "$EXPECTED_MASTER"
           else
