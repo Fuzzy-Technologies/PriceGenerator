@@ -36,24 +36,12 @@
         const graphics = [{id: "brand-emblem", type: "image", silent: true, z: 6,
             clipPath: {type: "circle", shape: {cx: 43, cy: 38, r: 23}},
             style: {image: branding.emblem, x: 20, y: 15, width: 46, height: 46}}];
-        if (layout.width >= 700) {
-            graphics.push({id: "brand-wordmark", type: "image", silent: true, z: 6,
-                style: {image: branding.watermark || branding.wordmark, x: layout.width - 204, y: 28,
-                    width: 174, height: 31.32, opacity: 0.88}});
-        }
         const available = layout.width - layout.left - layout.right;
-        const count = Math.max(1, Math.floor(available / 220));
-        const watermarkWidth = Math.min(174, available - 12);
-        [layout.top + layout.priceHeight, layout.volumeTop + layout.volumeHeight].forEach((bottom, panel) => {
-            for (let index = 0; index < count; index += 1) {
-                graphics.push({id: "watermark-" + panel + "-" + index, type: "image",
-                    silent: true, z: 0,
-                    style: {image: branding.watermark || branding.wordmark,
-                        x: layout.left + ((index + 0.5) * available / count) - watermarkWidth / 2,
-                        y: bottom - watermarkWidth * 0.18 - 8,
-                        width: watermarkWidth, height: watermarkWidth * 0.18, opacity: 0.16}});
-            }
-        });
+        const watermarkWidth = Math.min(160, available - 16);
+        graphics.push({id: "watermark-price", type: "image", silent: true, z: 6,
+            style: {image: branding.watermark || branding.wordmark, x: layout.left + 8,
+                y: layout.top + layout.priceHeight - watermarkWidth * 0.18 - 8,
+                width: watermarkWidth, height: watermarkWidth * 0.18, opacity: 0.28}});
         return graphics;
     }
 
@@ -62,7 +50,7 @@
         return {
             title: {text: spec.title, left: 80, top: 21,
                 textStyle: {fontSize: 19, fontWeight: 600, color: theme.text,
-                    width: Math.max(120, width - (width >= 700 ? 310 : 110)), overflow: "truncate"}},
+                    width: Math.max(120, width - 110), overflow: "truncate"}},
             grid: [{left: layout.left, right: layout.right, top: layout.top,
                 height: layout.priceHeight, backgroundColor: theme.panel, show: true, borderWidth: 0, outerBoundsMode: "none"},
             {left: layout.left, right: layout.right, top: layout.volumeTop,
@@ -331,7 +319,7 @@
         const context = canvas.getContext("2d");
         context.drawImage(image, 0, 0);
         context.globalCompositeOperation = "source-in";
-        context.fillStyle = theme.muted;
+        context.fillStyle = theme.text;
         context.fillRect(0, 0, canvas.width, canvas.height);
         return canvas;
     }

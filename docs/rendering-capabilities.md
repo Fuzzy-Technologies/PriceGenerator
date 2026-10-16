@@ -1,26 +1,32 @@
 # Chart rendering contract and migration evidence
 
-This audit characterizes the legacy implementation at `a97e848` and defines the replacement gates for [Feature #90](https://github.com/Fuzzy-Technologies/PriceGenerator/issues/90). It is based on `PriceGenerator.py`, `google_template_example.j2`, and the legacy renderer tests. [ADR-0009](adr/0009-modern-chart-rendering.md) records the selected architecture.
+The historical audit below characterizes the 1.x implementation at `a97e848`;
+its source and tests are archival evidence for [Feature #90](https://github.com/Fuzzy-Technologies/PriceGenerator/issues/90),
+not available runtime APIs. Current behavior follows
+[ADR-0010](adr/0010-modern-only-public-api.md), which supersedes the compatibility,
+branding and export limits in [ADR-0009](adr/0009-modern-chart-rendering.md).
+Use `Chart(data)` and `DisplayChart(data)` as the public entry points;
+[the migration guide](chart-migration.md) documents defaults and command syntax.
 
 ## Historical capabilities
 
-| Capability | Actual 1.x behavior | Replacement acceptance criterion |
+| Capability | Actual 1.x behavior | Modern replacement |
 | --- | --- | --- |
-| Static output | Google method writes JavaScript-dependent HTML with online loaders; no native SVG/PNG API | Offline standalone SVG; interactive HTML is a separate artifact |
+| Static output | Google method writes JavaScript-dependent HTML with online loaders; no native SVG/PNG API | Offline SVG, optional native PNG/JPEG, and standalone interactive HTML |
 | Candlesticks | OHLC wick/body; direction colors; doji uses rising style | Preserve OHLC geometry and readable direction at the configured precision |
 | Volume | Bokeh lower panel, matching direction colors and shared datetime range | Linked volume panel; zero volumes and a single candle are valid |
 | Time axis | Bokeh uses elapsed datetime; Google uses category strings | Explicit UTC timestamps; preserve gaps on the default time axis |
 | Hover | Candle index, date, time, OHLC, volume; volume hover separately | Interactive cursor/report exposes original values, including after display scaling |
 | Navigation | Pan, wheel zoom, box zoom, reset, toolbar save | Functional equivalents with synchronized price/volume ranges |
 | Controls | Grouped legend click-to-hide; independent `showControlsOnChart` | Explicit group visibility; optional controls without losing supplied series |
-| Close limits/trends | Max/min close with labels; full-horizon and split-segment trends | Aligned line overlays plus labels; supplied trend data is not recomputed by the renderer |
+| Close limits/trends | Max/min close with labels; full-horizon and split-segment trends | Aligned close-limit and elapsed-time trend overlays; calculations are explicit and renderers consume supplied values |
 | Average | High/low midpoint line and points, hidden by default | Aligned line and point overlays; documented default visibility |
 | SMA | 5/20 and 50/200 groups, hidden by default | All four results available through the analysis adapter |
-| HMA | 5/20 group, hidden by default | Both results; resolve the legacy HMA5 overwrite intentionally |
+| HMA | 5/20 group, hidden by default | Both unshifted HMA results, independent of Alligator |
 | VWMA | 5/20 group, hidden by default | Both results, including explicit zero-volume behavior |
 | Bollinger | Lower/mid/upper **lines**; no area shading in legacy code | Three aligned lines with gaps and group controls; filled bands are an optional later addition |
 | PSAR | Long/short point series, hidden by default | Separate point overlays, gaps and visibility preserved |
-| Alligator | Shifted HMA13/8/5 at offsets 8/5/3, not a standard SMMA implementation | Name and document these actual formulas; do not silently relabel them |
+| Alligator | Shifted HMA13/8/5 at offsets 8/5/3, not a standard SMMA implementation | Deliberately replaced by median-price SMMA at periods13/8/5 and shifts8/5/3; documented in the indicator migration |
 | Zig-Zag | Percentage filter produces sparse connected time/value points | Analysis adapter supplies the sparse line with a deliberate interpolation/alignment policy |
 | Custom markers | Arbitrary text above high, at midpoint, below low; old fixed ±0.5 offsets | Plain text in all three relative positions with stable screen spacing |
 | Custom lines | Named user DataFrame series over time | Validated named aligned line/point overlays; input data is not mutated |
@@ -28,11 +34,11 @@ This audit characterizes the legacy implementation at `a97e848` and defines the 
 | Title/size/theme | Custom or generated title, width/height, dark/light Bokeh option | Dark default, light option, bounded dimensions, readable narrow reports |
 | Notebook | Bokeh inline resources and display handle | Explicit HTML/SVG display adapter, covered during task #94 |
 | Template customization | Google accepts arbitrary Jinja template/model, path or string | Replace with documented data/presentation options or trusted outer HTML composition; raw templates are not part of ChartSpec |
-| Side effects | Rendering can mutate DataFrame, run indicators, open paths through `os.system`, and swallow some save errors | Pure rendering, opt-in file writes, propagated I/O failures, no shell/browser/network side effects |
+| Side effects | Rendering can mutate DataFrame, run indicators, open paths through `os.system`, and swallow some save errors | Pure low-level renderers; Chart explicitly writes/views HTML by default, view=False suppresses UI; analysis is opt-in and I/O errors propagate |
 
-The old tests mostly checked that HTML and Markdown files existed. They did not establish visual correctness, safe escaping, interaction behavior, or offline operation. The migration must add evidence for those properties.
+The old tests mostly checked that HTML and Markdown files existed. They did not establish visual correctness, safe escaping, interaction behavior, or offline operation. The current tests add evidence for those properties.
 
-`GetStatistics` first computes unshifted HMA5 and later overwrites it with the Alligator lips result shifted by three candles. Both the HMA and Alligator chart groups then read the shifted column. A new analysis adapter must distinguish preservation from correction, rather than accidentally treating this as a scientifically intended formula.
+`GetStatistics` first computes unshifted HMA5 and later overwrites it with the Alligator lips result shifted by three candles. Both the HMA and Alligator chart groups then read the shifted column. v2 deliberately removes that overwrite and the historical calculation mode. HMA is always unshifted, while Alligator uses its separate SMMA implementation; see [the exact formula mapping](indicator-migration.md).
 
 ## Shared specification
 
@@ -54,7 +60,8 @@ Every series has one number or `None` per candle. `None` creates a gap; renderer
 ## Static API
 
 ```python
-from pricegenerator.rendering import ChartCandle, ChartSeries, ChartSpec, SaveSVG
+from pricegenerator import Chart
+from pricegenerator.rendering import ChartCandle, ChartSeries, ChartSpec
 
 chart = ChartSpec(
     candles=(
@@ -65,12 +72,16 @@ chart = ChartSpec(
     series=(ChartSeries("reference", "Reference", (11, 11), dashed=True),),
     summary=("Illustrative data; no realism claim.",),
 )
-SaveSVG(chart, "scenario.svg")
+Chart(chart, "scenario.svg", view=False)
 ```
 
-`RenderSVG(spec)` returns the same standalone string that `SaveSVG(spec, path)` writes. SVG includes visible overlays only; hidden interactive overlays cannot be toggled in a static image. The requested height is the chart region: long titles, overlay labels, and report lines extend the exported canvas to avoid clipping. Marker labels display at most three wrapped lines with an ellipsis; each retains its complete original text in an SVG title. Supplied report/indicator data is displayed, not computed. PNG/PDF export is not part of this initial native API.
+`RenderSVG(spec)` returns the same standalone string that `SaveSVG(spec, path)` writes. SVG includes visible overlays only; hidden interactive overlays cannot be toggled in a static image. The requested height is the chart region: long titles, overlay labels, and report lines extend the exported canvas to avoid clipping. Marker labels display at most three wrapped lines with an ellipsis; each retains its complete original text in an SVG title. Supplied report/indicator data is displayed, not computed. Native PNG/JPEG exports rasterize the same SVG, including its full report.
+Install `pricegenerator[export]` for resvg-py/Pillow; SVG and HTML require no
+raster dependencies. `RenderPNG`/`RenderJPEG` return bytes, and
+`SavePNG`/`SaveJPEG` write explicit paths. JPEG uses an opaque themed RGB
+background and integer quality from 1 through 95. PDF is not a supported format.
 
-Both supplied corporate images are embedded once per SVG. Definitions are reused for translucent X-axis wordmarks on both price and volume panels. A tint filter changes their display color without replacing the supplied silhouette. The main emblem is clipped to its original circular design. No font, image, or script needs a network request. Glyphs retain a minimum 0.75-pixel width when intervals become subpixel, while their true timestamp positions remain unchanged; this is a display-density policy, not time compression.
+Both supplied corporate images are embedded once per SVG. One definition is referenced exactly once for the translucent wordmark at the lower left inside the price panel, at 28% opacity. The volume panel has no watermark and there is no repeated strip. A tint filter uses the theme text color without replacing the supplied silhouette. The main emblem is clipped to its original circular design. No font, image, or script needs a network request. Glyphs retain a minimum 0.75-pixel width when intervals become subpixel, while their true timestamp positions remain unchanged; this is a display-density policy, not time compression.
 
 ## Asset provenance
 
@@ -82,9 +93,9 @@ The user supplied both source images during the 2026-10-15 UTC session. Original
 | `rendering-assets/source/FTech-corporate-mark-circular-dark-2048.png` (source) | 1254×1254 | 2,255,851 | `6175ff9bd7649f7a1e8e8766149b3b09e1553f2e4b7a83506c61c92329b4a08f` |
 | `ftech-emblem-192.png` (runtime derivative) | 192×192 | 54,223 | `b0f03918847db13a6b7d3cdcd53b739362478f370a2f795a93b2996ab7720a28` |
 
-The derivative was produced using Pillow 12.3.0, `image.resize((192, 192), Image.Resampling.LANCZOS).save(path, format="PNG", optimize=True)`. No crop, recolor, synthetic detail, or design change was made. Pillow is build-time tooling only. Runtime package data consists of the two files under `pricegenerator/rendering/assets/branding/`; the large original stays in documentation sources.
+The derivative was produced using Pillow 12.3.0, `image.resize((192, 192), Image.Resampling.LANCZOS).save(path, format="PNG", optimize=True)`. No crop, recolor, synthetic detail, or design change was made. SVG/HTML load the packaged assets without Pillow. Pillow is also used at runtime by the optional JPEG export. Runtime package data consists of the two files under `pricegenerator/rendering/assets/branding/`; the large original stays in documentation sources.
 
-## Reproducing candidate bundle measurements
+## Historical candidate bundle measurements
 
 The ADR byte counts used Node.js 24.19.0, npm 11.9.0, esbuild 0.25.12, and gzip level 9. Install exact versions in a temporary directory with lifecycle scripts disabled:
 
@@ -116,7 +127,7 @@ e21cc5caa0226ef30bd8549c50b9ef926615f2a4ee6b4e486353477a55f598cf
 
 The custom comparison bundle SHA-256 is `9fa1dd7561b5d086a07281ba9a8faa95c7932c3572529ef4338beda96f544676`.
 
-## Completion plan and evidence
+## Historical replacement plan
 
 | Task | Deliverable and gate |
 | --- | --- |
@@ -133,24 +144,26 @@ public workflow to its explicit replacement. The implementation evidence is:
 | Contract | Executable evidence |
 | --- | --- |
 | Immutable snapshots, UTC precision, invalid input and safe JSON | `tests/test_chart_spec.py` |
-| Exact candle geometry, gaps, static labels, reports and two-panel branding | `tests/test_static_charts.py` and the reproducible SVG examples |
+| Exact candle geometry, gaps, static labels, reports and one price-panel wordmark | `tests/test_static_charts.py` and the reproducible SVG examples |
 | Offline HTML, embedded assets, escaping and propagated output failures | `tests/test_interactive_charts.py` |
 | Actual linked axes, visibility, navigation, reset and uneven time intervals | `tests/javascript/test_interactive_charts.cjs` |
 | Actual PNG pixels, complete initial frame, bounded annotations and logos | `tests/javascript/test_interactive_canvas.cjs` |
-| All historical vectors/report, explicit HMA5 choice, custom data, notebook and CSV | `tests/test_chart_migration.py` |
+| Modern hand-reference formulas, undefined reasons, reports, custom data and notebook | `tests/test_analysis.py`, `tests/test_indicators.py`, `tests/test_chart_migration.py` |
+| Unified output/view defaults, native PNG/JPEG decoding and logo pixels | `tests/test_chart_api.py`, `tests/test_chart_exports.py` |
 | Wheel/sdist resources and installed core-only API/CLI operation | `tests/test_packaging.py`, run outside the checkout with Python isolated mode |
-| Matched 1k/10k/100k export and Canvas workload | [Performance commands, scopes and recorded results](chart-performance.md) |
+| Current modern 1k export/Canvas evidence and archived larger comparisons | [Performance commands, scopes and recorded results](chart-performance.md) |
 
-These APIs are the documented modern route. `RenderGoogle`, `RenderBokeh` and
-their explicitly named CLI flags remain optional compatibility entry points;
-their existence does not add Bokeh or Google services to new rendering. Removing
-them is a separate deliberate retirement decision. The historical arbitrary
-Jinja template/model hooks migrate to trusted outer-report composition.
+The historical `RenderGoogle`, `RenderBokeh`, mutable generator class, template
+hooks and old CLI flags are absent from the v2 runtime. Trusted outer-report
+composition replaces arbitrary Jinja template execution. Analytics use the
+modern NumPy/pandas implementation without TA-backend fallbacks or an HMA5
+compatibility switch.
 
-SVG, full HTML and Markdown retain the supplied report. Interactive PNG contains
-the chart viewport and branding, excluding the separate HTML report and controls.
-This is an explicit export-scope change from Bokeh's in-canvas statistics legend.
-The native Python static API exports SVG; the interactive export supplies PNG.
+SVG, native Python PNG/JPEG, full HTML and Markdown retain the supplied report.
+The interactive **Export PNG** action contains the current chart viewport,
+visible overlays, header emblem and exactly one lower-left price-panel
+wordmark, excluding the separate HTML report and controls. Both paths keep
+volume free of watermarks. This is an explicit export-scope distinction.
 
 Interactive snapshots above 5,000 rows initially display the latest 1,000 while
 retaining every source row; Full range explicitly displays all data. When an
@@ -167,4 +180,6 @@ universal superiority for every workload.
 
 The static implementation is covered by targeted specification/SVG tests, including immutable snapshots, UTC duplicates, invalid candles, gaps, script delimiters, logo reuse, I/O failures, and extreme finite price ranges. Local SVG visual inspection covers 1280×760 and 480×360 chart regions with two overlays, three marker positions, and report text. This is static-layout evidence, not a browser interaction test.
 
-A local serialization probe in the shared Linux container, Python 3.12.14, measured medians of five runs on 100/1,000/10,000 candles: 1.297/9.228/93.928 ms; output 119,040/457,401/3,842,553 bytes. The fixtures use one-minute UTC candles from 2026-01-01, `open=100+(i%20)/10`, `high=103+(i%20)/10`, `low=99+(i%20)/10`, `close=101+(i%20)/10`, `volume=i%1000`, branding, and no overlays. Time only `RenderSVG(spec)` with `time.perf_counter()` after constructing the fixture; report the median of five consecutive calls. These observations include SVG string construction only, are not CI thresholds, and do not establish browser rendering speed or superiority over Bokeh. Task #94 must benchmark comparable complete workloads and preserve the resulting environment/commands.
+Current and archived timing observations, their exact workloads and source
+identities are retained in [chart performance](chart-performance.md). They are
+not browser FPS measurements or performance thresholds.

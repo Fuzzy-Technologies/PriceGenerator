@@ -63,11 +63,19 @@ def WriteCSV(frame, destination, *, assume_timezone=None, timeframe_seconds=None
     )
 
     with _TextStream(destination, "w") as stream:
-        writer = csv.writer(stream, lineterminator="\n")
+        _WriteCanonicalCSV(canonical, stream)
+
+
+def _WriteCanonicalCSV(canonical, stream, *, header=True):
+    """Serialize already validated rows to an open stream with an optional header."""
+
+    writer = csv.writer(stream, lineterminator="\n")
+
+    if header:
         writer.writerow(OHLCV_COLUMNS)
 
-        for row in canonical.itertuples(index=False, name=None):
-            timestamp = row[0]
-            instant = timestamp.strftime("%Y-%m-%dT%H:%M:%S")
-            instant += f".{timestamp.value % 1_000_000_000:09d}Z"
-            writer.writerow([instant, *(repr(value) for value in row[1:])])
+    for row in canonical.itertuples(index=False, name=None):
+        timestamp = row[0]
+        instant = timestamp.strftime("%Y-%m-%dT%H:%M:%S")
+        instant += f".{timestamp.value % 1_000_000_000:09d}Z"
+        writer.writerow([instant, *(repr(value) for value in row[1:])])

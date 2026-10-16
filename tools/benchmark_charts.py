@@ -32,7 +32,7 @@ def Environment():
 
     dependencies = {}
 
-    for name in ("pandas", "numpy", "bokeh", "Jinja2", "pandas-ta", "pandas-ta-classic"):
+    for name in ("pandas", "numpy", "resvg-py", "Pillow"):
         try:
             dependencies[name] = metadata.version(name)
 
@@ -124,10 +124,10 @@ def Timed(operation):
     return value, (time.perf_counter_ns() - started) / 1_000_000_000
 
 
-def WriteMeasured(text, path):
-    """Measure UTF-8 file writing separately from rendering and compression."""
+def WriteMeasured(content, path):
+    """Measure encoded file writing separately from rendering and compression."""
 
-    encoded = text.encode("utf-8")
+    encoded = content.encode("utf-8") if isinstance(content, str) else content
     _, seconds = Timed(lambda: path.write_bytes(encoded))
 
     return {"write_seconds": seconds, "bytes": len(encoded),
@@ -139,7 +139,6 @@ def Fixture(row_count):
     """Build deterministic shared OHLCV, one gapped overlay and one annotation."""
 
     import pandas as pd
-    from pricegenerator.PriceGenerator import PriceGenerator
 
     indices = range(row_count)
     opens = [100 + (index % 97) / 100 for index in indices]
@@ -150,41 +149,37 @@ def Fixture(row_count):
         "low": [min(first, second) - 0.3 for first, second in zip(opens, closes)],
         "close": closes, "volume": [1000 + index % 997 for index in indices],
     })
-    model = PriceGenerator()
-    model.prices = frame
-    model.horizon = row_count
-    model.precision = 2
-    model.ticker = "BENCHMARK"
     overlay = pd.DataFrame({"datetime": frame.datetime,
         "Reference": [None if index < 19 else (first + second) / 2 for index, (first, second) in enumerate(zip(opens, closes))]})
     markers = pd.DataFrame({"datetime": frame.datetime,
         "markersUpper": ["Signal" if index == row_count // 2 else "" for index in indices]})
 
-    return model, overlay, markers
+    return frame, overlay, markers
 
 
 def PythonCase(args):
-    """Measure both real renderers with matched source data and explicit scopes."""
+    """Measure actual modern static and interactive renderers with explicit scopes."""
 
     result = {"status": "error", "requested_rows": args.worker, "stages": {}}
     sys.path.insert(0, str(args.source_root))
 
     try:
-        from pricegenerator.rendering.adapters import BuildLegacyChart
+        from io import BytesIO
+        import xml.etree.ElementTree as ET
+        from PIL import Image
+        from pricegenerator.rendering import adapters
+        from pricegenerator.rendering.api import PrepareChart
+        from pricegenerator.rendering.exports import RenderJPEG, RenderPNG
         from pricegenerator.rendering.interactive import RenderInteractive
         from pricegenerator.rendering.static import RenderSVG
-        import pricegenerator.PriceGenerator as legacy
-        from bokeh.embed import file_html
-        from bokeh.resources import INLINE
 
-        if Path(legacy.__file__).resolve() != args.source_root / "pricegenerator" / "PriceGenerator.py":
-            raise RuntimeError("Imported PriceGenerator does not match --source-root")
+        if Path(adapters.__file__).resolve() != args.source_root / "pricegenerator" / "rendering" / "adapters.py":
+            raise RuntimeError("Imported chart adapter does not match --source-root")
 
-        legacy.uLogger.disabled = True
-        model, overlay, markers = Fixture(args.worker)
+        prices, overlay, markers = Fixture(args.worker)
         title = "Matched chart benchmark"
-        spec, adapter_seconds = Timed(lambda: BuildLegacyChart(model,
-            include_statistics=False, lines=(overlay,), markers=markers,
+        spec, adapter_seconds = Timed(lambda: PrepareChart(prices,
+            analysis=False, lines=(overlay,), markers=markers,
             title=title, theme="dark", width=1280, height=760))
         spec_json, json_seconds = Timed(spec.ToJSON)
         result["fixture"] = {"recipe": "arithmetic-ohlcv-v1", "seed": None,
@@ -205,32 +200,42 @@ def PythonCase(args):
             directory = Path(temporary)
             svg, seconds = Timed(lambda: RenderSVG(spec))
             result["stages"]["static_svg"] = dict(WriteMeasured(svg, directory / "chart.svg"), render_seconds=seconds)
+            document = ET.fromstring(svg)
+            dimensions = document.attrib
+            candle_count = sum("data-candle-index" in element.attrib for element in document.iter())
+            volume_count = sum("data-volume-index" in element.attrib for element in document.iter())
+
+            if candle_count != args.worker or volume_count != args.worker:
+                raise ValueError("Native SVG lost source candle or volume geometry")
+
+            result["stages"]["static_svg"].update({"candle_rows": candle_count, "volume_rows": volume_count})
+            expected_size = (int(dimensions["width"]), int(dimensions["height"]))
             del svg
+
+            for name, renderer, format in (("png", RenderPNG, "PNG"), ("jpeg", RenderJPEG, "JPEG")):
+                payload, seconds = Timed(lambda: renderer(spec))
+                stage = dict(WriteMeasured(payload, directory / f"chart.{name}"), render_seconds=seconds)
+
+                with Image.open(BytesIO(payload)) as decoded:
+                    decoded.load()
+
+                    if decoded.format != format or decoded.size != expected_size:
+                        raise ValueError(f"Native {format} export lost its format or complete SVG dimensions")
+
+                    stage.update({"format": decoded.format, "width": decoded.width, "height": decoded.height, "mode": decoded.mode})
+
+                result["stages"][f"static_{name}"] = stage
+
             html, seconds = Timed(lambda: RenderInteractive(spec))
             html_path = directory / "chart.html"
             result["stages"]["interactive_html"] = dict(WriteMeasured(html, html_path), render_seconds=seconds)
             del html
 
-            try:
-                layout, model_seconds = Timed(lambda: model.RenderBokeh(fileName=None,
-                    darkTheme=True, showStatOnChart=False, showControlsOnChart=True,
-                    lines=[overlay], markers=markers, title=title, width=1280, height=760))
-                legacy_html, serialization_seconds = Timed(lambda: file_html(layout, INLINE, title))
-                result["stages"]["legacy_bokeh_html"] = dict(
-                    WriteMeasured(legacy_html, directory / "legacy.html"),
-                    model_seconds=model_seconds, serialization_seconds=serialization_seconds,
-                    resources="INLINE", automatic_statistics=False, status="ok")
-                del legacy_html
-                layout = None
-
-            except Exception as error:
-                result["stages"]["legacy_bokeh_html"] = {"status": "error", "error": ErrorRecord(error)}
-
             command = [args.node, str(Path(__file__).with_suffix(".cjs")),
                 str(args.source_root), args.canvas_module, str(html_path)]
             result["canvas"] = RunJSON(command, args.timeout, args.source_root, isolate=False)
 
-        if result["canvas"]["status"] == "ok" and result["stages"]["legacy_bokeh_html"]["status"] == "ok":
+        if result["canvas"]["status"] == "ok":
             if result["canvas"].get("total_rows") != args.worker:
                 raise ValueError("Canvas evidence does not identify the requested row count")
 
@@ -271,17 +276,17 @@ def Main(argv=None):
 
         return int(result["status"] != "ok")
 
-    report = {"schema_version": 1, "benchmark": "chart-performance-v1",
+    report = {"schema_version": 2, "benchmark": "modern-chart-performance-v2",
         "created_at": datetime.now(timezone.utc).isoformat(),
         "source": SourceIdentity(args.source_root), "environment": Environment(),
         "invocation": {"source_root": str(args.source_root), "sizes": args.sizes,
             "canvas_module": args.canvas_module, "node": args.node, "timeout_seconds": args.timeout},
         "scope": {
-            "fixture": "Shared arithmetic OHLCV, one custom overlay with 19 leading gaps, one above-candle marker; automatic indicators disabled in both paths",
-            "python": "Fixture and imports excluded; adapter, serialization, renderer construction and file writes measured separately; gzip and hashes excluded",
-            "legacy": "Real RenderBokeh model construction plus offline INLINE file_html serialization and explicit UTF-8 file write; no legacy browser timing",
+            "fixture": "Shared arithmetic OHLCV, one custom overlay with 19 leading gaps, one above-candle marker; automatic indicators explicitly disabled",
+            "python": "Fixture and imports excluded; PrepareChart, spec serialization, SVG/PNG/JPEG/HTML rendering and file writes measured separately; compression, hashes and decoder verification excluded",
+            "raster": "Python resvg renders the complete native SVG including legend/report; JPEG adds Pillow RGB encoding at quality90; dimensions verified against SVG",
             "canvas": "Real vendored ECharts and native raster Canvas with DOM/lifecycle shim; no browser, DOM layout, input delivery or display FPS measurement",
-            "comparison": "New chart initial viewport may display fewer candles; full-range timings and visible counts recorded separately; no speed ratio implied",
+            "comparison": "Static exports include every candle; interactive viewport and full-range visible counts recorded separately; historical engine comparisons are archived only",
             "repetitions": "One observation per size in a fresh Python and Node process; no warmup or statistical aggregation",
             "timeout_seconds_per_worker": args.timeout,
             "performance_gate": False,

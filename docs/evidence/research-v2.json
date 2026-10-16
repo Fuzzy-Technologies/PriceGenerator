@@ -1,0 +1,2256 @@
+{
+  "bootstrap_comparison": {
+    "analysis_scope": "Selected independent diagnostics; --full-analysis includes all distributions and observation vectors",
+    "decision_scope": "Only supplied absolute tolerances; no universal model acceptance or forecast claim",
+    "environment": {
+      "implementation": "CPython",
+      "numpy": "2.2.6",
+      "pandas": "2.2.3",
+      "platform": "Linux-6.18.44-x86_64-with-glibc2.39",
+      "python": "3.12.14"
+    },
+    "library_version": "2.0.0.dev0",
+    "metric_version": "comparison_v1",
+    "metrics": [
+      {
+        "absolute_tolerance": 0.005,
+        "difference": -0.0007844276303077,
+        "name": "log_return_mean",
+        "reason": null,
+        "reference": 0.0005700181927614637,
+        "synthetic": -0.0002144094375462362,
+        "within_tolerance": true
+      },
+      {
+        "absolute_tolerance": 0.005,
+        "difference": -3.9086543115915764e-05,
+        "name": "log_return_std",
+        "reason": null,
+        "reference": 0.009916001096479625,
+        "synthetic": 0.00987691455336371,
+        "within_tolerance": true
+      },
+      {
+        "absolute_tolerance": null,
+        "difference": 0.0020043266266814297,
+        "name": "body_fraction_mean",
+        "reason": null,
+        "reference": 0.4593384577351481,
+        "synthetic": 0.4613427843618295,
+        "within_tolerance": null
+      },
+      {
+        "absolute_tolerance": 10,
+        "difference": 0.0,
+        "name": "volume_mean",
+        "reason": null,
+        "reference": 999.9999999999998,
+        "synthetic": 999.9999999999998,
+        "within_tolerance": true
+      },
+      {
+        "absolute_tolerance": null,
+        "difference": 0.07347115368175046,
+        "name": "squared_return_acf_lag1",
+        "reason": null,
+        "reference": -0.05241638499460762,
+        "synthetic": 0.021054768687142837,
+        "within_tolerance": null
+      },
+      {
+        "absolute_tolerance": null,
+        "difference": null,
+        "name": "volume_absolute_return_correlation",
+        "reason": "Undefined statistic; inspect independent analysis reasons",
+        "reference": null,
+        "synthetic": null,
+        "within_tolerance": null
+      },
+      {
+        "absolute_tolerance": null,
+        "difference": 0.08174075371280098,
+        "name": "maximum_drawdown",
+        "reason": null,
+        "reference": 0.09536642039691856,
+        "synthetic": 0.17710717410971955,
+        "within_tolerance": null
+      }
+    ],
+    "reference_analysis": {
+      "cadence_regular": true,
+      "candle_count": 192,
+      "distributions": [
+        {
+          "count": 191,
+          "excess_kurtosis": {
+            "reason": null,
+            "value": -0.1292892794369233
+          },
+          "excluded": 0,
+          "lower_tail_mean": {
+            "reason": null,
+            "value": -0.019397204379516267
+          },
+          "mean": {
+            "reason": null,
+            "value": 0.0005700181927614637
+          },
+          "name": "log_returns",
+          "quantiles": [
+            [
+              0.01,
+              {
+                "reason": null,
+                "value": -0.021055386125639775
+              }
+            ],
+            [
+              0.5,
+              {
+                "reason": null,
+                "value": 0.0006375802469813507
+              }
+            ],
+            [
+              0.99,
+              {
+                "reason": null,
+                "value": 0.0218630966011446
+              }
+            ]
+          ],
+          "standard_deviation": {
+            "reason": null,
+            "value": 0.009916001096479625
+          },
+          "upper_tail_mean": {
+            "reason": null,
+            "value": 0.019897513570090022
+          }
+        },
+        {
+          "count": 192,
+          "excess_kurtosis": {
+            "reason": null,
+            "value": -0.055748020488368785
+          },
+          "excluded": 0,
+          "lower_tail_mean": {
+            "reason": null,
+            "value": 0.5372707397058633
+          },
+          "mean": {
+            "reason": null,
+            "value": 1.802563945975089
+          },
+          "name": "range",
+          "quantiles": [
+            [
+              0.01,
+              {
+                "reason": null,
+                "value": 0.5254051543478488
+              }
+            ],
+            [
+              0.5,
+              {
+                "reason": null,
+                "value": 1.7596661626639758
+              }
+            ],
+            [
+              0.99,
+              {
+                "reason": null,
+                "value": 3.8999283928577753
+              }
+            ]
+          ],
+          "standard_deviation": {
+            "reason": null,
+            "value": 0.8326833771859583
+          },
+          "upper_tail_mean": {
+            "reason": null,
+            "value": 3.7512610692295403
+          }
+        },
+        {
+          "count": 192,
+          "excess_kurtosis": {
+            "reason": null,
+            "value": -0.9005395940726881
+          },
+          "excluded": 0,
+          "lower_tail_mean": {
+            "reason": null,
+            "value": 0.048293647449603586
+          },
+          "mean": {
+            "reason": null,
+            "value": 0.4593384577351481
+          },
+          "name": "body_fraction",
+          "quantiles": [
+            [
+              0.01,
+              {
+                "reason": null,
+                "value": 0.022607248294716664
+              }
+            ],
+            [
+              0.5,
+              {
+                "reason": null,
+                "value": 0.47501655731926
+              }
+            ],
+            [
+              0.99,
+              {
+                "reason": null,
+                "value": 0.8555662140422019
+              }
+            ]
+          ],
+          "standard_deviation": {
+            "reason": null,
+            "value": 0.22309743457095357
+          },
+          "upper_tail_mean": {
+            "reason": null,
+            "value": 0.8327398817849878
+          }
+        },
+        {
+          "count": 192,
+          "excess_kurtosis": {
+            "reason": "requires at least four observations with nonzero variance",
+            "value": null
+          },
+          "excluded": 0,
+          "lower_tail_mean": {
+            "reason": null,
+            "value": 999.9999999999998
+          },
+          "mean": {
+            "reason": null,
+            "value": 999.9999999999998
+          },
+          "name": "volume",
+          "quantiles": [
+            [
+              0.01,
+              {
+                "reason": null,
+                "value": 999.9999999999998
+              }
+            ],
+            [
+              0.5,
+              {
+                "reason": null,
+                "value": 999.9999999999998
+              }
+            ],
+            [
+              0.99,
+              {
+                "reason": null,
+                "value": 999.9999999999998
+              }
+            ]
+          ],
+          "standard_deviation": {
+            "reason": null,
+            "value": 0.0
+          },
+          "upper_tail_mean": {
+            "reason": null,
+            "value": 999.9999999999998
+          }
+        }
+      ],
+      "first_three_squared_return_acf": [
+        {
+          "reason": null,
+          "value": -0.05241638499460762
+        },
+        {
+          "reason": null,
+          "value": -0.0030189363330171545
+        },
+        {
+          "reason": null,
+          "value": -0.04895904682470179
+        }
+      ],
+      "maximum_drawdown": {
+        "reason": null,
+        "value": 0.09536642039691856
+      },
+      "notes": [
+        "Descriptive diagnostics are not evidence of universal market realism or investment suitability.",
+        "Variance uses ddof=1; skewness and excess kurtosis use adjusted Fisher estimators; quantiles use linear interpolation.",
+        "Tails are inclusive observations at/beyond empirical 5% and 95% quantiles; Tukey outliers use 1.5 IQR fences; 3\u03c3 uses population deviation.",
+        "ACF uses observation lags, global centering and a full-sample denominator; irregular cadence is not resampled.",
+        "Domain-invalid returns remain aligned nulls; marginal summaries exclude them; ACF does not compress gaps.",
+        "ProbabilityTolerance applies only to independent Bernoulli generator events with a predeclared confidence and sample size.",
+        "Drawdown is a positive peak-to-trough fraction; duration counts consecutive underwater observed bars, including unrecovered periods."
+      ],
+      "path": {
+        "close_range": {
+          "reason": null,
+          "value": 21.789186221636243
+        },
+        "doji_candles": 0,
+        "down_candles": 91,
+        "elapsed_seconds": 687600.0,
+        "end_datetime": "2000-01-08T23:00:00+00:00",
+        "endpoint_change": {
+          "reason": null,
+          "value": 11.365248540359431
+        },
+        "endpoint_return": {
+          "reason": null,
+          "value": 0.11502126314721606
+        },
+        "first_close": 98.80997851512912,
+        "last_close": 110.17522705548855,
+        "longest_down_run": 5,
+        "longest_up_run": 7,
+        "start_datetime": "2000-01-01T00:00:00+00:00",
+        "total_volume": {
+          "reason": null,
+          "value": 191999.99999999997
+        },
+        "up_candles": 101
+      },
+      "volume_absolute_return_correlation": {
+        "reason": "correlation requires nonconstant paired observations",
+        "value": null
+      },
+      "volume_range_correlation": {
+        "reason": "correlation requires nonconstant paired observations",
+        "value": null
+      }
+    },
+    "reference_fingerprint": "edb4ef9f60d806c4659794b72040f509125c60f4c08f6c1a9bc87e95af2a744a",
+    "reference_rows": 192,
+    "synthetic_analysis": {
+      "cadence_regular": true,
+      "candle_count": 192,
+      "distributions": [
+        {
+          "count": 191,
+          "excess_kurtosis": {
+            "reason": null,
+            "value": 0.2440067592186826
+          },
+          "excluded": 0,
+          "lower_tail_mean": {
+            "reason": null,
+            "value": -0.02187882009878557
+          },
+          "mean": {
+            "reason": null,
+            "value": -0.0002144094375462362
+          },
+          "name": "log_returns",
+          "quantiles": [
+            [
+              0.01,
+              {
+                "reason": null,
+                "value": -0.02349606739540713
+              }
+            ],
+            [
+              0.5,
+              {
+                "reason": null,
+                "value": 0.00046761182579402316
+              }
+            ],
+            [
+              0.99,
+              {
+                "reason": null,
+                "value": 0.020613936093423827
+              }
+            ]
+          ],
+          "standard_deviation": {
+            "reason": null,
+            "value": 0.00987691455336371
+          },
+          "upper_tail_mean": {
+            "reason": null,
+            "value": 0.01843830678221634
+          }
+        },
+        {
+          "count": 192,
+          "excess_kurtosis": {
+            "reason": null,
+            "value": 0.13758559567836232
+          },
+          "excluded": 0,
+          "lower_tail_mean": {
+            "reason": null,
+            "value": 0.488063809877535
+          },
+          "mean": {
+            "reason": null,
+            "value": 1.5595488259221726
+          },
+          "name": "range",
+          "quantiles": [
+            [
+              0.01,
+              {
+                "reason": null,
+                "value": 0.4395354772370851
+              }
+            ],
+            [
+              0.5,
+              {
+                "reason": null,
+                "value": 1.3966421800531847
+              }
+            ],
+            [
+              0.99,
+              {
+                "reason": null,
+                "value": 3.415244902584097
+              }
+            ]
+          ],
+          "standard_deviation": {
+            "reason": null,
+            "value": 0.7322312918280811
+          },
+          "upper_tail_mean": {
+            "reason": null,
+            "value": 3.3154974760714304
+          }
+        },
+        {
+          "count": 192,
+          "excess_kurtosis": {
+            "reason": null,
+            "value": -0.9291406705924862
+          },
+          "excluded": 0,
+          "lower_tail_mean": {
+            "reason": null,
+            "value": 0.04395153124149832
+          },
+          "mean": {
+            "reason": null,
+            "value": 0.4613427843618295
+          },
+          "name": "body_fraction",
+          "quantiles": [
+            [
+              0.01,
+              {
+                "reason": null,
+                "value": 0.02174410920877665
+              }
+            ],
+            [
+              0.5,
+              {
+                "reason": null,
+                "value": 0.48489108322355085
+              }
+            ],
+            [
+              0.99,
+              {
+                "reason": null,
+                "value": 0.8613275222322375
+              }
+            ]
+          ],
+          "standard_deviation": {
+            "reason": null,
+            "value": 0.22488048458868637
+          },
+          "upper_tail_mean": {
+            "reason": null,
+            "value": 0.8398020343766059
+          }
+        },
+        {
+          "count": 192,
+          "excess_kurtosis": {
+            "reason": "requires at least four observations with nonzero variance",
+            "value": null
+          },
+          "excluded": 0,
+          "lower_tail_mean": {
+            "reason": null,
+            "value": 999.9999999999998
+          },
+          "mean": {
+            "reason": null,
+            "value": 999.9999999999998
+          },
+          "name": "volume",
+          "quantiles": [
+            [
+              0.01,
+              {
+                "reason": null,
+                "value": 999.9999999999998
+              }
+            ],
+            [
+              0.5,
+              {
+                "reason": null,
+                "value": 999.9999999999998
+              }
+            ],
+            [
+              0.99,
+              {
+                "reason": null,
+                "value": 999.9999999999998
+              }
+            ]
+          ],
+          "standard_deviation": {
+            "reason": null,
+            "value": 0.0
+          },
+          "upper_tail_mean": {
+            "reason": null,
+            "value": 999.9999999999998
+          }
+        }
+      ],
+      "first_three_squared_return_acf": [
+        {
+          "reason": null,
+          "value": 0.021054768687142837
+        },
+        {
+          "reason": null,
+          "value": -0.08815348290188268
+        },
+        {
+          "reason": null,
+          "value": -0.07287417211855146
+        }
+      ],
+      "maximum_drawdown": {
+        "reason": null,
+        "value": 0.17710717410971955
+      },
+      "notes": [
+        "Descriptive diagnostics are not evidence of universal market realism or investment suitability.",
+        "Variance uses ddof=1; skewness and excess kurtosis use adjusted Fisher estimators; quantiles use linear interpolation.",
+        "Tails are inclusive observations at/beyond empirical 5% and 95% quantiles; Tukey outliers use 1.5 IQR fences; 3\u03c3 uses population deviation.",
+        "ACF uses observation lags, global centering and a full-sample denominator; irregular cadence is not resampled.",
+        "Domain-invalid returns remain aligned nulls; marginal summaries exclude them; ACF does not compress gaps.",
+        "ProbabilityTolerance applies only to independent Bernoulli generator events with a predeclared confidence and sample size.",
+        "Drawdown is a positive peak-to-trough fraction; duration counts consecutive underwater observed bars, including unrecovered periods."
+      ],
+      "path": {
+        "close_range": {
+          "reason": null,
+          "value": 20.642973379322356
+        },
+        "doji_candles": 0,
+        "down_candles": 93,
+        "elapsed_seconds": 687600.0,
+        "end_datetime": "2000-01-08T23:00:00+00:00",
+        "endpoint_change": {
+          "reason": null,
+          "value": -3.938318891180515
+        },
+        "endpoint_return": {
+          "reason": null,
+          "value": -0.040124991591400705
+        },
+        "first_close": 98.15127019302722,
+        "last_close": 94.2129513018467,
+        "longest_down_run": 5,
+        "longest_up_run": 6,
+        "start_datetime": "2000-01-01T00:00:00+00:00",
+        "total_volume": {
+          "reason": null,
+          "value": 191999.99999999997
+        },
+        "up_candles": 99
+      },
+      "volume_absolute_return_correlation": {
+        "reason": "correlation requires nonconstant paired observations",
+        "value": null
+      },
+      "volume_range_correlation": {
+        "reason": "correlation requires nonconstant paired observations",
+        "value": null
+      }
+    },
+    "synthetic_fingerprint": "93055c71c2076402261a8b27074ce58c5d40e50549264f1bc07e0aa8d137a1ce",
+    "synthetic_rows": 192
+  },
+  "bootstrap_manifest": {
+    "config": {
+      "block_length": 8,
+      "count": 192,
+      "initial_price": 98.80997851512912,
+      "seed": 20,
+      "start": "2000-01-01T00:00:00+00:00",
+      "timeframe_seconds": 3600
+    },
+    "environment": {
+      "implementation": "CPython",
+      "numpy": "2.2.6",
+      "pandas": "2.2.3",
+      "platform": "Linux-6.18.44-x86_64-with-glibc2.39",
+      "python": "3.12.14"
+    },
+    "library_version": "2.0.0.dev0",
+    "manifest_version": 1,
+    "model": "bootstrap_v1",
+    "model_version": 1,
+    "output_fingerprint": "93055c71c2076402261a8b27074ce58c5d40e50549264f1bc07e0aa8d137a1ce",
+    "rng": "numpy.PCG64",
+    "source_fingerprint": "edb4ef9f60d806c4659794b72040f509125c60f4c08f6c1a9bc87e95af2a744a",
+    "source_semantics": "regular timestamps; first source row excluded; joint gap/body/wicks/volume; non-circular blocks"
+  },
+  "calibration": {
+    "holdout": {
+      "analysis_scope": "Selected independent diagnostics; --full-analysis includes all distributions and observation vectors",
+      "decision_scope": "Only supplied absolute tolerances; no universal model acceptance or forecast claim",
+      "environment": {
+        "implementation": "CPython",
+        "numpy": "2.2.6",
+        "pandas": "2.2.3",
+        "platform": "Linux-6.18.44-x86_64-with-glibc2.39",
+        "python": "3.12.14"
+      },
+      "library_version": "2.0.0.dev0",
+      "metric_version": "comparison_v1",
+      "metrics": [
+        {
+          "absolute_tolerance": 0.005,
+          "difference": -0.029957193872243222,
+          "name": "log_return_mean",
+          "reason": null,
+          "reference": 0.030336905275962108,
+          "synthetic": 0.00037971140371888517,
+          "within_tolerance": false
+        },
+        {
+          "absolute_tolerance": 0.005,
+          "difference": -0.0011764167644007107,
+          "name": "log_return_std",
+          "reason": null,
+          "reference": 0.009797933436953695,
+          "synthetic": 0.008621516672552985,
+          "within_tolerance": true
+        },
+        {
+          "absolute_tolerance": null,
+          "difference": -0.38172544655545715,
+          "name": "body_fraction_mean",
+          "reason": null,
+          "reference": 0.7931871723091891,
+          "synthetic": 0.41146172575373197,
+          "within_tolerance": null
+        },
+        {
+          "absolute_tolerance": 10,
+          "difference": -3000.0,
+          "name": "volume_mean",
+          "reason": null,
+          "reference": 3999.9999999999995,
+          "synthetic": 999.9999999999998,
+          "within_tolerance": false
+        },
+        {
+          "absolute_tolerance": null,
+          "difference": 0.2710152504628688,
+          "name": "squared_return_acf_lag1",
+          "reason": null,
+          "reference": -0.23659401423217374,
+          "synthetic": 0.03442123623069504,
+          "within_tolerance": null
+        },
+        {
+          "absolute_tolerance": null,
+          "difference": null,
+          "name": "volume_absolute_return_correlation",
+          "reason": "Undefined statistic; inspect independent analysis reasons",
+          "reference": null,
+          "synthetic": null,
+          "within_tolerance": null
+        },
+        {
+          "absolute_tolerance": null,
+          "difference": 0.04600307443824847,
+          "name": "maximum_drawdown",
+          "reason": null,
+          "reference": 0.0,
+          "synthetic": 0.04600307443824847,
+          "within_tolerance": null
+        }
+      ],
+      "reference_analysis": {
+        "cadence_regular": true,
+        "candle_count": 64,
+        "distributions": [
+          {
+            "count": 63,
+            "excess_kurtosis": {
+              "reason": null,
+              "value": 0.19254071639112846
+            },
+            "excluded": 0,
+            "lower_tail_mean": {
+              "reason": null,
+              "value": 0.008922515623672744
+            },
+            "mean": {
+              "reason": null,
+              "value": 0.030336905275962108
+            },
+            "name": "log_returns",
+            "quantiles": [
+              [
+                0.01,
+                {
+                  "reason": null,
+                  "value": 0.007113717692715423
+                }
+              ],
+              [
+                0.5,
+                {
+                  "reason": null,
+                  "value": 0.03065185656291458
+                }
+              ],
+              [
+                0.99,
+                {
+                  "reason": null,
+                  "value": 0.04894016387541986
+                }
+              ]
+            ],
+            "standard_deviation": {
+              "reason": null,
+              "value": 0.009797933436953695
+            },
+            "upper_tail_mean": {
+              "reason": null,
+              "value": 0.04714174713565611
+            }
+          },
+          {
+            "count": 64,
+            "excess_kurtosis": {
+              "reason": null,
+              "value": 1.5934366299916747
+            },
+            "excluded": 0,
+            "lower_tail_mean": {
+              "reason": null,
+              "value": 3.426423203147955
+            },
+            "mean": {
+              "reason": null,
+              "value": 13.155907379154703
+            },
+            "name": "range",
+            "quantiles": [
+              [
+                0.01,
+                {
+                  "reason": null,
+                  "value": 3.153072822092378
+                }
+              ],
+              [
+                0.5,
+                {
+                  "reason": null,
+                  "value": 11.126103890958035
+                }
+              ],
+              [
+                0.99,
+                {
+                  "reason": null,
+                  "value": 38.43476860909849
+                }
+              ]
+            ],
+            "standard_deviation": {
+              "reason": null,
+              "value": 8.932018505626752
+            },
+            "upper_tail_mean": {
+              "reason": null,
+              "value": 35.75964605155042
+            }
+          },
+          {
+            "count": 64,
+            "excess_kurtosis": {
+              "reason": null,
+              "value": 0.7556364343714683
+            },
+            "excluded": 0,
+            "lower_tail_mean": {
+              "reason": null,
+              "value": 0.5160494869159856
+            },
+            "mean": {
+              "reason": null,
+              "value": 0.7931871723091891
+            },
+            "name": "body_fraction",
+            "quantiles": [
+              [
+                0.01,
+                {
+                  "reason": null,
+                  "value": 0.4712838948172492
+                }
+              ],
+              [
+                0.5,
+                {
+                  "reason": null,
+                  "value": 0.7993680446219958
+                }
+              ],
+              [
+                0.99,
+                {
+                  "reason": null,
+                  "value": 0.9795935911774973
+                }
+              ]
+            ],
+            "standard_deviation": {
+              "reason": null,
+              "value": 0.12103394876426553
+            },
+            "upper_tail_mean": {
+              "reason": null,
+              "value": 0.9729899980328773
+            }
+          },
+          {
+            "count": 64,
+            "excess_kurtosis": {
+              "reason": "requires at least four observations with nonzero variance",
+              "value": null
+            },
+            "excluded": 0,
+            "lower_tail_mean": {
+              "reason": null,
+              "value": 3999.9999999999995
+            },
+            "mean": {
+              "reason": null,
+              "value": 3999.9999999999995
+            },
+            "name": "volume",
+            "quantiles": [
+              [
+                0.01,
+                {
+                  "reason": null,
+                  "value": 3999.9999999999995
+                }
+              ],
+              [
+                0.5,
+                {
+                  "reason": null,
+                  "value": 3999.9999999999995
+                }
+              ],
+              [
+                0.99,
+                {
+                  "reason": null,
+                  "value": 3999.9999999999995
+                }
+              ]
+            ],
+            "standard_deviation": {
+              "reason": null,
+              "value": 0.0
+            },
+            "upper_tail_mean": {
+              "reason": null,
+              "value": 3999.9999999999995
+            }
+          }
+        ],
+        "first_three_squared_return_acf": [
+          {
+            "reason": null,
+            "value": -0.23659401423217374
+          },
+          {
+            "reason": null,
+            "value": -0.23894284767463964
+          },
+          {
+            "reason": null,
+            "value": 0.16900916752847375
+          }
+        ],
+        "maximum_drawdown": {
+          "reason": null,
+          "value": 0.0
+        },
+        "notes": [
+          "Descriptive diagnostics are not evidence of universal market realism or investment suitability.",
+          "Variance uses ddof=1; skewness and excess kurtosis use adjusted Fisher estimators; quantiles use linear interpolation.",
+          "Tails are inclusive observations at/beyond empirical 5% and 95% quantiles; Tukey outliers use 1.5 IQR fences; 3\u03c3 uses population deviation.",
+          "ACF uses observation lags, global centering and a full-sample denominator; irregular cadence is not resampled.",
+          "Domain-invalid returns remain aligned nulls; marginal summaries exclude them; ACF does not compress gaps.",
+          "ProbabilityTolerance applies only to independent Bernoulli generator events with a predeclared confidence and sample size.",
+          "Drawdown is a positive peak-to-trough fraction; duration counts consecutive underwater observed bars, including unrecovered periods."
+        ],
+        "path": {
+          "close_range": {
+            "reason": null,
+            "value": 659.8439891820236
+          },
+          "doji_candles": 0,
+          "down_candles": 0,
+          "elapsed_seconds": 226800.0,
+          "end_datetime": "2000-01-11T15:00:00+00:00",
+          "endpoint_change": {
+            "reason": null,
+            "value": 659.8439891820236
+          },
+          "endpoint_return": {
+            "reason": null,
+            "value": 5.761366620277057
+          },
+          "first_close": 114.52907490033894,
+          "last_close": 774.3730640823626,
+          "longest_down_run": 0,
+          "longest_up_run": 64,
+          "start_datetime": "2000-01-09T00:00:00+00:00",
+          "total_volume": {
+            "reason": null,
+            "value": 255999.99999999997
+          },
+          "up_candles": 64
+        },
+        "volume_absolute_return_correlation": {
+          "reason": "correlation requires nonconstant paired observations",
+          "value": null
+        },
+        "volume_range_correlation": {
+          "reason": "correlation requires nonconstant paired observations",
+          "value": null
+        }
+      },
+      "reference_fingerprint": "0308f1ecad05777ec52e5913df7991ad0ffeb60cab3d9c015d3e043d128f71a3",
+      "reference_rows": 64,
+      "synthetic_analysis": {
+        "cadence_regular": true,
+        "candle_count": 64,
+        "distributions": [
+          {
+            "count": 63,
+            "excess_kurtosis": {
+              "reason": null,
+              "value": -0.1627250950979674
+            },
+            "excluded": 0,
+            "lower_tail_mean": {
+              "reason": null,
+              "value": -0.015181441841974673
+            },
+            "mean": {
+              "reason": null,
+              "value": 0.00037971140371888517
+            },
+            "name": "log_returns",
+            "quantiles": [
+              [
+                0.01,
+                {
+                  "reason": null,
+                  "value": -0.016314324901713275
+                }
+              ],
+              [
+                0.5,
+                {
+                  "reason": null,
+                  "value": 7.553663239523445e-05
+                }
+              ],
+              [
+                0.99,
+                {
+                  "reason": null,
+                  "value": 0.02017965968084285
+                }
+              ]
+            ],
+            "standard_deviation": {
+              "reason": null,
+              "value": 0.008621516672552985
+            },
+            "upper_tail_mean": {
+              "reason": null,
+              "value": 0.018525636637384713
+            }
+          },
+          {
+            "count": 64,
+            "excess_kurtosis": {
+              "reason": null,
+              "value": 0.2485047986367054
+            },
+            "excluded": 0,
+            "lower_tail_mean": {
+              "reason": null,
+              "value": 0.26228568709657907
+            },
+            "mean": {
+              "reason": null,
+              "value": 1.5413498714590659
+            },
+            "name": "range",
+            "quantiles": [
+              [
+                0.01,
+                {
+                  "reason": null,
+                  "value": 0.19272143332942163
+                }
+              ],
+              [
+                0.5,
+                {
+                  "reason": null,
+                  "value": 1.5463883510116145
+                }
+              ],
+              [
+                0.99,
+                {
+                  "reason": null,
+                  "value": 3.516252995082331
+                }
+              ]
+            ],
+            "standard_deviation": {
+              "reason": null,
+              "value": 0.7741451307980709
+            },
+            "upper_tail_mean": {
+              "reason": null,
+              "value": 3.2980667822170417
+            }
+          },
+          {
+            "count": 64,
+            "excess_kurtosis": {
+              "reason": null,
+              "value": -1.2397277284233785
+            },
+            "excluded": 0,
+            "lower_tail_mean": {
+              "reason": null,
+              "value": 0.028515023858268023
+            },
+            "mean": {
+              "reason": null,
+              "value": 0.41146172575373197
+            },
+            "name": "body_fraction",
+            "quantiles": [
+              [
+                0.01,
+                {
+                  "reason": null,
+                  "value": 0.019767250229239433
+                }
+              ],
+              [
+                0.5,
+                {
+                  "reason": null,
+                  "value": 0.4280543710977068
+                }
+              ],
+              [
+                0.99,
+                {
+                  "reason": null,
+                  "value": 0.8115981144267319
+                }
+              ]
+            ],
+            "standard_deviation": {
+              "reason": null,
+              "value": 0.2402151535567488
+            },
+            "upper_tail_mean": {
+              "reason": null,
+              "value": 0.788838279655416
+            }
+          },
+          {
+            "count": 64,
+            "excess_kurtosis": {
+              "reason": "requires at least four observations with nonzero variance",
+              "value": null
+            },
+            "excluded": 0,
+            "lower_tail_mean": {
+              "reason": null,
+              "value": 999.9999999999998
+            },
+            "mean": {
+              "reason": null,
+              "value": 999.9999999999998
+            },
+            "name": "volume",
+            "quantiles": [
+              [
+                0.01,
+                {
+                  "reason": null,
+                  "value": 999.9999999999998
+                }
+              ],
+              [
+                0.5,
+                {
+                  "reason": null,
+                  "value": 999.9999999999998
+                }
+              ],
+              [
+                0.99,
+                {
+                  "reason": null,
+                  "value": 999.9999999999998
+                }
+              ]
+            ],
+            "standard_deviation": {
+              "reason": null,
+              "value": 0.0
+            },
+            "upper_tail_mean": {
+              "reason": null,
+              "value": 999.9999999999998
+            }
+          }
+        ],
+        "first_three_squared_return_acf": [
+          {
+            "reason": null,
+            "value": 0.03442123623069504
+          },
+          {
+            "reason": null,
+            "value": 0.1551657500566012
+          },
+          {
+            "reason": null,
+            "value": 0.28334078258401557
+          }
+        ],
+        "maximum_drawdown": {
+          "reason": null,
+          "value": 0.04600307443824847
+        },
+        "notes": [
+          "Descriptive diagnostics are not evidence of universal market realism or investment suitability.",
+          "Variance uses ddof=1; skewness and excess kurtosis use adjusted Fisher estimators; quantiles use linear interpolation.",
+          "Tails are inclusive observations at/beyond empirical 5% and 95% quantiles; Tukey outliers use 1.5 IQR fences; 3\u03c3 uses population deviation.",
+          "ACF uses observation lags, global centering and a full-sample denominator; irregular cadence is not resampled.",
+          "Domain-invalid returns remain aligned nulls; marginal summaries exclude them; ACF does not compress gaps.",
+          "ProbabilityTolerance applies only to independent Bernoulli generator events with a predeclared confidence and sample size.",
+          "Drawdown is a positive peak-to-trough fraction; duration counts consecutive underwater observed bars, including unrecovered periods."
+        ],
+        "path": {
+          "close_range": {
+            "reason": null,
+            "value": 7.903517475978333
+          },
+          "doji_candles": 0,
+          "down_candles": 32,
+          "elapsed_seconds": 226800.0,
+          "end_datetime": "2000-01-11T15:00:00+00:00",
+          "endpoint_change": {
+            "reason": null,
+            "value": 2.6616186479354127
+          },
+          "endpoint_return": {
+            "reason": null,
+            "value": 0.02421024040015962
+          },
+          "first_close": 109.93772073068175,
+          "last_close": 112.59933937861716,
+          "longest_down_run": 6,
+          "longest_up_run": 5,
+          "start_datetime": "2000-01-09T00:00:00+00:00",
+          "total_volume": {
+            "reason": null,
+            "value": 63999.99999999999
+          },
+          "up_candles": 32
+        },
+        "volume_absolute_return_correlation": {
+          "reason": "correlation requires nonconstant paired observations",
+          "value": null
+        },
+        "volume_range_correlation": {
+          "reason": "correlation requires nonconstant paired observations",
+          "value": null
+        }
+      },
+      "synthetic_fingerprint": "db2e88c8c11d4ccf94bc4488a1285878aff28be304817ace34897c2b86b89103",
+      "synthetic_rows": 64
+    },
+    "holdout_manifest": {
+      "configuration": {
+        "drift": 0.000504697320833312,
+        "horizon": 64,
+        "initial_price": 110.17522705548855,
+        "model": "regime_v2",
+        "price_ceiling": 1000000000000.0,
+        "price_floor": 1e-06,
+        "regime_persistence": 0.95,
+        "regime_scale": 1.0,
+        "seed": 75,
+        "shock_probability": 0.0,
+        "shock_scale": 5.0,
+        "start": "2000-01-09T00:00:00+00:00",
+        "timeframe_seconds": 3600,
+        "volatility": 0.009905442911213497,
+        "volume_base": 999.9999999999999,
+        "volume_ceiling": 1000000000000.0,
+        "volume_persistence": 0.0,
+        "volume_return_coupling": 0.0,
+        "volume_sigma": 0.0,
+        "wick_outlier_probability": 0.0,
+        "wick_outlier_scale": 5.0,
+        "wick_scale": 0.5
+      },
+      "environment": {
+        "implementation": "CPython",
+        "numpy": "2.2.6",
+        "pandas": "2.2.3",
+        "platform": "Linux-6.18.44-x86_64-with-glibc2.39",
+        "python": "3.12.14"
+      },
+      "fingerprint": "db2e88c8c11d4ccf94bc4488a1285878aff28be304817ace34897c2b86b89103",
+      "library_version": "2.0.0.dev0",
+      "manifest_version": 1,
+      "metadata": {
+        "fitted_parameters": [
+          "drift",
+          "volatility",
+          "volume_base"
+        ],
+        "fixed_restrictions": {
+          "regime_scale": 1.0,
+          "shock_probability": 0.0,
+          "volume_persistence": 0.0,
+          "volume_return_coupling": 0.0,
+          "volume_sigma": 0.0,
+          "wick_outlier_probability": 0.0
+        },
+        "profile": {
+          "data_schema": "datetime:UTC-ns;OHLCV:float64/v1",
+          "drift": 0.000504697320833312,
+          "estimator": "body-log-return-population-moments/volume-arithmetic-mean/v1",
+          "model": "regime_v2",
+          "model_version": 2,
+          "schema_version": 1,
+          "source_end": "2000-01-08T23:00:00+00:00",
+          "source_fingerprint": "edb4ef9f60d806c4659794b72040f509125c60f4c08f6c1a9bc87e95af2a744a",
+          "source_rows": 192,
+          "source_semantics": "training-only; regular bars; candle-body returns exclude inter-bar price gaps",
+          "source_start": "2000-01-01T00:00:00+00:00",
+          "timeframe_seconds": 3600.0,
+          "volatility": 0.009905442911213497,
+          "volume_base": 999.9999999999999
+        },
+        "profile_reference": "be54758d7e643fc7787bfae9e2d39048a3e00acd7aa23104d8dab19ee94b0004",
+        "unidentified_parameters": [
+          "regime_persistence",
+          "regime_scale",
+          "shock_probability",
+          "shock_scale",
+          "wick_scale",
+          "wick_outlier_probability",
+          "wick_outlier_scale",
+          "volume_sigma",
+          "volume_return_coupling",
+          "volume_persistence"
+        ]
+      },
+      "model": "regime_v2",
+      "rng": "python.random.Random/MT19937",
+      "scenario_fingerprint": "8b4162756aa63f6859eec955bec43d729f8acdba8b91f35daed4418ac7aec8fe",
+      "seed": 75
+    },
+    "limitation": "Restricted observable-moment fit, not full parameter identification or forecast validation",
+    "profile": {
+      "data_schema": "datetime:UTC-ns;OHLCV:float64/v1",
+      "drift": 0.000504697320833312,
+      "estimator": "body-log-return-population-moments/volume-arithmetic-mean/v1",
+      "model": "regime_v2",
+      "model_version": 2,
+      "schema_version": 1,
+      "source_end": "2000-01-08T23:00:00+00:00",
+      "source_fingerprint": "edb4ef9f60d806c4659794b72040f509125c60f4c08f6c1a9bc87e95af2a744a",
+      "source_rows": 192,
+      "source_semantics": "training-only; regular bars; candle-body returns exclude inter-bar price gaps",
+      "source_start": "2000-01-01T00:00:00+00:00",
+      "timeframe_seconds": 3600.0,
+      "volatility": 0.009905442911213497,
+      "volume_base": 999.9999999999999
+    },
+    "training": {
+      "analysis_scope": "Selected independent diagnostics; --full-analysis includes all distributions and observation vectors",
+      "decision_scope": "Only supplied absolute tolerances; no universal model acceptance or forecast claim",
+      "environment": {
+        "implementation": "CPython",
+        "numpy": "2.2.6",
+        "pandas": "2.2.3",
+        "platform": "Linux-6.18.44-x86_64-with-glibc2.39",
+        "python": "3.12.14"
+      },
+      "library_version": "2.0.0.dev0",
+      "metric_version": "comparison_v1",
+      "metrics": [
+        {
+          "absolute_tolerance": 0.005,
+          "difference": 0.00043008979316275166,
+          "name": "log_return_mean",
+          "reason": null,
+          "reference": 0.0005700181927614637,
+          "synthetic": 0.0010001079859242154,
+          "within_tolerance": true
+        },
+        {
+          "absolute_tolerance": 0.005,
+          "difference": 0.000279646335758452,
+          "name": "log_return_std",
+          "reason": null,
+          "reference": 0.009916001096479625,
+          "synthetic": 0.010195647432238077,
+          "within_tolerance": true
+        },
+        {
+          "absolute_tolerance": null,
+          "difference": 0.019172635396894955,
+          "name": "body_fraction_mean",
+          "reason": null,
+          "reference": 0.4593384577351481,
+          "synthetic": 0.47851109313204304,
+          "within_tolerance": null
+        },
+        {
+          "absolute_tolerance": 10,
+          "difference": 0.0,
+          "name": "volume_mean",
+          "reason": null,
+          "reference": 999.9999999999998,
+          "synthetic": 999.9999999999998,
+          "within_tolerance": true
+        },
+        {
+          "absolute_tolerance": null,
+          "difference": -0.050429095553347174,
+          "name": "squared_return_acf_lag1",
+          "reason": null,
+          "reference": -0.05241638499460762,
+          "synthetic": -0.1028454805479548,
+          "within_tolerance": null
+        },
+        {
+          "absolute_tolerance": null,
+          "difference": null,
+          "name": "volume_absolute_return_correlation",
+          "reason": "Undefined statistic; inspect independent analysis reasons",
+          "reference": null,
+          "synthetic": null,
+          "within_tolerance": null
+        },
+        {
+          "absolute_tolerance": null,
+          "difference": 0.03169642021831354,
+          "name": "maximum_drawdown",
+          "reason": null,
+          "reference": 0.09536642039691856,
+          "synthetic": 0.1270628406152321,
+          "within_tolerance": null
+        }
+      ],
+      "reference_analysis": {
+        "cadence_regular": true,
+        "candle_count": 192,
+        "distributions": [
+          {
+            "count": 191,
+            "excess_kurtosis": {
+              "reason": null,
+              "value": -0.1292892794369233
+            },
+            "excluded": 0,
+            "lower_tail_mean": {
+              "reason": null,
+              "value": -0.019397204379516267
+            },
+            "mean": {
+              "reason": null,
+              "value": 0.0005700181927614637
+            },
+            "name": "log_returns",
+            "quantiles": [
+              [
+                0.01,
+                {
+                  "reason": null,
+                  "value": -0.021055386125639775
+                }
+              ],
+              [
+                0.5,
+                {
+                  "reason": null,
+                  "value": 0.0006375802469813507
+                }
+              ],
+              [
+                0.99,
+                {
+                  "reason": null,
+                  "value": 0.0218630966011446
+                }
+              ]
+            ],
+            "standard_deviation": {
+              "reason": null,
+              "value": 0.009916001096479625
+            },
+            "upper_tail_mean": {
+              "reason": null,
+              "value": 0.019897513570090022
+            }
+          },
+          {
+            "count": 192,
+            "excess_kurtosis": {
+              "reason": null,
+              "value": -0.055748020488368785
+            },
+            "excluded": 0,
+            "lower_tail_mean": {
+              "reason": null,
+              "value": 0.5372707397058633
+            },
+            "mean": {
+              "reason": null,
+              "value": 1.802563945975089
+            },
+            "name": "range",
+            "quantiles": [
+              [
+                0.01,
+                {
+                  "reason": null,
+                  "value": 0.5254051543478488
+                }
+              ],
+              [
+                0.5,
+                {
+                  "reason": null,
+                  "value": 1.7596661626639758
+                }
+              ],
+              [
+                0.99,
+                {
+                  "reason": null,
+                  "value": 3.8999283928577753
+                }
+              ]
+            ],
+            "standard_deviation": {
+              "reason": null,
+              "value": 0.8326833771859583
+            },
+            "upper_tail_mean": {
+              "reason": null,
+              "value": 3.7512610692295403
+            }
+          },
+          {
+            "count": 192,
+            "excess_kurtosis": {
+              "reason": null,
+              "value": -0.9005395940726881
+            },
+            "excluded": 0,
+            "lower_tail_mean": {
+              "reason": null,
+              "value": 0.048293647449603586
+            },
+            "mean": {
+              "reason": null,
+              "value": 0.4593384577351481
+            },
+            "name": "body_fraction",
+            "quantiles": [
+              [
+                0.01,
+                {
+                  "reason": null,
+                  "value": 0.022607248294716664
+                }
+              ],
+              [
+                0.5,
+                {
+                  "reason": null,
+                  "value": 0.47501655731926
+                }
+              ],
+              [
+                0.99,
+                {
+                  "reason": null,
+                  "value": 0.8555662140422019
+                }
+              ]
+            ],
+            "standard_deviation": {
+              "reason": null,
+              "value": 0.22309743457095357
+            },
+            "upper_tail_mean": {
+              "reason": null,
+              "value": 0.8327398817849878
+            }
+          },
+          {
+            "count": 192,
+            "excess_kurtosis": {
+              "reason": "requires at least four observations with nonzero variance",
+              "value": null
+            },
+            "excluded": 0,
+            "lower_tail_mean": {
+              "reason": null,
+              "value": 999.9999999999998
+            },
+            "mean": {
+              "reason": null,
+              "value": 999.9999999999998
+            },
+            "name": "volume",
+            "quantiles": [
+              [
+                0.01,
+                {
+                  "reason": null,
+                  "value": 999.9999999999998
+                }
+              ],
+              [
+                0.5,
+                {
+                  "reason": null,
+                  "value": 999.9999999999998
+                }
+              ],
+              [
+                0.99,
+                {
+                  "reason": null,
+                  "value": 999.9999999999998
+                }
+              ]
+            ],
+            "standard_deviation": {
+              "reason": null,
+              "value": 0.0
+            },
+            "upper_tail_mean": {
+              "reason": null,
+              "value": 999.9999999999998
+            }
+          }
+        ],
+        "first_three_squared_return_acf": [
+          {
+            "reason": null,
+            "value": -0.05241638499460762
+          },
+          {
+            "reason": null,
+            "value": -0.0030189363330171545
+          },
+          {
+            "reason": null,
+            "value": -0.04895904682470179
+          }
+        ],
+        "maximum_drawdown": {
+          "reason": null,
+          "value": 0.09536642039691856
+        },
+        "notes": [
+          "Descriptive diagnostics are not evidence of universal market realism or investment suitability.",
+          "Variance uses ddof=1; skewness and excess kurtosis use adjusted Fisher estimators; quantiles use linear interpolation.",
+          "Tails are inclusive observations at/beyond empirical 5% and 95% quantiles; Tukey outliers use 1.5 IQR fences; 3\u03c3 uses population deviation.",
+          "ACF uses observation lags, global centering and a full-sample denominator; irregular cadence is not resampled.",
+          "Domain-invalid returns remain aligned nulls; marginal summaries exclude them; ACF does not compress gaps.",
+          "ProbabilityTolerance applies only to independent Bernoulli generator events with a predeclared confidence and sample size.",
+          "Drawdown is a positive peak-to-trough fraction; duration counts consecutive underwater observed bars, including unrecovered periods."
+        ],
+        "path": {
+          "close_range": {
+            "reason": null,
+            "value": 21.789186221636243
+          },
+          "doji_candles": 0,
+          "down_candles": 91,
+          "elapsed_seconds": 687600.0,
+          "end_datetime": "2000-01-08T23:00:00+00:00",
+          "endpoint_change": {
+            "reason": null,
+            "value": 11.365248540359431
+          },
+          "endpoint_return": {
+            "reason": null,
+            "value": 0.11502126314721606
+          },
+          "first_close": 98.80997851512912,
+          "last_close": 110.17522705548855,
+          "longest_down_run": 5,
+          "longest_up_run": 7,
+          "start_datetime": "2000-01-01T00:00:00+00:00",
+          "total_volume": {
+            "reason": null,
+            "value": 191999.99999999997
+          },
+          "up_candles": 101
+        },
+        "volume_absolute_return_correlation": {
+          "reason": "correlation requires nonconstant paired observations",
+          "value": null
+        },
+        "volume_range_correlation": {
+          "reason": "correlation requires nonconstant paired observations",
+          "value": null
+        }
+      },
+      "reference_fingerprint": "edb4ef9f60d806c4659794b72040f509125c60f4c08f6c1a9bc87e95af2a744a",
+      "reference_rows": 192,
+      "synthetic_analysis": {
+        "cadence_regular": true,
+        "candle_count": 192,
+        "distributions": [
+          {
+            "count": 191,
+            "excess_kurtosis": {
+              "reason": null,
+              "value": -0.3261980395853378
+            },
+            "excluded": 0,
+            "lower_tail_mean": {
+              "reason": null,
+              "value": -0.019281506882795705
+            },
+            "mean": {
+              "reason": null,
+              "value": 0.0010001079859242154
+            },
+            "name": "log_returns",
+            "quantiles": [
+              [
+                0.01,
+                {
+                  "reason": null,
+                  "value": -0.0218740956820227
+                }
+              ],
+              [
+                0.5,
+                {
+                  "reason": null,
+                  "value": 0.001459134167077103
+                }
+              ],
+              [
+                0.99,
+                {
+                  "reason": null,
+                  "value": 0.022884870775612482
+                }
+              ]
+            ],
+            "standard_deviation": {
+              "reason": null,
+              "value": 0.010195647432238077
+            },
+            "upper_tail_mean": {
+              "reason": null,
+              "value": 0.02034149226500004
+            }
+          },
+          {
+            "count": 192,
+            "excess_kurtosis": {
+              "reason": null,
+              "value": 0.5361522176493927
+            },
+            "excluded": 0,
+            "lower_tail_mean": {
+              "reason": null,
+              "value": 0.4989189739706448
+            },
+            "mean": {
+              "reason": null,
+              "value": 1.7018179470937203
+            },
+            "name": "range",
+            "quantiles": [
+              [
+                0.01,
+                {
+                  "reason": null,
+                  "value": 0.3690955696658263
+                }
+              ],
+              [
+                0.5,
+                {
+                  "reason": null,
+                  "value": 1.5959167859349535
+                }
+              ],
+              [
+                0.99,
+                {
+                  "reason": null,
+                  "value": 3.9049579173280082
+                }
+              ]
+            ],
+            "standard_deviation": {
+              "reason": null,
+              "value": 0.7724791713724873
+            },
+            "upper_tail_mean": {
+              "reason": null,
+              "value": 3.654249526635311
+            }
+          },
+          {
+            "count": 192,
+            "excess_kurtosis": {
+              "reason": null,
+              "value": -0.7141034725871075
+            },
+            "excluded": 0,
+            "lower_tail_mean": {
+              "reason": null,
+              "value": 0.06418922862252072
+            },
+            "mean": {
+              "reason": null,
+              "value": 0.47851109313204304
+            },
+            "name": "body_fraction",
+            "quantiles": [
+              [
+                0.01,
+                {
+                  "reason": null,
+                  "value": 0.056649660108525235
+                }
+              ],
+              [
+                0.5,
+                {
+                  "reason": null,
+                  "value": 0.5002725346551333
+                }
+              ],
+              [
+                0.99,
+                {
+                  "reason": null,
+                  "value": 0.9340667779993526
+                }
+              ]
+            ],
+            "standard_deviation": {
+              "reason": null,
+              "value": 0.22424017411853686
+            },
+            "upper_tail_mean": {
+              "reason": null,
+              "value": 0.9014040062853507
+            }
+          },
+          {
+            "count": 192,
+            "excess_kurtosis": {
+              "reason": "requires at least four observations with nonzero variance",
+              "value": null
+            },
+            "excluded": 0,
+            "lower_tail_mean": {
+              "reason": null,
+              "value": 999.9999999999998
+            },
+            "mean": {
+              "reason": null,
+              "value": 999.9999999999998
+            },
+            "name": "volume",
+            "quantiles": [
+              [
+                0.01,
+                {
+                  "reason": null,
+                  "value": 999.9999999999998
+                }
+              ],
+              [
+                0.5,
+                {
+                  "reason": null,
+                  "value": 999.9999999999998
+                }
+              ],
+              [
+                0.99,
+                {
+                  "reason": null,
+                  "value": 999.9999999999998
+                }
+              ]
+            ],
+            "standard_deviation": {
+              "reason": null,
+              "value": 0.0
+            },
+            "upper_tail_mean": {
+              "reason": null,
+              "value": 999.9999999999998
+            }
+          }
+        ],
+        "first_three_squared_return_acf": [
+          {
+            "reason": null,
+            "value": -0.1028454805479548
+          },
+          {
+            "reason": null,
+            "value": 0.002331271180192407
+          },
+          {
+            "reason": null,
+            "value": 0.11585455252842679
+          }
+        ],
+        "maximum_drawdown": {
+          "reason": null,
+          "value": 0.1270628406152321
+        },
+        "notes": [
+          "Descriptive diagnostics are not evidence of universal market realism or investment suitability.",
+          "Variance uses ddof=1; skewness and excess kurtosis use adjusted Fisher estimators; quantiles use linear interpolation.",
+          "Tails are inclusive observations at/beyond empirical 5% and 95% quantiles; Tukey outliers use 1.5 IQR fences; 3\u03c3 uses population deviation.",
+          "ACF uses observation lags, global centering and a full-sample denominator; irregular cadence is not resampled.",
+          "Domain-invalid returns remain aligned nulls; marginal summaries exclude them; ACF does not compress gaps.",
+          "ProbabilityTolerance applies only to independent Bernoulli generator events with a predeclared confidence and sample size.",
+          "Drawdown is a positive peak-to-trough fraction; duration counts consecutive underwater observed bars, including unrecovered periods."
+        ],
+        "path": {
+          "close_range": {
+            "reason": null,
+            "value": 32.31032579986943
+          },
+          "doji_candles": 0,
+          "down_candles": 89,
+          "elapsed_seconds": 687600.0,
+          "end_datetime": "2000-01-08T23:00:00+00:00",
+          "endpoint_change": {
+            "reason": null,
+            "value": 20.957338686328512
+          },
+          "endpoint_return": {
+            "reason": null,
+            "value": 0.2104844184420558
+          },
+          "first_close": 99.56717386231537,
+          "last_close": 120.52451254864388,
+          "longest_down_run": 9,
+          "longest_up_run": 18,
+          "start_datetime": "2000-01-01T00:00:00+00:00",
+          "total_volume": {
+            "reason": null,
+            "value": 191999.99999999997
+          },
+          "up_candles": 103
+        },
+        "volume_absolute_return_correlation": {
+          "reason": "correlation requires nonconstant paired observations",
+          "value": null
+        },
+        "volume_range_correlation": {
+          "reason": "correlation requires nonconstant paired observations",
+          "value": null
+        }
+      },
+      "synthetic_fingerprint": "603cc05dd22241a1fe55550289ef772f45604a0990c7fd20217857ccc36f903c",
+      "synthetic_rows": 192
+    },
+    "training_manifest": {
+      "configuration": {
+        "drift": 0.000504697320833312,
+        "horizon": 192,
+        "initial_price": 100.0,
+        "model": "regime_v2",
+        "price_ceiling": 1000000000000.0,
+        "price_floor": 1e-06,
+        "regime_persistence": 0.95,
+        "regime_scale": 1.0,
+        "seed": 74,
+        "shock_probability": 0.0,
+        "shock_scale": 5.0,
+        "start": "2000-01-01T00:00:00+00:00",
+        "timeframe_seconds": 3600,
+        "volatility": 0.009905442911213497,
+        "volume_base": 999.9999999999999,
+        "volume_ceiling": 1000000000000.0,
+        "volume_persistence": 0.0,
+        "volume_return_coupling": 0.0,
+        "volume_sigma": 0.0,
+        "wick_outlier_probability": 0.0,
+        "wick_outlier_scale": 5.0,
+        "wick_scale": 0.5
+      },
+      "environment": {
+        "implementation": "CPython",
+        "numpy": "2.2.6",
+        "pandas": "2.2.3",
+        "platform": "Linux-6.18.44-x86_64-with-glibc2.39",
+        "python": "3.12.14"
+      },
+      "fingerprint": "603cc05dd22241a1fe55550289ef772f45604a0990c7fd20217857ccc36f903c",
+      "library_version": "2.0.0.dev0",
+      "manifest_version": 1,
+      "metadata": {
+        "fitted_parameters": [
+          "drift",
+          "volatility",
+          "volume_base"
+        ],
+        "fixed_restrictions": {
+          "regime_scale": 1.0,
+          "shock_probability": 0.0,
+          "volume_persistence": 0.0,
+          "volume_return_coupling": 0.0,
+          "volume_sigma": 0.0,
+          "wick_outlier_probability": 0.0
+        },
+        "profile": {
+          "data_schema": "datetime:UTC-ns;OHLCV:float64/v1",
+          "drift": 0.000504697320833312,
+          "estimator": "body-log-return-population-moments/volume-arithmetic-mean/v1",
+          "model": "regime_v2",
+          "model_version": 2,
+          "schema_version": 1,
+          "source_end": "2000-01-08T23:00:00+00:00",
+          "source_fingerprint": "edb4ef9f60d806c4659794b72040f509125c60f4c08f6c1a9bc87e95af2a744a",
+          "source_rows": 192,
+          "source_semantics": "training-only; regular bars; candle-body returns exclude inter-bar price gaps",
+          "source_start": "2000-01-01T00:00:00+00:00",
+          "timeframe_seconds": 3600.0,
+          "volatility": 0.009905442911213497,
+          "volume_base": 999.9999999999999
+        },
+        "profile_reference": "be54758d7e643fc7787bfae9e2d39048a3e00acd7aa23104d8dab19ee94b0004",
+        "unidentified_parameters": [
+          "regime_persistence",
+          "regime_scale",
+          "shock_probability",
+          "shock_scale",
+          "wick_scale",
+          "wick_outlier_probability",
+          "wick_outlier_scale",
+          "volume_sigma",
+          "volume_return_coupling",
+          "volume_persistence"
+        ]
+      },
+      "model": "regime_v2",
+      "rng": "python.random.Random/MT19937",
+      "scenario_fingerprint": "fe2cd45ad97f06f1178f2531283cc1759541738ae3b6d29257770875a83f9eb7",
+      "seed": 74
+    }
+  },
+  "command": "python -m tools.evaluate_models --output docs/evidence/research-v2.json",
+  "evidence_version": 1,
+  "fixture_configurations": {
+    "holdout": {
+      "drift": 0.03,
+      "horizon": 64,
+      "initial_price": 110.17522705548855,
+      "model": "regime_v2",
+      "price_ceiling": 1000000000000.0,
+      "price_floor": 1e-06,
+      "regime_persistence": 0.95,
+      "regime_scale": 1.0,
+      "seed": 981,
+      "shock_probability": 0.0,
+      "shock_scale": 5.0,
+      "start": "2000-01-09T00:00:00+00:00",
+      "timeframe_seconds": 3600,
+      "volatility": 0.01,
+      "volume_base": 4000.0,
+      "volume_ceiling": 1000000000000.0,
+      "volume_persistence": 0.0,
+      "volume_return_coupling": 0.0,
+      "volume_sigma": 0.0,
+      "wick_outlier_probability": 0.0,
+      "wick_outlier_scale": 5.0,
+      "wick_scale": 0.5
+    },
+    "training": {
+      "drift": 0.0,
+      "horizon": 192,
+      "initial_price": 100.0,
+      "model": "regime_v2",
+      "price_ceiling": 1000000000000.0,
+      "price_floor": 1e-06,
+      "regime_persistence": 0.95,
+      "regime_scale": 1.0,
+      "seed": 812,
+      "shock_probability": 0.0,
+      "shock_scale": 5.0,
+      "start": "2000-01-01T00:00:00+00:00",
+      "timeframe_seconds": 3600,
+      "volatility": 0.01,
+      "volume_base": 1000.0,
+      "volume_ceiling": 1000000000000.0,
+      "volume_persistence": 0.0,
+      "volume_return_coupling": 0.0,
+      "volume_sigma": 0.0,
+      "wick_outlier_probability": 0.0,
+      "wick_outlier_scale": 5.0,
+      "wick_scale": 0.5
+    }
+  },
+  "historical_evidence": {
+    "comparison_limit": "Historical tests use a different schema and model; no statistical equivalence is asserted",
+    "paths": [
+      "docs/baseline/source-test-results.json",
+      "docs/benchmarks/legacy-baseline-2026-10-15.json"
+    ],
+    "status": "archived characterization only; no legacy model was executed or admitted"
+  },
+  "interpretation": "The withheld drift/volume change is deliberately detectable; passing a listed tolerance validates only that fixture metric, not market realism, forecast quality or all parameters",
+  "predeclared_tolerances": {
+    "log_return_mean": 0.005,
+    "log_return_std": 0.005,
+    "volume_mean": 10
+  },
+  "registry": [
+    {
+      "limitations": [
+        "not a forecast",
+        "no market microstructure",
+        "moment calibration does not identify latent regimes"
+      ],
+      "model": "regime_v2",
+      "required_validation": [
+        "OHLCV invariants",
+        "seed replay",
+        "declared marginal metrics",
+        "temporal dependence",
+        "independent holdout"
+      ],
+      "rng": "python.random.Random/MT19937",
+      "status": "experimental",
+      "suitability": [
+        "deterministic software fixtures",
+        "regime and shock sensitivity experiments"
+      ],
+      "supported_parameters": [
+        "seed",
+        "horizon",
+        "start",
+        "timeframe_seconds",
+        "model",
+        "initial_price",
+        "price_floor",
+        "price_ceiling",
+        "drift",
+        "volatility",
+        "regime_persistence",
+        "regime_scale",
+        "shock_probability",
+        "shock_scale",
+        "wick_scale",
+        "wick_outlier_probability",
+        "wick_outlier_scale",
+        "volume_base",
+        "volume_sigma",
+        "volume_return_coupling",
+        "volume_persistence",
+        "volume_ceiling"
+      ],
+      "version": 2
+    },
+    {
+      "limitations": [
+        "cannot create unseen candle geometry",
+        "block boundaries break long dependence",
+        "reference gaps are rejected"
+      ],
+      "model": "bootstrap_v1",
+      "required_validation": [
+        "OHLCV invariants",
+        "seed replay",
+        "declared marginal metrics",
+        "temporal dependence",
+        "independent holdout"
+      ],
+      "rng": "numpy.PCG64",
+      "status": "experimental",
+      "suitability": [
+        "empirical joint candle and volume resampling",
+        "block dependence sensitivity"
+      ],
+      "supported_parameters": [
+        "count",
+        "seed",
+        "block_length",
+        "initial_price",
+        "start",
+        "timeframe_seconds"
+      ],
+      "version": 1
+    },
+    {
+      "limitations": [
+        "designed paths have no estimated market probability",
+        "no endpoint targeting"
+      ],
+      "model": "scripted_v1",
+      "required_validation": [
+        "OHLCV invariants",
+        "exact replay",
+        "event timing"
+      ],
+      "rng": "none",
+      "status": "experimental",
+      "suitability": [
+        "deterministic stress fixtures",
+        "explicit step and drift transitions"
+      ],
+      "supported_parameters": [
+        "count",
+        "initial_price",
+        "start",
+        "timeframe_seconds",
+        "drift",
+        "wick_fraction",
+        "volume",
+        "steps"
+      ],
+      "version": 1
+    }
+  ],
+  "scripted_manifest": {
+    "config": {
+      "count": 80,
+      "drift": 0.001,
+      "initial_price": 100.0,
+      "start": "2000-01-01T00:00:00+00:00",
+      "steps": [
+        {
+          "drift": null,
+          "index": 20,
+          "log_jump": -0.25,
+          "volume": 5000
+        },
+        {
+          "drift": -0.01,
+          "index": 40,
+          "log_jump": 0.0,
+          "volume": null
+        },
+        {
+          "drift": 0.005,
+          "index": 60,
+          "log_jump": 0.0,
+          "volume": 1000
+        }
+      ],
+      "timeframe_seconds": 3600,
+      "volume": 1000.0,
+      "wick_fraction": 0.01
+    },
+    "environment": {
+      "implementation": "CPython",
+      "numpy": "2.2.6",
+      "pandas": "2.2.3",
+      "platform": "Linux-6.18.44-x86_64-with-glibc2.39",
+      "python": "3.12.14"
+    },
+    "library_version": "2.0.0.dev0",
+    "manifest_version": 1,
+    "model": "scripted_v1",
+    "model_version": 1,
+    "output_fingerprint": "cfcfae1cf94cecda6ecdd00cdf43a6f0f25da7b0fcc582782675abb5ba43ae62",
+    "rng": "none"
+  },
+  "source": "Purposeful synthetic fixtures only; no historical market dataset or future observations",
+  "training_body_log_return_mean_interval": {
+    "block_length": 8,
+    "confidence": 0.95,
+    "lower": -0.0006396933666668048,
+    "method": "moving-block percentile bootstrap of mean",
+    "numpy_version": "2.2.6",
+    "observations": 192,
+    "resamples": 2000,
+    "rng": "numpy.PCG64",
+    "seed": 42,
+    "upper": 0.0017709204634157245
+  }
+}

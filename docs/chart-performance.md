@@ -5,7 +5,19 @@ initialization, PNG export and data-view actions for 1,000, 10,000 and 100,000
 input candles. It is a diagnostic command, without speed or memory thresholds.
 The checked-in report is an observation, not a universal performance guarantee.
 
-## Recorded observation
+## Current 1,000-candle verification
+
+[The modern schema-v2 report](chart-performance-2026-10-16-modern.json) records
+one actual 1,000-candle run against commit `1a01113`, including unchanged source
+and recipe hashes. SVG row counts, decoded Python PNG/JPEG dimensions, and real
+Canvas row counts passed. This is a functional diagnostic observation, with no
+speed threshold or claim about other sizes. Reproduce the recorded small run:
+
+```bash
+python tools/benchmark_charts.py --sizes 1000 --timeout 60 --output chart-performance.json
+```
+
+## Archived pre-v2 observation
 
 [The final JSON report](chart-performance-2026-10-15-final.json) records one
 observation per size on 2026-10-15 UTC, using measured integration commit
@@ -71,14 +83,17 @@ three sizes; their SVG bytes and digests also match. Final interactive visual
 fixes change HTML and PNG bytes, so those digests deliberately differ. Each
 report is a single observation; concurrent load and runtime noise still apply.
 
-## Reproduction
+## Current modern-only reproduction
 
-Use the repository's pinned modern Python dependency environment, including the
-legacy Bokeh extra used for comparison. Install the locked developer-only Canvas
-harness; chart users do not need Node.js or this native package:
+The historical tables and JSON above retain their original implementation and
+environment identity. Current code no longer imports or measures Bokeh; reproduce
+those old comparisons from their recorded historical revisions only. The current
+command measures native SVG, PNG, JPEG and offline HTML plus real Canvas actions.
+Install the export extra and locked developer-only Canvas harness; chart users
+do not need Node.js or that native package:
 
 ```bash
-python -m pip install -r requirements/modern.txt
+python -m pip install -e ".[export]" -c requirements/modern.txt
 npm ci --prefix tools/chart_runtime --ignore-scripts --no-audit --no-fund
 python tools/benchmark_charts.py --sizes 1000 10000 100000 --timeout 60 --output chart-performance.json
 ```
@@ -99,36 +114,28 @@ worker failures in JSON. Exit code 2 indicates invalid arguments. If writing the
 report fails, the report and output error are returned on stdout. A missing
 runtime or unsupported fixture is never replaced with simulated performance.
 
-## Matched workload
+## Current workload and timing contract
 
 The deterministic `arithmetic-ohlcv-v1` fixture starts at
 `2020-01-01T00:00:00Z`, has a one-minute interval, alternating rising/falling
 candles, varying volume, one custom overlay with 19 leading gaps and one
-above-candle annotation. It uses no stochastic data generation. Both paths use
-the same DataFrame, custom line, marker, dark theme and nominal 1280 × 760 size.
+above-candle annotation. Fixture construction uses a canonical DataFrame; no
+legacy model, legacy indicators or stochastic generation participates.
 
-Automatic statistics and technical indicators are **disabled in both paths**.
-This isolates chart handling without charging indicator calculations only to
-the old renderer. It does not benchmark the full legacy statistics report.
-Legacy annotations use full-length text arrays while the new snapshot contains
-the one visible annotation; this is their real respective API representation.
+`PrepareChart(analysis=False)`, strict snapshot serialization, each real renderer,
+and file writing are separate measured stages. Static SVG contains all source
+rows. PNG renders that complete SVG through `resvg-py`; JPEG adds Pillow RGB
+encoding at quality90. The PNG/JPEG rendering stages include their native SVG
+serialization, not just binary encoding. A real Pillow decoder verifies each
+raster's format and complete SVG dimensions outside the measured render/write
+stages. Interactive HTML embeds the real ECharts runtime and official assets.
 
-The new path measures `BuildLegacyChart(include_statistics=False)`, explicit
-snapshot serialization, `RenderSVG` or `RenderInteractive`, and UTF-8 file writing
-as separate stages. The old path measures real
-`RenderBokeh(showStatOnChart=False, fileName=None)`, `file_html(..., INLINE)` and
-UTF-8 writing. INLINE resources make both compared HTML artifacts self-contained;
-the old method's default CDN export is deliberately not compared against an
-offline artifact as if they had equal contents. The Bokeh model's layout, styling
-and metadata remain its own implementation. No Bokeh browser or drawing latency
-is measured or inferred.
-
-Fixture construction, imports, gzip compression and output hashing are excluded
-from the reported stage timings. Python timings use `perf_counter_ns`; Canvas
-timings use Node's `performance.now`. Raw UTF-8 size, reproducible gzip size and
-an output SHA-256 accompany each Python export. Bokeh can generate new internal
-IDs, so its output digest identifies that observation rather than promising
-byte-identical HTML between runs.
+Fixture construction, imports, compression, hashes and decoder verification are
+excluded from stage timings. Python uses `perf_counter_ns`; Canvas uses Node's
+`performance.now`. Each artifact records its encoded size, reproducible gzip
+size and SHA-256. Binary gzip sizes are diagnostic values, without a claim that
+already-compressed PNG/JPEG benefit from further compression. The schema-v2
+report contains no current-engine speed comparison against archived engines.
 
 ## Native Canvas scope
 

@@ -1,5 +1,9 @@
 include LICENSE README.md README_RU.md
-recursive-include pricegenerator *.j2 *.png *.js *.json *.txt *.md LICENSE NOTICE
+include AGENTS.md DEVELOPMENT_PROTOCOL.md PYTHON_CODE_STYLE.md
+recursive-include pricegenerator *.png *.js *.json *.txt *.md *.svg LICENSE NOTICE
 recursive-include requirements *.txt
-recursive-include tests *.py *.json *.csv *.j2
-include docs/packaging.md
+recursive-include tests *.py *.json *.csv
+recursive-include tools *.py
+include docs/packaging.md docs/releasing.md
+recursive-include docs/adr *.md
+global-exclude *.j2

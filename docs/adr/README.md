@@ -21,4 +21,8 @@ This directory contains architecture decisions for PriceGenerator modernization.
 8. [ADR-0008 — Packaging and release strategy](0008-packaging-and-release-strategy.md)
 9. [ADR-0009 — Modern static and interactive chart rendering](0009-modern-chart-rendering.md)
 
+10. [ADR-0010 — Modern-only public API and restrained chart branding](0010-modern-only-public-api.md)
+
+ADR-0010 governs the modern-only runtime and overrides conflicting earlier legacy-retention, dependency and repeated-branding provisions.
+
 Roadmap: #28.

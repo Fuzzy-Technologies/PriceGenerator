@@ -1,0 +1,142 @@
+name: Verify and publish release
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Existing exact version tag at master HEAD (v followed by canonical version)
+        required: true
+        type: string
+      publish:
+        description: Publish verified artifacts after approval in the protected pypi environment
+        required: true
+        default: false
+        type: boolean
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pricegenerator-release
+  cancel-in-progress: false
+
+env:
+  PYTHONHASHSEED: "0"
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+
+jobs:
+  build:
+    permissions:
+      contents: read
+      actions: read
+    if: github.ref == 'refs/heads/master'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    outputs:
+      commit: ${{ steps.commit.outputs.commit }}
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
+        with:
+          python-version: "3.12"
+      - name: Validate exact version tag and master commit
+        id: commit
+        env:
+          RELEASE_TAG: ${{ inputs.tag }}
+          PUBLISH: ${{ inputs.publish }}
+        run: |
+          arguments=()
+          if [ "$PUBLISH" = true ]; then arguments+=(--publish); fi
+          python tools/release_verify.py --tag "$RELEASE_TAG" "${arguments[@]}"
+          echo "commit=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+      - name: Require green quality and Canvas runs for this exact commit
+        if: inputs.publish
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          RELEASE_SHA: ${{ steps.commit.outputs.commit }}
+        run: |
+          gh api --paginate --slurp "repos/$GH_REPO/actions/runs?head_sha=$RELEASE_SHA&per_page=100" > "$RUNNER_TEMP/release-ci.json"
+          python tools/release_verify.py --ci-runs "$RUNNER_TEMP/release-ci.json" --commit "$RELEASE_SHA"
+      - name: Require configured human approval before enabling publication
+        if: inputs.publish
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          gh api "repos/$GH_REPO/environments/pypi" > "$RUNNER_TEMP/pypi-environment.json"
+          jq -e 'any(.protection_rules[]?; .type == "required_reviewers" and (.reviewers | length > 0))' "$RUNNER_TEMP/pypi-environment.json" || {
+            echo 'Configure required human reviewers on Settings > Environments > pypi before publication. See docs/releasing.md.' >&2
+            exit 1
+          }
+      - name: Build reviewed source distribution and wheel once
+        run: |
+          python -m pip install -r requirements/ci.txt
+          python -m build
+          python -m twine check --strict dist/*
+          python tools/release_verify.py --artifacts dist
+          cat dist/SHA256SUMS
+      - name: Retain immutable release candidates
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
+        with:
+          name: release-distributions
+          path: dist/
+          if-no-files-found: error
+          retention-days: 30
+
+  verify:
+    needs: build
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.10", "3.11", "3.12", "3.13"]
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+        with:
+          ref: ${{ needs.build.outputs.commit }}
+          persist-credentials: false
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
+        with:
+          python-version: ${{ matrix.python-version }}
+      - uses: actions/download-artifact@018cc2cf5baa6db3ef3c5f8a56943fffe632ef53 # v6
+        with:
+          name: release-distributions
+          path: dist/
+      - name: Verify downloaded bytes and isolated installed behavior
+        run: |
+          (cd dist && sha256sum --check SHA256SUMS)
+          python tools/release_verify.py --artifacts dist
+          python tools/release_install.py dist
+
+  publish:
+    if: inputs.publish && github.ref == 'refs/heads/master'
+    needs: [build, verify]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    environment:
+      name: pypi
+      url: https://pypi.org/project/pricegenerator/
+    permissions:
+      id-token: write
+    steps:
+      - uses: actions/download-artifact@018cc2cf5baa6db3ef3c5f8a56943fffe632ef53 # v6
+        with:
+          name: release-distributions
+          path: dist/
+      - name: Verify exact approved bytes and select only distributions
+        run: |
+          (cd dist && sha256sum --check SHA256SUMS)
+          mkdir publish
+          cp dist/*.whl dist/*.tar.gz publish/
+      - name: Publish with PyPI Trusted Publishing and attestations
+        uses: pypa/gh-action-pypi-publish@dc37677b2e1c63e2034f94d8a5b11f265b73ba33 # release/v1, verified 2026-10-16
+        with:
+          packages-dir: publish/
+          attestations: true
+          print-hash: true
+          skip-existing: false

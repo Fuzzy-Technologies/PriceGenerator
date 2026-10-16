@@ -41,3 +41,7 @@ A new model must have:
 5. statistical validation metrics selected before declaring the model stable.
 
 Familiar financial models are not automatically accepted merely because they are standard names.
+
+## Partial supersession — 2026-10-16
+
+[ADR-0010](0010-modern-only-public-api.md) supersedes conflicting legacy-retention, optional-backend and repeated-branding provisions. The modern-only runtime and one price-panel wordmark govern current implementation; remaining invariants continue to apply.

@@ -4,7 +4,7 @@ on:
   pull_request:
     branches: [develop, master]
   push:
-    branches: [develop]
+    branches: [develop, master]
   workflow_dispatch:
 
 permissions:
@@ -19,88 +19,49 @@ env:
   PIP_DISABLE_PIP_VERSION_CHECK: "1"
 
 jobs:
-  runtime-plan:
-    runs-on: ubuntu-24.04
-    timeout-minutes: 3
-    outputs:
-      versions: ${{ steps.versions.outputs.versions }}
-    steps:
-      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
-        with:
-          persist-credentials: false
-      - name: Select the verified package runtime contract
-        id: versions
-        run: |
-          if [ -f pyproject.toml ]; then
-            echo 'versions=["3.10", "3.11", "3.12", "3.13"]' >> "$GITHUB_OUTPUT"
-          else
-            echo 'versions=["3.11"]' >> "$GITHUB_OUTPUT"
-          fi
   quality:
-    needs: runtime-plan
     runs-on: ubuntu-24.04
-    timeout-minutes: 15
+    timeout-minutes: 25
     strategy:
       fail-fast: false
       matrix:
-        python-version: ${{ fromJSON(needs.runtime-plan.outputs.versions) }}
+        python-version: ["3.10", "3.11", "3.12", "3.13"]
     steps:
-      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
         with:
           persist-credentials: false
-      - uses: actions/setup-python@e797f83bcb11b83ae66e0230d6156d7c80228e7c # v6.0.0
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
         with:
           python-version: ${{ matrix.python-version }}
           cache: pip
           cache-dependency-path: requirements/*.txt
-      - name: Install locked tooling and report the runtime
+      - name: Install locked modern tools and runtime
         run: |
           python -m pip install -r requirements/ci.txt
+          python -m pip install -c requirements/modern.txt '.[export]'
           python --version
-          python -m pip --version
-      - name: Compile sources and lint maintained modules
+          python -m pip freeze
+          python -m pip check
+      - name: Compile and lint maintained Python
         run: |
           python -m compileall -q pricegenerator tools tests
-          python -m ruff check --select E4,E7,E9,F,D --ignore D202,D203,D213 tools/pr_merge_links.py tests/test_pr_merge_links.py
-          python -m ruff check --select E4,E7,E9,F,D --ignore D202,D203,D213 pricegenerator/rendering tools/benchmark.py tools/benchmark_charts.py tools/chart_examples.py tests/test_chart_spec.py tests/test_static_charts.py tests/test_interactive_charts.py tests/test_chart_migration.py tests/test_chart_performance.py tests/test_packaging.py
-      - name: Test Task lifecycle and failure paths
+          python -m ruff check --select E4,E7,E9,F,D --ignore D202,D203,D213 pricegenerator tools/release_verify.py tools/release_install.py tools/pr_merge_links.py tests/test_packaging.py tests/test_release_contract.py tests/test_pr_merge_links.py
+      - name: Test Task lifecycle and deterministic failure paths
         run: |
           python -m pytest -q tests/test_pr_merge_links.py --cov=tools.pr_merge_links --cov-branch --cov-fail-under=95 --cov-report=term-missing --junitxml=ci-reports/lifecycle.xml
-      - name: Build source and wheel artifacts
+      - name: Run complete integration suite
+        run: python -m pytest -q tests --junitxml=ci-reports/package-tests.xml
+      - name: Build sdist and its wheel once and inspect metadata
         run: |
-          if [ -f pyproject.toml ]; then
-            python -m build
-          else
-            python -m build --no-isolation
-          fi
-          sha256sum dist/*
-      - name: Create a clean artifact-install environment
-        run: |
-          python -m venv "$RUNNER_TEMP/pricegenerator-install"
-          "$RUNNER_TEMP/pricegenerator-install/bin/python" -m pip install -r requirements/ci.txt
-          if [ -f pyproject.toml ]; then
-            "$RUNNER_TEMP/pricegenerator-install/bin/python" -m pip install -c requirements/modern.txt dist/*.whl
-            "$RUNNER_TEMP/pricegenerator-install/bin/python" -I tests/test_packaging.py core
-            wheel_path="$(realpath dist/*.whl)"
-            "$RUNNER_TEMP/pricegenerator-install/bin/python" -m pip install -c requirements/modern.txt "${wheel_path}[render,indicators]"
-            "$RUNNER_TEMP/pricegenerator-install/bin/python" -I tests/test_packaging.py extras
-            "$RUNNER_TEMP/pricegenerator-install/bin/python" -m pip check
-          else
-            "$RUNNER_TEMP/pricegenerator-install/bin/python" -m pip install -r requirements/ci-legacy.txt
-            "$RUNNER_TEMP/pricegenerator-install/bin/python" -m pip install --no-deps dist/*.whl
-          fi
-          "$RUNNER_TEMP/pricegenerator-install/bin/python" -m pip freeze
-      - name: Smoke-test the installed artifact outside the source tree
-        run: |
-          cd "$RUNNER_TEMP"
-          "$RUNNER_TEMP/pricegenerator-install/bin/python" -I -c 'import importlib.metadata; from pricegenerator import PriceGenerator; print(PriceGenerator.__file__); print(importlib.metadata.version("pricegenerator")); model = PriceGenerator.PriceGenerator(); model.horizon = 5; model.Generate(); assert len(model.prices) == 5'
-      - name: Run every project test and invariant suite
-        run: |
-          install_python="$RUNNER_TEMP/pricegenerator-install/bin/python"
-          "$install_python" -c 'import random, pytest; random.seed(0); raise SystemExit(pytest.main(["-q", "tests", "--junitxml=ci-reports/package-tests.xml"]))'
+          python -m build
+          python -m twine check --strict dist/*
+          python tools/release_verify.py --artifacts dist
+          cat dist/SHA256SUMS
+      - name: Test actual core and export artifacts in clean environments
+        run: python tools/release_install.py dist
       - name: Retain build and test evidence
         if: always()
-        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
         with:
           name: pr-evidence-python-${{ matrix.python-version }}
           path: |

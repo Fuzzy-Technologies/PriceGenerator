@@ -3,6 +3,7 @@
 import json
 import signal
 import subprocess
+from types import SimpleNamespace
 from unittest.mock import Mock
 
 import pytest
@@ -104,3 +105,51 @@ def test_SourceChangeInvalidatesMeasurements(monkeypatch, tmp_path, capsys):
     assert exit_code == 1, "Concurrent edits must invalidate the observation"
     assert report["source_error"]["type"] == "SourceChangedError", "The reproducibility failure must remain explicit"
     assert report["cases"][0]["status"] == "ok", "Completed observations must remain available for diagnosis"
+
+
+def test_FixtureUsesCanonicalDataWithoutLegacyModel():
+    """The benchmark fixture is independent of all retired generator classes."""
+
+    prices, overlay, markers = benchmark_charts.Fixture(1000)
+    assert list(prices.columns) == ["datetime", "open", "high", "low", "close", "volume"]
+    assert len(prices) == len(overlay) == len(markers) == 1000
+    assert overlay.Reference.isna().sum() == 19
+    assert (markers.markersUpper == "Signal").sum() == 1
+
+
+def test_MissingCanvasRuntimePreservesRealStaticExportEvidence(tmp_path):
+    """A native Node spawn failure cannot turn completed static work into success."""
+
+    pytest.importorskip("resvg_py")
+    pytest.importorskip("PIL")
+    arguments = SimpleNamespace(worker=1000, source_root=benchmark_charts.ROOT,
+        work_directory=tmp_path, node=str(tmp_path / "missing-node"),
+        canvas_module="@napi-rs/canvas", timeout=5)
+    result = benchmark_charts.PythonCase(arguments)
+    assert result["status"] == "error"
+    assert result["canvas"]["error"]["type"] == "FileNotFoundError"
+    assert result["stages"]["static_svg"]["candle_rows"] == 1000
+    assert result["stages"]["static_png"]["format"] == "PNG"
+    assert result["stages"]["static_jpeg"]["mode"] == "RGB"
+    assert "legacy_bokeh_html" not in result["stages"]
+
+
+def test_MissingExportBindingRetainsActionableFailure(monkeypatch, tmp_path):
+    """Missing optional raster support produces explicit diagnostic evidence."""
+
+    pytest.importorskip("PIL")
+    from pricegenerator.rendering import exports
+
+    def Missing(name):
+        """Represent an absent resvg binding while preserving actual SVG output."""
+
+        raise ImportError('Raster export requires: python -m pip install "pricegenerator[export]"')
+
+    monkeypatch.setattr(exports, "_ExportModule", Missing)
+    arguments = SimpleNamespace(worker=1000, source_root=benchmark_charts.ROOT,
+        work_directory=tmp_path, node="node", canvas_module="@napi-rs/canvas", timeout=5)
+    result = benchmark_charts.PythonCase(arguments)
+    assert result["status"] == "error" and result["error"]["type"] == "ImportError"
+    assert "pricegenerator[export]" in result["error"]["message"]
+    assert result["stages"]["static_svg"]["candle_rows"] == 1000
+    assert "static_png" not in result["stages"] and "canvas" not in result

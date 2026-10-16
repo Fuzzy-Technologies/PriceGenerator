@@ -43,3 +43,7 @@ A scenario manifest must be serializable and sufficient to reconstruct determini
 ## Compatibility
 
 Unseeded legacy usage remains supported. This ADR does not promise that accidental historical workflows based on external global `random.seed()` remain a permanent public contract.
+
+## Partial supersession — 2026-10-16
+
+[ADR-0010](0010-modern-only-public-api.md) supersedes conflicting legacy-retention, optional-backend and repeated-branding provisions. The modern-only runtime and one price-panel wordmark govern current implementation; remaining invariants continue to apply.
