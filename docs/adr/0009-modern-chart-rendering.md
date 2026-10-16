@@ -67,3 +67,7 @@ Before retiring legacy modules, task #94 must demonstrate the complete capabilit
 - [Lightweight Charts license and attribution](https://tradingview.github.io/lightweight-charts/docs)
 - [Lightweight Charts panes](https://tradingview.github.io/lightweight-charts/tutorials/how_to/panes)
 - [uPlot license, features, and explicit panning non-goal](https://github.com/leeoniya/uPlot)
+
+## Partial supersession — 2026-10-16
+
+[ADR-0010](0010-modern-only-public-api.md) supersedes conflicting legacy-retention, optional-backend and repeated-branding provisions. The modern-only runtime and one price-panel wordmark govern current implementation; remaining invariants continue to apply.

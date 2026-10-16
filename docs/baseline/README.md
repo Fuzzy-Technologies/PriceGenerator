@@ -1,4 +1,10 @@
-# Published 1.x engineering baseline
+# Published 1.x engineering baseline (archival evidence)
+
+This document records historical observations, not the modern runtime contract.
+The old source and characterization tools remain in immutable Git revision
+[`88f6d52`](https://github.com/Fuzzy-Technologies/PriceGenerator/tree/88f6d52a5ff142bbadbef38430cd30324125f33e).
+Modern installs/tests do not load the historical model or its dependencies.
+[ADR-0010](../adr/0010-modern-only-public-api.md) governs current behavior.
 
 Tasks: [#44](https://github.com/Fuzzy-Technologies/PriceGenerator/issues/44),
 [#45](https://github.com/Fuzzy-Technologies/PriceGenerator/issues/45),
@@ -44,7 +50,7 @@ or production source modification is part of this baseline.
 The reconstructed environment uses CPython 3.11.17 on Linux x86_64, NumPy 1.24.4,
 pandas 1.5.3, Bokeh 3.0.3 and real pandas-ta 0.3.14b0. All direct and transitive
 packages, including the historical notebook/bkcharts dependencies, are pinned in
-[`requirements/baseline-py311.txt`](../../requirements/baseline-py311.txt).
+[`archive/baseline-py311.txt`](archive/baseline-py311.txt).
 
 The old pandas-ta release is absent from current PyPI metadata. The baseline
 therefore installs the MIT-licensed historical source from
@@ -69,15 +75,17 @@ warnings remain visible. The two expected failures are known model defects,
 not installation failures. The unpinned resolver observation is recorded in
 [the installation matrix](install-matrix.json).
 
-Reproduce the source row from the current checkout (Git and `uv` required):
+Historical reproduction is isolated from the modern checkout (Git and `uv` required).
+Use the original characterization tools from their immutable revision:
 
 ```bash
+git worktree add --detach ../PriceGenerator-baseline-tools 88f6d52a5ff142bbadbef38430cd30324125f33e
 git worktree add --detach ../PriceGenerator-legacy-source a97e84829ebee121c411a273845cba871ce07890
 uv venv --python 3.11.17 .venv-legacy
-uv pip install --python .venv-legacy/bin/python -r requirements/baseline-py311.txt
+uv pip install --python .venv-legacy/bin/python -r docs/baseline/archive/baseline-py311.txt
 uv pip install --python .venv-legacy/bin/python --no-deps --no-build-isolation ../PriceGenerator-legacy-source
 uv pip check --python .venv-legacy/bin/python
-.venv-legacy/bin/python tools/baseline_tests.py --report /tmp/pricegenerator-source-results.json
+.venv-legacy/bin/python ../PriceGenerator-baseline-tools/tools/baseline_tests.py --report /tmp/pricegenerator-source-results.json
 ```
 
 For the published-wheel row, create another empty virtual environment, install
@@ -90,7 +98,7 @@ when the test process finishes. No browser is opened.
 
 ## Characterization contract
 
-[`tests/legacy_harness.py`](../../tests/legacy_harness.py) seeds Python's global
+[Historical `tests/legacy_harness.py`](https://github.com/Fuzzy-Technologies/PriceGenerator/blob/88f6d52a5ff142bbadbef38430cd30324125f33e/tests/legacy_harness.py) seeds Python's global
 MT19937 **before construction**, retaining the three constructor random draws.
 It restores caller RNG, stderr and logger state even after generation fails.
 A test-only `tzlocal()` override pins UTC because the old generator otherwise
@@ -98,7 +106,7 @@ forces the host timezone. Explicit generation inputs and a fixed start time are
 stored with every scenario. This helper is serial test machinery; it is not a
 thread-safe API and does not define the future per-instance RNG interface.
 
-[`tests/legacy_cases.json`](../../tests/legacy_cases.json) holds full golden rows
+[`archive/legacy_cases.json`](archive/legacy_cases.json) holds full golden rows
 for default-equivalent settings, bounded five-decimal prices and a three-part
 up/down/no-trend scenario. The default case explicitly records the constructor
 bounds and volume selected by seed zero, while leaving documented derived values
@@ -114,7 +122,7 @@ Unsplit body bounds include one price tick for floating-point rounding. These
 are measured properties of the specified configurations, not universal realism
 claims or a promise that every legacy parameter combination is valid.
 
-[`tests/legacy_indicators.json`](../../tests/legacy_indicators.json) captures 240
+[`archive/legacy_indicators.json`](archive/legacy_indicators.json) captures 240
 input candles and 19 real indicator vectors for migration comparisons. It includes
 the historical overwrite of `hma5` by the Alligator Lips calculation. The baseline
 test compares all vectors, NaN positions included, with `rtol=atol=1e-12`.

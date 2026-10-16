@@ -35,7 +35,7 @@ function Differences(first, second, region, ratio = 2) {
     return difference;
 }
 
-test("Mount followed immediately by PNG export contains decoded header and all watermarks", async () => {
+test("Mount followed immediately by PNG export contains decoded emblem and one price-panel wordmark", async () => {
     const harness = CreateHarness();
     const spec = Spec();
     const status = {textContent: ""};
@@ -48,13 +48,14 @@ test("Mount followed immediately by PNG export contains decoded header and all w
         assert.match(status.textContent, /^Ready\./);
         const graphics = controller.chart.getOption().graphic[0].elements;
         const regions = [{name: "emblem", x: 20, y: 15, width: 46, height: 46},
-            {name: "wordmark", x: spec.width - 204, y: 28, width: 174, height: 32},
             ...graphics.filter((item) => item.id.startsWith("watermark-")).map((item) => ({name: item.id,
                 x: item.style.x, y: item.style.y, width: item.style.width, height: item.style.height}))];
         controller.chart.setOption({graphic: []}, {replaceMerge: ["graphic"]});
         const plain = await harness.DecodePNG(controller.ExportPNG());
-        assert.ok(regions.some((region) => region.name.startsWith("watermark-0")));
-        assert.ok(regions.some((region) => region.name.startsWith("watermark-1")));
+        assert.equal(regions.filter((region) => region.name.startsWith("watermark-")).length, 1);
+        assert.equal(regions[1].name, "watermark-price");
+        assert.equal(regions[1].x, 90);
+        assert.equal(regions[1].width, 160);
         for (const region of regions) assert.ok(Differences(exported, plain, region) > 20,
             region.name + " must survive PNG export as actual non-background pixels");
     } finally {

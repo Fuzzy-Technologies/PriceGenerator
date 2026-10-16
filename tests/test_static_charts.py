@@ -51,8 +51,8 @@ def test_SvgPreservesDataAndVisibleFeatures() -> None:
     assert RenderSVG(spec) == rendered, "Identical input changed serialized output"
 
 
-def test_BrandingIsEmbeddedOnceAndRepeatedByReference() -> None:
-    """Reusable SVG definitions avoid multiplying embedded image payloads."""
+def test_BrandingContainsOnePricePanelWordmark() -> None:
+    """One translucent wordmark is anchored at the price panel lower left."""
 
     rendered = RenderSVG(Spec())
     root = ET.fromstring(rendered)
@@ -60,8 +60,8 @@ def test_BrandingIsEmbeddedOnceAndRepeatedByReference() -> None:
 
     assert rendered.count(branding["wordmark"]) == 1, "Repeated wordmarks duplicate image bytes"
     assert rendered.count(branding["emblem"]) == 1, "The main emblem duplicates image bytes"
-    assert len(root.findall('.//svg:use', SVG_NS)) >= 4, "Chart is missing repeated X-axis branding"
-    assert {group.attrib["data-watermark-panel"] for group in root.findall('.//svg:g[@data-watermark-panel]', SVG_NS)} == {"price", "volume"}, "Both chart panels must carry X-axis branding"
+    assert len(root.findall('.//svg:use', SVG_NS)) == 2, "Chart must contain one emblem and one wordmark"
+    assert {group.attrib["data-watermark-panel"] for group in root.findall('.//svg:g[@data-watermark-panel]', SVG_NS)} == {"price"}, "Only the main price panel may carry the wordmark"
     assert len(rendered.encode("utf-8")) < 100_000, "A three-candle SVG exceeded the fixture size budget"
     assert not re.search(r'(?:href|src)="https?://', rendered), "Offline SVG contains an external asset dependency"
 

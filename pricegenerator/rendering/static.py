@@ -108,7 +108,7 @@ def RenderSVG(spec: ChartSpec) -> str:
         f'<defs><clipPath id="{prefix}-plot"><rect x="{left}" y="{price_top}" width="{right - left}" height="{price_bottom - price_top}"/></clipPath>',
         f'<clipPath id="{prefix}-volume"><rect x="{left}" y="{volume_top}" width="{right - left}" height="{volume_bottom - volume_top}"/></clipPath>',
         f'<clipPath id="{prefix}-emblem-clip"><circle cx="28" cy="28" r="28"/></clipPath>',
-        f'<filter id="{prefix}-wordmark-tint"><feFlood flood-color="{theme["muted"]}"/><feComposite in2="SourceAlpha" operator="in"/></filter>',
+        f'<filter id="{prefix}-wordmark-tint"><feFlood flood-color="{theme["text"]}"/><feComposite in2="SourceAlpha" operator="in"/></filter>',
         f'<image id="{prefix}-wordmark" xlink:href="{branding["wordmark"]}" width="160" height="28.8"/>',
         f'<image id="{prefix}-emblem" xlink:href="{branding["emblem"]}" width="56" height="56" clip-path="url(#{prefix}-emblem-clip)"/></defs>',
         f'<rect width="100%" height="100%" fill="{theme["background"]}"/>',
@@ -126,14 +126,6 @@ def RenderSVG(spec: ChartSpec) -> str:
         y = _Coordinate(position_y(tick))
         pieces.append(f'<path d="M {left} {y} H {right}" stroke="{theme["grid"]}" stroke-dasharray="3 6"/>')
         pieces.append(f'<text x="{left - 9}" y="{y}" dy="4" font-size="11" text-anchor="end" fill="{theme["muted"]}">{_PriceLabel(tick, spec.price_precision)}</text>')
-
-    for panel, clip, bottom in (("price", "plot", price_bottom), ("volume", "volume", volume_bottom)):
-        pieces.append(f'<g data-watermark-panel="{panel}" clip-path="url(#{prefix}-{clip})" opacity="0.16">')
-
-        for x in range(int(left + 8), int(right), 190):
-            pieces.append(f'<use href="#{prefix}-wordmark" xlink:href="#{prefix}-wordmark" x="{x}" y="{bottom - 34}" filter="url(#{prefix}-wordmark-tint)"/>')
-
-        pieces.append('</g>')
 
     maximum_volume = max(candle.volume for candle in spec.candles) or 1.0
 
@@ -180,6 +172,8 @@ def RenderSVG(spec: ChartSpec) -> str:
         pieces.append('</g>')
 
     pieces.append('</g>')
+    pieces.append(f'<g data-watermark-panel="price" clip-path="url(#{prefix}-plot)" opacity="0.28">')
+    pieces.append(f'<use href="#{prefix}-wordmark" xlink:href="#{prefix}-wordmark" x="{left + 8}" y="{price_bottom - 36.8}" filter="url(#{prefix}-wordmark-tint)"/></g>')
 
     for marker in spec.markers:
         candle = spec.candles[marker.candle_index]

@@ -51,3 +51,7 @@ For established v2 public contracts, prefer documented deprecation and migration
 - migration notes become part of release quality;
 - historical stochastic behavior can still be reproduced where scientifically useful;
 - API versioning and stochastic-model versioning are treated as separate concerns.
+
+## Partial supersession — 2026-10-16
+
+[ADR-0010](0010-modern-only-public-api.md) supersedes conflicting legacy-retention, optional-backend and repeated-branding provisions. The modern-only runtime and one price-panel wordmark govern current implementation; remaining invariants continue to apply.

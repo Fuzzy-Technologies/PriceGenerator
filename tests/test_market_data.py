@@ -175,3 +175,46 @@ def test_EmptyTablesAndExplicitDatetimeIndexHelper():
 
     with pytest.raises(OHLCVError):
         ValidateOHLCV(indexed)
+
+
+def test_TimestampStorageIsDetachedAndSubNanosecondObjectsAreRejected():
+    """Detach datetime storage and reject precision pandas would otherwise truncate."""
+
+    original = Candles()
+    canonical = ValidateOHLCV(original)
+    canonical.loc[0, "datetime"] = pd.Timestamp("2025-01-01T00:00:00Z")
+    assert original.datetime.iloc[0] == pd.Timestamp("2024-01-01T00:00:00Z")
+    precise = original.iloc[:1].copy()
+    precise["datetime"] = pd.Series([np.datetime64("1970-01-01T00:00:00.000000000001", "ps")], dtype=object)
+
+    with pytest.raises(OHLCVError, match="finer"):
+        ValidateOHLCV(precise)
+
+
+def test_MultiCenturyContinuityFallbackRejectsOffGridAndContinuousClaims():
+    """Retain exact policy checks when timestamp spans exceed signed int64."""
+
+    frame = Candles().iloc[:2].copy()
+    frame["datetime"] = pd.to_datetime(["1700-01-01T00:00:00Z", "2200-01-01T00:00:00Z"])
+
+    with pytest.raises(OHLCVError, match="spacing"):
+        ValidateOHLCV(frame, timeframe_seconds=1, allow_gaps=False)
+
+    frame.loc[frame.index[1], "datetime"] += pd.Timedelta(nanoseconds=1)
+
+    with pytest.raises(OHLCVError, match="spacing"):
+        ValidateOHLCV(frame, timeframe_seconds=1)
+
+
+@pytest.mark.parametrize("start,periods,step", [
+    ("2024-01-01T00:00:00", 3, 1),
+    ("2024-01-01T00:00:00Z", True, 1),
+    ("2262-04-11T23:47:16Z", 2, 1),
+])
+def test_TimestampBuilderRejectsInvalidDomains(start, periods, step):
+    """Keep invalid timezone, row-count, and absolute-range inputs explicit."""
+
+    from pricegenerator.market_data import TimestampRange
+
+    with pytest.raises(OHLCVError):
+        TimestampRange(start, periods, step)

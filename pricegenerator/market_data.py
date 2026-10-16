@@ -44,6 +44,47 @@ def TimeframeNanoseconds(timeframe_seconds):
     return int(nanoseconds)
 
 
+def TimestampRange(start, periods, timeframe_seconds):
+    """Build UTC nanosecond timestamps without overflowing interval arithmetic.
+
+    Each absolute instant must fit pandas' timestamp domain; the total span
+    need not fit a signed nanosecond duration. This avoids date_range's internal
+    multiplication overflow for valid multi-century series.
+    """
+
+    if type(periods) is not int or periods < 0:
+        raise OHLCVError("periods must be a nonnegative integer")
+
+    step_ns = TimeframeNanoseconds(timeframe_seconds)
+
+    try:
+        timestamp = pd.Timestamp(start)
+
+        if pd.isna(timestamp) or timestamp.tzinfo is None:
+            raise OHLCVError("start must be a valid timezone-aware timestamp")
+
+        start_ns = timestamp.tz_convert("UTC").as_unit("ns").value
+
+    except (ValueError, TypeError, OverflowError) as error:
+        raise OHLCVError("start exceeds the supported timezone-aware nanosecond domain") from error
+
+    span_ns = (periods - 1) * step_ns if periods else 0
+
+    if start_ns + span_ns > pd.Timestamp.max.value:
+        raise OHLCVError("timestamp range exceeds the supported nanosecond domain")
+
+    if span_ns <= np.iinfo(np.int64).max:
+        instants = np.arange(periods, dtype=np.int64) * step_ns + start_ns
+
+    else:
+        instants = np.fromiter(
+            (start_ns + index * step_ns for index in range(periods)),
+            dtype=np.int64, count=periods,
+        )
+
+    return pd.to_datetime(instants, utc=True)
+
+
 def _DatetimeColumn(values, assume_timezone):
     """Normalize explicit datetimes to UTC without guessing timezone or units."""
 
@@ -172,14 +213,23 @@ def ValidateOHLCV(frame, *, assume_timezone=None, timeframe_seconds=None, allow_
         raise OHLCVError("OHLC values violate high/low geometric bounds")
 
     if timeframe_ns is not None:
-        # Python integer differences avoid signed-int64 overflow across the epoch.
         instants = timestamps.array.asi8
 
-        for previous, current in zip(instants[:-1], instants[1:]):
-            difference = int(current) - int(previous)
+        if len(instants) > 1 and int(instants[-1]) - int(instants[0]) <= np.iinfo(np.int64).max:
+            # Monotonicity bounds every difference by this overflow-safe span.
+            differences = np.diff(instants)
+            invalid = differences % timeframe_ns != 0 if allow_gaps else differences != timeframe_ns
 
-            if difference % timeframe_ns != 0 or (not allow_gaps and difference != timeframe_ns):
+            if invalid.any():
                 raise OHLCVError("datetime spacing violates the declared timeframe/gap policy")
+
+        elif len(instants) > 1:
+            # Rare multi-century series exceed signed-int64 subtraction's domain.
+            for previous, current in zip(instants[:-1], instants[1:]):
+                difference = int(current) - int(previous)
+
+                if difference % timeframe_ns != 0 or (not allow_gaps and difference != timeframe_ns):
+                    raise OHLCVError("datetime spacing violates the declared timeframe/gap policy")
 
     return pd.DataFrame({"datetime": timestamps, **numeric}, columns=OHLCV_COLUMNS)
 

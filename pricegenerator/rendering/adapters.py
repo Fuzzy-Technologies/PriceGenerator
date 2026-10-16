@@ -1,6 +1,5 @@
 """Bridge existing price data to charts without mutating caller-owned state."""
 
-from copy import copy, deepcopy
 from datetime import datetime
 from html import escape
 from importlib import import_module
@@ -215,122 +214,54 @@ def _Interpolate(candles: tuple[ChartCandle, ...], positions: list[int], values:
     return tuple(result)
 
 
-def _UnshiftedHMA(close):
-    """Offer the documented HMA5 correction using the actual installed TA backend."""
+def IndicatorOverlays(report) -> tuple[ChartSeries, ...]:
+    """Convert modern detached indicator values to explicitly hidden chart overlays."""
 
-    try:
-        backend = import_module("pandas_ta_classic")
-
-    except ModuleNotFoundError as error:
-        if error.name != "pandas_ta_classic":
-            raise
-
-        try:
-            backend = import_module("pandas_ta")
-
-        except ModuleNotFoundError as legacy_error:
-            if legacy_error.name != "pandas_ta":
-                raise
-
-            raise ImportError('HMA analysis requires: python -m pip install "pricegenerator[indicators]"') from legacy_error
-
-    return backend.hma(close=close, length=5, offset=None)
+    return tuple(ChartSeries(item.key, item.label, item.values, group=item.group, kind=item.kind, visible=False) for item in report.series)
 
 
-def _LegacySeries(model, candles: tuple[ChartCandle, ...], hma5_mode: str) -> tuple[ChartSeries, ...]:
-    """Retain the actual historical indicator formulas and overlay visibility."""
+def MarketOverlays(frame, *, split_counts=(), zigzag_deviation: float = 0.05) -> tuple[ChartSeries, ...]:
+    """Explicitly calculate modern indicators, price limits, midpoint and time trends."""
 
+    from ..indicators import Indicators
+    from ..market_data import ValidateOHLCV
+
+    prices = ValidateOHLCV(frame)
+    candles = FromDataFrame(prices).candles
     length = len(candles)
-    statistics = model.stat
-    maximum = round(float(statistics["closeMax"]), model.precision)
-    minimum = round(float(statistics["closeMin"]), model.precision)
+    closing = tuple(float(value) for value in prices.close)
+    midpoint = tuple(float(high / 2 + low / 2) for high, low in zip(prices.high, prices.low))
     result = [
-        ChartSeries("close-max", f"Max close: {maximum}", (maximum,) * length, group="Close limits and trends"),
-        ChartSeries("close-min", f"Min close: {minimum}", (minimum,) * length, group="Close limits and trends"),
-        ChartSeries("trend", "Full-horizon trend", _Interpolate(candles, [0, length - 1], [candles[0].close, candles[-1].close]), group="Close limits and trends", dashed=True),
-        ChartSeries("average-line", "High/low midpoint", _Values(model.prices.avg, length), visible=False, group="Midpoint"),
-        ChartSeries("average-points", "High/low midpoint points", _Values(model.prices.avg, length), kind="points", visible=False, group="Midpoint"),
+        ChartSeries("close-max", "Maximum close", (max(closing),) * length, group="Close limits and trends"),
+        ChartSeries("close-min", "Minimum close", (min(closing),) * length, group="Close limits and trends"),
+        ChartSeries("trend", "Full-horizon endpoint trend", _Interpolate(candles, [0] if length == 1 else [0, length - 1], [closing[0]] if length == 1 else [closing[0], closing[-1]]), group="Close limits and trends", dashed=True),
+        ChartSeries("midpoint-line", "High/low midpoint", midpoint, visible=False, group="Midpoint"),
+        ChartSeries("midpoint-points", "High/low midpoint points", midpoint, kind="points", visible=False, group="Midpoint"),
     ]
 
-    if model.trendSplit and model.splitCount:
-        if any(type(count) is not int or count < 1 for count in model.splitCount) or sum(model.splitCount) != length:
-            raise ValueError("legacy splitCount must contain positive counts summing to the candle count")
+    if split_counts:
+        if any(type(count) is not int or count < 1 for count in split_counts) or sum(split_counts) != length:
+            raise ValueError("split_counts must be positive integers summing to the candle count")
 
         left = 0
 
-        for index, count in enumerate(model.splitCount):
+        for index, count in enumerate(split_counts):
             right = left + count - 1
             positions = [left] if left == right else [left, right]
-            values = [candles[position].close for position in positions]
-            result.append(ChartSeries(f"trend-segment-{index + 1}", f"Segment {index + 1} trend", _Interpolate(candles, positions, values), group="Close limits and trends", dashed=True))
+            result.append(ChartSeries(f"trend-segment-{index + 1}", f"Segment {index + 1} endpoint trend", _Interpolate(candles, positions, [closing[position] for position in positions]), group="Close limits and trends", dashed=True))
             left += count
 
-    definitions = (
-        ("sma5", "SMA 5", "SMA 5 / 20"), ("sma20", "SMA 20", "SMA 5 / 20"),
-        ("sma50", "SMA 50", "SMA 50 / 200"), ("sma200", "SMA 200", "SMA 50 / 200"),
-        ("hma5", "HMA 5 (legacy shift 3)" if hma5_mode == "legacy" else "HMA 5 (unshifted)", "HMA 5 / 20"),
-        ("hma20", "HMA 20", "HMA 5 / 20"),
-        ("vwma5", "VWMA 5", "VWMA 5 / 20"), ("vwma20", "VWMA 20", "VWMA 5 / 20"),
-    )
+    indicators = Indicators(prices, zigzag_deviation=zigzag_deviation)
 
-    for key, label, group in definitions:
-        values = _UnshiftedHMA(model.prices.close) if key == "hma5" and hma5_mode == "unshifted" else statistics[key]
-        result.append(ChartSeries(key, label, _Values(values, length), visible=False, group=group))
+    for overlay in IndicatorOverlays(indicators):
+        if overlay.key == "zigzag":
+            positions = [index for index, value in enumerate(overlay.values) if value is not None]
+            values = [overlay.values[index] for index in positions]
+            overlay = ChartSeries(overlay.key, overlay.label, _Interpolate(candles, positions, values), visible=False, group=overlay.group)
 
-    for key in ("lower", "mid", "upper"):
-        result.append(ChartSeries(f"bbands-{key}", f"Bollinger {key}", _Values(statistics["bbands"][key], length), visible=False, group="Bollinger bands"))
-
-    for key in ("long", "short"):
-        result.append(ChartSeries(f"psar-{key}", f"PSAR {key}", _Values(statistics["psar"][key], length), kind="points", visible=False, group="PSAR"))
-
-    for key, label in (("hma13", "Jaw: HMA 13, shift 8"), ("hma8", "Teeth: HMA 8, shift 5"), ("hma5", "Lips: HMA 5, shift 3")):
-        result.append(ChartSeries(f"alligator-{key}", label, _Values(statistics[key], length), visible=False, group="Alligator (historical HMA formulas)"))
-
-    zigzag = statistics["zigzag3"]
-    positions = list(zigzag.index)
-    values = list(zigzag["filtered"])
-    result.append(ChartSeries("zigzag", f"Zig-Zag ({model.zigZagDeviation * 100:g}%)", _Interpolate(candles, positions, values), visible=False, group="Zig-Zag"))
+        result.append(overlay)
 
     return tuple(result)
-
-
-def BuildLegacyChart(
-    model, *, include_statistics: bool = True, assume_timezone: str | None = None,
-    markers=None, lines=(), title: str | None = None, theme: str = "dark", width: int = 1280,
-    height: int = 760, show_controls: bool = True, hma5_mode: str = "legacy",
-) -> ChartSpec:
-    """Adapt an existing PriceGenerator with optional analysis on a detached copy."""
-
-    if not isinstance(include_statistics, bool) or hma5_mode not in {"legacy", "unshifted"}:
-        raise ValueError("include_statistics must be boolean and hma5_mode must be 'legacy' or 'unshifted'")
-
-    snapshot = _FrameSnapshot(model.prices, _PRICE_COLUMNS, "model.prices")
-    base = FromDataFrame(
-        snapshot, assume_timezone=assume_timezone, title=title or getattr(model, "_chartTitle", "") or f"Instrument: {model.ticker}",
-        markers=markers, lines=lines, theme=theme, width=width, height=height,
-        price_precision=model.precision, show_controls=show_controls,
-    )
-
-    if not include_statistics:
-        return base
-
-    if len(snapshot) < 5 or any(candle.close == 0 for candle in base.candles):
-        raise ValueError("Legacy analysis requires at least five candles and nonzero closes; use include_statistics=False for raw charts")
-
-    detached = copy(model)
-    detached.prices = snapshot
-    detached._stat = deepcopy(model.stat)
-    detached.horizon = len(snapshot)
-    detached.prices["datetime"] = _Pandas().to_datetime([candle.datetime for candle in base.candles], utc=True)
-    detached.DetectTimeframe()
-    summary = tuple(detached.GetStatistics())
-
-    return ChartSpec(
-        candles=base.candles, title=title or detached._chartTitle,
-        series=_LegacySeries(detached, base.candles, hma5_mode) + base.series,
-        markers=base.markers, summary=summary, theme=theme, width=width, height=height,
-        price_precision=detached.precision, show_controls=show_controls,
-    )
 
 
 def RenderMarkdown(spec: ChartSpec) -> str:

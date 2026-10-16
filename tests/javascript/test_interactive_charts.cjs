@@ -166,8 +166,11 @@ test("responsive layout preserves zoom and selected overlays", () => {
     const graphics = chart.getOption().graphic[0].elements;
     assert.ok(graphics.some((element) => element.id === "brand-emblem"));
     assert.ok(!graphics.some((element) => element.id === "brand-wordmark"));
-    assert.ok(graphics.some((element) => element.id.startsWith("watermark-0")));
-    assert.ok(graphics.some((element) => element.id.startsWith("watermark-1")));
+    const watermarks = graphics.filter((element) => element.id.startsWith("watermark-"));
+    assert.equal(watermarks.length, 1);
+    assert.equal(watermarks[0].id, "watermark-price");
+    assert.equal(watermarks[0].style.x, 70);
+    assert.equal(watermarks[0].style.opacity, 0.28);
     controller.Dispose();
 });
 

@@ -1,78 +1,73 @@
 # Development and validation
 
-The [F-Tech development protocol](../DEVELOPMENT_PROTOCOL.md),
-[Python code style](../PYTHON_CODE_STYLE.md) and
-[accepted ADRs](adr/README.md) apply to this repository. Implementation branches
-start at `develop`, and their PRs target `develop` with complete native Task and
-PR metadata. Release review and PyPI publication are separate operations.
+Start at [AGENTS.md](../AGENTS.md), then read the
+[development protocol](../DEVELOPMENT_PROTOCOL.md),
+[Python style contract](../PYTHON_CODE_STYLE.md) and [accepted ADRs](adr/README.md).
+Use an isolated branch from `develop` and a PR back to `develop`; preserve native
+GitHub Task links, milestone, priority/effort and review evidence. Publication is
+a separate release operation.
 
-## Reproduce the bootstrap gate
+## Locked modern environment
 
-The initial CI runtime is CPython 3.11 on Ubuntu 24.04. This is a verified legacy
-compatibility environment, not a promise that historical dependencies support
-every newer Python version. The modern package contract has separately verified
-CPython 3.10, 3.11, 3.12 and 3.13 core/extras installation and behavior; CI
-automatically selects that matrix when `pyproject.toml` is present.
+CPython 3.10–3.13 is the supported package window. Create one environment per
+runtime when verifying support; installing on one version does not certify the
+others. From the repository:
 
 ```bash
-python3.11 -m venv .venv
+python -m venv .venv
 . .venv/bin/activate
-python -m pip install -r requirements/ci.txt -r requirements/ci-legacy.txt
+python -m pip install -r requirements.txt
+python -m pip check
 python -m compileall -q pricegenerator tools tests
-python -m ruff check --select E4,E7,E9,F,D --ignore D202,D203,D213 tools/pr_merge_links.py tests/test_pr_merge_links.py
-python -m pytest -q tests/test_pr_merge_links.py --cov=tools.pr_merge_links --cov-branch --cov-fail-under=95 --cov-report=term-missing
-python -m build --no-isolation
 ```
 
-The bootstrap pins contain actual legacy generation/rendering dependencies and
-an immutable source revision of pandas-ta 0.3.14b0, which is no longer available
-from PyPI. They intentionally do not install unused historical notebook and
-bkcharts packages. The separate baseline lock records the complete historical
-environment; this small CI lock exists so the CI bootstrap can be reviewed and
-merged independently of baseline capture.
+`requirements.txt` installs the editable modern package with development/export
+extras under `requirements/modern.txt` constraints. Modern generation, analysis,
+indicators, SVG and offline HTML use no Bokeh, Jinja or TA backend. PNG/JPEG tests
+need the real `[export]` dependencies. Historical dependency locks and fixtures
+are evidence under [the baseline archive](baseline/README.md), outside the active
+runtime and modern test contract.
 
-The workflow creates a second environment, installs the built wheel, imports it
-with Python isolated mode outside the checkout, and generates five candles.
-This prevents source-tree imports from masking missing wheel files. It then
-seeds the legacy RNG with zero and runs **every** project test, including new
-benchmark, rendering and baseline-invariant tests as they land. The historical
-tests' disposable CSV/HTML outputs are ignored by Git. The separate baseline
-wrapper runs installed-package characterization in a temporary directory when
-reproducing archival evidence; CI does not replace the full suite with that subset.
+## Focused checks and shared gate
 
-After modern packaging is present, CI installs the wheel with constraints from
-`requirements/modern.txt`, checks core-only operation, installs render/indicator
-extras, checks their actual behavior, runs `pip check`, and executes the modern
-test suite. Modern builds use the exact isolated backend pins in `pyproject.toml`;
-the legacy build uses the bootstrap tooling environment. The suite includes
-baseline invariants: a dependency migration must account
-for any changed output explicitly instead of silently skipping evidence. The
-selected matrix is CPython 3.10 through 3.13. Additional supported runtimes need
-installation and behavioral evidence before extending that contract. CI stores
-sdist/wheel artifacts and JUnit reports for
-14 days. Artifact hashes and installed versions appear in the build logs.
+Run tests relevant to each change during development. For example:
 
-CI has only `contents: read`, does not retain checkout credentials, and has no
-publishing credentials or publication command. New automation receives lint and
-docstring checks without rewriting unrelated legacy formatting. No automatic
-`ruff format` step is used. Branch/ruleset protection must require the
-`quality (3.11)` check to make failures block merge; a workflow alone cannot
-change repository merge policy.
+```bash
+python -m pytest -q tests/test_generation_v2.py tests/test_scenario_v2.py tests/test_cli_v2.py
+python -m pytest -q tests/test_packaging.py tests/test_release_contract.py
+python -m ruff check --select E4,E7,E9,F,D --ignore D202,D203,D213 pricegenerator tools/release_verify.py tools/release_install.py
+```
 
-## Modern chart gate
+The repository's naming/docstring/vertical-spacing rules apply to maintained
+code and tests. `ruff format` is not the canonical formatter. Do not rewrite
+unrelated files or replace real dependency evidence with stubs.
 
-The Python matrix also lints the maintained chart modules, adapters, benchmark
-and example commands, and their tests with the repository's docstring rules.
-Installed core-only smoke actually renders SVG and offline HTML, writes their
-explicit output paths, checks embedded runtime hashes and license notices, and
-executes the CSV chart CLI without Bokeh or an indicator backend.
+Before integration, run the complete gate:
 
-The separate `Interactive chart runtime gate` installs exact developer-only npm
-dependencies with lifecycle scripts disabled, rebuilds the vendored JavaScript
-and rejects a changed artifact. It runs real ECharts behavior and native Canvas
-tests, including immediate PNG export and official logo pixels on both panels.
-It does not replace those gates with a mocked renderer or an HTML-existence test.
-Run the same checks locally with:
+```bash
+python -m pytest -q tests
+python -m build
+python -m twine check --strict dist/*
+python tools/release_verify.py --artifacts dist
+python tools/release_install.py dist
+```
+
+Build produces an sdist and builds its wheel from that sdist. Artifact verification
+installs each archive into a separate clean environment, runs public APIs and CLI
+from outside the checkout, checks core dependency absence, then checks actual
+PNG/JPEG exports. Preserve commands/results and artifact hashes in the Task/PR.
+Local results do not establish that hosted CI passed.
+
+The PR quality workflow checks all supported Python versions, the full suite,
+maintained-module lint, isolated artifacts and metadata. It also exercises
+Task-lifecycle failure paths. Require the relevant hosted quality checks and
+chart runtime check in branch protection/rulesets; committing a workflow does
+not configure those repository settings.
+
+## Chart runtime gate
+
+Node is developer tooling for rebuilding/testing the vendored ECharts bundle;
+it is unnecessary when users generate HTML or SVG. Reproduce the JS gate with:
 
 ```bash
 npm ci --ignore-scripts --no-audit --no-fund --prefix tools/chart_runtime
@@ -81,58 +76,20 @@ git diff --exit-code -- pricegenerator/rendering/assets/echarts
 node --test tests/javascript/test_interactive_charts.cjs tests/javascript/test_interactive_canvas.cjs
 ```
 
-Canvas observations are not browser FPS measurements. The diagnostic
-`tools/benchmark_charts.py` command and its exact timing scope are documented in
-[chart performance](chart-performance.md). Its measurements have no flaky
-wall-clock threshold in the PR gate. Repository protection should require the
-supported Python quality jobs and `canvas-and-runtime` for chart changes.
+The gate checks actual ECharts/Canvas behavior, offline assets, export and
+branding. A parseable HTML file is insufficient evidence of interaction.
+[Chart performance](chart-performance.md) records workload and measurement
+boundaries; a Canvas timing is not a browser FPS claim.
 
-## Linked Task completion
+## Task lifecycle and release
 
-Write an explicit completion instruction on its own PR-body line:
+Use explicit closing instructions such as `Closes #123` on their own PR-body
+line. The linked-Task workflow only completes native Tasks after a successful
+merge and verifies state before branch cleanup; plain mentions do not authorize
+completion. Fork PRs retain their documented manual completion path. Read back
+Task and branch state after merge.
 
-```text
-Closes #123, #124
-Fixes #125
-Resolves #126
-Implements #127
-```
-
-Keywords are case-insensitive and accept normal singular/past inflections.
-Lists and same-repository qualified references are supported. Plain mentions,
-other repositories, pull request URLs, block quotes, code blocks, inline code,
-HTML comments and invalid numbers never authorize completion. Keep completion
-instructions outside examples and prose paragraphs.
-
-For a merged same-repository PR into `develop` or `master`, the separate closed
-event workflow checks out the trusted integration branch. Its stdlib-only
-script reads the event JSON as data, verifies each referenced object is an open
-Issue with native type `Task`, posts a completion comment, closes it with
-`state_reason=completed`, and reads back the result. Labels cannot substitute
-for native issue type. Features, PRs, already-closed Tasks and absent issues are
-skipped. A failed read, comment, close or verification stops cleanup.
-
-Only after successful Task processing may cleanup delete the same-repository
-head branch. It skips `master`, `main`, `develop`, the current base/default
-branch, protected branches, and branches whose head moved since the merge.
-Already-deleted branches and deletion failures do not undo Task completion.
-The workflow has only the `contents: write` and `issues: write` permissions
-needed for these operations, and runs neither PR-head code nor dependencies.
-
-Fork PR tokens are read-only, so their automatic completion is deliberately
-skipped. After reviewing a merged fork PR, a maintainer must comment and close
-its native Tasks as completed. Fork branches are never deleted. A future
-`pull_request_target` version can remove this manual fallback once the reviewed
-workflow is available on the default branch; it must retain the trusted-checkout
-boundary. This bootstrap does not change `master` just to activate automation.
-
-Use the read-only parser locally when preparing a PR body:
-
-```bash
-PR_BODY='Closes #123, #124' python tools/pr_merge_links.py
-```
-
-The first automation PR may require manual Task completion if GitHub evaluated
-the merge event before the workflow existed on its base branch. Read back Task
-state and branch cleanup after every merge; do not infer success from a merge
-response alone.
+See [release instructions](releasing.md) for exact tagged-master verification,
+reviewed artifacts, PyPI Trusted Publishing and the protected `pypi` environment.
+Ordinary CI and tag pushes never publish a package. Do not invoke old release
+branch/Travis commands.

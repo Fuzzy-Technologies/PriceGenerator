@@ -1,4 +1,4 @@
-"""Verify package metadata and smoke installed artifacts outside the checkout."""
+"""Verify modern metadata and installed artifacts without checkout imports."""
 
 import argparse
 import ast
@@ -10,15 +10,17 @@ import sys
 import tempfile
 from html import unescape
 from importlib import metadata, resources, util
+from io import BytesIO
 from pathlib import Path
 from xml.etree import ElementTree
 
 SOURCE_ROOT = Path(__file__).resolve().parents[1]
-OPTIONAL_MODULES = ("bokeh", "jinja2", "pandas_ta", "pandas_ta_classic", "notebook", "IPython")
+OBSOLETE_MODULES = ("bokeh", "jinja2", "pandas_ta", "pandas_ta_classic", "bkcharts")
+OPTIONAL_MODULES = ("resvg_py", "PIL", "notebook", "IPython")
 
 
 def ReadProjectMetadata():
-    """Read metadata in test environments across supported Python versions."""
+    """Read canonical metadata on every supported interpreter."""
 
     try:
         import tomllib
@@ -30,207 +32,189 @@ def ReadProjectMetadata():
 
 
 def test_CanonicalVersionIsLiteralAndShared():
-    """Keep builds deterministic without importing optional or runtime code."""
+    """Keep deterministic build metadata separate from runtime imports."""
 
     from pricegenerator import __version__
 
     tree = ast.parse((SOURCE_ROOT / "pricegenerator/_version.py").read_text(encoding="utf-8"))
     assignments = [node for node in tree.body if isinstance(node, ast.Assign)]
     assert len(assignments) == 1, "Version source must contain one deterministic assignment"
-    assert assignments[0].targets[0].id == "__version__", "Build and runtime version names diverged"
-    assert ast.literal_eval(assignments[0].value) == __version__, "Runtime version differs from canonical source"
+    assert assignments[0].targets[0].id == "__version__", "Canonical version name changed"
+    assert ast.literal_eval(assignments[0].value) == __version__, "Runtime version differs from build source"
     configuration = ReadProjectMetadata()
-    assert configuration["project"]["dynamic"] == ["version"], "Package version must use the canonical source"
+    assert configuration["project"]["dynamic"] == ["version"], "Version must come from canonical source"
     assert configuration["tool"]["setuptools"]["dynamic"]["version"] == {
         "attr": "pricegenerator._version.__version__",
-    }, "Setuptools does not read the canonical version literal"
-    assert "TRAVIS" not in (SOURCE_ROOT / "setup.py").read_text(), "Legacy environment-derived versions returned"
+    }, "Setuptools must read the canonical version literal"
+    assert "TRAVIS" not in (SOURCE_ROOT / "setup.py").read_text(), "Environment-derived version returned"
 
 
-def test_CoreMetadataExcludesOptionalAndUnusedDependencies():
-    """Keep production generation requirements separate from tooling and legacy charts."""
+def test_CoreMetadataExcludesObsoleteDependencies():
+    """Keep modern runtime independent of former render and indicator backends."""
 
     project = ReadProjectMetadata()["project"]
     core_names = {re.split(r"[<>=!~ ]", requirement, maxsplit=1)[0] for requirement in project["dependencies"]}
-    assert core_names == {"numpy", "pandas", "python-dateutil"}, "Core dependency boundary changed unexpectedly"
-    assert {"render", "indicators", "notebook", "test", "docs", "release", "dev"} <= set(
-        project["optional-dependencies"],
-    ), "An optional workflow has no documented extra"
-    assert "bkcharts" not in json.dumps(project), "Obsolete bkcharts was reintroduced"
+    assert core_names == {"numpy", "pandas", "python-dateutil"}, "Core dependency boundary changed"
+    assert {"export", "notebook", "test", "docs", "release", "dev"} <= set(project["optional-dependencies"]), (
+        "Documented optional workflow is missing"
+    )
+    assert not {"render", "indicators"} & set(project["optional-dependencies"]), "Legacy extras returned"
+    serialized = json.dumps(project).lower()
+
+    for name in ("bokeh", "jinja2", "pandas-ta", "bkcharts"):
+        assert name not in serialized, f"Obsolete dependency returned: {name}"
+
+    assert project["scripts"] == {"pricegenerator": "pricegenerator.cli:Main"}, "CLI must use the modern entry point"
     assert all("Fuzzy-Technologies/PriceGenerator" in url for url in project["urls"].values()), (
-        "Active package metadata still points to the historical personal repository"
+        "Active metadata still points to the historical personal repository"
     )
 
 
-def test_PythonMetadataMatchesTestedRuntimeWindow():
-    """Keep the compatibility promise explicit instead of inheriting unsupported runtimes."""
+def test_PythonMetadataMatchesMatrix():
+    """Require explicit metadata for the Python versions checked by CI."""
 
     project = ReadProjectMetadata()["project"]
-    assert project["requires-python"] == ">=3.10,<3.14", "Runtime support changed without matrix evidence"
+    assert project["requires-python"] == ">=3.10,<3.14", "Runtime window changed without matrix evidence"
 
     for minor in range(10, 14):
-        assert f"Programming Language :: Python :: 3.{minor}" in project["classifiers"], (
-            f"Python 3.{minor} classifier is missing from the supported matrix"
-        )
+        assert f"Programming Language :: Python :: 3.{minor}" in project["classifiers"], "Supported classifier missing"
 
 
-def SmokeInstalledCharts(output_directory):
-    """Execute landed chart APIs and CLI from an installed artifact with its resources."""
+def SmokeInstalledCharts(output_directory, mode):
+    """Render SVG, self-contained HTML and optional actual raster exports."""
 
     from pricegenerator.rendering import ChartCandle, ChartSpec, RenderSVG, SaveSVG
+    from pricegenerator.rendering.interactive import RenderInteractive, SaveInteractive
 
     spec = ChartSpec((
         ChartCandle("2026-01-01T00:00:00Z", 10, 13, 9, 12, 100),
         ChartCandle("2026-01-01T01:00:00Z", 12, 13, 10, 11, 120),
         ChartCandle("2026-01-01T02:00:00Z", 11, 14, 10, 13, 150),
-    ), title="Installed artifact <offline>", summary=("No indicator calculation requested.",))
+    ), title="Installed artifact <offline>")
     svg = RenderSVG(spec)
     root = ElementTree.fromstring(svg)
-    assert root.tag == "{http://www.w3.org/2000/svg}svg", "Installed static API did not produce SVG"
-    assert len(root.findall('.//{http://www.w3.org/2000/svg}g[@data-candle-index]')) == 3, (
-        "Installed static renderer lost the supplied candles"
-    )
-    assert "data:image/png;base64," in svg, "Installed SVG failed to embed corporate logo resources"
+    assert root.tag == "{http://www.w3.org/2000/svg}svg", "Installed renderer did not produce SVG"
+    assert len(root.findall('.//{http://www.w3.org/2000/svg}g[@data-candle-index]')) == 3, "SVG lost candles"
+    assert "data:image/png;base64," in svg, "SVG lost the embedded corporate logo"
     svg_path = output_directory / "api chart.svg"
-    assert SaveSVG(spec, svg_path) == svg_path, "SaveSVG did not return its explicit destination"
-    assert svg_path.read_text(encoding="utf-8") == svg, "Installed SaveSVG changed the rendered document"
-    interactive_present = (SOURCE_ROOT / "pricegenerator/rendering/interactive.py").is_file()
+    assert SaveSVG(spec, svg_path) == svg_path, "SaveSVG lost its destination"
+    assert svg_path.read_text(encoding="utf-8") == svg, "SaveSVG changed its document"
+    html = RenderInteractive(spec)
+    assert "PriceGeneratorView.Mount" in html, "HTML lost its offline runtime"
+    assert "data:image/png;base64," in html, "HTML lost embedded corporate logo"
+    asset_root = resources.files("pricegenerator.rendering").joinpath("assets", "echarts")
+    runtime = asset_root.joinpath("echarts-financial.min.js").read_bytes()
+    build = json.loads(asset_root.joinpath("build.json").read_text(encoding="utf-8"))
+    assert hashlib.sha256(runtime).hexdigest() == build["sha256"], "Installed runtime hash differs from build record"
 
-    if interactive_present:
-        from pricegenerator.rendering.interactive import (
-            RenderInteractive,
-            SaveInteractive,
-        )
+    for name in ("NOTICE.txt", "LICENSE-APACHE-2.0.txt", "LICENSE-ZRENDER-BSD-3.txt", "LICENSE-TSLIB-0BSD.txt"):
+        notice = asset_root.joinpath(name).read_text(encoding="utf-8")
+        assert notice in unescape(html), f"Generated HTML lost notice: {name}"
 
-        html = RenderInteractive(spec)
-        assert "PriceGeneratorView.Mount" in html, "Installed interactive API did not include its chart runtime"
-        assert "data:image/png;base64," in html, "Installed HTML failed to embed corporate logo resources"
-        asset_root = resources.files("pricegenerator.rendering").joinpath("assets", "echarts")
-        runtime = asset_root.joinpath("echarts-financial.min.js").read_bytes()
-        build = json.loads(asset_root.joinpath("build.json").read_text(encoding="utf-8"))
-        assert hashlib.sha256(runtime).hexdigest() == build["sha256"], "Installed chart runtime differs from its reviewed hash"
-        unescaped_html = unescape(html)
+    html_path = output_directory / "api chart.html"
+    assert SaveInteractive(spec, html_path) == html_path, "SaveInteractive lost its destination"
+    assert html_path.read_text(encoding="utf-8") == html, "SaveInteractive changed its document"
 
-        for name in ("NOTICE.txt", "LICENSE-APACHE-2.0.txt", "LICENSE-ZRENDER-BSD-3.txt", "LICENSE-TSLIB-0BSD.txt"):
-            notice = asset_root.joinpath(name).read_text(encoding="utf-8")
-            assert notice in unescaped_html, f"Generated HTML lost the installed third-party notice: {name}"
+    if mode == "export":
+        from PIL import Image
+        from pricegenerator.rendering import RenderJPEG, RenderPNG, SaveJPEG, SavePNG
 
-        html_path = output_directory / "api chart.html"
-        assert SaveInteractive(spec, html_path) == html_path, "SaveInteractive did not return its explicit destination"
-        assert html_path.read_text(encoding="utf-8") == html, "Installed SaveInteractive changed the rendered document"
+        for extension, render, save, image_format in (
+            ("png", RenderPNG, SavePNG, "PNG"), ("jpg", RenderJPEG, SaveJPEG, "JPEG"),
+        ):
+            content = render(spec)
+            destination = output_directory / f"api chart.{extension}"
+            assert save(spec, destination) == destination, "Raster saver lost destination"
+            assert destination.read_bytes() == content, "Raster save differs from API bytes"
 
-    if not (SOURCE_ROOT / "pricegenerator/rendering/__main__.py").is_file():
-        return
-
-    csv_path = output_directory / "chart input.csv"
-    csv_path.write_text(
-        "datetime,open,high,low,close,volume\n"
-        "2026-01-01T00:00:00Z,10,13,9,12,100\n"
-        "2026-01-01T01:00:00Z,12,13,10,11,120\n"
-        "2026-01-01T02:00:00Z,11,14,10,13,150\n", encoding="utf-8",
-    )
-    cli_svg = output_directory / "cli chart.svg"
-    cli_html = output_directory / "cli chart.html"
-    cli_report = output_directory / "cli report.md"
-    command = [sys.executable, "-I", "-m", "pricegenerator.rendering", str(csv_path),
-               "--svg", str(cli_svg), "--report", str(cli_report),
-               "--summary", "Installed chart CLI without legacy dependencies."]
-
-    if interactive_present:
-        command.extend(("--html", str(cli_html)))
-
-    result = subprocess.run(command, cwd=output_directory, capture_output=True, text=True, check=False)
-    assert result.returncode == 0, f"Installed offline chart CLI failed: {result.stderr}"
-    assert ElementTree.parse(cli_svg).getroot().tag == root.tag, "Installed chart CLI failed to write SVG"
-    assert "Installed chart CLI without legacy dependencies." in cli_report.read_text(encoding="utf-8"), (
-        "Installed chart CLI lost the requested Markdown report"
-    )
-
-    if interactive_present:
-        assert "PriceGeneratorView.Mount" in cli_html.read_text(encoding="utf-8"), "Installed chart CLI omitted its interactive runtime"
+            with Image.open(BytesIO(content)) as image:
+                image.load()
+                assert image.format == image_format, "Raster export has incorrect encoding"
+                assert image.width > 100 and image.height > 100, "Raster export dimensions are empty"
+                extrema = image.convert("RGB").getextrema()
+                assert any(low < high for low, high in extrema), "Raster export is a blank image"
 
 
 def SmokeInstalledArtifact(mode):
-    """Check installed metadata, resources, CLI, generation and the requested extra set."""
+    """Exercise public API, CLI, replay and packaged resources in isolation."""
 
     import pricegenerator
-    from pricegenerator import PriceGenerator
+    from pricegenerator import Generate, GenerationConfig, ReadCSV, ValidateOHLCV, WriteCSV
 
     package_path = Path(pricegenerator.__file__).resolve()
-    assert not package_path.is_relative_to(SOURCE_ROOT), "Smoke imported the source checkout instead of the installed artifact"
-    assert metadata.version("pricegenerator") == pricegenerator.__version__, "Installed distribution and runtime versions differ"
-    assert resources.files("pricegenerator").joinpath("google_template_example.j2").is_file(), (
-        "Installed package is missing its legacy template resource"
+    assert not package_path.is_relative_to(SOURCE_ROOT), "Smoke imported source instead of installed artifact"
+    assert metadata.version("pricegenerator") == pricegenerator.__version__, "Metadata and runtime versions differ"
+    distribution = metadata.distribution("pricegenerator")
+    files = [str(path) for path in distribution.files or ()]
+    licenses = [path for path in files if path.endswith(".dist-info/licenses/LICENSE")]
+    assert len(licenses) == 1, "Wheel lost Apache license"
+    assert Path(distribution.locate_file(licenses[0])).read_bytes() == (SOURCE_ROOT / "LICENSE").read_bytes(), (
+        "Installed Apache license differs from reviewed source"
     )
+    assert not any(path.endswith(".j2") for path in files), "Wheel contains retired legacy templates"
     source_assets = SOURCE_ROOT / "pricegenerator/rendering/assets"
+    assert source_assets.is_dir(), "Expected reviewed assets are missing from source distribution"
+    installed_assets = resources.files("pricegenerator.rendering").joinpath("assets")
 
-    if source_assets.is_dir():
-        installed_assets = resources.files("pricegenerator.rendering").joinpath("assets")
+    for source_file in source_assets.rglob("*"):
+        if source_file.is_file():
+            resource = installed_assets.joinpath(*source_file.relative_to(source_assets).parts)
+            assert resource.is_file(), f"Installed resource missing: {source_file.name}"
+            assert resource.read_bytes() == source_file.read_bytes(), f"Installed resource changed: {source_file.name}"
 
-        for source_file in source_assets.rglob("*"):
-            if source_file.is_file():
-                resource = installed_assets.joinpath(*source_file.relative_to(source_assets).parts)
-                assert resource.is_file(), f"Installed renderer resource is missing: {source_file.name}"
-                assert resource.read_bytes() == source_file.read_bytes(), (
-                    f"Installed renderer resource differs from reviewed source: {source_file.name}"
-                )
-
-    model = PriceGenerator.PriceGenerator()
-    model.horizon = 240
-    prices = model.Generate()
-    assert len(prices) == 240, "Installed generation did not return the configured horizon"
-    assert list(prices) == model.dfHeaders, "Installed generation changed legacy OHLCV columns"
+    prices = Generate(GenerationConfig(seed=0, horizon=8))
+    ValidateOHLCV(prices)
+    assert len(prices) == 8, "Installed generation ignored requested horizon"
+    assert list(prices) == ["datetime", "open", "high", "low", "close", "volume"], "Canonical columns changed"
 
     with tempfile.TemporaryDirectory() as temporary:
         output_directory = Path(temporary)
-        for command in ([sys.executable, "-m", "pricegenerator", "--help"],
-                        [str(Path(sys.executable).with_name("pricegenerator")), "--help"]):
-            result = subprocess.run(command, cwd=temporary, capture_output=True, text=True, check=False)
+        api_csv = output_directory / "api.csv"
+        WriteCSV(prices, api_csv)
+        assert len(ReadCSV(api_csv)) == 8, "Installed CSV round trip lost rows"
+        commands = ([sys.executable, "-I", "-m", "pricegenerator"],
+                    [str(Path(sys.executable).with_name("pricegenerator"))])
+
+        for command in commands:
+            result = subprocess.run([*command, "--help"], cwd=temporary, capture_output=True, text=True, check=False)
             assert result.returncode == 0, f"Installed CLI entry point failed: {result.stderr}"
-            assert "--generate" in result.stdout, "Installed CLI help lost the generation command"
+            assert "generate" in result.stdout and "replay" in result.stdout, "Modern CLI commands are missing"
 
-        output_file = output_directory / "generated.csv"
-        result = subprocess.run(
-            [sys.executable, "-m", "pricegenerator", "--generate", "--horizon", "8", "--save-to", str(output_file)],
-            cwd=temporary, capture_output=True, text=True, check=False,
-        )
-        assert result.returncode == 0, f"Installed CLI generation failed: {result.stderr}"
-        assert len(output_file.read_text().splitlines()) == 8, "Installed CLI failed to write eight CSV rows"
+        cli_csv = output_directory / "cli.csv"
+        manifest = output_directory / "scenario.json"
+        replay_csv = output_directory / "replay.csv"
+        commands = [
+            ["generate", "--seed", "0", "--horizon", "8", "--output", str(cli_csv), "--manifest", str(manifest)],
+            ["replay", str(manifest), "--output", str(replay_csv)],
+            ["chart", str(cli_csv), "--output", str(output_directory / "cli.html"), "--no-view"],
+        ]
 
-        if source_assets.is_dir():
-            SmokeInstalledCharts(output_directory)
+        for arguments in commands:
+            result = subprocess.run([sys.executable, "-I", "-m", "pricegenerator", *arguments],
+                                    cwd=temporary, capture_output=True, text=True, check=False)
+            assert result.returncode == 0, f"Installed CLI failed: {arguments}: {result.stderr}"
 
-        if mode == "core":
-            for name in OPTIONAL_MODULES:
-                assert util.find_spec(name) is None, f"Core environment unexpectedly installed optional module {name}"
+        assert len(ReadCSV(cli_csv)) == 8, "CLI generation lost rows"
+        assert cli_csv.read_bytes() == replay_csv.read_bytes(), "Manifest replay changed generated candles"
+        assert "PriceGeneratorView.Mount" in (output_directory / "cli.html").read_text(), "CLI HTML runtime missing"
+        SmokeInstalledCharts(output_directory, mode)
 
-            try:
-                model.GetStatistics()
+    for name in OBSOLETE_MODULES:
+        assert util.find_spec(name) is None, f"Modern artifact installed obsolete backend {name}"
 
-            except ImportError as error:
-                assert "pricegenerator[indicators]" in str(error), "Core install lacks actionable indicator guidance"
+    if mode == "core":
+        for name in OPTIONAL_MODULES:
+            assert util.find_spec(name) is None, f"Core installation pulled optional dependency {name}"
 
-            else:
-                raise AssertionError("Core installed artifact unexpectedly loaded indicators")
-
-        else:
-            for name in ("bokeh", "jinja2", "pandas_ta_classic"):
-                assert util.find_spec(name) is not None, f"Requested extras did not install {name}"
-
-            assert model.GetStatistics(), "Installed indicator integration returned no statistics"
-            model.RenderBokeh(fileName=str(output_directory / "bokeh.html"), viewInBrowser=False)
-            model.RenderGoogle(fileName=str(output_directory / "google.html"), viewInBrowser=False)
-            assert (output_directory / "bokeh.html").stat().st_size > 1000, "Installed Bokeh rendering produced no chart"
-            assert (output_directory / "google.html").stat().st_size > 1000, "Installed Google rendering produced no chart"
-
-    print(json.dumps({"version": pricegenerator.__version__, "python": sys.version.split()[0], "mode": mode, "package": str(package_path)}))
+    print(json.dumps({"version": pricegenerator.__version__, "python": sys.version.split()[0],
+                      "mode": mode, "package": str(package_path)}))
 
 
 def Main():
-    """Run the installed-wheel smoke with no pytest or build dependencies."""
+    """Run artifact verification with only the requested runtime dependencies."""
 
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("mode", choices=("core", "extras"))
+    parser.add_argument("mode", choices=("core", "export"))
     arguments = parser.parse_args()
     SmokeInstalledArtifact(arguments.mode)
 

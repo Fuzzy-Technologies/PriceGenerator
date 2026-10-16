@@ -58,3 +58,7 @@ This ADR does not choose final module names, a plugin framework, or a specific f
 ## Implementation constraint
 
 Before replacing a 1.x behavior, characterize it well enough to state whether v2 intentionally preserves, replaces or removes it.
+
+## Partial supersession — 2026-10-16
+
+[ADR-0010](0010-modern-only-public-api.md) supersedes conflicting legacy-retention, optional-backend and repeated-branding provisions. The modern-only runtime and one price-panel wordmark govern current implementation; remaining invariants continue to apply.
