@@ -3,8 +3,10 @@
 Release code lives in `.github/workflows/release.yml`. It runs **only by manual
 dispatch on `master`**. A push, branch name, tag push, PR, or ordinary CI run
 never uploads a package. The removed Travis workflow is no longer a release
-path. `pricegenerator/_version.py` remains the sole version source; development
-builds retain `2.0.0.dev0` until a separately reviewed release-version change.
+path. `pricegenerator/_version.py` remains the sole version source. This release
+candidate sets it to `2.0.0`; that source change does not itself publish files.
+Future releases need separately reviewed version changes. Unreleased development
+versions use a `.devN` suffix and can be verified but cannot publish.
 
 ## Configure the existing PyPI project
 

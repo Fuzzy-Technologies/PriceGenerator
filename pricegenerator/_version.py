@@ -1,3 +1,3 @@
-"""Define the development version without importing runtime dependencies."""
+"""Define the canonical release version without importing runtime dependencies."""
 
-__version__ = "2.0.0.dev0"
+__version__ = "2.0.0"

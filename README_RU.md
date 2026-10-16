@@ -7,17 +7,18 @@
 
 ## Установка
 
-Поддерживаемое окно версий — CPython 3.10–3.13. Из исходного дерева v2:
+Поддерживаемое окно версий — CPython 3.10–3.13. После публикации версии 2.0.0
+на PyPI установите именно этот выпуск:
 
 ```bash
-python -m pip install .
-# Необязательный экспорт PNG/JPEG из Python:
-python -m pip install '.[export]'
+python -m pip install 'pricegenerator==2.0.0'
+python -m pip install 'pricegenerator[export]==2.0.0'  # Optional PNG/JPEG.
 ```
 
-Исходное дерево может содержать ещё не выпущенную версию. Проверяйте
-`pricegenerator.__version__` и [порядок выпуска](docs/releasing.md), прежде чем
-считать, что соответствующая версия v2 опубликована на PyPI.
+Для исходного дерева используйте `python -m pip install .` или
+`python -m pip install '.[export]'`. Подготовка релиза сама по себе не загружает
+файлы: проверяйте [порядок выпуска](https://github.com/Fuzzy-Technologies/PriceGenerator/blob/v2.0.0/docs/releasing.md) и фактическую страницу PyPI,
+прежде чем считать публикацию завершённой. Ссылки ведут на тег v2.0.0.
 
 ## Генерация и CSV
 
@@ -32,7 +33,7 @@ restored = ReadCSV("prices.csv")
 
 `GenerationConfig` неизменяем. По умолчанию заданы фиксированное начало UTC
 и версионируемая модель `regime_v2`; seed 0 допустим. Генерация использует свой
-RNG и не изменяет глобальное состояние случайных чисел. [Описание модели](docs/model-regime-v2.md)
+RNG и не изменяет глобальное состояние случайных чисел. [Описание модели](https://github.com/Fuzzy-Technologies/PriceGenerator/blob/v2.0.0/docs/model-regime-v2.md)
 определяет дрейф, режимы, независимые шоки/тени, объём, отражение и границы.
 
 Канонические столбцы: `datetime, open, high, low, close, volume`. Время — UTC
@@ -57,9 +58,9 @@ chart_path = Chart(prices, "chart.html", view=False)
 ```
 
 Манифест хранит полную конфигурацию, модель, RNG, версию библиотеки, окружение
-и отпечаток канонических данных. По умолчанию Replay требует совпадения
+и отдельные отпечатки идентичности сценария и канонических данных. Replay требует совпадения
 окружения; `strict_environment=False` всё равно требует точного совпадения
-отпечатка. Диагностика и индикаторы не изменяют исходную таблицу. Отсутствующие
+обоих отпечатков. Диагностика и индикаторы не изменяют исходную таблицу. Отсутствующие
 или неприменимые оценки сопровождаются причиной.
 
 `Chart(prices)` создаёт автономный интерактивный HTML и открывает браузер.
@@ -68,7 +69,7 @@ chart_path = Chart(prices, "chart.html", view=False)
 индикаторы и диагностику. `DisplayChart(prices)` встраивает HTML в notebook;
 если в окружении нет нужных инструментов, установите `.[notebook]`. На ценовой
 панели размещён один полупрозрачный фирменный водяной знак.
-Подробнее: [руководство по графикам](docs/chart-migration.md).
+Подробнее: [руководство по графикам](https://github.com/Fuzzy-Technologies/PriceGenerator/blob/v2.0.0/docs/chart-migration.md).
 
 ## Командная строка
 
@@ -84,9 +85,9 @@ pricegenerator chart prices.csv --output chart.html --no-view --analysis
 задаёт все параметры генерации; явно заданные общие флаги переопределяют поля.
 Неизвестные поля, неконечные числа, неоднозначное время и совпадающие входные/
 выходные пути отклоняются. Старый изменяемый класс, методы рисования и флаги
-удалены намеренно: см. [миграцию](docs/chart-migration.md) и
-[ADR-0010](docs/adr/0010-modern-only-public-api.md). Исторические результаты
-сохранены в [архиве](docs/baseline/README.md).
+удалены намеренно: см. [миграцию](https://github.com/Fuzzy-Technologies/PriceGenerator/blob/v2.0.0/docs/chart-migration.md) и
+[ADR-0010](https://github.com/Fuzzy-Technologies/PriceGenerator/blob/v2.0.0/docs/adr/0010-modern-only-public-api.md). Исторические результаты
+сохранены в [архиве](https://github.com/Fuzzy-Technologies/PriceGenerator/blob/v2.0.0/docs/baseline/README.md).
 
 ## Разработка и расширения
 
@@ -95,9 +96,9 @@ python -m pip install -r requirements.txt
 python -m pytest -q tests
 ```
 
-Начните с [команд разработки](docs/development.md), [упаковки](docs/packaging.md)
-и [ADR](docs/adr/README.md). **AI-участникам: перед изменениями прочитайте
-[AGENTS.md](AGENTS.md)**, затем связанный протокол и требования к стилю.
+Начните с [команд разработки](https://github.com/Fuzzy-Technologies/PriceGenerator/blob/v2.0.0/docs/development.md), [упаковки](https://github.com/Fuzzy-Technologies/PriceGenerator/blob/v2.0.0/docs/packaging.md)
+и [ADR](https://github.com/Fuzzy-Technologies/PriceGenerator/blob/v2.0.0/docs/adr/README.md). **AI-участникам: перед изменениями прочитайте
+[AGENTS.md](https://github.com/Fuzzy-Technologies/PriceGenerator/blob/v2.0.0/AGENTS.md)**, затем связанный протокол и требования к стилю.
 Исследовательские функции остаются экспериментальными и вызываются из модулей
 `pricegenerator.calibration`, `pricegenerator.evaluation`,
 `pricegenerator.extended_models`, `pricegenerator.registry`. Они не входят
@@ -106,4 +107,4 @@ python -m pytest -q tests
 
 [Репозиторий](https://github.com/Fuzzy-Technologies/PriceGenerator) ·
 [Задачи](https://github.com/Fuzzy-Technologies/PriceGenerator/issues) ·
-[Лицензия Apache-2.0](LICENSE) · [English](README.md)
+[Лицензия Apache-2.0](https://github.com/Fuzzy-Technologies/PriceGenerator/blob/v2.0.0/LICENSE) · [English](https://github.com/Fuzzy-Technologies/PriceGenerator/blob/v2.0.0/README.md)

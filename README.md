@@ -7,17 +7,18 @@ establish that a strategy is profitable.
 
 ## Install
 
-CPython 3.10–3.13 is the supported runtime window. From this v2 source checkout:
+CPython 3.10–3.13 is the supported runtime window. Once version 2.0.0 has
+been published on PyPI, install that exact release with:
 
 ```bash
-python -m pip install .
-# Optional Python PNG/JPEG export:
-python -m pip install '.[export]'
+python -m pip install 'pricegenerator==2.0.0'
+python -m pip install 'pricegenerator[export]==2.0.0'  # Optional PNG/JPEG.
 ```
 
-A source checkout may be an unreleased development version. Check the installed
-`pricegenerator.__version__` and [release instructions](docs/releasing.md) before
-assuming that a v2 version has been published on PyPI.
+For a source checkout, use `python -m pip install .` or
+`python -m pip install '.[export]'`. Release preparation does not itself upload
+files; check [release instructions](https://github.com/Fuzzy-Technologies/PriceGenerator/blob/v2.0.0/docs/releasing.md) and the actual PyPI project
+before assuming publication is complete. Documentation links target the v2.0.0 tag.
 
 ## Generate and save
 
@@ -32,7 +33,7 @@ restored = ReadCSV("prices.csv")
 
 `GenerationConfig` is immutable. Defaults include a fixed UTC start and the
 versioned `regime_v2` model; seed zero is valid. Generation owns a private RNG
-and leaves process-global random state alone. See [model semantics](docs/model-regime-v2.md)
+and leaves process-global random state alone. See [model semantics](https://github.com/Fuzzy-Technologies/PriceGenerator/blob/v2.0.0/docs/model-regime-v2.md)
 for drift, regimes, independent shocks/wicks, volume, reflection and bounds.
 
 Canonical data has exactly `datetime, open, high, low, close, volume`: UTC
@@ -56,8 +57,8 @@ chart_path = Chart(prices, "chart.html", view=False)
 ```
 
 A manifest records full configuration, model/RNG/library identity, environment
-and separate scenario-identity and canonical-output fingerprints. Replay requires a matching environment by
-default; `strict_environment=False` still requires exact fingerprint equality.
+and separate scenario-identity and canonical-output fingerprints. Replay requires
+a matching environment by default; `strict_environment=False` still requires exact fingerprint equality.
 Diagnostics and indicators do not mutate source data. Missing/domain-limited
 estimates include reasons, rather than fabricated finite values.
 
@@ -66,7 +67,7 @@ Use `view=False` in batch jobs. SVG needs an explicit `.svg` destination; PNG an
 JPEG additionally need `[export]`. `analysis=True` explicitly attaches financial
 overlays and diagnostics. `DisplayChart(prices)` embeds HTML in a notebook;
 install `.[notebook]` if the host lacks notebook tooling. Charts contain one
-translucent corporate wordmark in the price panel. See [chart guide](docs/chart-migration.md).
+translucent corporate wordmark in the price panel. See [chart guide](https://github.com/Fuzzy-Technologies/PriceGenerator/blob/v2.0.0/docs/chart-migration.md).
 
 ## Command line
 
@@ -82,8 +83,8 @@ pricegenerator chart prices.csv --output chart.html --no-view --analysis
 all generation parameters; explicit common CLI flags override those fields.
 Unknown fields, nonfinite values, ambiguous times and aliased input/output paths
 fail early. The old mutable class, rendering methods and old CLI flags are
-removed; [migration](docs/chart-migration.md) and [ADR-0010](docs/adr/0010-modern-only-public-api.md)
-record the deliberate break. Historical evidence remains [archived](docs/baseline/README.md).
+removed; [migration](https://github.com/Fuzzy-Technologies/PriceGenerator/blob/v2.0.0/docs/chart-migration.md) and [ADR-0010](https://github.com/Fuzzy-Technologies/PriceGenerator/blob/v2.0.0/docs/adr/0010-modern-only-public-api.md)
+record the deliberate break. Historical evidence remains [archived](https://github.com/Fuzzy-Technologies/PriceGenerator/blob/v2.0.0/docs/baseline/README.md).
 
 ## Develop and extend
 
@@ -92,8 +93,8 @@ python -m pip install -r requirements.txt
 python -m pytest -q tests
 ```
 
-Start with [development commands](docs/development.md), [packaging](docs/packaging.md)
-and the [ADRs](docs/adr/README.md). **AI contributors: read [AGENTS.md](AGENTS.md)
+Start with [development commands](https://github.com/Fuzzy-Technologies/PriceGenerator/blob/v2.0.0/docs/development.md), [packaging](https://github.com/Fuzzy-Technologies/PriceGenerator/blob/v2.0.0/docs/packaging.md)
+and the [ADRs](https://github.com/Fuzzy-Technologies/PriceGenerator/blob/v2.0.0/docs/adr/README.md). **AI contributors: read [AGENTS.md](https://github.com/Fuzzy-Technologies/PriceGenerator/blob/v2.0.0/AGENTS.md)
 before changing code**, then follow the linked protocol and style contract.
 Research helpers remain experimental and module-qualified under
 `pricegenerator.calibration`, `pricegenerator.evaluation`,
@@ -103,4 +104,4 @@ Large-data adapters are `GenerateChunks` and `WriteCSVChunks`.
 
 [Repository](https://github.com/Fuzzy-Technologies/PriceGenerator) ·
 [Issues](https://github.com/Fuzzy-Technologies/PriceGenerator/issues) ·
-[Apache-2.0 license](LICENSE) · [Русский](README_RU.md)
+[Apache-2.0 license](https://github.com/Fuzzy-Technologies/PriceGenerator/blob/v2.0.0/LICENSE) · [Русский](https://github.com/Fuzzy-Technologies/PriceGenerator/blob/v2.0.0/README_RU.md)

@@ -3,7 +3,9 @@
 `pyproject.toml` defines metadata, the build backend, dependencies, extras and
 `pricegenerator.cli:Main`. `_version.py` provides one deterministic literal for
 runtime, wheel and sdist versions. Builds never depend on Travis variables or
-the current date. The v2 development version is `2.0.0.dev0`.
+the current date. This release candidate uses canonical version `2.0.0`;
+publication is a separate reviewed operation. Subsequent development versions
+use an explicit `.devN` suffix and are not published by the release workflow.
 
 The supported runtime is CPython **3.10–3.13** (`>=3.10,<3.14`). CI checks modern
 APIs from clean installed wheel and sdist environments on each version. An
@@ -51,6 +53,6 @@ uv pip compile pyproject.toml --extra dev --extra export \
   --universal --python-version 3.10 --output-file requirements/modern.txt
 ```
 
-The checked-in legacy locks describe historical characterization only and never
+The dependency lock under `docs/baseline/archive` describes historical characterization only and never
 participate in modern installation or CI. See [release instructions](releasing.md)
 for the manual, protected Trusted Publishing workflow and external setup.
