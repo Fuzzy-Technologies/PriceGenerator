@@ -1,11 +1,58 @@
 # PriceGenerator — список релизных изменений
 
-[![gift](https://badgen.net/badge/gift/donate/green)](https://yoomoney.ru/quickpay/shop-widget?writer=seller&targets=%D0%94%D0%BE%D0%BD%D0%B0%D1%82%20(%D0%BF%D0%BE%D0%B4%D0%B0%D1%80%D0%BE%D0%BA)%20%D0%B4%D0%BB%D1%8F%20%D0%B0%D0%B2%D1%82%D0%BE%D1%80%D0%BE%D0%B2%20%D0%BF%D1%80%D0%BE%D0%B5%D0%BA%D1%82%D0%B0%20PriceGenerator&default-sum=999&button-text=13&payment-type-choice=on&successURL=https%3A%2F%2Ftim55667757.github.io%2FPriceGenerator%2F&quickpay=shop&account=410015019068268)
+[English](https://github.com/Fuzzy-Technologies/PriceGenerator/blob/develop/CHANGELOG.md) ·
+[Документация](https://github.com/Fuzzy-Technologies/PriceGenerator/blob/develop/README_RU.md) ·
+[Порядок выпуска](https://github.com/Fuzzy-Technologies/PriceGenerator/blob/develop/docs/releasing.md)
 
-* 🇺🇸 [See release notes in english here (актуальные релиз-ноты на английском)](https://github.com/Tim55667757/PriceGenerator/blob/develop/CHANGELOG.md)
-* 📚 [Документация на модуль PriceGenerator и примеры работы в консоли](https://github.com/Tim55667757/PriceGenerator/blob/master/README_RU.md)
-* ⚙️ [PriceGenerator API-документация](https://tim55667757.github.io/PriceGenerator/docs/pricegenerator/PriceGenerator.html)
-* 🎁 Поддержать проект донатом на ЮМани-кошелёк: [410015019068268](https://yoomoney.ru/fundraise/BxB9DQNvJnk.230111)
+## 2.0.0
+
+Это намеренно несовместимая замена среды выполнения 1.x. Публикация выполняется
+отдельно; её фактический статус отражён на [PyPI](https://pypi.org/project/pricegenerator/)
+и в workflow выпуска. Исторические записи ниже сохранены с исходными ссылками
+и происхождением.
+
+- **API, модель и CLI:** неизменяемая `GenerationConfig` и `Generate(config)`
+  заменяют изменяемый класс. Модель `regime_v2` использует собственный RNG,
+  явный seed, фиксированное время UTC, дрейф/режимы, независимые шоки и события
+  теней, положительные ограниченные цены и непрерывный объём. Seed 0 допустим.
+  Старой модели, класса совместимости и прежних флагов в runtime нет; старые
+  seed не обещают идентичные последовательности v2. Команды: `generate`,
+  `replay`, `validate`, `analyze`, `chart`.
+- **Данные и воспроизведение:** строгий шестиколоночный OHLCV CSV с заголовком,
+  UTC с наносекундной точностью, конечные float64, отдельная проверенная таблица
+  и явные правила часового пояса/шага. Манифест хранит полную конфигурацию,
+  идентичность модели/RNG/библиотеки/окружения и отдельные отпечатки сценария
+  и точного результата. Переносимое воспроизведение также проверяет оба хеша.
+  Манифесты версий разработки сохраняют исходную идентичность библиотеки:
+  автоматического переименования в 2.0.0 нет. `GenerateChunks`/`WriteCSVChunks`
+  дают потоковую обработку с ограниченной памятью и той же последовательностью.
+- **Анализ и исследования:** диагностика без изменения исходных данных и
+  современные формулы индикаторов на NumPy/pandas заменяют внешний TA backend.
+  HMA отделена от Alligator; прогрев и неприменимые оценки обозначены явно.
+  Калибровка, сравнения, bootstrap/scripted-сценарии и реестр моделей доступны
+  через отдельные модули и остаются экспериментальными. Синтетические инварианты,
+  частоты событий и исторические сравнения не доказывают универсальную
+  реалистичность рынка, точность прогнозов или прибыльность стратегии.
+- **Графики:** `Chart` по умолчанию создаёт автономный интерактивный HTML и
+  открывает браузер; в автоматизации задавайте `view=False`. SVG входит в core,
+  а `[export]` добавляет PNG/JPEG через закреплённые resvg-py/Pillow.
+  `DisplayChart` встраивает HTML в notebook. Индикаторы добавляются явно через
+  `analysis=True`. Оба движка сохраняют эмблему и показывают один полупрозрачный
+  фирменный водяной знак в ценовой панели, ни одного в панели объёма. Ресурсы и
+  лицензионные уведомления работают без сети.
+- **Упаковка и выпуск:** CPython 3.10–3.13; основные зависимости — NumPy, pandas,
+  python-dateutil. Bokeh, Jinja и pandas-ta исключены. Точные ограничения,
+  чистые установки wheel/sdist и настоящий PNG/JPEG проверяются в GitHub Actions.
+  Ручной выпуск тега текущего master требует успешных quality/Canvas проверок;
+  подтверждение защищённого окружения предшествует PyPI Trusted Publishing с
+  аттестациями. Загрузка через Travis удалена. Для публикации всё ещё необходимы
+  внешняя настройка доверенного издателя и подтверждение.
+
+Подробнее: [миграция](https://github.com/Fuzzy-Technologies/PriceGenerator/blob/develop/docs/chart-migration.md),
+[контракт модели](https://github.com/Fuzzy-Technologies/PriceGenerator/blob/develop/docs/model-regime-v2.md),
+[ADR-0010](https://github.com/Fuzzy-Technologies/PriceGenerator/blob/develop/docs/adr/0010-modern-only-public-api.md).
+Исходники 1.x и результаты baseline сохранены в архиве вне современного runtime
+и активных требований к зависимостям.
 
 
 ### [1.4.93 (2023-11-25)](https://github.com/Tim55667757/PriceGenerator/releases/tag/v1.4.93) — опубликована

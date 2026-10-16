@@ -1,0 +1,11 @@
+{
+  "echarts_version": "6.1.0",
+  "echarts_source": "https://registry.npmjs.org/echarts/-/echarts-6.1.0.tgz",
+  "echarts_source_integrity": "sha512-q0yaFPggC9FUdsWH4blavRWFmxdrIodbkoKNAjJudAI6CA9gNPxHtV2RcZNEepZVlk4yvBYkOkbk6HIVpIyHZA==",
+  "zrender_version": "6.1.0",
+  "tslib_version": "2.3.0",
+  "builder_version": "0.25.12",
+  "sha256": "b124fe8ea624740666cb76e1d3322299b1411120f97bd438850951692f07b6b6",
+  "raw_bytes": 658040,
+  "gzip_bytes": 224045
+}

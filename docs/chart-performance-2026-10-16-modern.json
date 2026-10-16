@@ -1,0 +1,221 @@
+{
+  "benchmark": "modern-chart-performance-v2",
+  "cases": [
+    {
+      "canvas": {
+        "actions": {
+          "full_range": {
+            "milliseconds": 31.332172000000014,
+            "visible_rows": {
+              "price": 1000,
+              "volume": 1000
+            }
+          },
+          "pan": {
+            "milliseconds": 39.58025299999997,
+            "visible_rows": {
+              "price": 250,
+              "volume": 250
+            }
+          },
+          "reset": {
+            "milliseconds": 83.13703399999997,
+            "visible_rows": {
+              "price": 1000,
+              "volume": 1000
+            }
+          },
+          "update": {
+            "milliseconds": 38.504233,
+            "visible_rows": {
+              "price": 1000,
+              "volume": 1000
+            }
+          },
+          "zoom": {
+            "milliseconds": 45.54238099999998,
+            "visible_rows": {
+              "price": 250,
+              "volume": 250
+            }
+          }
+        },
+        "environment": {
+          "architecture": "x64",
+          "canvas": "0.1.100",
+          "cpu_count": 9,
+          "cpu_model": "AMD EPYC 9V74 80-Core Processor",
+          "echarts": "6.1.0",
+          "node": "v24.19.0",
+          "os_release": "6.18.44",
+          "pixel_ratio": 2,
+          "platform": "linux",
+          "renderer": "native Canvas, ssr=true",
+          "timers": "ECharts animation timers suppressed by shared raster harness; animation and progressive rendering disabled"
+        },
+        "html_json_parse_ms": 0.8396549999999934,
+        "initial_visible_rows": {
+          "price": 1000,
+          "volume": 1000
+        },
+        "mount_ms": 158.85708499999998,
+        "png": {
+          "bytes": 347859,
+          "height": 1520,
+          "sha256": "793ae5e3630b7105effacf39091a951bc8c1c47c8fbf8fecab8c542ad840c3ed",
+          "width": 2560
+        },
+        "png_export_ms": 207.865609,
+        "process_peak_rss_bytes": 216985600,
+        "scope": {
+          "actions": "Synchronous real ECharts dispatch/setOption plus Canvas raster flush; excludes OS input, DOM layout and display frames",
+          "mount": "Brand image decode/tint, real ECharts init and setOption, control binding shim and raster flush",
+          "png": "Actual controller ExportPNG at pixel ratio 2; decoding and hashing excluded",
+          "update": "Replace complete candle data array after increasing final high by 0.01; array preparation excluded"
+        },
+        "status": "ok",
+        "total_rows": 1000
+      },
+      "fixture": {
+        "automatic_statistics": false,
+        "chart_spec_sha256": "e966d23cdc9e63b57972eaea9ba0580d85ddffd2dfd97ef476fa38be438384ef",
+        "height": 760,
+        "markers": 1,
+        "overlays": 1,
+        "recipe": "arithmetic-ohlcv-v1",
+        "rows": 1000,
+        "seed": null,
+        "start": "2020-01-01T00:00:00Z",
+        "timeframe_seconds": 60,
+        "timezone": "UTC",
+        "width": 1280
+      },
+      "requested_rows": 1000,
+      "stages": {
+        "adapter_seconds": 0.013776525,
+        "interactive_html": {
+          "bytes": 906924,
+          "gzip_bytes": 306975,
+          "render_seconds": 0.006724085,
+          "sha256": "6e48ace6a5717ac563f8d85e0612394e461ab6cd6c2d57855bd7e136f7837325",
+          "write_seconds": 0.00055109
+        },
+        "spec_json_bytes": 131267,
+        "spec_serialization_seconds": 0.004184471,
+        "static_jpeg": {
+          "bytes": 254127,
+          "format": "JPEG",
+          "gzip_bytes": 212931,
+          "height": 823,
+          "mode": "RGB",
+          "render_seconds": 0.492065308,
+          "sha256": "20da0f2870558f7f29d5bbbf6ebada1f49b9c63140edb19a6b42ce107389772e",
+          "width": 1280,
+          "write_seconds": 0.000279701
+        },
+        "static_png": {
+          "bytes": 117691,
+          "format": "PNG",
+          "gzip_bytes": 113680,
+          "height": 823,
+          "mode": "RGBA",
+          "render_seconds": 0.479220025,
+          "sha256": "d68d391599e3da12dddfe77080b92b9911e80bf226f1a803beaea3ea3e816eb0",
+          "width": 1280,
+          "write_seconds": 0.000174663
+        },
+        "static_svg": {
+          "bytes": 486955,
+          "candle_rows": 1000,
+          "gzip_bytes": 119935,
+          "render_seconds": 0.012633716,
+          "sha256": "02cd7689cac19052b66320165cb0fb5f93f8c3d693cf6ca74a3d58e02f3f0eab",
+          "volume_rows": 1000,
+          "write_seconds": 0.000280913
+        }
+      },
+      "status": "ok"
+    }
+  ],
+  "created_at": "2026-10-16T13:35:42.975788+00:00",
+  "environment": {
+    "cpu_count": 9,
+    "dependencies": {
+      "Pillow": "12.0.0",
+      "numpy": "2.3.5",
+      "pandas": "2.2.3",
+      "resvg-py": "0.5.0"
+    },
+    "machine": "x86_64",
+    "platform": "Linux-6.18.44-x86_64-with-glibc2.39",
+    "python": "3.12.14",
+    "python_executable": "/tmp/pg-chart-export-env/bin/python"
+  },
+  "invocation": {
+    "canvas_module": "@napi-rs/canvas",
+    "node": "node",
+    "sizes": [
+      1000
+    ],
+    "source_root": "/workspace/scratch/5c8c2915c4a6/pg-charts-v2",
+    "timeout_seconds": 60.0
+  },
+  "schema_version": 2,
+  "scope": {
+    "canvas": "Real vendored ECharts and native raster Canvas with DOM/lifecycle shim; no browser, DOM layout, input delivery or display FPS measurement",
+    "comparison": "Static exports include every candle; interactive viewport and full-range visible counts recorded separately; historical engine comparisons are archived only",
+    "fixture": "Shared arithmetic OHLCV, one custom overlay with 19 leading gaps, one above-candle marker; automatic indicators explicitly disabled",
+    "performance_gate": false,
+    "python": "Fixture and imports excluded; PrepareChart, spec serialization, SVG/PNG/JPEG/HTML rendering and file writes measured separately; compression, hashes and decoder verification excluded",
+    "raster": "Python resvg renders the complete native SVG including legend/report; JPEG adds Pillow RGB encoding at quality90; dimensions verified against SVG",
+    "repetitions": "One observation per size in a fresh Python and Node process; no warmup or statistical aggregation",
+    "timeout_seconds_per_worker": 60.0
+  },
+  "source": {
+    "git_commit": "1a01113b6db549c4a4edf138f5ac3249b33637d6",
+    "recipe_sha256": {
+      "benchmark_charts.cjs": "e168f2c9092964247262f3d8ddf3a450485e262d644bd78fe1cbb43cb33cf65c",
+      "benchmark_charts.py": "25bc1319ac4b4283596f6765cd4a61d5f995675acd6d59bb4ebbf4cc1825d3e6"
+    },
+    "source_sha256": {
+      "pricegenerator/__init__.py": "4c6a53ff82e0bd16bbc846148c75df061e2024df4033d9c6d6af4c2c02adf4df",
+      "pricegenerator/__main__.py": "cb9dbc99aaefaf2d50bce907454a3b182a077e581e7968d71bb45f70aa776aee",
+      "pricegenerator/_version.py": "6d0450cbab21e5738db07bd7fef0605656f3853e293049d06f23a50f51e60c91",
+      "pricegenerator/analysis.py": "1f83760759e37900e4c9c425e2da375411594c3945ae552b90bfc1823d42250e",
+      "pricegenerator/cli.py": "f4b9810cd2dd731cb8049e513b6798db5868e74f0da2a473ea4836fa260951b8",
+      "pricegenerator/config.py": "fb2408c54c124a401161ebf7dd7eb1b662f951c1610ea405bdaf96405a5191cc",
+      "pricegenerator/generation.py": "cf5326960c3efb395aaa6dc51d962efb5cbe941e4b1f2e7bd09fbddf06bb8807",
+      "pricegenerator/indicators.py": "e6ab9eba6a0bddaa26e70336d0d5754a0cb28713cbf8eb24ed2cdd3198f39379",
+      "pricegenerator/io.py": "eabce85f6fcdb3c8aa9d0e6e976fcc6f5e899ebb8256cd3341e687ab6304695a",
+      "pricegenerator/market_data.py": "e657489a9c7afa2c5f43ba7f79e54a442d65c524c318272b897bc8e2a794b6f5",
+      "pricegenerator/models.py": "b9ecfce7a113d30febcad73e91553a3ca494a0d2255d2ff0e506c4d68e9b8eb8",
+      "pricegenerator/rendering/__init__.py": "f4ae78571fdaf662e6cccc97257b4dca69323b08777a2d0f99a9dc25e4682e06",
+      "pricegenerator/rendering/__main__.py": "a97eeeef86f696cfab471fc6be3b173cd06bffd3f06ae86a94f519750eb256cd",
+      "pricegenerator/rendering/adapters.py": "cc0a6c2510f706197e668dfd1d8be1d0b7793bc7087eb4f1601bd12d4a4240a6",
+      "pricegenerator/rendering/api.py": "51784b536648e0dcb2d964e0e11d3015afe46f50a57f2ca8bd115ef9511a3377",
+      "pricegenerator/rendering/assets/branding/FuzzyTechnologies-Logo-transp.png": "d359c5ec7a949f6133508aab59dac97dfea77872ed43b6c6df3c4a10def46103",
+      "pricegenerator/rendering/assets/branding/ftech-emblem-192.png": "b0f03918847db13a6b7d3cdcd53b739362478f370a2f795a93b2996ab7720a28",
+      "pricegenerator/rendering/assets/echarts/LICENSE-APACHE-2.0.txt": "634293835b43a6dd2094fa39182a3d9a6b9ca43b7fdb9ac354e8037af2a3093a",
+      "pricegenerator/rendering/assets/echarts/LICENSE-TSLIB-0BSD.txt": "210b19e543130388c68654b7497e967119ce17145f66ab7d85688fbd70f08751",
+      "pricegenerator/rendering/assets/echarts/LICENSE-ZRENDER-BSD-3.txt": "a681e9d183c72b4af4856935893805eb48c08f0f5a3f260203db7444c20fb98a",
+      "pricegenerator/rendering/assets/echarts/NOTICE.txt": "d491d358344f842685c1b1585970999db65fe30ecf7ef3867af8814f4016c016",
+      "pricegenerator/rendering/assets/echarts/THIRD_PARTY_NOTICES.md": "ba1424f3c09ac016cc3f42a73b9392e4bd328c3189ba352e20f2159eda89cff0",
+      "pricegenerator/rendering/assets/echarts/build.json": "33eac29c49bf66eb5361d42b8415fde6b2a75daf10a5829d408458b79aa107e2",
+      "pricegenerator/rendering/assets/echarts/echarts-financial.min.js": "b124fe8ea624740666cb76e1d3322299b1411120f97bd438850951692f07b6b6",
+      "pricegenerator/rendering/assets/interactive.js": "0182334730eabebe1d08f79eb9a68aa81106431f357d4f2ed964acd9277b9279",
+      "pricegenerator/rendering/exports.py": "ccd2f9fd2f39517c34a7880441c0ba9c7e798163a471f6e97912ec8dd10a9d3c",
+      "pricegenerator/rendering/interactive.py": "98d0648cb99058186e1930458ccfac3c76a25743038c78b4ce5499e2d937fc3c",
+      "pricegenerator/rendering/spec.py": "ed43c6a911ef0e50f03fe4862d201b51f74431d8adb5cf6ea7cfe24d3e6968ec",
+      "pricegenerator/rendering/static.py": "be41288071573e9107b0ebfe147776acb1df8c2be1e8dc886287b6a96287f3db",
+      "pricegenerator/rendering/theme.py": "789169b5104a3cfa9dcb3a95aadc77a1b2a92664a0b684f0bc925de0daf1ad86",
+      "pricegenerator/scenario.py": "d401661aca6033e3b991e05fa21c69013106dde74009330d137a94bcd1eab5e6",
+      "pyproject.toml": "357ba41f58a8669e06b85a74656a028f3404777f9dab30e51fc46e9090dcc632",
+      "setup.py": "b955f4d501f4f8cf656aa1b5c14316767e9856ab1652f2e4d3b60d7f454e61ed",
+      "tools/chart_runtime/canvas_environment.cjs": "670a76d7c8374ea45f1c883a152010bc24633ffd7de3ef70d1af25a9e4e8291f",
+      "tools/chart_runtime/package-lock.json": "57c01bf03ae681c3c3656b6bbcc47147da0dd6fb06f996b4084938633f035d09",
+      "tools/chart_runtime/package.json": "304524cb30be90dd8c78119ed60ce310cf9b123903e61ba32d5c4d1b897aac9f"
+    }
+  },
+  "source_tree_stable": true,
+  "status": "ok"
+}
