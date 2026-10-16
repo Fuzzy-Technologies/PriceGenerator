@@ -1,0 +1,82 @@
+name: Apply modern-only task metadata
+on:
+  pull_request:
+    types: [opened, synchronize]
+permissions:
+  contents: write
+  issues: write
+  pull-requests: write
+jobs:
+  normalize:
+    if: github.repository == 'Fuzzy-Technologies/PriceGenerator' && github.actor == 'Tim55667757' && github.head_ref == 'ops/modern-only-planning' && github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-24.04
+    timeout-minutes: 3
+    steps:
+      - name: Set and verify only approved Tasks 105 and 106
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          PR_HEAD: ${{ github.event.pull_request.head.sha }}
+        run: |
+          python <<'PY'
+          """Apply explicit native fields for the user-authorized modern-only scope."""
+          import json
+          import os
+          import subprocess
+
+          prefix = "repos/" + os.environ["GH_REPO"]
+          specs = {105: 90, 106: 37}
+
+
+          def Api(method, suffix, payload=None):
+              """Use the official API without emitting credentials."""
+
+              command = ["gh", "api", "--method", method, "-H", "Accept: application/vnd.github+json",
+                         "-H", "X-GitHub-Api-Version: 2026-03-10", prefix + "/" + suffix]
+              data = None
+
+              if payload is not None:
+                  command.extend(["--input", "-"])
+                  data = json.dumps(payload)
+
+              result = subprocess.run(command, input=data, text=True, capture_output=True, check=True)
+
+              return json.loads(result.stdout) if result.stdout.strip() else None
+
+
+          def Main():
+              """Verify field IDs and parent identity before completing the narrow batch."""
+
+              existing = Api("GET", "issues/44/issue-field-values")
+              fields = {item["issue_field_name"]: item["issue_field_id"] for item in existing}
+              assert fields["Priority"] == 22639629 and fields["Effort"] == 22639632
+
+              for number, parent in specs.items():
+                  issue = Api("PATCH", f"issues/{number}", {"type": "Task", "milestone": 9,
+                              "assignees": ["Tim55667757"], "labels": ["Task"]})
+                  Api("POST", f"issues/{number}/issue-field-values", {"issue_field_values": [
+                      {"field_id": fields["Priority"], "value": "High"},
+                      {"field_id": fields["Effort"], "value": "High"}]})
+
+                  if not issue.get("parent_issue_url"):
+                      Api("POST", f"issues/{parent}/sub_issues", {"sub_issue_id": issue["id"]})
+
+                  actual = Api("GET", f"issues/{number}")
+                  actual_fields = {item["issue_field_name"]: item.get("single_select_option", {}).get("name")
+                                   for item in Api("GET", f"issues/{number}/issue-field-values")}
+                  assert actual["type"]["name"] == "Task" and actual["milestone"]["number"] == 9
+                  assert actual_fields["Priority"] == actual_fields["Effort"] == "High"
+                  assert Api("GET", f"issues/{number}/parent")["number"] == parent
+                  print(f"PASS #{number}: Task High/High milestone9 parent#{parent}")
+
+              Api("PATCH", "pulls/" + os.environ["PR_NUMBER"], {"state": "closed"})
+              branch = "ops/modern-only-planning"
+              assert Api("GET", "git/ref/heads/" + branch)["object"]["sha"] == os.environ["PR_HEAD"]
+              Api("DELETE", "git/refs/heads/" + branch)
+              print("PASS: temporary operation closed unmerged and branch deleted")
+
+
+          if __name__ == "__main__":
+              Main()
+          PY
