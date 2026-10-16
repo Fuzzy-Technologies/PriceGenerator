@@ -56,7 +56,7 @@ chart_path = Chart(prices, "chart.html", view=False)
 ```
 
 A manifest records full configuration, model/RNG/library identity, environment
-and a canonical output fingerprint. Replay requires a matching environment by
+and separate scenario-identity and canonical-output fingerprints. Replay requires a matching environment by
 default; `strict_environment=False` still requires exact fingerprint equality.
 Diagnostics and indicators do not mutate source data. Missing/domain-limited
 estimates include reasons, rather than fabricated finite values.

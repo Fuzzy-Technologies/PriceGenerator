@@ -157,3 +157,43 @@ def test_CanonicalWideTimestampRangeDoesNotOverflowTimedelta() -> None:
     report = Analyze(frame)
 
     assert report.cadence_regular and report.path.elapsed_seconds == 15778454400, "Elapsed time must use exact Python integer nanosecond differences."
+
+
+def test_PairedOutlierEventsSeparateTailAndCandleFrequencies() -> None:
+    """Independent masks fix upper/lower, union and intersection event semantics."""
+
+    from pricegenerator.analysis import SummarizeOutlierEvents
+
+    upper = [True, False, True, False]
+    lower = [False, True, True, False]
+    original_upper = list(upper)
+    summary = SummarizeOutlierEvents(upper, lower, definition="Fixture flags identify two explicitly observed tail events")
+
+    assert (summary.upper_count, summary.lower_count, summary.either_count, summary.both_count) == (2, 2, 3, 1), "Per-candle union and intersection cannot be replaced by per-tail counts."
+    assert [summary.upper_frequency.value, summary.lower_frequency.value, summary.either_frequency.value, summary.both_frequency.value] == [0.5, 0.5, 0.75, 0.25], "Every frequency uses the number of paired candles as its denominator."
+    assert upper == original_upper and summary.trials == 4, "Event summarization must not alter masks or invent candle observations."
+    assert "confidence" not in summary.ToDict(), "Descriptive masks cannot imply an independence-based confidence claim."
+
+    with pytest.raises(FrozenInstanceError):
+        summary.trials = 99
+
+
+@pytest.mark.parametrize("upper,lower,definition", [([True], [], "known"), ([1], [False], "known"), ([None], [False], "known"), ([True], [float("nan")], "known"), ([], [], " "), ([], [], None)])
+def test_InvalidPairedOutlierMasksFail(upper, lower, definition) -> None:
+    """Reject unaligned, numeric, missing or unexplained event masks explicitly."""
+
+    from pricegenerator.analysis import SummarizeOutlierEvents
+
+    with pytest.raises(ValueError):
+        SummarizeOutlierEvents(upper, lower, definition=definition)
+
+
+def test_EmptyPairedOutlierMasksHaveUndefinedFrequencies() -> None:
+    """An empty event observation set has zero counts and no frequency estimate."""
+
+    from pricegenerator.analysis import SummarizeOutlierEvents
+
+    result = SummarizeOutlierEvents(np.array([], dtype=bool), [], definition="No event observations supplied")
+
+    assert result.trials == result.either_count == result.both_count == 0, "No supplied events cannot create trials or successes."
+    assert result.upper_frequency.value is None and result.upper_frequency.reason, "An empty denominator must remain explicitly undefined."

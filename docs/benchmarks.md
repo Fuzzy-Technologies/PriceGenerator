@@ -85,7 +85,10 @@ null where the resource counter is unavailable. Fresh workers prevent previous
 cases from inflating subsequent RSS measurements. Timing and memory observations
 do not replay bit for bit. Use repeated measurements with matching scope,
 configuration, sources and environment before making performance comparisons.
-See [v2 performance and streaming](performance-v2.md) for commands, the measured
+See [final committed-source evidence](performance-v2-final.md) for the clean
+100-to-1,000,000-row measurements, durable public source mapping and exact
+full/chunked hash checks. See [v2 performance and streaming](performance-v2.md)
+for commands, the measured
 continuity optimization, full/chunked observations and their limitations.
 
 ## Archived 1.x baseline

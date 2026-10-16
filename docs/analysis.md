@@ -106,3 +106,37 @@ and [Hoeffding's original bounded-sum inequality](https://doi.org/10.1080/016214
 UTC horizon differences are computed with Python integer nanoseconds, so
 canonical dates spanning more than292 years do not overflow pandas Timedelta.
 The regression vector1700-01-01 to2200-01-01 has elapsed15,778,454,400 seconds.
+
+## Paired upper/lower event frequencies
+
+`SummarizeOutlierEvents(upper_flags, lower_flags, definition=...)` is a separate,
+pure helper for supplied paired boolean masks. It reports upper-tail,
+lower-tail, either-tail and both-tail counts and frequencies. All rates use the
+number of paired candles as denominator. Masks must be aligned strict boolean
+values; numeric0/1, missing values and unaligned lengths fail. Empty masks
+produce zero counts and explicitly undefined frequencies.
+
+The mandatory `definition` describes the provenance and meaning of these
+particular events. For example, flags from an instrumented generator branch
+and flags from a predeclared observational wick threshold are different events.
+The helper does not infer latent generator branches from OHLCV magnitudes,
+modify the six-column canonical schema or claim that a large realized wick
+must have used an outlier branch. It supplies no confidence interval or
+independence claim; apply a finite-sample event policy only when its assumptions
+are independently justified.
+
+```python
+from pricegenerator.analysis import SummarizeOutlierEvents
+
+summary = SummarizeOutlierEvents(
+    [True, False, True, False],
+    [False, True, True, False],
+    definition="Four fixture candles with explicitly observed upper/lower events",
+)
+assert summary.upper_count == summary.lower_count == 2
+assert summary.either_count == 3
+assert summary.both_count == 1
+```
+
+The fixture distinguishes per-tail rates0.5/0.5 from per-candle union0.75 and
+intersection0.25. It is event-accounting evidence, not a market-realism test.

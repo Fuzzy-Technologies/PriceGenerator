@@ -16,6 +16,27 @@ class Estimate:
 
 
 @dataclass(frozen=True)
+class OutlierEventSummary:
+    """Describe caller-defined paired tail events without inferring latent model flags."""
+
+    definition: str
+    trials: int
+    upper_count: int
+    lower_count: int
+    either_count: int
+    both_count: int
+    upper_frequency: Estimate
+    lower_frequency: Estimate
+    either_frequency: Estimate
+    both_frequency: Estimate
+
+    def ToDict(self) -> dict:
+        """Return detached descriptive counts and frequencies."""
+
+        return asdict(self)
+
+
+@dataclass(frozen=True)
 class Distribution:
     """A marginal distribution with conventions and domain exclusions exposed."""
 
@@ -194,6 +215,36 @@ def Describe(values, name: str = "values") -> Distribution:
     extreme = np.abs(centered) > 3 * sigma
 
     return Distribution(name, count, len(supplied) - count, mean, variance, deviation, skew, kurtosis, _Estimate(float(array.min())), _Estimate(float(array.max())), tuple((level, _Estimate(float(value) * scale)) for level, value in zip(quantile_levels, quantiles)), _Estimate(float(lower.mean()) * scale), _Estimate(float(upper.mean()) * scale), _Estimate(float(outliers.mean())), _Estimate(float(extreme.mean())))
+
+
+def SummarizeOutlierEvents(upper_flags, lower_flags, *, definition: str) -> OutlierEventSummary:
+    """Summarize strict paired boolean masks with explicit caller-defined event meaning.
+
+    Flags are supplied evidence, not inferred from wick magnitudes or generator
+    parameters. Frequencies alone imply no independence or confidence interval.
+    """
+
+    if not isinstance(definition, str) or not definition.strip():
+        raise ValueError("definition must be a nonempty description of the supplied event masks")
+
+    upper = tuple(upper_flags)
+    lower = tuple(lower_flags)
+
+    if len(upper) != len(lower):
+        raise ValueError("upper and lower flags must be aligned with equal lengths")
+
+    if any(not isinstance(value, (bool, np.bool_)) for value in upper + lower):
+        raise ValueError("event flags must be strict booleans, never numeric or missing values")
+
+    trials = len(upper)
+    upper_count = sum(bool(value) for value in upper)
+    lower_count = sum(bool(value) for value in lower)
+    either_count = sum(bool(first or second) for first, second in zip(upper, lower))
+    both_count = sum(bool(first and second) for first, second in zip(upper, lower))
+    counts = (upper_count, lower_count, either_count, both_count)
+    frequencies = tuple(Estimate(count / trials) if trials else Estimate(None, "no paired event observations") for count in counts)
+
+    return OutlierEventSummary(definition, trials, *counts, *frequencies)
 
 
 def ProportionInterval(count: int, trials: int, *, confidence: float = 0.99) -> ProportionBand:

@@ -1,5 +1,11 @@
 # Reproducible v2 performance and streaming
 
+The [final committed-source evidence](performance-v2-final.md) is the current
+reproducible measurement: a clean modern-only snapshot, a durable public source
+commit, and exact matching full/chunked output across 100 through 1,000,000
+rows. Earlier observations below remain archival records with their provenance
+limits; use the final report when checking the release implementation.
+
 The maintained benchmark runs actual `regime_v2` package code. Historical 1.x
 measurements remain archival evidence; the removed runtime is not executed by
 the current command. These diagnostics impose no wall-clock CI threshold.
@@ -78,7 +84,7 @@ This is process-failure protection, not a promise of filesystem durability
 across power loss. Memory is proportional to chunk size, rather than horizon;
 CSV disk space remains proportional to the complete output.
 
-# Profile-guided continuity optimization
+# Archived profile-guided continuity optimization
 
 A 10,000-row profile of the initial v2 boundary, with cProfile and tracemalloc
 both enabled, observed 1.860 seconds in `Generate`, including 1.625 seconds in
@@ -115,7 +121,7 @@ reproduction. The commands above run new diagnostics on the current source;
 they do not reconstruct the earlier measured snapshot. No old runtime source
 is retained to recreate it.
 
-# Full-range memory evidence
+# Archived formative full-range memory evidence
 
 The [full-frame](performance-v2-full-2026-10-16.json) and
 [10,000-row chunk](performance-v2-chunked-2026-10-16.json) runs cover every default

@@ -291,5 +291,3 @@ def test_AdapterImportDoesNotLoadOptionalOrDataframeLibraries() -> None:
     completed = subprocess.run([sys.executable, "-c", script], text=True, capture_output=True, check=False)
 
     assert completed.returncode == 0, f"Chart adapter import loaded an optional dependency: {completed.stderr}"
-
-

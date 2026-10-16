@@ -1,0 +1,2077 @@
+{
+  "analysis_scope": "Selected marginal/path/dependence summaries; no raw observation vectors",
+  "command": "python -m tools.compare_market tests/AFLT_day.csv --format aflt-day --timezone Europe/Moscow --config docs/evidence/reference-aflt-config.json --output docs/evidence/reference-aflt.json --markdown docs/evidence/reference-aflt.md",
+  "comparison": {
+    "decision_scope": "Only supplied absolute tolerances; no universal model acceptance or forecast claim",
+    "environment": {
+      "implementation": "CPython",
+      "numpy": "2.2.6",
+      "pandas": "2.2.3",
+      "platform": "Linux-6.18.44-x86_64-with-glibc2.39",
+      "python": "3.12.14"
+    },
+    "library_version": "2.0.0.dev0",
+    "metric_version": "comparison_v1",
+    "metrics": [
+      {
+        "absolute_tolerance": null,
+        "difference": 3.996571260685302e-06,
+        "name": "log_return_mean",
+        "reason": null,
+        "reference": 9.677676551054514e-05,
+        "synthetic": 0.00010077333677123044,
+        "within_tolerance": null
+      },
+      {
+        "absolute_tolerance": null,
+        "difference": 0.001454242472583099,
+        "name": "log_return_std",
+        "reason": null,
+        "reference": 0.020994408914448436,
+        "synthetic": 0.022448651387031535,
+        "within_tolerance": null
+      },
+      {
+        "absolute_tolerance": null,
+        "difference": 0.018212320441342633,
+        "name": "body_fraction_mean",
+        "reason": null,
+        "reference": 0.4407611990123515,
+        "synthetic": 0.45897351945369413,
+        "within_tolerance": null
+      },
+      {
+        "absolute_tolerance": null,
+        "difference": -2889850.132505492,
+        "name": "volume_mean",
+        "reason": null,
+        "reference": 2902682.624144144,
+        "synthetic": 12832.491638652147,
+        "within_tolerance": null
+      },
+      {
+        "absolute_tolerance": null,
+        "difference": 0.017804321683129093,
+        "name": "squared_return_acf_lag1",
+        "reason": null,
+        "reference": 0.11287194291316244,
+        "synthetic": 0.13067626459629153,
+        "within_tolerance": null
+      },
+      {
+        "absolute_tolerance": null,
+        "difference": -0.21647450396868215,
+        "name": "volume_absolute_return_correlation",
+        "reason": null,
+        "reference": 0.3530245522725049,
+        "synthetic": 0.13655004830382275,
+        "within_tolerance": null
+      },
+      {
+        "absolute_tolerance": null,
+        "difference": -0.01954986392056235,
+        "name": "maximum_drawdown",
+        "reason": null,
+        "reference": 0.7542222222222222,
+        "synthetic": 0.7346723583016599,
+        "within_tolerance": null
+      }
+    ],
+    "reference_analysis": {
+      "absolute_return_acf": [
+        {
+          "reason": null,
+          "value": 0.1770778230141771
+        },
+        {
+          "reason": null,
+          "value": 0.185345536783533
+        },
+        {
+          "reason": null,
+          "value": 0.15341433071880886
+        },
+        {
+          "reason": null,
+          "value": 0.14856274271732087
+        },
+        {
+          "reason": null,
+          "value": 0.15309403495048868
+        },
+        {
+          "reason": null,
+          "value": 0.1176522940679291
+        },
+        {
+          "reason": null,
+          "value": 0.14073683888621832
+        },
+        {
+          "reason": null,
+          "value": 0.11220560284157977
+        },
+        {
+          "reason": null,
+          "value": 0.09945878196197191
+        },
+        {
+          "reason": null,
+          "value": 0.08741118431455648
+        }
+      ],
+      "cadence_regular": false,
+      "candle_count": 2775,
+      "distributions": [
+        {
+          "count": 2774,
+          "excess_kurtosis": {
+            "reason": null,
+            "value": 5.924038337751866
+          },
+          "excluded": 0,
+          "lower_tail_mean": {
+            "reason": null,
+            "value": -0.047010438438723184
+          },
+          "maximum": {
+            "reason": null,
+            "value": 0.1037871033776867
+          },
+          "mean": {
+            "reason": null,
+            "value": 0.00031632528030411537
+          },
+          "minimum": {
+            "reason": null,
+            "value": -0.178370786516854
+          },
+          "name": "simple_returns",
+          "quantiles": [
+            [
+              0.01,
+              {
+                "reason": null,
+                "value": -0.05582849131038073
+              }
+            ],
+            [
+              0.05,
+              {
+                "reason": null,
+                "value": -0.030747437620634116
+              }
+            ],
+            [
+              0.25,
+              {
+                "reason": null,
+                "value": -0.010364627013785405
+              }
+            ],
+            [
+              0.5,
+              {
+                "reason": null,
+                "value": -0.00015197561412294558
+              }
+            ],
+            [
+              0.75,
+              {
+                "reason": null,
+                "value": 0.010319780875322258
+              }
+            ],
+            [
+              0.8,
+              {
+                "reason": null,
+                "value": 0.013606623538488941
+              }
+            ],
+            [
+              0.95,
+              {
+                "reason": null,
+                "value": 0.03481362601788851
+              }
+            ],
+            [
+              0.99,
+              {
+                "reason": null,
+                "value": 0.060550392834787095
+              }
+            ]
+          ],
+          "skewness": {
+            "reason": null,
+            "value": -0.292117678065462
+          },
+          "standard_deviation": {
+            "reason": null,
+            "value": 0.020898602675456436
+          },
+          "three_sigma_fraction": {
+            "reason": null,
+            "value": 0.013338139870223503
+          },
+          "tukey_outlier_fraction": {
+            "reason": null,
+            "value": 0.05371304974765681
+          },
+          "upper_tail_mean": {
+            "reason": null,
+            "value": 0.04933516922956999
+          },
+          "variance": {
+            "reason": null,
+            "value": 0.0004367515937865949
+          }
+        },
+        {
+          "count": 2774,
+          "excess_kurtosis": {
+            "reason": null,
+            "value": 7.396206951580355
+          },
+          "excluded": 0,
+          "lower_tail_mean": {
+            "reason": null,
+            "value": -0.04843405602835902
+          },
+          "maximum": {
+            "reason": null,
+            "value": 0.0987470881152599
+          },
+          "mean": {
+            "reason": null,
+            "value": 9.677676551054514e-05
+          },
+          "minimum": {
+            "reason": null,
+            "value": -0.19646606418011903
+          },
+          "name": "log_returns",
+          "quantiles": [
+            [
+              0.01,
+              {
+                "reason": null,
+                "value": -0.05744744743890072
+              }
+            ],
+            [
+              0.05,
+              {
+                "reason": null,
+                "value": -0.031230059205733986
+              }
+            ],
+            [
+              0.25,
+              {
+                "reason": null,
+                "value": -0.010418713811291891
+              }
+            ],
+            [
+              0.5,
+              {
+                "reason": null,
+                "value": -0.00015198723511522516
+              }
+            ],
+            [
+              0.75,
+              {
+                "reason": null,
+                "value": 0.010266895451334301
+              }
+            ],
+            [
+              0.8,
+              {
+                "reason": null,
+                "value": 0.013514884606266268
+              }
+            ],
+            [
+              0.95,
+              {
+                "reason": null,
+                "value": 0.03422133495255406
+              }
+            ],
+            [
+              0.99,
+              {
+                "reason": null,
+                "value": 0.05878801179054206
+              }
+            ]
+          ],
+          "skewness": {
+            "reason": null,
+            "value": -0.560129571028
+          },
+          "standard_deviation": {
+            "reason": null,
+            "value": 0.020994408914448436
+          },
+          "three_sigma_fraction": {
+            "reason": null,
+            "value": 0.012617159336697908
+          },
+          "tukey_outlier_fraction": {
+            "reason": null,
+            "value": 0.0555155010814708
+          },
+          "upper_tail_mean": {
+            "reason": null,
+            "value": 0.04806727782592865
+          },
+          "variance": {
+            "reason": null,
+            "value": 0.00044076520566707194
+          }
+        },
+        {
+          "count": 2775,
+          "excess_kurtosis": {
+            "reason": null,
+            "value": 9.714937441280258
+          },
+          "excluded": 0,
+          "lower_tail_mean": {
+            "reason": null,
+            "value": 0.5514285714285714
+          },
+          "maximum": {
+            "reason": null,
+            "value": 19.649999999999977
+          },
+          "mean": {
+            "reason": null,
+            "value": 2.4469981981981985
+          },
+          "minimum": {
+            "reason": null,
+            "value": 0.10000000000000853
+          },
+          "name": "range",
+          "quantiles": [
+            [
+              0.01,
+              {
+                "reason": null,
+                "value": 0.45000000000000284
+              }
+            ],
+            [
+              0.05,
+              {
+                "reason": null,
+                "value": 0.6899999999999977
+              }
+            ],
+            [
+              0.25,
+              {
+                "reason": null,
+                "value": 1.20000000000001
+              }
+            ],
+            [
+              0.5,
+              {
+                "reason": null,
+                "value": 1.8900000000000006
+              }
+            ],
+            [
+              0.75,
+              {
+                "reason": null,
+                "value": 3.0600000000000027
+              }
+            ],
+            [
+              0.8,
+              {
+                "reason": null,
+                "value": 3.4200000000000017
+              }
+            ],
+            [
+              0.95,
+              {
+                "reason": null,
+                "value": 6.068999999999994
+              }
+            ],
+            [
+              0.99,
+              {
+                "reason": null,
+                "value": 9.575199999999997
+              }
+            ]
+          ],
+          "skewness": {
+            "reason": null,
+            "value": 2.453404263587654
+          },
+          "standard_deviation": {
+            "reason": null,
+            "value": 1.8879844613344792
+          },
+          "three_sigma_fraction": {
+            "reason": null,
+            "value": 0.01945945945945946
+          },
+          "tukey_outlier_fraction": {
+            "reason": null,
+            "value": 0.05477477477477478
+          },
+          "upper_tail_mean": {
+            "reason": null,
+            "value": 8.330215827338128
+          },
+          "variance": {
+            "reason": null,
+            "value": 3.5644853262404435
+          }
+        },
+        {
+          "count": 2775,
+          "excess_kurtosis": {
+            "reason": null,
+            "value": -0.9829431473022688
+          },
+          "excluded": 0,
+          "lower_tail_mean": {
+            "reason": null,
+            "value": 0.01721096733601028
+          },
+          "maximum": {
+            "reason": null,
+            "value": 1.0
+          },
+          "mean": {
+            "reason": null,
+            "value": 0.4407611990123515
+          },
+          "minimum": {
+            "reason": null,
+            "value": 0.0
+          },
+          "name": "body_fraction",
+          "quantiles": [
+            [
+              0.01,
+              {
+                "reason": null,
+                "value": 0.0019473684210536346
+              }
+            ],
+            [
+              0.05,
+              {
+                "reason": null,
+                "value": 0.036518847006652644
+              }
+            ],
+            [
+              0.25,
+              {
+                "reason": null,
+                "value": 0.21513032422123307
+              }
+            ],
+            [
+              0.5,
+              {
+                "reason": null,
+                "value": 0.4374999999999978
+              }
+            ],
+            [
+              0.75,
+              {
+                "reason": null,
+                "value": 0.6440613026819908
+              }
+            ],
+            [
+              0.8,
+              {
+                "reason": null,
+                "value": 0.6951922111813762
+              }
+            ],
+            [
+              0.95,
+              {
+                "reason": null,
+                "value": 0.8859793814432938
+              }
+            ],
+            [
+              0.99,
+              {
+                "reason": null,
+                "value": 0.9863255987326454
+              }
+            ]
+          ],
+          "skewness": {
+            "reason": null,
+            "value": 0.15062978003683894
+          },
+          "standard_deviation": {
+            "reason": null,
+            "value": 0.2648503620845967
+          },
+          "three_sigma_fraction": {
+            "reason": null,
+            "value": 0.0
+          },
+          "tukey_outlier_fraction": {
+            "reason": null,
+            "value": 0.0
+          },
+          "upper_tail_mean": {
+            "reason": null,
+            "value": 0.9424301969838313
+          },
+          "variance": {
+            "reason": null,
+            "value": 0.07014571429634199
+          }
+        },
+        {
+          "count": 2775,
+          "excess_kurtosis": {
+            "reason": null,
+            "value": -0.3173093818266777
+          },
+          "excluded": 0,
+          "lower_tail_mean": {
+            "reason": null,
+            "value": 0.0
+          },
+          "maximum": {
+            "reason": null,
+            "value": 0.9916317991631786
+          },
+          "mean": {
+            "reason": null,
+            "value": 0.28244616818500956
+          },
+          "minimum": {
+            "reason": null,
+            "value": 0.0
+          },
+          "name": "upper_wick_fraction",
+          "quantiles": [
+            [
+              0.01,
+              {
+                "reason": null,
+                "value": 0.0
+              }
+            ],
+            [
+              0.05,
+              {
+                "reason": null,
+                "value": 0.0
+              }
+            ],
+            [
+              0.25,
+              {
+                "reason": null,
+                "value": 0.10344827586207093
+              }
+            ],
+            [
+              0.5,
+              {
+                "reason": null,
+                "value": 0.24999999999999623
+              }
+            ],
+            [
+              0.75,
+              {
+                "reason": null,
+                "value": 0.4285714285714272
+              }
+            ],
+            [
+              0.8,
+              {
+                "reason": null,
+                "value": 0.47925435006468925
+              }
+            ],
+            [
+              0.95,
+              {
+                "reason": null,
+                "value": 0.6923076923076937
+              }
+            ],
+            [
+              0.99,
+              {
+                "reason": null,
+                "value": 0.8426829268292643
+              }
+            ]
+          ],
+          "skewness": {
+            "reason": null,
+            "value": 0.6336599065962709
+          },
+          "standard_deviation": {
+            "reason": null,
+            "value": 0.21841311833093766
+          },
+          "three_sigma_fraction": {
+            "reason": null,
+            "value": 0.0025225225225225223
+          },
+          "tukey_outlier_fraction": {
+            "reason": null,
+            "value": 0.003243243243243243
+          },
+          "upper_tail_mean": {
+            "reason": null,
+            "value": 0.7848145236821188
+          },
+          "variance": {
+            "reason": null,
+            "value": 0.04770429025904417
+          }
+        },
+        {
+          "count": 2775,
+          "excess_kurtosis": {
+            "reason": null,
+            "value": -0.07782687302204093
+          },
+          "excluded": 0,
+          "lower_tail_mean": {
+            "reason": null,
+            "value": 0.0
+          },
+          "maximum": {
+            "reason": null,
+            "value": 0.9818181818181828
+          },
+          "mean": {
+            "reason": null,
+            "value": 0.27679263280263877
+          },
+          "minimum": {
+            "reason": null,
+            "value": 0.0
+          },
+          "name": "lower_wick_fraction",
+          "quantiles": [
+            [
+              0.01,
+              {
+                "reason": null,
+                "value": 0.0
+              }
+            ],
+            [
+              0.05,
+              {
+                "reason": null,
+                "value": 0.0
+              }
+            ],
+            [
+              0.25,
+              {
+                "reason": null,
+                "value": 0.10315189633973258
+              }
+            ],
+            [
+              0.5,
+              {
+                "reason": null,
+                "value": 0.24210526315789593
+              }
+            ],
+            [
+              0.75,
+              {
+                "reason": null,
+                "value": 0.41522945782535503
+              }
+            ],
+            [
+              0.8,
+              {
+                "reason": null,
+                "value": 0.4567123554000187
+              }
+            ],
+            [
+              0.95,
+              {
+                "reason": null,
+                "value": 0.6834615384615378
+              }
+            ],
+            [
+              0.99,
+              {
+                "reason": null,
+                "value": 0.845148127270448
+              }
+            ]
+          ],
+          "skewness": {
+            "reason": null,
+            "value": 0.7029650737264391
+          },
+          "standard_deviation": {
+            "reason": null,
+            "value": 0.21285760534263995
+          },
+          "three_sigma_fraction": {
+            "reason": null,
+            "value": 0.0036036036036036037
+          },
+          "tukey_outlier_fraction": {
+            "reason": null,
+            "value": 0.006126126126126126
+          },
+          "upper_tail_mean": {
+            "reason": null,
+            "value": 0.7852548817109113
+          },
+          "variance": {
+            "reason": null,
+            "value": 0.04530836015220306
+          }
+        },
+        {
+          "count": 2775,
+          "excess_kurtosis": {
+            "reason": null,
+            "value": 67.05056893403255
+          },
+          "excluded": 0,
+          "lower_tail_mean": {
+            "reason": null,
+            "value": 33353.28057553957
+          },
+          "maximum": {
+            "reason": null,
+            "value": 71427300.0
+          },
+          "mean": {
+            "reason": null,
+            "value": 2902682.624144144
+          },
+          "minimum": {
+            "reason": null,
+            "value": 4229.0
+          },
+          "name": "volume",
+          "quantiles": [
+            [
+              0.01,
+              {
+                "reason": null,
+                "value": 21446.48
+              }
+            ],
+            [
+              0.05,
+              {
+                "reason": null,
+                "value": 59911.80000000002
+              }
+            ],
+            [
+              0.25,
+              {
+                "reason": null,
+                "value": 655420.5
+              }
+            ],
+            [
+              0.5,
+              {
+                "reason": null,
+                "value": 1797100.0
+              }
+            ],
+            [
+              0.75,
+              {
+                "reason": null,
+                "value": 3794150.0
+              }
+            ],
+            [
+              0.8,
+              {
+                "reason": null,
+                "value": 4362880.0
+              }
+            ],
+            [
+              0.95,
+              {
+                "reason": null,
+                "value": 8990649.99999999
+              }
+            ],
+            [
+              0.99,
+              {
+                "reason": null,
+                "value": 18220205.99999999
+              }
+            ]
+          ],
+          "skewness": {
+            "reason": null,
+            "value": 5.968493528976378
+          },
+          "standard_deviation": {
+            "reason": null,
+            "value": 4041657.735966497
+          },
+          "three_sigma_fraction": {
+            "reason": null,
+            "value": 0.015135135135135135
+          },
+          "tukey_outlier_fraction": {
+            "reason": null,
+            "value": 0.05621621621621622
+          },
+          "upper_tail_mean": {
+            "reason": null,
+            "value": 15348888.755395683
+          },
+          "variance": {
+            "reason": null,
+            "value": 16334997254697.832
+          }
+        }
+      ],
+      "maximum_drawdown": {
+        "reason": null,
+        "value": 0.7542222222222222
+      },
+      "maximum_drawdown_duration_bars": {
+        "reason": null,
+        "value": 892.0
+      },
+      "notes": [
+        "Descriptive diagnostics are not evidence of universal market realism or investment suitability.",
+        "Variance uses ddof=1; skewness and excess kurtosis use adjusted Fisher estimators; quantiles use linear interpolation.",
+        "Tails are inclusive observations at/beyond empirical 5% and 95% quantiles; Tukey outliers use 1.5 IQR fences; 3\u03c3 uses population deviation.",
+        "ACF uses observation lags, global centering and a full-sample denominator; irregular cadence is not resampled.",
+        "Domain-invalid returns remain aligned nulls; marginal summaries exclude them; ACF does not compress gaps.",
+        "ProbabilityTolerance applies only to independent Bernoulli generator events with a predeclared confidence and sample size.",
+        "Drawdown is a positive peak-to-trough fraction; duration counts consecutive underwater observed bars, including unrecovered periods."
+      ],
+      "path": {
+        "close_range": {
+          "reason": null,
+          "value": 195.14
+        },
+        "doji_candles": 28,
+        "down_candles": 1467,
+        "elapsed_seconds": 348364800.0,
+        "end_datetime": "2021-01-25T07:00:00+00:00",
+        "endpoint_change": {
+          "reason": null,
+          "value": 16.739999999999995
+        },
+        "endpoint_return": {
+          "reason": null,
+          "value": 0.3079470198675496
+        },
+        "first_close": 54.36,
+        "last_close": 71.1,
+        "longest_down_run": 10,
+        "longest_up_run": 8,
+        "start_datetime": "2010-01-11T07:00:00+00:00",
+        "total_volume": {
+          "reason": null,
+          "value": 8054944282.0
+        },
+        "up_candles": 1280
+      },
+      "return_acf": [
+        {
+          "reason": null,
+          "value": 0.09729287965555887
+        },
+        {
+          "reason": null,
+          "value": 0.011209595610923696
+        },
+        {
+          "reason": null,
+          "value": 0.0008521529372806515
+        },
+        {
+          "reason": null,
+          "value": 0.0281342800017572
+        },
+        {
+          "reason": null,
+          "value": -0.004559840745271306
+        },
+        {
+          "reason": null,
+          "value": -0.012631390858567824
+        },
+        {
+          "reason": null,
+          "value": 0.06194653888913151
+        },
+        {
+          "reason": null,
+          "value": 0.03415595474988184
+        },
+        {
+          "reason": null,
+          "value": 0.033263293899594884
+        },
+        {
+          "reason": null,
+          "value": 0.007326861836562449
+        }
+      ],
+      "squared_return_acf": [
+        {
+          "reason": null,
+          "value": 0.11287194291316244
+        },
+        {
+          "reason": null,
+          "value": 0.15397719386285585
+        },
+        {
+          "reason": null,
+          "value": 0.11143355439162944
+        },
+        {
+          "reason": null,
+          "value": 0.11291629397114872
+        },
+        {
+          "reason": null,
+          "value": 0.0741672652125139
+        },
+        {
+          "reason": null,
+          "value": 0.0574495459406979
+        },
+        {
+          "reason": null,
+          "value": 0.1403296289098117
+        },
+        {
+          "reason": null,
+          "value": 0.14870736345388513
+        },
+        {
+          "reason": null,
+          "value": 0.050112704069197544
+        },
+        {
+          "reason": null,
+          "value": 0.05239519499910969
+        }
+      ],
+      "up_candle_fraction": {
+        "reason": null,
+        "value": 0.46126126126126127
+      },
+      "volume_absolute_return_correlation": {
+        "reason": null,
+        "value": 0.3530245522725049
+      },
+      "volume_range_correlation": {
+        "reason": null,
+        "value": 0.28237282476666425
+      },
+      "zero_volume_fraction": {
+        "reason": null,
+        "value": 0.0
+      }
+    },
+    "reference_fingerprint": "f2cd25fb70d5618a56c99808fa8fea65a35db9eff62713f10dc8fc88e700f2d6",
+    "reference_rows": 2775,
+    "synthetic_analysis": {
+      "absolute_return_acf": [
+        {
+          "reason": null,
+          "value": 0.23664154134853574
+        },
+        {
+          "reason": null,
+          "value": 0.2269817462243008
+        },
+        {
+          "reason": null,
+          "value": 0.160179361631862
+        },
+        {
+          "reason": null,
+          "value": 0.12561935858264683
+        },
+        {
+          "reason": null,
+          "value": 0.12866159841601407
+        },
+        {
+          "reason": null,
+          "value": 0.09276163559792959
+        },
+        {
+          "reason": null,
+          "value": 0.11095854438392619
+        },
+        {
+          "reason": null,
+          "value": 0.10777115898515037
+        },
+        {
+          "reason": null,
+          "value": 0.11205780315977504
+        },
+        {
+          "reason": null,
+          "value": 0.09217060243988179
+        }
+      ],
+      "cadence_regular": true,
+      "candle_count": 2775,
+      "distributions": [
+        {
+          "count": 2774,
+          "excess_kurtosis": {
+            "reason": null,
+            "value": 2.6259862787524537
+          },
+          "excluded": 0,
+          "lower_tail_mean": {
+            "reason": null,
+            "value": -0.050070242422046135
+          },
+          "maximum": {
+            "reason": null,
+            "value": 0.10968511810517656
+          },
+          "mean": {
+            "reason": null,
+            "value": 0.000353045682482255
+          },
+          "minimum": {
+            "reason": null,
+            "value": -0.1072131232514707
+          },
+          "name": "simple_returns",
+          "quantiles": [
+            [
+              0.01,
+              {
+                "reason": null,
+                "value": -0.05807255188515575
+              }
+            ],
+            [
+              0.05,
+              {
+                "reason": null,
+                "value": -0.03543957393849336
+              }
+            ],
+            [
+              0.25,
+              {
+                "reason": null,
+                "value": -0.010666073142143545
+              }
+            ],
+            [
+              0.5,
+              {
+                "reason": null,
+                "value": -0.00032653945498628545
+              }
+            ],
+            [
+              0.75,
+              {
+                "reason": null,
+                "value": 0.010384781917084362
+              }
+            ],
+            [
+              0.8,
+              {
+                "reason": null,
+                "value": 0.013450680652802083
+              }
+            ],
+            [
+              0.95,
+              {
+                "reason": null,
+                "value": 0.03903932793755439
+              }
+            ],
+            [
+              0.99,
+              {
+                "reason": null,
+                "value": 0.06974377787223959
+              }
+            ]
+          ],
+          "skewness": {
+            "reason": null,
+            "value": 0.3132008137113141
+          },
+          "standard_deviation": {
+            "reason": null,
+            "value": 0.022508313932587568
+          },
+          "three_sigma_fraction": {
+            "reason": null,
+            "value": 0.015501081470800288
+          },
+          "tukey_outlier_fraction": {
+            "reason": null,
+            "value": 0.07786589762076424
+          },
+          "upper_tail_mean": {
+            "reason": null,
+            "value": 0.05686611441121653
+          },
+          "variance": {
+            "reason": null,
+            "value": 0.0005066241960879157
+          }
+        },
+        {
+          "count": 2774,
+          "excess_kurtosis": {
+            "reason": null,
+            "value": 2.566843280175332
+          },
+          "excluded": 0,
+          "lower_tail_mean": {
+            "reason": null,
+            "value": -0.051465044425276975
+          },
+          "maximum": {
+            "reason": null,
+            "value": 0.10407629769747917
+          },
+          "mean": {
+            "reason": null,
+            "value": 0.00010077333677123044
+          },
+          "minimum": {
+            "reason": null,
+            "value": -0.11340738644550363
+          },
+          "name": "log_returns",
+          "quantiles": [
+            [
+              0.01,
+              {
+                "reason": null,
+                "value": -0.059827041429938596
+              }
+            ],
+            [
+              0.05,
+              {
+                "reason": null,
+                "value": -0.03608279936615664
+              }
+            ],
+            [
+              0.25,
+              {
+                "reason": null,
+                "value": -0.010723363439491873
+              }
+            ],
+            [
+              0.5,
+              {
+                "reason": null,
+                "value": -0.00032659279423974397
+              }
+            ],
+            [
+              0.75,
+              {
+                "reason": null,
+                "value": 0.010331230496800627
+              }
+            ],
+            [
+              0.8,
+              {
+                "reason": null,
+                "value": 0.013361023321120945
+              }
+            ],
+            [
+              0.95,
+              {
+                "reason": null,
+                "value": 0.03829656279066516
+              }
+            ],
+            [
+              0.99,
+              {
+                "reason": null,
+                "value": 0.06741900313117176
+              }
+            ]
+          ],
+          "skewness": {
+            "reason": null,
+            "value": 0.16078824266057634
+          },
+          "standard_deviation": {
+            "reason": null,
+            "value": 0.022448651387031535
+          },
+          "three_sigma_fraction": {
+            "reason": null,
+            "value": 0.015501081470800288
+          },
+          "tukey_outlier_fraction": {
+            "reason": null,
+            "value": 0.07750540735400144
+          },
+          "upper_tail_mean": {
+            "reason": null,
+            "value": 0.05520100628345879
+          },
+          "variance": {
+            "reason": null,
+            "value": 0.0005039419490964729
+          }
+        },
+        {
+          "count": 2775,
+          "excess_kurtosis": {
+            "reason": null,
+            "value": 8.717626255551467
+          },
+          "excluded": 0,
+          "lower_tail_mean": {
+            "reason": null,
+            "value": 0.9111364249810088
+          },
+          "maximum": {
+            "reason": null,
+            "value": 64.38614139331696
+          },
+          "mean": {
+            "reason": null,
+            "value": 7.254719886578074
+          },
+          "minimum": {
+            "reason": null,
+            "value": 0.12643435120790514
+          },
+          "name": "range",
+          "quantiles": [
+            [
+              0.01,
+              {
+                "reason": null,
+                "value": 0.685274703643936
+              }
+            ],
+            [
+              0.05,
+              {
+                "reason": null,
+                "value": 1.2596537499549811
+              }
+            ],
+            [
+              0.25,
+              {
+                "reason": null,
+                "value": 2.8430537515185392
+              }
+            ],
+            [
+              0.5,
+              {
+                "reason": null,
+                "value": 5.167945214717747
+              }
+            ],
+            [
+              0.75,
+              {
+                "reason": null,
+                "value": 9.65873363291243
+              }
+            ],
+            [
+              0.8,
+              {
+                "reason": null,
+                "value": 11.046139636373745
+              }
+            ],
+            [
+              0.95,
+              {
+                "reason": null,
+                "value": 19.854961711685664
+              }
+            ],
+            [
+              0.99,
+              {
+                "reason": null,
+                "value": 30.423387506083643
+              }
+            ]
+          ],
+          "skewness": {
+            "reason": null,
+            "value": 2.262446955697911
+          },
+          "standard_deviation": {
+            "reason": null,
+            "value": 6.474815979209081
+          },
+          "three_sigma_fraction": {
+            "reason": null,
+            "value": 0.016576576576576577
+          },
+          "tukey_outlier_fraction": {
+            "reason": null,
+            "value": 0.05009009009009009
+          },
+          "upper_tail_mean": {
+            "reason": null,
+            "value": 26.59456274898682
+          },
+          "variance": {
+            "reason": null,
+            "value": 41.923241964621255
+          }
+        },
+        {
+          "count": 2775,
+          "excess_kurtosis": {
+            "reason": null,
+            "value": -0.8233593346140797
+          },
+          "excluded": 0,
+          "lower_tail_mean": {
+            "reason": null,
+            "value": 0.03519771896771759
+          },
+          "maximum": {
+            "reason": null,
+            "value": 0.9859492425845465
+          },
+          "mean": {
+            "reason": null,
+            "value": 0.45897351945369413
+          },
+          "minimum": {
+            "reason": null,
+            "value": 0.0005057489863874894
+          },
+          "name": "body_fraction",
+          "quantiles": [
+            [
+              0.01,
+              {
+                "reason": null,
+                "value": 0.012693359958271365
+              }
+            ],
+            [
+              0.05,
+              {
+                "reason": null,
+                "value": 0.06676046519014356
+              }
+            ],
+            [
+              0.25,
+              {
+                "reason": null,
+                "value": 0.27733126230695143
+              }
+            ],
+            [
+              0.5,
+              {
+                "reason": null,
+                "value": 0.47140966453531885
+              }
+            ],
+            [
+              0.75,
+              {
+                "reason": null,
+                "value": 0.6332203113502449
+              }
+            ],
+            [
+              0.8,
+              {
+                "reason": null,
+                "value": 0.6730105624814767
+              }
+            ],
+            [
+              0.95,
+              {
+                "reason": null,
+                "value": 0.8355826613057789
+              }
+            ],
+            [
+              0.99,
+              {
+                "reason": null,
+                "value": 0.9330587205491474
+              }
+            ]
+          ],
+          "skewness": {
+            "reason": null,
+            "value": -0.041251879848691504
+          },
+          "standard_deviation": {
+            "reason": null,
+            "value": 0.23238825370409247
+          },
+          "three_sigma_fraction": {
+            "reason": null,
+            "value": 0.0
+          },
+          "tukey_outlier_fraction": {
+            "reason": null,
+            "value": 0.0
+          },
+          "upper_tail_mean": {
+            "reason": null,
+            "value": 0.8918396732605529
+          },
+          "variance": {
+            "reason": null,
+            "value": 0.054004300459637646
+          }
+        },
+        {
+          "count": 2775,
+          "excess_kurtosis": {
+            "reason": null,
+            "value": 0.15072560512962502
+          },
+          "excluded": 0,
+          "lower_tail_mean": {
+            "reason": null,
+            "value": 0.013298744378595493
+          },
+          "maximum": {
+            "reason": null,
+            "value": 0.9387362205800581
+          },
+          "mean": {
+            "reason": null,
+            "value": 0.2704647962312157
+          },
+          "minimum": {
+            "reason": null,
+            "value": 8.674282475397047e-05
+          },
+          "name": "upper_wick_fraction",
+          "quantiles": [
+            [
+              0.01,
+              {
+                "reason": null,
+                "value": 0.005490064256961062
+              }
+            ],
+            [
+              0.05,
+              {
+                "reason": null,
+                "value": 0.025715697772046547
+              }
+            ],
+            [
+              0.25,
+              {
+                "reason": null,
+                "value": 0.12259990693596698
+              }
+            ],
+            [
+              0.5,
+              {
+                "reason": null,
+                "value": 0.23758354872557333
+              }
+            ],
+            [
+              0.75,
+              {
+                "reason": null,
+                "value": 0.3818248184413279
+              }
+            ],
+            [
+              0.8,
+              {
+                "reason": null,
+                "value": 0.4185613446765492
+              }
+            ],
+            [
+              0.95,
+              {
+                "reason": null,
+                "value": 0.643190370594342
+              }
+            ],
+            [
+              0.99,
+              {
+                "reason": null,
+                "value": 0.7981493101058864
+              }
+            ]
+          ],
+          "skewness": {
+            "reason": null,
+            "value": 0.802532445556829
+          },
+          "standard_deviation": {
+            "reason": null,
+            "value": 0.18865064693326067
+          },
+          "three_sigma_fraction": {
+            "reason": null,
+            "value": 0.005405405405405406
+          },
+          "tukey_outlier_fraction": {
+            "reason": null,
+            "value": 0.014414414414414415
+          },
+          "upper_tail_mean": {
+            "reason": null,
+            "value": 0.7329594688954214
+          },
+          "variance": {
+            "reason": null,
+            "value": 0.03558906658833777
+          }
+        },
+        {
+          "count": 2775,
+          "excess_kurtosis": {
+            "reason": null,
+            "value": 0.22144143157012464
+          },
+          "excluded": 0,
+          "lower_tail_mean": {
+            "reason": null,
+            "value": 0.011094845662143917
+          },
+          "maximum": {
+            "reason": null,
+            "value": 0.9910317035615646
+          },
+          "mean": {
+            "reason": null,
+            "value": 0.27056168431509015
+          },
+          "minimum": {
+            "reason": null,
+            "value": 2.8395088417396656e-05
+          },
+          "name": "lower_wick_fraction",
+          "quantiles": [
+            [
+              0.01,
+              {
+                "reason": null,
+                "value": 0.005358025351964635
+              }
+            ],
+            [
+              0.05,
+              {
+                "reason": null,
+                "value": 0.023263111383175935
+              }
+            ],
+            [
+              0.25,
+              {
+                "reason": null,
+                "value": 0.11756533333606174
+              }
+            ],
+            [
+              0.5,
+              {
+                "reason": null,
+                "value": 0.23843562629620213
+              }
+            ],
+            [
+              0.75,
+              {
+                "reason": null,
+                "value": 0.39190009667890296
+              }
+            ],
+            [
+              0.8,
+              {
+                "reason": null,
+                "value": 0.4264736334120755
+              }
+            ],
+            [
+              0.95,
+              {
+                "reason": null,
+                "value": 0.637126864553222
+              }
+            ],
+            [
+              0.99,
+              {
+                "reason": null,
+                "value": 0.797680918938417
+              }
+            ]
+          ],
+          "skewness": {
+            "reason": null,
+            "value": 0.7876144104930126
+          },
+          "standard_deviation": {
+            "reason": null,
+            "value": 0.1913643118816368
+          },
+          "three_sigma_fraction": {
+            "reason": null,
+            "value": 0.0075675675675675675
+          },
+          "tukey_outlier_fraction": {
+            "reason": null,
+            "value": 0.00972972972972973
+          },
+          "upper_tail_mean": {
+            "reason": null,
+            "value": 0.7412368300586787
+          },
+          "variance": {
+            "reason": null,
+            "value": 0.03662029986193236
+          }
+        },
+        {
+          "count": 2775,
+          "excess_kurtosis": {
+            "reason": null,
+            "value": 2493.3629874436842
+          },
+          "excluded": 0,
+          "lower_tail_mean": {
+            "reason": null,
+            "value": 796.5354469487421
+          },
+          "maximum": {
+            "reason": null,
+            "value": 20694172.638845183
+          },
+          "mean": {
+            "reason": null,
+            "value": 12832.491638652147
+          },
+          "minimum": {
+            "reason": null,
+            "value": 485.76728067331857
+          },
+          "name": "volume",
+          "quantiles": [
+            [
+              0.01,
+              {
+                "reason": null,
+                "value": 720.0745248845243
+              }
+            ],
+            [
+              0.05,
+              {
+                "reason": null,
+                "value": 917.2943672889429
+              }
+            ],
+            [
+              0.25,
+              {
+                "reason": null,
+                "value": 1346.3120970998493
+              }
+            ],
+            [
+              0.5,
+              {
+                "reason": null,
+                "value": 1973.976328858336
+              }
+            ],
+            [
+              0.75,
+              {
+                "reason": null,
+                "value": 3165.1963343781586
+              }
+            ],
+            [
+              0.8,
+              {
+                "reason": null,
+                "value": 3586.431833473997
+              }
+            ],
+            [
+              0.95,
+              {
+                "reason": null,
+                "value": 7684.439127629468
+              }
+            ],
+            [
+              0.99,
+              {
+                "reason": null,
+                "value": 15791.199614914342
+              }
+            ]
+          ],
+          "skewness": {
+            "reason": null,
+            "value": 49.09338926270665
+          },
+          "standard_deviation": {
+            "reason": null,
+            "value": 403635.67598279973
+          },
+          "three_sigma_fraction": {
+            "reason": null,
+            "value": 0.001081081081081081
+          },
+          "tukey_outlier_fraction": {
+            "reason": null,
+            "value": 0.08288288288288288
+          },
+          "upper_tail_mean": {
+            "reason": null,
+            "value": 212008.06084543953
+          },
+          "variance": {
+            "reason": null,
+            "value": 162921758926.0917
+          }
+        }
+      ],
+      "maximum_drawdown": {
+        "reason": null,
+        "value": 0.7346723583016599
+      },
+      "maximum_drawdown_duration_bars": {
+        "reason": null,
+        "value": 1537.0
+      },
+      "notes": [
+        "Descriptive diagnostics are not evidence of universal market realism or investment suitability.",
+        "Variance uses ddof=1; skewness and excess kurtosis use adjusted Fisher estimators; quantiles use linear interpolation.",
+        "Tails are inclusive observations at/beyond empirical 5% and 95% quantiles; Tukey outliers use 1.5 IQR fences; 3\u03c3 uses population deviation.",
+        "ACF uses observation lags, global centering and a full-sample denominator; irregular cadence is not resampled.",
+        "Domain-invalid returns remain aligned nulls; marginal summaries exclude them; ACF does not compress gaps.",
+        "ProbabilityTolerance applies only to independent Bernoulli generator events with a predeclared confidence and sample size.",
+        "Drawdown is a positive peak-to-trough fraction; duration counts consecutive underwater observed bars, including unrecovered periods."
+      ],
+      "path": {
+        "close_range": {
+          "reason": null,
+          "value": 359.70601037542133
+        },
+        "doji_candles": 0,
+        "down_candles": 1410,
+        "elapsed_seconds": 239673600.0,
+        "end_datetime": "2017-08-16T07:00:00+00:00",
+        "endpoint_change": {
+          "reason": null,
+          "value": 31.813744822958384
+        },
+        "endpoint_return": {
+          "reason": null,
+          "value": 0.32252823759814886
+        },
+        "first_close": 98.63863412355367,
+        "last_close": 130.45237894651206,
+        "longest_down_run": 10,
+        "longest_up_run": 8,
+        "start_datetime": "2010-01-11T07:00:00+00:00",
+        "total_volume": {
+          "reason": null,
+          "value": 35610164.29725971
+        },
+        "up_candles": 1365
+      },
+      "return_acf": [
+        {
+          "reason": null,
+          "value": 0.0013711113893983586
+        },
+        {
+          "reason": null,
+          "value": -0.015298690637409502
+        },
+        {
+          "reason": null,
+          "value": -0.02230297102678707
+        },
+        {
+          "reason": null,
+          "value": 0.06734303310968076
+        },
+        {
+          "reason": null,
+          "value": -0.018229312999949805
+        },
+        {
+          "reason": null,
+          "value": -0.030834892608463425
+        },
+        {
+          "reason": null,
+          "value": -0.01695555031647127
+        },
+        {
+          "reason": null,
+          "value": 0.041270691745753214
+        },
+        {
+          "reason": null,
+          "value": -0.01256271987171606
+        },
+        {
+          "reason": null,
+          "value": -0.011861793114547277
+        }
+      ],
+      "squared_return_acf": [
+        {
+          "reason": null,
+          "value": 0.13067626459629153
+        },
+        {
+          "reason": null,
+          "value": 0.1358226296756318
+        },
+        {
+          "reason": null,
+          "value": 0.07183025662174711
+        },
+        {
+          "reason": null,
+          "value": 0.046621349795244245
+        },
+        {
+          "reason": null,
+          "value": 0.053161857779982266
+        },
+        {
+          "reason": null,
+          "value": 0.04083901977783231
+        },
+        {
+          "reason": null,
+          "value": 0.03806507549837042
+        },
+        {
+          "reason": null,
+          "value": 0.07628680972174752
+        },
+        {
+          "reason": null,
+          "value": 0.09118204007902916
+        },
+        {
+          "reason": null,
+          "value": 0.05836079551920058
+        }
+      ],
+      "up_candle_fraction": {
+        "reason": null,
+        "value": 0.4918918918918919
+      },
+      "volume_absolute_return_correlation": {
+        "reason": null,
+        "value": 0.13655004830382275
+      },
+      "volume_range_correlation": {
+        "reason": null,
+        "value": 0.03217435133119485
+      },
+      "zero_volume_fraction": {
+        "reason": null,
+        "value": 0.0
+      }
+    },
+    "synthetic_fingerprint": "3e509e7c9259578e849074b4b82a99840ba09a3f8f0c71339a31cce9604ddb4b",
+    "synthetic_rows": 2775
+  },
+  "declared_input_sources": {
+    "configuration": {
+      "file_sha256": "bcd363cdbc595347658ab97d4df2631c74e15765620930fdeb9b48f18a893ca0",
+      "path": "docs/evidence/reference-aflt-config.json"
+    },
+    "tolerances": {
+      "kind": "none; no acceptance thresholds"
+    }
+  },
+  "evidence_version": 1,
+  "interpretation": "Metric differences describe this reference window and this one seeded scenario. No universal realism, model acceptance, calibration, forecast or market-mechanics claim. A null tolerance decision means no threshold was supplied or the metric was undefined.",
+  "predeclared_absolute_tolerances": {},
+  "procedure": {
+    "calendar_alignment": false,
+    "generator_inputs": "Explicit complete configuration in scenario_manifest; defaults are library defaults, never inferred from reference data",
+    "parameter_fit": false,
+    "price_or_volume_scaling": false,
+    "resampling": false,
+    "seed_search": false
+  },
+  "recipe": {
+    "implementation_source_sha256": {
+      "pricegenerator.analysis": "a6bebfa28fea2db80f586624cad0848e26ddc776ea7486f071173b5a0b58e215",
+      "pricegenerator.config": "fb2408c54c124a401161ebf7dd7eb1b662f951c1610ea405bdaf96405a5191cc",
+      "pricegenerator.evaluation": "7ee223e0287d7ca2b31d56df007687d7d15d245eb9a3841458dffb81030ae24a",
+      "pricegenerator.generation": "f36547823cef63ea66110eb6f6417e4fcb10a6d2496e1ae0daf92a7bb3bcde14",
+      "pricegenerator.io": "416de39e24aedf11ad40ef80300699753f754852ae5b971483e8d7cd2d3137ed",
+      "pricegenerator.market_data": "408852b2bf49ff1b3cc273abcf1bfdbebbef1a2fb7985ecd866026d233a1a644",
+      "pricegenerator.models": "b9ecfce7a113d30febcad73e91553a3ca494a0d2255d2ff0e506c4d68e9b8eb8",
+      "pricegenerator.scenario": "0f60fb4f1e26d44384339fc9ae1a21028f3942dc4cded6a4e399afd572267d98",
+      "tools.compare_market": "f4510810e25c64aaa488735a731ec9a45563f124dfa36acced75b7016e01f55f"
+    },
+    "name": "declared-market-comparison-v1"
+  },
+  "reference": {
+    "assume_timezone": "Europe/Moscow",
+    "canonical_fingerprint": "f2cd25fb70d5618a56c99808fa8fea65a35db9eff62713f10dc8fc88e700f2d6",
+    "file_sha256": "55419201cc5af61892a80df68f70b36e8dd6be9c859816e37f85a4a9227f4f09",
+    "format": "aflt-day",
+    "path": "tests/AFLT_day.csv",
+    "selected_row_positions_zero_based_inclusive": [
+      0,
+      2774
+    ],
+    "selected_rows": 2775,
+    "source_end_utc": "2021-01-25T07:00:00+00:00",
+    "source_limit": "Caller-supplied data; venue, instrument identity, volume units and price-adjustment policy were not independently verified",
+    "source_start_utc": "2010-01-11T07:00:00+00:00",
+    "timestamp_policy": "Preserve observed rows and gaps; timezone is caller-supplied, not inferred from the instrument or filename",
+    "timezone_rules_environment": {
+      "pandas": "2.2.3",
+      "pytz": "2026.5",
+      "tzdata": "2026.5"
+    },
+    "total_source_rows": 2775,
+    "window": {
+      "actual_end_utc": "2021-01-25T07:00:00+00:00",
+      "actual_start_utc": "2010-01-11T07:00:00+00:00",
+      "closure": "both",
+      "requested_end_utc": null,
+      "requested_start_utc": null
+    }
+  },
+  "scenario_manifest": {
+    "configuration": {
+      "drift": 0.0,
+      "horizon": 2775,
+      "initial_price": 100.0,
+      "model": "regime_v2",
+      "price_ceiling": 1000000000000.0,
+      "price_floor": 1e-06,
+      "regime_persistence": 0.95,
+      "regime_scale": 3.0,
+      "seed": 20261016,
+      "shock_probability": 0.01,
+      "shock_scale": 5.0,
+      "start": "2010-01-11T07:00:00+00:00",
+      "timeframe_seconds": 86400,
+      "volatility": 0.01,
+      "volume_base": 1000.0,
+      "volume_ceiling": 1000000000000.0,
+      "volume_persistence": 0.5,
+      "volume_return_coupling": 1.0,
+      "volume_sigma": 0.25,
+      "wick_outlier_probability": 0.01,
+      "wick_outlier_scale": 5.0,
+      "wick_scale": 0.5
+    },
+    "environment": {
+      "implementation": "CPython",
+      "numpy": "2.2.6",
+      "pandas": "2.2.3",
+      "platform": "Linux-6.18.44-x86_64-with-glibc2.39",
+      "python": "3.12.14"
+    },
+    "fingerprint": "3e509e7c9259578e849074b4b82a99840ba09a3f8f0c71339a31cce9604ddb4b",
+    "library_version": "2.0.0.dev0",
+    "manifest_version": 1,
+    "metadata": {
+      "purpose": "Unfitted descriptive comparison with a declared reference window",
+      "reference_canonical_fingerprint": "f2cd25fb70d5618a56c99808fa8fea65a35db9eff62713f10dc8fc88e700f2d6",
+      "reference_file_sha256": "55419201cc5af61892a80df68f70b36e8dd6be9c859816e37f85a4a9227f4f09"
+    },
+    "model": "regime_v2",
+    "rng": "python.random.Random/MT19937",
+    "scenario_fingerprint": "6f431fbcb4e0b438c2909b2eb7def54226c99eb79092a2ed9be67c346fbaeb44",
+    "seed": 20261016
+  }
+}
