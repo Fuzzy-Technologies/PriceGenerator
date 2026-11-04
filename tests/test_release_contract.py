@@ -33,6 +33,22 @@ def test_RejectUnreleasedPublication(version):
         release_verify.CheckRef(f"v{version}", version, publish=True)
 
 
+def test_VerifyTestBaselineAndRejectItsPublication(monkeypatch):
+    """Allow verification of the historical test tag and block its publication."""
+
+    def FakeGit(*arguments):
+        """Return the reviewed ref identity and a clean checkout."""
+
+        return "" if arguments == ("status", "--porcelain") else "head"
+
+    monkeypatch.setattr(release_verify, "Git", FakeGit)
+
+    assert release_verify.CheckRef("v2.0.0", "2.0.0") == "head", "Test tag must remain verifiable"
+
+    with pytest.raises(release_verify.ReleaseError, match="test baseline"):
+        release_verify.CheckRef("v2.0.0", "2.0.0", publish=True)
+
+
 @pytest.mark.parametrize("master,tagged,dirty", [("other", "head", ""), ("head", "other", ""), ("head", "head", " M file"), ("head", "head", "?? accidental.py")])
 def test_RejectMovedBranchTagAndDirtySource(master, tagged, dirty, monkeypatch):
     """Stop release when the reviewed source identity changes."""
@@ -41,7 +57,7 @@ def test_RejectMovedBranchTagAndDirtySource(master, tagged, dirty, monkeypatch):
         """Return deterministic local repository identities."""
 
         values = {("rev-parse", "HEAD"): "head", ("rev-parse", "refs/remotes/origin/master"): master,
-                  ("rev-parse", "--verify", "refs/tags/v2.0.0^{commit}"): tagged,
+                  ("rev-parse", "--verify", "refs/tags/v2.1.0^{commit}"): tagged,
                   ("status", "--porcelain"): dirty}
 
         return values[arguments]
@@ -49,7 +65,7 @@ def test_RejectMovedBranchTagAndDirtySource(master, tagged, dirty, monkeypatch):
     monkeypatch.setattr(release_verify, "Git", FakeGit)
 
     with pytest.raises(release_verify.ReleaseError):
-        release_verify.CheckRef("v2.0.0", "2.0.0", publish=True)
+        release_verify.CheckRef("v2.1.0", "2.1.0", publish=True)
 
 
 def MakeArtifacts(directory, version="2.0.0", obsolete=False, license_present=True, requires_python=">=3.10,<3.14"):
