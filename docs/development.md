@@ -33,9 +33,8 @@ runtime and modern test contract.
 Run tests relevant to each change during development. For example:
 
 ```bash
-python -m pytest -q tests/test_generation_v2.py tests/test_scenario_v2.py tests/test_cli_v2.py
-python -m pytest -q tests/test_packaging.py tests/test_release_contract.py
-python -m ruff check --select E4,E7,E9,F,D --ignore D202,D203,D213 pricegenerator tools/release_verify.py tools/release_install.py
+python tools/validate.py tests/test_generation_v2.py tests/test_scenario_v2.py tests/test_cli_v2.py
+python tools/validate.py tests/test_packaging.py tests/test_release_contract.py
 ```
 
 The repository's naming/docstring/vertical-spacing rules apply to maintained
@@ -45,7 +44,7 @@ unrelated files or replace real dependency evidence with stubs.
 Before integration, run the complete gate:
 
 ```bash
-python -m pytest -q tests
+python tools/validate.py --reports ci-reports
 python -m build
 python -m twine check --strict dist/*
 python tools/release_verify.py --artifacts dist
@@ -58,9 +57,12 @@ from outside the checkout, checks core dependency absence, then checks actual
 PNG/JPEG exports. Preserve commands/results and artifact hashes in the Task/PR.
 Local results do not establish that hosted CI passed.
 
-The PR quality workflow checks all supported Python versions, the full suite,
-maintained-module lint, isolated artifacts and metadata. It also exercises
-Task-lifecycle failure paths. Require the relevant hosted quality checks and
+The shared source gate compiles and lints the maintained Python tree, exercises
+Task-lifecycle failure paths, and runs the full suite with branch measurement.
+It enforces coverage floors of 95% for the lifecycle parser and 90% for the
+package, calculated from statements and branches. The PR workflow runs it on
+Linux for every supported Python and adds an isolated wheel/sdist smoke on
+Windows with Python 3.13. Require the relevant hosted quality checks and
 chart runtime check in branch protection/rulesets; committing a workflow does
 not configure those repository settings.
 

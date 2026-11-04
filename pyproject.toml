@@ -67,3 +67,11 @@ version = {attr = "pricegenerator._version.__version__"}
 [tool.setuptools.package-data]
 pricegenerator = ["assets/**/*"]
 "pricegenerator.rendering" = ["assets/**/*"]
+
+[tool.ruff]
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E4", "E7", "E9", "F", "D"]
+# F-Tech permits a logical blank line after a docstring and uses one summary convention.
+ignore = ["D202", "D203", "D213"]
