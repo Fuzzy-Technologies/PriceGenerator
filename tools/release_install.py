@@ -9,6 +9,7 @@ import venv
 from pathlib import Path
 
 SOURCE_ROOT = Path(__file__).resolve().parents[1]
+DEFAULT_MODES = ("core", "export")
 
 
 def Run(arguments, directory):
@@ -19,8 +20,8 @@ def Run(arguments, directory):
     subprocess.run(list(map(str, arguments)), cwd=directory, env=environment, check=True)
 
 
-def Verify(artifact):
-    """Install core then export dependencies and run the actual public APIs."""
+def Verify(artifact, modes=DEFAULT_MODES):
+    """Install the requested artifact modes and run the public APIs."""
 
     with tempfile.TemporaryDirectory(prefix="pricegenerator-artifact-") as temporary:
         directory = Path(temporary)
@@ -29,10 +30,12 @@ def Verify(artifact):
         python = environment / ("Scripts/python.exe" if os.name == "nt" else "bin/python")
         constraints = SOURCE_ROOT / "requirements/modern.txt"
         smoke = SOURCE_ROOT / "tests/test_packaging.py"
-        Run([python, "-m", "pip", "install", "-c", constraints, artifact], directory)
-        Run([python, "-I", smoke, "core"], directory)
-        Run([python, "-m", "pip", "install", "-c", constraints, f"{artifact}[export]"], directory)
-        Run([python, "-I", smoke, "export"], directory)
+
+        for mode in modes:
+            requirement = artifact if mode == "core" else f"{artifact}[{mode}]"
+            Run([python, "-m", "pip", "install", "-c", constraints, requirement], directory)
+            Run([python, "-I", smoke, mode], directory)
+
         Run([python, "-m", "pip", "check"], directory)
         Run([python, "-m", "pip", "freeze"], directory)
 
@@ -42,16 +45,19 @@ def Main():
 
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("directory", type=Path)
+    parser.add_argument("--fuzzy", action="store_true", help="Verify the scalar fuzzy extra on Python 3.13.")
     arguments = parser.parse_args()
     artifacts = sorted(arguments.directory.resolve().glob("*.whl")) + sorted(arguments.directory.resolve().glob("*.tar.gz"))
 
     if len(artifacts) != 2:
         parser.error("Expected exactly one wheel and one sdist")
 
-    for artifact in artifacts:
-        Verify(artifact)
+    modes = ("fuzzy",) if arguments.fuzzy else DEFAULT_MODES
 
-    print(f"Verified core/export wheel and sdist with Python {sys.version.split()[0]}")
+    for artifact in artifacts:
+        Verify(artifact, modes)
+
+    print(f"Verified {'/'.join(modes)} wheel and sdist with Python {sys.version.split()[0]}")
 
 
 if __name__ == "__main__":

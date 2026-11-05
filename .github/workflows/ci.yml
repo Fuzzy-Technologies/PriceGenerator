@@ -52,6 +52,9 @@ jobs:
           cat dist/SHA256SUMS
       - name: Test actual core and export artifacts in clean environments
         run: python tools/release_install.py dist
+      - name: Test the installed scalar fuzzy extra in clean environments
+        if: matrix.python-version == '3.13'
+        run: python tools/release_install.py dist --fuzzy
       - name: Retain build and test evidence
         if: always()
         uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
