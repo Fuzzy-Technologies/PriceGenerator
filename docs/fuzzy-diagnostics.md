@@ -37,11 +37,11 @@ ratio above 2 evaluates at 2. The report retains the observed ratio and the
 evaluated coordinate.
 
 | Volatility | Activity | Consequent |
-| --- | --- | --- |
-| Ordinary | Ordinary | Calm |
-| Ordinary | Elevated | Watch |
-| Elevated | Ordinary | Watch |
-| Elevated | Elevated | Stress |
+| ---------- | -------- | ---------- |
+| Ordinary   | Ordinary | Calm       |
+| Ordinary   | Elevated | Watch      |
+| Elevated   | Ordinary | Watch      |
+| Elevated   | Elevated | Stress     |
 
 Each rule uses minimum conjunction and weight 1. The consequent terms are
 triangles on `[0, 1]` with left, peak and right coordinates
