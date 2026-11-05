@@ -7,18 +7,17 @@
 
 ## Установка
 
-Поддерживаемое окно версий — CPython 3.10–3.13. После публикации версии 2.0.0
-на PyPI установите именно этот выпуск:
+Поддерживается CPython 3.10–3.13. На PyPI доступен исторический выпуск
+1.4.93. [Тестовый выпуск 2.0.0](https://github.com/Fuzzy-Technologies/PriceGenerator/releases/tag/v2.0.0)
+доступен на GitHub. Для примеров API v2 ниже установите пакет из исходников:
 
 ```bash
-python -m pip install 'pricegenerator==2.0.0'
-python -m pip install 'pricegenerator[export]==2.0.0'  # Optional PNG/JPEG.
+python -m pip install .
+python -m pip install '.[export]'  # Для экспорта PNG/JPEG.
 ```
 
-Для исходного дерева используйте `python -m pip install .` или
-`python -m pip install '.[export]'`. Подготовка релиза сама по себе не загружает
-файлы: проверяйте [порядок выпуска](https://github.com/Fuzzy-Technologies/PriceGenerator/blob/v2.0.0/docs/releasing.md) и фактическую страницу PyPI,
-прежде чем считать публикацию завершённой. Ссылки ведут на тег v2.0.0.
+Первый публичный выпуск современной ветки на PyPI запланирован как 2.1.0.
+Проверка и публикация описаны в [инструкции по выпуску](docs/releasing.md).
 
 ## Генерация и CSV
 

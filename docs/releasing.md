@@ -1,5 +1,14 @@
 # Release verification and PyPI publication
 
+The [2.0.0 GitHub pre-release](https://github.com/Fuzzy-Technologies/PriceGenerator/releases/tag/v2.0.0)
+records the October verification baseline. Its exact tag remains available for
+historical reproduction. The first modern PyPI release is planned for 2.1.0
+under [Task #109](https://github.com/Fuzzy-Technologies/PriceGenerator/issues/109).
+Prepare fresh release notes with feature examples and chart illustrations,
+select a new exact tag, and repeat the verification on the final master commit.
+The release workflow rejects PyPI publication of 2.0.0.
+
+
 Release code lives in `.github/workflows/release.yml`. It runs **only by manual
 dispatch on `master`**. A push, branch name, tag push, PR, or ordinary CI run
 never uploads a package. The removed Travis workflow is no longer a release
