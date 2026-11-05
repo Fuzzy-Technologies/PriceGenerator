@@ -66,6 +66,21 @@ Windows with Python 3.13. Require the relevant hosted quality checks and
 chart runtime check in branch protection/rulesets; committing a workflow does
 not configure those repository settings.
 
+## Build the public API reference
+
+From the checkout root, install the documentation extra and run the builder:
+
+```bash
+python -m pip install -c requirements/modern.txt '.[docs]'
+python PDocBuilder.py
+```
+
+Open `build/docs-api/pricegenerator.html`. The page is generated from the
+checkout's `pricegenerator.__all__`, signatures and docstrings. The build
+fails if the page lacks an entry for any declared export. Module-qualified
+research APIs remain covered by their own guides. Generated HTML stays under
+the ignored `build/` directory, leaving documentation sources in `docs/`.
+
 ## Chart runtime gate
 
 Node is developer tooling for rebuilding/testing the vendored ECharts bundle;
