@@ -23,12 +23,12 @@ A project owner signs in to [pricegenerator publishing settings](https://pypi.or
 Add a **GitHub Actions** Trusted Publisher to this existing project with these
 exact fields:
 
-| PyPI field | Value |
-| --- | --- |
-| Owner | `Fuzzy-Technologies` |
-| Repository name | `PriceGenerator` |
-| Workflow filename | `release.yml` |
-| Environment name | `pypi` |
+| PyPI field        | Value                |
+| ----------------- | -------------------- |
+| Owner             | `Fuzzy-Technologies` |
+| Repository name   | `PriceGenerator`     |
+| Workflow filename | `release.yml`        |
+| Environment name  | `pypi`               |
 
 The workflow field takes the filename alone, not `.github/workflows/release.yml`.
 Use the existing project, rather than registering a pending publisher for a new

@@ -19,10 +19,10 @@ The machine-readable [snapshot](repository-snapshot.json) records repository ID
 branch, branch heads, all six Git tags/releases, and all 28 PyPI version records
 with artifact URLs, sizes, timestamps and hashes as observed on 2026-10-15 UTC.
 
-| Reference | Commit |
-| --- | --- |
-| `master` | `23c44d1f6eef822770f672e645a451a00c11d02c` |
-| `develop` / characterization source | `a97e84829ebee121c411a273845cba871ce07890` |
+| Reference                            | Commit                                     |
+| ------------------------------------ | ------------------------------------------ |
+| `master`                             | `23c44d1f6eef822770f672e645a451a00c11d02c` |
+| `develop` / characterization source  | `a97e84829ebee121c411a273845cba871ce07890` |
 | `v1.4.93` / latest published release | `0ace3635910d08cf0b1b8f07f95be20f9a8e0636` |
 
 At capture, `develop` was 26 commits ahead and zero behind `master`. The historical
@@ -35,10 +35,10 @@ an empty diff between `v1.4.93` and the characterization source. All five packag
 files from the downloaded PyPI wheel are byte-identical to the checkout,
 including the Jinja template. Their individual SHA-256 values are recorded.
 
-| Published artifact | Verified SHA-256 |
-| --- | --- |
+| Published artifact                       | Verified SHA-256                                                   |
+| ---------------------------------------- | ------------------------------------------------------------------ |
 | `pricegenerator-1.4.93-py3-none-any.whl` | `44c1e43db96265d01d184d8260fd873c21e6bd9b16e89379a921f1e6b74e686b` |
-| `pricegenerator-1.4.93.tar.gz` | `1ecb572b0d387bda44f33394bdf4ceb99244c7b6c5a91888c4fdba9b81c5e95c` |
+| `pricegenerator-1.4.93.tar.gz`           | `1ecb572b0d387bda44f33394bdf4ceb99244c7b6c5a91888c4fdba9b81c5e95c` |
 
 Local source builds produce `1.4.dev0`; the historical Travis branch/build-number
 environment produced release versions such as `1.4.93`. These are distinct
@@ -60,12 +60,12 @@ the original upstream repository is unavailable. No technical-analysis stubs or
 replacement indicator formulas are used. The original deleted PyPI artifact was
 not available for a byte-for-byte comparison with this mirror.
 
-| Installation | Import / dependency check | Historical tests | New characterization |
-| --- | --- | --- | --- |
-| Source at `a97e848`, local version `1.4.dev0`, pinned environment | Pass | 23 passed | 15 passed, 2 strict xfails |
-| Hash-verified PyPI wheel `1.4.93`, fresh pinned environment | Pass | 23 passed | 15 passed, 2 strict xfails |
-| Unconstrained `pricegenerator==1.4.93` on Python 3.11.17 today | Dependency resolution fails: available pandas-ta releases require Python >=3.12 | Not run | Not run |
-| Python 3.9, 3.10, 3.12+, other OSes, latest dependency combinations | Not certified by this baseline | Not run | Not run |
+| Installation                                                        | Import / dependency check                                                       | Historical tests | New characterization       |
+| ------------------------------------------------------------------- | ------------------------------------------------------------------------------- | ---------------- | -------------------------- |
+| Source at `a97e848`, local version `1.4.dev0`, pinned environment   | Pass                                                                            | 23 passed        | 15 passed, 2 strict xfails |
+| Hash-verified PyPI wheel `1.4.93`, fresh pinned environment         | Pass                                                                            | 23 passed        | 15 passed, 2 strict xfails |
+| Unconstrained `pricegenerator==1.4.93` on Python 3.11.17 today      | Dependency resolution fails: available pandas-ta releases require Python >=3.12 | Not run          | Not run                    |
+| Python 3.9, 3.10, 3.12+, other OSes, latest dependency combinations | Not certified by this baseline                                                  | Not run          | Not run                    |
 
 Both successful rows ran from disposable working directories against installed
 packages. See [source evidence](source-test-results.json) and
@@ -129,10 +129,10 @@ test compares all vectors, NaN positions included, with `rtol=atol=1e-12`.
 
 ## Known defects remain explicit
 
-| Reproduction | Observed result | Repair work |
-| --- | --- | --- |
-| Seed 0, five candles, close bounds 1–2, initial close 1, outlier limit 5, outlier probability 1 | Lows include `-1.62` and `-3.62` | [#64](https://github.com/Fuzzy-Technologies/PriceGenerator/issues/64) |
-| Seed 0, ten candles, forced up trend, close bounds 10–110, initial close 50, body limit 0.1 | Final body is 17.39 (`open=50.07`, `close=67.46`) | [#63](https://github.com/Fuzzy-Technologies/PriceGenerator/issues/63) |
+| Reproduction                                                                                    | Observed result                                   | Repair work                                                           |
+| ----------------------------------------------------------------------------------------------- | ------------------------------------------------- | --------------------------------------------------------------------- |
+| Seed 0, five candles, close bounds 1–2, initial close 1, outlier limit 5, outlier probability 1 | Lows include `-1.62` and `-3.62`                  | [#64](https://github.com/Fuzzy-Technologies/PriceGenerator/issues/64) |
+| Seed 0, ten candles, forced up trend, close bounds 10–110, initial close 50, body limit 0.1     | Final body is 17.39 (`open=50.07`, `close=67.46`) | [#63](https://github.com/Fuzzy-Technologies/PriceGenerator/issues/63) |
 
 Both assertions are `xfail(strict=True, raises=AssertionError)` and link to the
 corresponding repair work. Unexpected success fails the gate and requires an

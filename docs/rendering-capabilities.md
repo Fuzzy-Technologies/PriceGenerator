@@ -10,31 +10,31 @@ Use `Chart(data)` and `DisplayChart(data)` as the public entry points;
 
 ## Historical capabilities
 
-| Capability | Actual 1.x behavior | Modern replacement |
-| --- | --- | --- |
-| Static output | Google method writes JavaScript-dependent HTML with online loaders; no native SVG/PNG API | Offline SVG, optional native PNG/JPEG, and standalone interactive HTML |
-| Candlesticks | OHLC wick/body; direction colors; doji uses rising style | Preserve OHLC geometry and readable direction at the configured precision |
-| Volume | Bokeh lower panel, matching direction colors and shared datetime range | Linked volume panel; zero volumes and a single candle are valid |
-| Time axis | Bokeh uses elapsed datetime; Google uses category strings | Explicit UTC timestamps; preserve gaps on the default time axis |
-| Hover | Candle index, date, time, OHLC, volume; volume hover separately | Interactive cursor/report exposes original values, including after display scaling |
-| Navigation | Pan, wheel zoom, box zoom, reset, toolbar save | Functional equivalents with synchronized price/volume ranges |
-| Controls | Grouped legend click-to-hide; independent `showControlsOnChart` | Explicit group visibility; optional controls without losing supplied series |
-| Close limits/trends | Max/min close with labels; full-horizon and split-segment trends | Aligned close-limit and elapsed-time trend overlays; calculations are explicit and renderers consume supplied values |
-| Average | High/low midpoint line and points, hidden by default | Aligned line and point overlays; documented default visibility |
-| SMA | 5/20 and 50/200 groups, hidden by default | All four results available through the analysis adapter |
-| HMA | 5/20 group, hidden by default | Both unshifted HMA results, independent of Alligator |
-| VWMA | 5/20 group, hidden by default | Both results, including explicit zero-volume behavior |
-| Bollinger | Lower/mid/upper **lines**; no area shading in legacy code | Three aligned lines with gaps and group controls; filled bands are an optional later addition |
-| PSAR | Long/short point series, hidden by default | Separate point overlays, gaps and visibility preserved |
-| Alligator | Shifted HMA13/8/5 at offsets 8/5/3, not a standard SMMA implementation | Deliberately replaced by median-price SMMA at periods13/8/5 and shifts8/5/3; documented in the indicator migration |
-| Zig-Zag | Percentage filter produces sparse connected time/value points | Analysis adapter supplies the sparse line with a deliberate interpolation/alignment policy |
-| Custom markers | Arbitrary text above high, at midpoint, below low; old fixed ±0.5 offsets | Plain text in all three relative positions with stable screen spacing |
-| Custom lines | Named user DataFrame series over time | Validated named aligned line/point overlays; input data is not mutated |
-| Statistics | Candle count/timeframe/precision; first/last/min/max close; close range/trend; up/down counts/percentages and longest runs; range extrema/std/99/95/80 percentiles; total volume | Explicit analysis report, displayed and exportable as Markdown |
-| Title/size/theme | Custom or generated title, width/height, dark/light Bokeh option | Dark default, light option, bounded dimensions, readable narrow reports |
-| Notebook | Bokeh inline resources and display handle | Explicit HTML/SVG display adapter, covered during task #94 |
-| Template customization | Google accepts arbitrary Jinja template/model, path or string | Replace with documented data/presentation options or trusted outer HTML composition; raw templates are not part of ChartSpec |
-| Side effects | Rendering can mutate DataFrame, run indicators, open paths through `os.system`, and swallow some save errors | Pure low-level renderers; Chart explicitly writes/views HTML by default, view=False suppresses UI; analysis is opt-in and I/O errors propagate |
+| Capability             | Actual 1.x behavior                                                                                                                                                              | Modern replacement                                                                                                                             |
+| ---------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
+| Static output          | Google method writes JavaScript-dependent HTML with online loaders; no native SVG/PNG API                                                                                        | Offline SVG, optional native PNG/JPEG, and standalone interactive HTML                                                                         |
+| Candlesticks           | OHLC wick/body; direction colors; doji uses rising style                                                                                                                         | Preserve OHLC geometry and readable direction at the configured precision                                                                      |
+| Volume                 | Bokeh lower panel, matching direction colors and shared datetime range                                                                                                           | Linked volume panel; zero volumes and a single candle are valid                                                                                |
+| Time axis              | Bokeh uses elapsed datetime; Google uses category strings                                                                                                                        | Explicit UTC timestamps; preserve gaps on the default time axis                                                                                |
+| Hover                  | Candle index, date, time, OHLC, volume; volume hover separately                                                                                                                  | Interactive cursor/report exposes original values, including after display scaling                                                             |
+| Navigation             | Pan, wheel zoom, box zoom, reset, toolbar save                                                                                                                                   | Functional equivalents with synchronized price/volume ranges                                                                                   |
+| Controls               | Grouped legend click-to-hide; independent `showControlsOnChart`                                                                                                                  | Explicit group visibility; optional controls without losing supplied series                                                                    |
+| Close limits/trends    | Max/min close with labels; full-horizon and split-segment trends                                                                                                                 | Aligned close-limit and elapsed-time trend overlays; calculations are explicit and renderers consume supplied values                           |
+| Average                | High/low midpoint line and points, hidden by default                                                                                                                             | Aligned line and point overlays; documented default visibility                                                                                 |
+| SMA                    | 5/20 and 50/200 groups, hidden by default                                                                                                                                        | All four results available through the analysis adapter                                                                                        |
+| HMA                    | 5/20 group, hidden by default                                                                                                                                                    | Both unshifted HMA results, independent of Alligator                                                                                           |
+| VWMA                   | 5/20 group, hidden by default                                                                                                                                                    | Both results, including explicit zero-volume behavior                                                                                          |
+| Bollinger              | Lower/mid/upper **lines**; no area shading in legacy code                                                                                                                        | Three aligned lines with gaps and group controls; filled bands are an optional later addition                                                  |
+| PSAR                   | Long/short point series, hidden by default                                                                                                                                       | Separate point overlays, gaps and visibility preserved                                                                                         |
+| Alligator              | Shifted HMA13/8/5 at offsets 8/5/3, not a standard SMMA implementation                                                                                                           | Deliberately replaced by median-price SMMA at periods13/8/5 and shifts8/5/3; documented in the indicator migration                             |
+| Zig-Zag                | Percentage filter produces sparse connected time/value points                                                                                                                    | Analysis adapter supplies the sparse line with a deliberate interpolation/alignment policy                                                     |
+| Custom markers         | Arbitrary text above high, at midpoint, below low; old fixed ±0.5 offsets                                                                                                        | Plain text in all three relative positions with stable screen spacing                                                                          |
+| Custom lines           | Named user DataFrame series over time                                                                                                                                            | Validated named aligned line/point overlays; input data is not mutated                                                                         |
+| Statistics             | Candle count/timeframe/precision; first/last/min/max close; close range/trend; up/down counts/percentages and longest runs; range extrema/std/99/95/80 percentiles; total volume | Explicit analysis report, displayed and exportable as Markdown                                                                                 |
+| Title/size/theme       | Custom or generated title, width/height, dark/light Bokeh option                                                                                                                 | Dark default, light option, bounded dimensions, readable narrow reports                                                                        |
+| Notebook               | Bokeh inline resources and display handle                                                                                                                                        | Explicit HTML/SVG display adapter, covered during task #94                                                                                     |
+| Template customization | Google accepts arbitrary Jinja template/model, path or string                                                                                                                    | Replace with documented data/presentation options or trusted outer HTML composition; raw templates are not part of ChartSpec                   |
+| Side effects           | Rendering can mutate DataFrame, run indicators, open paths through `os.system`, and swallow some save errors                                                                     | Pure low-level renderers; Chart explicitly writes/views HTML by default, view=False suppresses UI; analysis is opt-in and I/O errors propagate |
 
 The old tests mostly checked that HTML and Markdown files existed. They did not establish visual correctness, safe escaping, interaction behavior, or offline operation. The current tests add evidence for those properties.
 
@@ -44,12 +44,12 @@ The old tests mostly checked that HTML and Markdown files existed. They did not 
 
 Import from `pricegenerator.rendering` or `pricegenerator.rendering.spec`. All dataclasses are frozen and snapshot caller sequences as tuples.
 
-| Type | Fields |
-| --- | --- |
-| `ChartCandle` | `datetime`, `open`, `high`, `low`, `close`, `volume` |
-| `ChartSeries` | `key`, `label`, `values`, `color=None`, `kind="line"`, `visible=True`, `group=None`, `width=1.8`, `dashed=False` |
-| `ChartMarker` | `candle_index`, `text`, `position="above"`, `color=None` |
-| `ChartSpec` | `candles`, `title="PriceGenerator"`, `series=()`, `markers=()`, `summary=()`, `theme="dark"`, `width=1280`, `height=760`, `price_precision=2`, `show_controls=True` |
+| Type          | Fields                                                                                                                                                              |
+| ------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `ChartCandle` | `datetime`, `open`, `high`, `low`, `close`, `volume`                                                                                                                |
+| `ChartSeries` | `key`, `label`, `values`, `color=None`, `kind="line"`, `visible=True`, `group=None`, `width=1.8`, `dashed=False`                                                    |
+| `ChartMarker` | `candle_index`, `text`, `position="above"`, `color=None`                                                                                                            |
+| `ChartSpec`   | `candles`, `title="PriceGenerator"`, `series=()`, `markers=()`, `summary=()`, `theme="dark"`, `width=1280`, `height=760`, `price_precision=2`, `show_controls=True` |
 
 `ChartSpec.ToDict()` and `ToJSON()` include `schema_version=1`. `FromDict()` restores the same validated contract and rejects unknown fields/versions. JSON serialization escapes script delimiters without changing the text after decoding.
 
@@ -87,11 +87,11 @@ Both supplied corporate images are embedded once per SVG. One definition is refe
 
 The user supplied both source images during the 2026-10-15 UTC session. Original files are not regenerated. The emblem's source filename says `2048`, but its actual dimensions are 1254×1254.
 
-| Asset | Actual dimensions | Bytes | SHA-256 |
-| --- | --- | ---: | --- |
-| `FuzzyTechnologies-Logo-transp.png` (unchanged runtime wordmark) | 1000×180 | 3,708 | `d359c5ec7a949f6133508aab59dac97dfea77872ed43b6c6df3c4a10def46103` |
-| `rendering-assets/source/FTech-corporate-mark-circular-dark-2048.png` (source) | 1254×1254 | 2,255,851 | `6175ff9bd7649f7a1e8e8766149b3b09e1553f2e4b7a83506c61c92329b4a08f` |
-| `ftech-emblem-192.png` (runtime derivative) | 192×192 | 54,223 | `b0f03918847db13a6b7d3cdcd53b739362478f370a2f795a93b2996ab7720a28` |
+| Asset                                                                          | Actual dimensions | Bytes     | SHA-256                                                            |
+| ------------------------------------------------------------------------------ | ----------------- | --------: | ------------------------------------------------------------------ |
+| `FuzzyTechnologies-Logo-transp.png` (unchanged runtime wordmark)               | 1000×180          | 3,708     | `d359c5ec7a949f6133508aab59dac97dfea77872ed43b6c6df3c4a10def46103` |
+| `rendering-assets/source/FTech-corporate-mark-circular-dark-2048.png` (source) | 1254×1254         | 2,255,851 | `6175ff9bd7649f7a1e8e8766149b3b09e1553f2e4b7a83506c61c92329b4a08f` |
+| `ftech-emblem-192.png` (runtime derivative)                                    | 192×192           | 54,223    | `b0f03918847db13a6b7d3cdcd53b739362478f370a2f795a93b2996ab7720a28` |
 
 The derivative was produced using Pillow 12.3.0, `image.resize((192, 192), Image.Resampling.LANCZOS).save(path, format="PNG", optimize=True)`. No crop, recolor, synthetic detail, or design change was made. SVG/HTML load the packaged assets without Pillow. Pillow is also used at runtime by the optional JPEG export. Runtime package data consists of the two files under `pricegenerator/rendering/assets/branding/`; the large original stays in documentation sources.
 
@@ -129,29 +129,29 @@ The custom comparison bundle SHA-256 is `9fa1dd7561b5d086a07281ba9a8faa95c7932c3
 
 ## Historical replacement plan
 
-| Task | Deliverable and gate |
-| --- | --- |
-| [#91](https://github.com/Fuzzy-Technologies/PriceGenerator/issues/91) | Source-based parity audit, license/size comparison, ADR and bounded architecture |
-| [#92](https://github.com/Fuzzy-Technologies/PriceGenerator/issues/92) | Immutable validated specification; offline branded SVG; finite/flat/gapped data, text safety, package resources and no-heavy-import tests |
+| Task                                                                  | Deliverable and gate                                                                                                                                          |
+| --------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [#91](https://github.com/Fuzzy-Technologies/PriceGenerator/issues/91) | Source-based parity audit, license/size comparison, ADR and bounded architecture                                                                              |
+| [#92](https://github.com/Fuzzy-Technologies/PriceGenerator/issues/92) | Immutable validated specification; offline branded SVG; finite/flat/gapped data, text safety, package resources and no-heavy-import tests                     |
 | [#93](https://github.com/Fuzzy-Technologies/PriceGenerator/issues/93) | Pinned minimal ECharts runtime; linked financial views; tested controls, arbitrary annotations, offline HTML, PNG export, licenses and final bundle footprint |
-| [#94](https://github.com/Fuzzy-Technologies/PriceGenerator/issues/94) | Indicator/report adapter, CLI/notebook/migration docs, matching workload benchmark and evidence for every retained capability before legacy retirement |
+| [#94](https://github.com/Fuzzy-Technologies/PriceGenerator/issues/94) | Indicator/report adapter, CLI/notebook/migration docs, matching workload benchmark and evidence for every retained capability before legacy retirement        |
 
 ## Integrated replacement evidence
 
 The [migration guide](chart-migration.md) maps each historical indicator and
 public workflow to its explicit replacement. The implementation evidence is:
 
-| Contract | Executable evidence |
-| --- | --- |
-| Immutable snapshots, UTC precision, invalid input and safe JSON | `tests/test_chart_spec.py` |
-| Exact candle geometry, gaps, static labels, reports and one price-panel wordmark | `tests/test_static_charts.py` and the reproducible SVG examples |
-| Offline HTML, embedded assets, escaping and propagated output failures | `tests/test_interactive_charts.py` |
-| Actual linked axes, visibility, navigation, reset and uneven time intervals | `tests/javascript/test_interactive_charts.cjs` |
-| Actual PNG pixels, complete initial frame, bounded annotations and logos | `tests/javascript/test_interactive_canvas.cjs` |
+| Contract                                                                             | Executable evidence                                                                   |
+| ------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------- |
+| Immutable snapshots, UTC precision, invalid input and safe JSON                      | `tests/test_chart_spec.py`                                                            |
+| Exact candle geometry, gaps, static labels, reports and one price-panel wordmark     | `tests/test_static_charts.py` and the reproducible SVG examples                       |
+| Offline HTML, embedded assets, escaping and propagated output failures               | `tests/test_interactive_charts.py`                                                    |
+| Actual linked axes, visibility, navigation, reset and uneven time intervals          | `tests/javascript/test_interactive_charts.cjs`                                        |
+| Actual PNG pixels, complete initial frame, bounded annotations and logos             | `tests/javascript/test_interactive_canvas.cjs`                                        |
 | Modern hand-reference formulas, undefined reasons, reports, custom data and notebook | `tests/test_analysis.py`, `tests/test_indicators.py`, `tests/test_chart_migration.py` |
-| Unified output/view defaults, native PNG/JPEG decoding and logo pixels | `tests/test_chart_api.py`, `tests/test_chart_exports.py` |
-| Wheel/sdist resources and installed core-only API/CLI operation | `tests/test_packaging.py`, run outside the checkout with Python isolated mode |
-| Current modern 1k export/Canvas evidence and archived larger comparisons | [Performance commands, scopes and recorded results](chart-performance.md) |
+| Unified output/view defaults, native PNG/JPEG decoding and logo pixels               | `tests/test_chart_api.py`, `tests/test_chart_exports.py`                              |
+| Wheel/sdist resources and installed core-only API/CLI operation                      | `tests/test_packaging.py`, run outside the checkout with Python isolated mode         |
+| Current modern 1k export/Canvas evidence and archived larger comparisons             | [Performance commands, scopes and recorded results](chart-performance.md)             |
 
 The historical `RenderGoogle`, `RenderBokeh`, mutable generator class, template
 hooks and old CLI flags are absent from the v2 runtime. Trusted outer-report

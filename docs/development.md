@@ -59,6 +59,9 @@ Local results do not establish that hosted CI passed.
 
 The shared source gate compiles and lints the maintained Python tree, exercises
 Task-lifecycle failure paths, and runs the full suite with branch measurement.
+It also checks source alignment for tables in all tracked Markdown files.
+Run `python tools/markdown_tables.py` to check alignment on its own, or
+`python tools/markdown_tables.py --write` to apply the same formatter locally.
 It enforces coverage floors of 95% for the lifecycle parser and 90% for the
 package, calculated from statements and branches. The PR workflow runs it on
 Linux for every supported Python and adds an isolated wheel/sdist smoke on
