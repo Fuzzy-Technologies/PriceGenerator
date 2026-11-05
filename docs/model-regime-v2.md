@@ -81,6 +81,14 @@ that all Python/libm/platform combinations produce bit-identical floating values
 
 ## Evidence and limitations
 
+The [scripted numerical oracles](../tests/test_regime_v2_oracles.py) check three
+candles across two scenarios against hand-derived OHLCV values with relative
+tolerance `1e-12`. The first scenario switches from calm to stressed and back,
+exercises the return-shock and wick-outlier thresholds, and checks AR(1) volume.
+The second reflects a price proposal twice and checks that volume uses the
+realized return while both wicks clip at the configured bounds. Both tests
+check draw order and consumption, including inactive events.
+
 `tests/test_generation_v2.py` fixes a seed-zero output fingerprint; checks schema,
 continuity, extreme positive bounds, flat/drift-only dynamics and noninterference;
 records 100,000 actual private-engine event traces and checks all four Bernoulli
@@ -97,3 +105,6 @@ liquidity process, session calendar, or empirical return distribution. Price
 reflection and volume caps are explicit test-scenario boundary policies.
 Historical 1.x golden rows and known defects are archived evidence only; no
 legacy generator is selectable through this runtime.
+
+Use the [independent holdout protocol](reference-comparison.md#independent-holdout-protocol)
+for claims about observed market data.
