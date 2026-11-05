@@ -1,5 +1,10 @@
 # Canonical OHLCV data
 
+For a runnable generate-and-replay example and MetaTrader 5 exchange constraints,
+see the quick start in [English](site/content/en/quick-start.md),
+[Russian](site/content/ru/quick-start.md) or
+[Simplified Chinese](site/content/zh-CN/quick-start.md).
+
 PriceGenerator v2 exchanges one explicit six-column table, in this order:
 
 | Column | Canonical pandas dtype | Domain |
