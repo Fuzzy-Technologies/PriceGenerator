@@ -4,6 +4,20 @@
 [Documentation](https://github.com/Fuzzy-Technologies/PriceGenerator/blob/develop/README.md) ·
 [Release procedure](https://github.com/Fuzzy-Technologies/PriceGenerator/blob/develop/docs/releasing.md)
 
+## 2.1.0 (unreleased)
+
+- Generate and replay bounded Monte Carlo ensembles with stable path seeds,
+  worker-independent results, drawdown distributions, and quantile charts.
+- Inspect an optional scalar Mamdani regime score and rule trace with
+  FuzzyRoutines 2.1.0 on CPython 3.13.
+- Reduce canonical CSV write time and chart-spec serialization memory while
+  preserving verified output bytes. See the benchmark recipes for scope.
+- Add localized quickstarts and scientific guides, generated API coverage,
+  source-link checks, model oracles and a chronological BTC/USD holdout.
+
+See the [illustrated preview](docs/site/content/en/release-2-1.md) and
+[1.4.93 migration guide](docs/site/content/en/migrate-to-2-1.md).
+
 ## 2.0.0
 
 This is an intentionally breaking replacement of the 1.x runtime. Publication
