@@ -11,7 +11,10 @@ def test_CoreOperationsAvoidOptionalImports():
 import importlib.abc
 import sys
 
-OPTIONAL_MODULES = {"bokeh", "jinja2", "pandas_ta", "pandas_ta_classic", "matplotlib", "IPython", "notebook", "requests", "PIL"}
+OPTIONAL_MODULES = {
+    "bokeh", "jinja2", "pandas_ta", "pandas_ta_classic", "matplotlib", "IPython",
+    "notebook", "requests", "PIL", "fuzzyroutines",
+}
 
 
 class RejectOptionalModules(importlib.abc.MetaPathFinder):
@@ -26,6 +29,7 @@ class RejectOptionalModules(importlib.abc.MetaPathFinder):
 
 sys.meta_path.insert(0, RejectOptionalModules())
 from pricegenerator import Generate, GenerationConfig, CreateManifest, Replay
+from pricegenerator.fuzzy_diagnostics import DiagnoseRegime
 configuration = GenerationConfig(seed=0, horizon=8)
 prices = Generate(configuration)
 Replay(CreateManifest(configuration, prices))

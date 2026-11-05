@@ -16,7 +16,7 @@ from xml.etree import ElementTree
 
 SOURCE_ROOT = Path(__file__).resolve().parents[1]
 OBSOLETE_MODULES = ("bokeh", "jinja2", "pandas_ta", "pandas_ta_classic", "bkcharts")
-OPTIONAL_MODULES = ("resvg_py", "PIL", "notebook", "IPython")
+OPTIONAL_MODULES = ("resvg_py", "PIL", "notebook", "IPython", "fuzzyroutines")
 
 
 def ReadProjectMetadata():
@@ -59,6 +59,9 @@ def test_CoreMetadataExcludesObsoleteDependencies():
         "Documented optional workflow is missing"
     )
     assert not {"render", "indicators"} & set(project["optional-dependencies"]), "Legacy extras returned"
+    assert project["optional-dependencies"]["fuzzy"] == ["fuzzyroutines==2.1.0"], (
+        "Fuzzy diagnostics must stay pinned to the optional scalar backend"
+    )
     serialized = json.dumps(project).lower()
 
     for name in ("bokeh", "jinja2", "pandas-ta", "bkcharts"):
