@@ -58,3 +58,8 @@ illustrative thresholds. Empirical calibration and holdout validation belong
 to a separate evaluation of the profile. Changes to thresholds, rules or
 inference policy require a new profile identifier. Diagnostic calls consume no
 RNG and are separate from generation parameters, manifests and replay.
+
+The [Bitstamp chronological holdout](evidence/reference-bitstamp-holdout.md)
+shows the frozen profile's score distribution, clipping and full traces on
+independently sourced hourly bars. The study uses a separate earlier window
+for its reference levels and reports descriptive results.
