@@ -75,7 +75,6 @@ def _WriteCanonicalCSV(canonical, stream, *, header=True):
         writer.writerow(OHLCV_COLUMNS)
 
     for row in canonical.itertuples(index=False, name=None):
-        timestamp = row[0]
-        instant = timestamp.strftime("%Y-%m-%dT%H:%M:%S")
-        instant += f".{timestamp.value % 1_000_000_000:09d}Z"
-        writer.writerow([instant, *(repr(value) for value in row[1:])])
+        # The canonical UTC nanosecond dtype makes NumPy emit all nine digits.
+        instant = str(row[0].asm8) + "Z"
+        writer.writerow((instant, *row[1:]))
