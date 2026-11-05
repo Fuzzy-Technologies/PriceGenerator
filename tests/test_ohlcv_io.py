@@ -44,6 +44,31 @@ def test_CallerOwnedStreamsRemainOpenAndEmptyTablesRoundTrip():
     assert not stream.closed
 
 
+def test_CanonicalTimestampAndFloatBytes():
+    """Keep fixed UTC fractions and float spellings in the CSV wire format."""
+
+    timestamps = [
+        "1677-09-21T00:12:43.145224193Z",
+        "1969-12-31T23:59:59.999999999Z",
+        "1970-01-01T00:00:00.000000000Z",
+        "1970-01-01T00:00:00.000001000Z",
+        "2262-04-11T23:47:16.854775807Z",
+    ]
+    frame = pd.DataFrame({
+        "datetime": pd.to_datetime(timestamps, utc=True),
+        "open": -0.0,
+        "high": 1e+20,
+        "low": -1e-20,
+        "close": 0.1,
+        "volume": 0.0,
+    })
+    stream = StringIO()
+    WriteCSV(frame, stream)
+
+    expected = HEADER + "".join(f"{instant},-0.0,1e+20,-1e-20,0.1,0.0\n" for instant in timestamps)
+    assert stream.getvalue() == expected
+
+
 @pytest.mark.parametrize("content", [
     "", ROW, HEADER.replace("volume", "close") + ROW,
     HEADER.replace("datetime", "date") + ROW,

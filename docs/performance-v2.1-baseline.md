@@ -83,3 +83,33 @@ python tools/benchmark_stages.py --sizes 1000 10000 --seed 0
 To measure the historical source used for this report, check out
 `cfd8db6da83235afd04b7bda8ed71e0eb126c2fc` in a separate worktree and pass its
 path with `--source-root`. The script prints one JSON record per line.
+
+## CSV writer optimization
+
+The writer now formats the already validated UTC nanosecond timestamp through
+its NumPy scalar and lets the CSV writer format the canonical Python floats.
+Both full and chunked CSV writes still emit one row at a time. The wire test
+covers both ends of the nanosecond range, a pre-epoch instant, a zero fraction,
+and exact float spellings including signed zero.
+
+Compare the optimized source to
+`7b47806208c68c61d6d17059445eab7bbe008835` in the same dependency environment
+with the stage command above. Run each checkout five times, alternating which
+checkout runs first. Use `--source-root` to select the before checkout. The
+comparison used CPython 3.12.14, pandas 2.2.3 and NumPy 2.2.6 on Linux x86-64
+with an Intel Xeon Platinum 8573C and an eight-CPU container quota. Timing
+includes validation and buffered local I/O, and varies with shared-host load.
+
+| Rows   | Before median s (min–max) | After median s (min–max) | Before median traced peak bytes | After median traced peak bytes |
+| -----: | ------------------------- | ------------------------ | ------------------------------: | -----------------------------: |
+| 1,000  | 0.0266 (0.0147–0.0361)    | 0.0123 (0.0088–0.0460)   | 344,084                         | 341,137                        |
+| 10,000 | 0.1483 (0.1144–0.3726)    | 0.0906 (0.0828–0.1085)   | 1,926,693                       | 1,924,506                      |
+
+At 10,000 rows the median write time fell by 39% in this run. The 1,000-row
+timing ranges overlap.
+
+Both checkouts reproduced the CSV sizes and SHA-256 values above, and the
+stage runner verified exact frame recovery after reading each CSV. The
+[chart benchmark](chart-performance.md) on the 1,000-row arithmetic fixture
+also reproduced SVG, PNG, JPEG and offline HTML digests between checkouts,
+with Canvas verification passing. This slice measures the CSV writer.
