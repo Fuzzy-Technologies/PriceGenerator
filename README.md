@@ -2,6 +2,11 @@
 
 ![PriceGenerator by Fuzzy Technologies. Synthetic market data generator.](https://raw.githubusercontent.com/Fuzzy-Technologies/PriceGenerator/develop/docs/assets/pricegenerator-product-card.webp)
 
+[English guide](docs/site/content/en/scenario-guide.md) ·
+[Русский](docs/site/content/ru/scenario-guide.md) ·
+[简体中文](docs/site/content/zh-CN/scenario-guide.md) ·
+[2.1 illustrated preview](docs/site/content/en/release-2-1.md)
+
 Reproducible synthetic OHLCV scenarios for trading-system tests and quantitative
 research. The v2 API separates generation, validation, diagnostics, CSV, replay
 and charts. It produces synthetic test data; it does not forecast markets or
@@ -79,6 +84,10 @@ pricegenerator validate prices.csv --timeframe-seconds 3600 --no-gaps
 pricegenerator analyze prices.csv --output statistics.json
 pricegenerator chart prices.csv --output chart.html --no-view --analysis
 ```
+
+The 2.1 development version also provides [ensemble generation and exact
+replay](docs/monte-carlo.md) through the CLI and Python, and optional
+[fuzzy regime diagnostics](docs/fuzzy-diagnostics.md) on Python 3.13.
 
 `python -m pricegenerator` exposes the same commands. A JSON `--config` supplies
 all generation parameters; explicit common CLI flags override those fields.
