@@ -9,6 +9,7 @@ import argparse
 import re
 import subprocess
 import sys
+import unicodedata
 from collections.abc import Sequence
 from pathlib import Path
 
@@ -69,6 +70,16 @@ def IndentedCode(line: str) -> bool:
     prefix = line[:len(line) - len(line.lstrip(" \t"))]
 
     return len(prefix.expandtabs(4)) >= 4
+
+
+def CellWidth(cell: str) -> int:
+    """Count source display columns, including wide glyphs and combining marks."""
+
+    return sum(
+        2 if unicodedata.east_asian_width(character) in {"F", "W"} else 1
+        for character in cell
+        if unicodedata.category(character) not in {"Mn", "Me", "Cf"}
+    )
 
 
 def AlignMarkdown(text: str) -> str:
@@ -138,7 +149,7 @@ def AlignMarkdown(text: str) -> str:
             end += 1
 
         widths = [max(3 + separator[column].count(":"),
-                      *(len(row[column]) for offset, row in enumerate(rows) if offset != 1))
+                      *(CellWidth(row[column]) for offset, row in enumerate(rows) if offset != 1))
                   for column in range(len(header))]
 
         for offset, row in enumerate(rows):
@@ -150,7 +161,7 @@ def AlignMarkdown(text: str) -> str:
                     right = ":" if cell.endswith(":") else ""
                     cell = left + "-" * (widths[column] - len(left) - len(right)) + right
 
-                rendered.append(cell.ljust(widths[column]))
+                rendered.append(cell + " " * (widths[column] - CellWidth(cell)))
 
             original = lines[index + offset]
             prefix = original[:len(original) - len(original.lstrip())]

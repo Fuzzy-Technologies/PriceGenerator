@@ -38,3 +38,13 @@ def test_AlignmentPreservesFencesEscapedPipesAndLineEndings():
         "| Term   | Description |\r\n| ------ | ----------: |\r\n| `x\\|y` | Example     |"
     ), "Alignment must preserve the escaped pipe, alignment marker and CRLF"
     assert AlignMarkdown(aligned) == aligned, "Repeated formatting must be idempotent"
+
+
+def test_AlignmentUsesDisplayColumnsForWideAndCombiningText():
+    """Align multilingual source with wide glyphs and decomposed accents."""
+
+    source = "| 版本 | Name |\n| --- | --- |\n| v1 | e\u0301 |\n"
+
+    assert AlignMarkdown(source) == (
+        "| 版本 | Name |\n| ---- | ---- |\n| v1   | e\u0301    |\n"
+    ), "Chinese glyphs use two columns and combining accents use none"
