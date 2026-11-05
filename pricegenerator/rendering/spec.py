@@ -1,6 +1,6 @@
 """Validate immutable, renderer-independent financial chart descriptions."""
 
-from dataclasses import asdict, dataclass
+from dataclasses import asdict, dataclass, fields
 from datetime import datetime, timezone
 import json
 import math
@@ -184,6 +184,25 @@ class ChartMarker:
             raise ValueError("marker position must be 'above', 'center', or 'below'")
 
 
+def _JSONRecord(record: Any) -> dict[str, Any]:
+    """Encode immutable candle primitives without a recursive snapshot."""
+
+    if type(record) is ChartCandle:
+        return {
+            "datetime": record.datetime,
+            "open": record.open,
+            "high": record.high,
+            "low": record.low,
+            "close": record.close,
+            "volume": record.volume,
+        }
+
+    if isinstance(record, (ChartCandle, ChartSeries, ChartMarker)):
+        return asdict(record)
+
+    raise TypeError(f"Object of type {type(record).__name__} is not JSON serializable")
+
+
 @dataclass(frozen=True)
 class ChartSpec:
     """A complete chart snapshot independent of pandas and browser libraries."""
@@ -260,7 +279,17 @@ class ChartSpec:
     def ToJSON(self) -> str:
         """Serialize deterministically without allowing an HTML script escape."""
 
-        serialized = json.dumps(self.ToDict(), ensure_ascii=False, allow_nan=False, separators=(",", ":"))
+        if type(self) is ChartSpec:
+            data = {field.name: getattr(self, field.name) for field in fields(self)}
+            data["schema_version"] = SCHEMA_VERSION
+            encode_record = _JSONRecord
+
+        else:
+            # Preserve dataclass extensions and overrides of ToDict.
+            data = self.ToDict()
+            encode_record = None
+
+        serialized = json.dumps(data, default=encode_record, ensure_ascii=False, allow_nan=False, separators=(",", ":"))
 
         return serialized.replace("&", "\\u0026").replace("<", "\\u003c").replace(">", "\\u003e").replace("\u2028", "\\u2028").replace("\u2029", "\\u2029")
 

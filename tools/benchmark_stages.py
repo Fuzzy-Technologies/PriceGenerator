@@ -30,6 +30,7 @@ def MeasureStages(rows, seed, source_root):
         stages = (
             ("csv_write", lambda: WriteCSV(frame, csv_path)),
             ("csv_read", lambda: ReadCSV(csv_path)),
+            ("spec_json", spec.ToJSON),
             ("svg_render", lambda: RenderSVG(spec)),
             ("html_render", lambda: RenderInteractive(spec)),
         )
@@ -48,7 +49,7 @@ def MeasureStages(rows, seed, source_root):
             if stage == "csv_read" and not (value.equals(frame) and measured.equals(frame)):
                 raise RuntimeError("The CSV round-trip changed the source frame")
 
-            if stage.endswith("_render") and value != measured:
+            if isinstance(value, str) and value != measured:
                 raise RuntimeError(f"Repeated {stage} calls produced different artifacts")
 
             yield {"rows": rows, "stage": stage, "elapsed_seconds": seconds, "traced_peak_bytes": peak}

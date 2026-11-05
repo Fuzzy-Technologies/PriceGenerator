@@ -180,3 +180,55 @@ timing scopes and visible counts. Failures retain the requested size and a
 serializable error instead of invented timing values. `performance_gate` is
 false; compare repeated observations in a controlled environment before setting
 regression budgets.
+
+## Chart specification serialization in 2.1
+
+Profiling a 10,000-candle snapshot showed that recursively copying its
+dataclasses accounted for 0.132 s of 0.165 s of profiled JSON serialization.
+The encoder now writes each immutable candle directly from its normalized
+fields. The detached `ToDict()` result, versioned JSON field order, escaping
+and rendering formats are preserved.
+
+The table compares the source at `7b47806208c68c61d6d17059445eab7bbe008835`
+with the optimized encoder. Both used CPython 3.12.14, NumPy 2.2.6 and pandas
+2.2.3 on Linux x86-64 (Intel Xeon Platinum 8573C, one logical CPU selected with
+`taskset`). Five paired runs alternated checkout order. Each used the same
+`regime_v2` seed 0 and measured wall time without tracing before a separate
+call for peak traced Python allocations. The prebuilt chart, native backend
+allocations and process RSS are outside the traced peak.
+
+| Rows   | Stage     | Before median s (min–max) | After median s (min–max) | Before median peak bytes | After median peak bytes |
+| -----: | --------- | ------------------------- | ------------------------ | -----------------------: | ----------------------: |
+| 1,000  | Spec JSON | 0.0104 (0.0046–0.0266)    | 0.0050 (0.0035–0.0080)   | 559,054                  | 196,141                 |
+| 1,000  | SVG       | 0.0332 (0.0209–0.0846)    | 0.0209 (0.0178–0.0325)   | 1,413,629                | 1,408,453               |
+| 1,000  | HTML      | 0.0112 (0.0099–0.0270)    | 0.0135 (0.0079–0.0237)   | 2,158,057                | 2,152,817               |
+| 10,000 | Spec JSON | 0.0669 (0.0585–0.1313)    | 0.0386 (0.0356–0.0463)   | 4,784,575                | 1,812,830               |
+| 10,000 | SVG       | 0.2832 (0.1632–0.7571)    | 0.1992 (0.1482–0.4013)   | 12,636,171               | 12,630,995              |
+| 10,000 | HTML      | 0.0988 (0.0809–0.2737)    | 0.0584 (0.0542–0.0979)   | 6,720,493                | 6,715,253               |
+
+At 10,000 rows, median spec serialization time fell by 42% and traced peak
+by 62%. End-to-end SVG and HTML timing ranges overlap. Their traced peaks
+remain dominated by later rendering and assembly.
+
+Run the stage recipe from the optimized checkout with the locked environment,
+alternating command order across five pairs:
+
+```text
+git worktree add --detach ../pricegenerator-before-charts 7b47806208c68c61d6d17059445eab7bbe008835
+python tools/benchmark_stages.py --source-root ../pricegenerator-before-charts --sizes 1000 10000 --seed 0
+python tools/benchmark_stages.py --sizes 1000 10000 --seed 0
+```
+
+The seeded CSV byte counts and SHA-256 digests matched in all pairs, and
+reads recovered the exact frame. For independent rendering parity, install
+the locked Canvas harness in both worktrees as shown above and run:
+
+```text
+python tools/benchmark_charts.py --source-root ../pricegenerator-before-charts --sizes 1000 10000 --timeout 90 --output charts-before.json
+python tools/benchmark_charts.py --sizes 1000 10000 --timeout 90 --output charts-after.json
+```
+
+For the arithmetic fixture at both sizes, SHA-256 matched for the chart spec,
+SVG, PNG, JPEG, HTML and the Canvas PNG. Visible price and volume counts
+matched after every Canvas action. The comparison used resvg-py 0.5.0,
+Pillow 12.0.0, Node 24.22.1, ECharts 6.1.0 and native Canvas 0.1.100.
