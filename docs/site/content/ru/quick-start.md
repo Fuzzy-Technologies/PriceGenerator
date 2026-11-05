@@ -1,5 +1,7 @@
 # Воспроизведение синтетического сценария OHLCV
 
+![PriceGenerator от Fuzzy Technologies. Генератор синтетических рыночных данных.](../../../assets/pricegenerator-product-card.webp)
+
 [English](../en/quick-start.md) · [简体中文](../zh-CN/quick-start.md)
 
 Сгенерируем ряд с заданным seed, воспроизведём его по манифесту и построим

@@ -1,5 +1,7 @@
 # PriceGenerator
 
+![PriceGenerator by Fuzzy Technologies. Synthetic market data generator.](https://raw.githubusercontent.com/Fuzzy-Technologies/PriceGenerator/develop/docs/assets/pricegenerator-product-card.webp)
+
 Reproducible synthetic OHLCV scenarios for trading-system tests and quantitative
 research. The v2 API separates generation, validation, diagnostics, CSV, replay
 and charts. It produces synthetic test data; it does not forecast markets or
