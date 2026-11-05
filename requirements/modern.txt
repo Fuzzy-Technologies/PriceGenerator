@@ -45,7 +45,9 @@ jeepney==0.9.0 ; platform_machine != 'ppc64le' and platform_machine != 's390x' a
 keyring==25.7.0 ; platform_machine != 'ppc64le' and platform_machine != 's390x'
     # via twine
 markdown-it-py==4.2.0
-    # via rich
+    # via
+    #   pricegenerator (pyproject.toml)
+    #   rich
 mdurl==0.1.2
     # via markdown-it-py
 more-itertools==11.1.0 ; python_full_version < '3.11' and platform_machine != 'ppc64le' and platform_machine != 's390x'

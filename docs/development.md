@@ -62,8 +62,15 @@ Task-lifecycle failure paths, and runs the full suite with branch measurement.
 It also checks source alignment for tables in all tracked Markdown files.
 Run `python tools/markdown_tables.py` to check alignment on its own, or
 `python tools/markdown_tables.py --write` to apply the same formatter locally.
-It enforces coverage floors of 95% for the lifecycle parser and 90% for the
-package, calculated from statements and branches. The PR workflow runs it on
+
+The shared gate also checks that each localized source route has English,
+Russian and Simplified Chinese pages, that each page links to the other
+translations and that relative Markdown link and image targets exist in the
+checkout. Run `python -m tools.documentation_links` on its own. External URLs
+and heading fragments are outside this source check.
+
+The source gate enforces coverage floors of 95% for the lifecycle parser and
+90% for the package, calculated from statements and branches. The PR workflow runs it on
 Linux for every supported Python and adds an isolated wheel/sdist smoke on
 Windows with Python 3.13. Require the relevant hosted quality checks and
 chart runtime check in branch protection/rulesets; committing a workflow does

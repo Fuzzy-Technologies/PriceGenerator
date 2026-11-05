@@ -1,6 +1,7 @@
 # Shared modern build and quality tools; exact transitive pins are reviewed.
 -c modern.txt
 build==1.6.1
+markdown-it-py==4.2.0
 pytest==8.4.2
 pytest-cov==6.3.0
 ruff==0.17.1
