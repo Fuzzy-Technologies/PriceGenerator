@@ -44,6 +44,9 @@ def CheckRef(tag, version, publish=False):
     if tag != f"v{version}":
         raise ReleaseError(f"Release tag {tag!r} does not match source version {version!r}")
 
+    if publish and version == "2.0.0":
+        raise ReleaseError("The 2.0.0 test baseline cannot be published to PyPI")
+
     if publish and (".dev" in version or "+" in version):
         raise ReleaseError("Development and local versions cannot be published by this workflow")
 

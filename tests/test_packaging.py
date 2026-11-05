@@ -209,6 +209,22 @@ def SmokeInstalledArtifact(mode):
         for name in OPTIONAL_MODULES:
             assert util.find_spec(name) is None, f"Core installation pulled optional dependency {name}"
 
+    if mode == "fuzzy":
+        from pricegenerator.fuzzy_diagnostics import DiagnoseRegime
+
+        diagnostic = DiagnoseRegime(1.75, 1.75)
+        assert diagnostic.fuzzyroutines_version == "2.1.0", "Fuzzy extra installed the wrong backend"
+        assert abs(diagnostic.score - 27 / 46) <= 1e-10, "Installed centroid differs from the analytic oracle"
+        expected_rules = (
+            ("both-ordinary", 0.25),
+            ("activity-elevated", 0.25),
+            ("volatility-elevated", 0.25),
+            ("both-elevated", 0.75),
+        )
+        assert tuple((rule.name, rule.firing_strength) for rule in diagnostic.rules) == expected_rules, (
+            "Installed scalar inference changed rule identities, strengths or order"
+        )
+
     print(json.dumps({"version": pricegenerator.__version__, "python": sys.version.split()[0],
                       "mode": mode, "package": str(package_path)}))
 
@@ -217,7 +233,7 @@ def Main():
     """Run artifact verification with only the requested runtime dependencies."""
 
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("mode", choices=("core", "export"))
+    parser.add_argument("mode", choices=("core", "export", "fuzzy"))
     arguments = parser.parse_args()
     SmokeInstalledArtifact(arguments.mode)
 

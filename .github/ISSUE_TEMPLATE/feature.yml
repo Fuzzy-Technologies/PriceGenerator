@@ -1,0 +1,27 @@
+name: Feature
+description: Propose a PriceGenerator capability or research outcome
+type: Feature
+labels: [Feature]
+body:
+  - type: textarea
+    id: outcome
+    attributes:
+      label: Outcome
+      description: Describe the use case and what should become possible.
+    validations:
+      required: true
+  - type: textarea
+    id: scope
+    attributes:
+      label: Scope and dependencies
+      description: Identify affected APIs, model contracts, ADRs or related work.
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance criteria
+      description: List the evidence needed to verify completion.
+    validations:
+      required: true
+  - type: markdown
+    attributes:
+      value: Maintainers set the native milestone, Priority, Effort and assignee, then attach implementation Tasks as sub-issues.

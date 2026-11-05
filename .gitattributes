@@ -1,3 +1,4 @@
 # Retain upstream license text and generated legal comments verbatim.
-pricegenerator/rendering/assets/echarts/LICENSE-*.txt -whitespace
-pricegenerator/rendering/assets/echarts/echarts-financial.min.js -whitespace
+pricegenerator/rendering/assets/echarts/LICENSE-*.txt -text -whitespace
+pricegenerator/rendering/assets/echarts/echarts-financial.min.js -text -whitespace
+pricegenerator/rendering/assets/echarts/build.json text eol=lf
