@@ -1,0 +1,4520 @@
+{
+  "archive_minute_rows": 87840,
+  "environment": {
+    "implementation": "CPython",
+    "numpy": "2.2.6",
+    "pandas": "2.2.3",
+    "platform": "Linux-6.18.57-x86_64-with-glibc2.39",
+    "python": "3.13.17"
+  },
+  "fuzzy": {
+    "clipping_counts": {
+      "activity": 1,
+      "volatility": 1
+    },
+    "decision": "descriptive only; no independent regime labels or acceptance threshold",
+    "hours_per_window": 24,
+    "observed_score_quantiles": [
+      0.25,
+      0.25,
+      0.49001318690965157
+    ],
+    "training_reference": {
+      "activity_btc": 71.92933128570833,
+      "volatility": 0.0046933655371141315
+    },
+    "windows": [
+      {
+        "activity_ratio": 1.6207905320386846,
+        "end_utc": "2024-10-01T23:00:00+00:00",
+        "fuzzyroutines_version": "2.1.0",
+        "input_grades": [
+          {
+            "coordinate": 1.027719796020167,
+            "grade": 0.9722802039798331,
+            "term": "ordinary",
+            "variable": "volatility"
+          },
+          {
+            "coordinate": 1.027719796020167,
+            "grade": 0.027719796020166942,
+            "term": "elevated",
+            "variable": "volatility"
+          },
+          {
+            "coordinate": 1.6207905320386846,
+            "grade": 0.3792094679613154,
+            "term": "ordinary",
+            "variable": "activity"
+          },
+          {
+            "coordinate": 1.6207905320386846,
+            "grade": 0.6207905320386846,
+            "term": "elevated",
+            "variable": "activity"
+          }
+        ],
+        "method": "adaptive-simpson",
+        "profile_id": "relative-market-stress-v1",
+        "rules": [
+          {
+            "antecedent_grade": 0.3792094679613154,
+            "consequent": "calm",
+            "firing_strength": 0.3792094679613154,
+            "name": "both-ordinary",
+            "weight": 1.0
+          },
+          {
+            "antecedent_grade": 0.6207905320386846,
+            "consequent": "watch",
+            "firing_strength": 0.6207905320386846,
+            "name": "activity-elevated",
+            "weight": 1.0
+          },
+          {
+            "antecedent_grade": 0.027719796020166942,
+            "consequent": "watch",
+            "firing_strength": 0.027719796020166942,
+            "name": "volatility-elevated",
+            "weight": 1.0
+          },
+          {
+            "antecedent_grade": 0.027719796020166942,
+            "consequent": "stress",
+            "firing_strength": 0.027719796020166942,
+            "name": "both-elevated",
+            "weight": 1.0
+          }
+        ],
+        "score": 0.40980362433347783,
+        "start_utc": "2024-10-01T00:00:00+00:00",
+        "volatility_ratio": 1.027719796020167
+      },
+      {
+        "activity_ratio": 1.412106557677647,
+        "end_utc": "2024-10-02T23:00:00+00:00",
+        "fuzzyroutines_version": "2.1.0",
+        "input_grades": [
+          {
+            "coordinate": 1.3749257457977422,
+            "grade": 0.6250742542022578,
+            "term": "ordinary",
+            "variable": "volatility"
+          },
+          {
+            "coordinate": 1.3749257457977422,
+            "grade": 0.3749257457977422,
+            "term": "elevated",
+            "variable": "volatility"
+          },
+          {
+            "coordinate": 1.412106557677647,
+            "grade": 0.587893442322353,
+            "term": "ordinary",
+            "variable": "activity"
+          },
+          {
+            "coordinate": 1.412106557677647,
+            "grade": 0.41210655767764703,
+            "term": "elevated",
+            "variable": "activity"
+          }
+        ],
+        "method": "adaptive-simpson",
+        "profile_id": "relative-market-stress-v1",
+        "rules": [
+          {
+            "antecedent_grade": 0.587893442322353,
+            "consequent": "calm",
+            "firing_strength": 0.587893442322353,
+            "name": "both-ordinary",
+            "weight": 1.0
+          },
+          {
+            "antecedent_grade": 0.41210655767764703,
+            "consequent": "watch",
+            "firing_strength": 0.41210655767764703,
+            "name": "activity-elevated",
+            "weight": 1.0
+          },
+          {
+            "antecedent_grade": 0.3749257457977422,
+            "consequent": "watch",
+            "firing_strength": 0.3749257457977422,
+            "name": "volatility-elevated",
+            "weight": 1.0
+          },
+          {
+            "antecedent_grade": 0.3749257457977422,
+            "consequent": "stress",
+            "firing_strength": 0.3749257457977422,
+            "name": "both-elevated",
+            "weight": 1.0
+          }
+        ],
+        "score": 0.46646568345755746,
+        "start_utc": "2024-10-02T00:00:00+00:00",
+        "volatility_ratio": 1.3749257457977422
+      },
+      {
+        "activity_ratio": 0.8182821374756932,
+        "end_utc": "2024-10-03T23:00:00+00:00",
+        "fuzzyroutines_version": "2.1.0",
+        "input_grades": [
+          {
+            "coordinate": 1.006587755133395,
+            "grade": 0.993412244866605,
+            "term": "ordinary",
+            "variable": "volatility"
+          },
+          {
+            "coordinate": 1.006587755133395,
+            "grade": 0.006587755133395046,
+            "term": "elevated",
+            "variable": "volatility"
+          },
+          {
+            "coordinate": 0.8182821374756932,
+            "grade": 1.0,
+            "term": "ordinary",
+            "variable": "activity"
+          },
+          {
+            "coordinate": 0.8182821374756932,
+            "grade": 0.0,
+            "term": "elevated",
+            "variable": "activity"
+          }
+        ],
+        "method": "adaptive-simpson",
+        "profile_id": "relative-market-stress-v1",
+        "rules": [
+          {
+            "antecedent_grade": 0.993412244866605,
+            "consequent": "calm",
+            "firing_strength": 0.993412244866605,
+            "name": "both-ordinary",
+            "weight": 1.0
+          },
+          {
+            "antecedent_grade": 0.0,
+            "consequent": "watch",
+            "firing_strength": 0.0,
+            "name": "activity-elevated",
+            "weight": 1.0
+          },
+          {
+            "antecedent_grade": 0.006587755133395046,
+            "consequent": "watch",
+            "firing_strength": 0.006587755133395046,
+            "name": "volatility-elevated",
+            "weight": 1.0
+          },
+          {
+            "antecedent_grade": 0.0,
+            "consequent": "stress",
+            "firing_strength": 0.0,
+            "name": "both-elevated",
+            "weight": 1.0
+          }
+        ],
+        "score": 0.2524489565123275,
+        "start_utc": "2024-10-03T00:00:00+00:00",
+        "volatility_ratio": 1.006587755133395
+      },
+      {
+        "activity_ratio": 0.8077824466414102,
+        "end_utc": "2024-10-04T23:00:00+00:00",
+        "fuzzyroutines_version": "2.1.0",
+        "input_grades": [
+          {
+            "coordinate": 0.9872450689874864,
+            "grade": 1.0,
+            "term": "ordinary",
+            "variable": "volatility"
+          },
+          {
+            "coordinate": 0.9872450689874864,
+            "grade": 0.0,
+            "term": "elevated",
+            "variable": "volatility"
+          },
+          {
+            "coordinate": 0.8077824466414102,
+            "grade": 1.0,
+            "term": "ordinary",
+            "variable": "activity"
+          },
+          {
+            "coordinate": 0.8077824466414102,
+            "grade": 0.0,
+            "term": "elevated",
+            "variable": "activity"
+          }
+        ],
+        "method": "adaptive-simpson",
+        "profile_id": "relative-market-stress-v1",
+        "rules": [
+          {
+            "antecedent_grade": 1.0,
+            "consequent": "calm",
+            "firing_strength": 1.0,
+            "name": "both-ordinary",
+            "weight": 1.0
+          },
+          {
+            "antecedent_grade": 0.0,
+            "consequent": "watch",
+            "firing_strength": 0.0,
+            "name": "activity-elevated",
+            "weight": 1.0
+          },
+          {
+            "antecedent_grade": 0.0,
+            "consequent": "watch",
+            "firing_strength": 0.0,
+            "name": "volatility-elevated",
+            "weight": 1.0
+          },
+          {
+            "antecedent_grade": 0.0,
+            "consequent": "stress",
+            "firing_strength": 0.0,
+            "name": "both-elevated",
+            "weight": 1.0
+          }
+        ],
+        "score": 0.25,
+        "start_utc": "2024-10-04T00:00:00+00:00",
+        "volatility_ratio": 0.9872450689874864
+      },
+      {
+        "activity_ratio": 0.260472231212108,
+        "end_utc": "2024-10-05T23:00:00+00:00",
+        "fuzzyroutines_version": "2.1.0",
+        "input_grades": [
+          {
+            "coordinate": 0.4162911240321671,
+            "grade": 1.0,
+            "term": "ordinary",
+            "variable": "volatility"
+          },
+          {
+            "coordinate": 0.4162911240321671,
+            "grade": 0.0,
+            "term": "elevated",
+            "variable": "volatility"
+          },
+          {
+            "coordinate": 0.260472231212108,
+            "grade": 1.0,
+            "term": "ordinary",
+            "variable": "activity"
+          },
+          {
+            "coordinate": 0.260472231212108,
+            "grade": 0.0,
+            "term": "elevated",
+            "variable": "activity"
+          }
+        ],
+        "method": "adaptive-simpson",
+        "profile_id": "relative-market-stress-v1",
+        "rules": [
+          {
+            "antecedent_grade": 1.0,
+            "consequent": "calm",
+            "firing_strength": 1.0,
+            "name": "both-ordinary",
+            "weight": 1.0
+          },
+          {
+            "antecedent_grade": 0.0,
+            "consequent": "watch",
+            "firing_strength": 0.0,
+            "name": "activity-elevated",
+            "weight": 1.0
+          },
+          {
+            "antecedent_grade": 0.0,
+            "consequent": "watch",
+            "firing_strength": 0.0,
+            "name": "volatility-elevated",
+            "weight": 1.0
+          },
+          {
+            "antecedent_grade": 0.0,
+            "consequent": "stress",
+            "firing_strength": 0.0,
+            "name": "both-elevated",
+            "weight": 1.0
+          }
+        ],
+        "score": 0.25,
+        "start_utc": "2024-10-05T00:00:00+00:00",
+        "volatility_ratio": 0.4162911240321671
+      },
+      {
+        "activity_ratio": 0.49048841340463334,
+        "end_utc": "2024-10-06T23:00:00+00:00",
+        "fuzzyroutines_version": "2.1.0",
+        "input_grades": [
+          {
+            "coordinate": 0.5256577032381229,
+            "grade": 1.0,
+            "term": "ordinary",
+            "variable": "volatility"
+          },
+          {
+            "coordinate": 0.5256577032381229,
+            "grade": 0.0,
+            "term": "elevated",
+            "variable": "volatility"
+          },
+          {
+            "coordinate": 0.49048841340463334,
+            "grade": 1.0,
+            "term": "ordinary",
+            "variable": "activity"
+          },
+          {
+            "coordinate": 0.49048841340463334,
+            "grade": 0.0,
+            "term": "elevated",
+            "variable": "activity"
+          }
+        ],
+        "method": "adaptive-simpson",
+        "profile_id": "relative-market-stress-v1",
+        "rules": [
+          {
+            "antecedent_grade": 1.0,
+            "consequent": "calm",
+            "firing_strength": 1.0,
+            "name": "both-ordinary",
+            "weight": 1.0
+          },
+          {
+            "antecedent_grade": 0.0,
+            "consequent": "watch",
+            "firing_strength": 0.0,
+            "name": "activity-elevated",
+            "weight": 1.0
+          },
+          {
+            "antecedent_grade": 0.0,
+            "consequent": "watch",
+            "firing_strength": 0.0,
+            "name": "volatility-elevated",
+            "weight": 1.0
+          },
+          {
+            "antecedent_grade": 0.0,
+            "consequent": "stress",
+            "firing_strength": 0.0,
+            "name": "both-elevated",
+            "weight": 1.0
+          }
+        ],
+        "score": 0.25,
+        "start_utc": "2024-10-06T00:00:00+00:00",
+        "volatility_ratio": 0.5256577032381229
+      },
+      {
+        "activity_ratio": 1.0515346217674093,
+        "end_utc": "2024-10-07T23:00:00+00:00",
+        "fuzzyroutines_version": "2.1.0",
+        "input_grades": [
+          {
+            "coordinate": 1.3211019399991317,
+            "grade": 0.6788980600008683,
+            "term": "ordinary",
+            "variable": "volatility"
+          },
+          {
+            "coordinate": 1.3211019399991317,
+            "grade": 0.3211019399991317,
+            "term": "elevated",
+            "variable": "volatility"
+          },
+          {
+            "coordinate": 1.0515346217674093,
+            "grade": 0.9484653782325907,
+            "term": "ordinary",
+            "variable": "activity"
+          },
+          {
+            "coordinate": 1.0515346217674093,
+            "grade": 0.051534621767409305,
+            "term": "elevated",
+            "variable": "activity"
+          }
+        ],
+        "method": "adaptive-simpson",
+        "profile_id": "relative-market-stress-v1",
+        "rules": [
+          {
+            "antecedent_grade": 0.6788980600008683,
+            "consequent": "calm",
+            "firing_strength": 0.6788980600008683,
+            "name": "both-ordinary",
+            "weight": 1.0
+          },
+          {
+            "antecedent_grade": 0.051534621767409305,
+            "consequent": "watch",
+            "firing_strength": 0.051534621767409305,
+            "name": "activity-elevated",
+            "weight": 1.0
+          },
+          {
+            "antecedent_grade": 0.3211019399991317,
+            "consequent": "watch",
+            "firing_strength": 0.3211019399991317,
+            "name": "volatility-elevated",
+            "weight": 1.0
+          },
+          {
+            "antecedent_grade": 0.051534621767409305,
+            "consequent": "stress",
+            "firing_strength": 0.051534621767409305,
+            "name": "both-elevated",
+            "weight": 1.0
+          }
+        ],
+        "score": 0.35980604660437554,
+        "start_utc": "2024-10-07T00:00:00+00:00",
+        "volatility_ratio": 1.3211019399991317
+      },
+      {
+        "activity_ratio": 0.646643242017622,
+        "end_utc": "2024-10-08T23:00:00+00:00",
+        "fuzzyroutines_version": "2.1.0",
+        "input_grades": [
+          {
+            "coordinate": 0.7573802532556204,
+            "grade": 1.0,
+            "term": "ordinary",
+            "variable": "volatility"
+          },
+          {
+            "coordinate": 0.7573802532556204,
+            "grade": 0.0,
+            "term": "elevated",
+            "variable": "volatility"
+          },
+          {
+            "coordinate": 0.646643242017622,
+            "grade": 1.0,
+            "term": "ordinary",
+            "variable": "activity"
+          },
+          {
+            "coordinate": 0.646643242017622,
+            "grade": 0.0,
+            "term": "elevated",
+            "variable": "activity"
+          }
+        ],
+        "method": "adaptive-simpson",
+        "profile_id": "relative-market-stress-v1",
+        "rules": [
+          {
+            "antecedent_grade": 1.0,
+            "consequent": "calm",
+            "firing_strength": 1.0,
+            "name": "both-ordinary",
+            "weight": 1.0
+          },
+          {
+            "antecedent_grade": 0.0,
+            "consequent": "watch",
+            "firing_strength": 0.0,
+            "name": "activity-elevated",
+            "weight": 1.0
+          },
+          {
+            "antecedent_grade": 0.0,
+            "consequent": "watch",
+            "firing_strength": 0.0,
+            "name": "volatility-elevated",
+            "weight": 1.0
+          },
+          {
+            "antecedent_grade": 0.0,
+            "consequent": "stress",
+            "firing_strength": 0.0,
+            "name": "both-elevated",
+            "weight": 1.0
+          }
+        ],
+        "score": 0.25,
+        "start_utc": "2024-10-08T00:00:00+00:00",
+        "volatility_ratio": 0.7573802532556204
+      },
+      {
+        "activity_ratio": 0.7848614564413027,
+        "end_utc": "2024-10-09T23:00:00+00:00",
+        "fuzzyroutines_version": "2.1.0",
+        "input_grades": [
+          {
+            "coordinate": 0.9169806852607614,
+            "grade": 1.0,
+            "term": "ordinary",
+            "variable": "volatility"
+          },
+          {
+            "coordinate": 0.9169806852607614,
+            "grade": 0.0,
+            "term": "elevated",
+            "variable": "volatility"
+          },
+          {
+            "coordinate": 0.7848614564413027,
+            "grade": 1.0,
+            "term": "ordinary",
+            "variable": "activity"
+          },
+          {
+            "coordinate": 0.7848614564413027,
+            "grade": 0.0,
+            "term": "elevated",
+            "variable": "activity"
+          }
+        ],
+        "method": "adaptive-simpson",
+        "profile_id": "relative-market-stress-v1",
+        "rules": [
+          {
+            "antecedent_grade": 1.0,
+            "consequent": "calm",
+            "firing_strength": 1.0,
+            "name": "both-ordinary",
+            "weight": 1.0
+          },
+          {
+            "antecedent_grade": 0.0,
+            "consequent": "watch",
+            "firing_strength": 0.0,
+            "name": "activity-elevated",
+            "weight": 1.0
+          },
+          {
+            "antecedent_grade": 0.0,
+            "consequent": "watch",
+            "firing_strength": 0.0,
+            "name": "volatility-elevated",
+            "weight": 1.0
+          },
+          {
+            "antecedent_grade": 0.0,
+            "consequent": "stress",
+            "firing_strength": 0.0,
+            "name": "both-elevated",
+            "weight": 1.0
+          }
+        ],
+        "score": 0.25,
+        "start_utc": "2024-10-09T00:00:00+00:00",
+        "volatility_ratio": 0.9169806852607614
+      },
+      {
+        "activity_ratio": 1.0423930783838322,
+        "end_utc": "2024-10-10T23:00:00+00:00",
+        "fuzzyroutines_version": "2.1.0",
+        "input_grades": [
+          {
+            "coordinate": 0.9182788322761499,
+            "grade": 1.0,
+            "term": "ordinary",
+            "variable": "volatility"
+          },
+          {
+            "coordinate": 0.9182788322761499,
+            "grade": 0.0,
+            "term": "elevated",
+            "variable": "volatility"
+          },
+          {
+            "coordinate": 1.0423930783838322,
+            "grade": 0.9576069216161678,
+            "term": "ordinary",
+            "variable": "activity"
+          },
+          {
+            "coordinate": 1.0423930783838322,
+            "grade": 0.04239307838383222,
+            "term": "elevated",
+            "variable": "activity"
+          }
+        ],
+        "method": "adaptive-simpson",
+        "profile_id": "relative-market-stress-v1",
+        "rules": [
+          {
+            "antecedent_grade": 0.9576069216161678,
+            "consequent": "calm",
+            "firing_strength": 0.9576069216161678,
+            "name": "both-ordinary",
+            "weight": 1.0
+          },
+          {
+            "antecedent_grade": 0.04239307838383222,
+            "consequent": "watch",
+            "firing_strength": 0.04239307838383222,
+            "name": "activity-elevated",
+            "weight": 1.0
+          },
+          {
+            "antecedent_grade": 0.0,
+            "consequent": "watch",
+            "firing_strength": 0.0,
+            "name": "volatility-elevated",
+            "weight": 1.0
+          },
+          {
+            "antecedent_grade": 0.0,
+            "consequent": "stress",
+            "firing_strength": 0.0,
+            "name": "both-elevated",
+            "weight": 1.0
+          }
+        ],
+        "score": 0.26506132943301275,
+        "start_utc": "2024-10-10T00:00:00+00:00",
+        "volatility_ratio": 0.9182788322761499
+      },
+      {
+        "activity_ratio": 0.9168171586668082,
+        "end_utc": "2024-10-11T23:00:00+00:00",
+        "fuzzyroutines_version": "2.1.0",
+        "input_grades": [
+          {
+            "coordinate": 0.8091537042216917,
+            "grade": 1.0,
+            "term": "ordinary",
+            "variable": "volatility"
+          },
+          {
+            "coordinate": 0.8091537042216917,
+            "grade": 0.0,
+            "term": "elevated",
+            "variable": "volatility"
+          },
+          {
+            "coordinate": 0.9168171586668082,
+            "grade": 1.0,
+            "term": "ordinary",
+            "variable": "activity"
+          },
+          {
+            "coordinate": 0.9168171586668082,
+            "grade": 0.0,
+            "term": "elevated",
+            "variable": "activity"
+          }
+        ],
+        "method": "adaptive-simpson",
+        "profile_id": "relative-market-stress-v1",
+        "rules": [
+          {
+            "antecedent_grade": 1.0,
+            "consequent": "calm",
+            "firing_strength": 1.0,
+            "name": "both-ordinary",
+            "weight": 1.0
+          },
+          {
+            "antecedent_grade": 0.0,
+            "consequent": "watch",
+            "firing_strength": 0.0,
+            "name": "activity-elevated",
+            "weight": 1.0
+          },
+          {
+            "antecedent_grade": 0.0,
+            "consequent": "watch",
+            "firing_strength": 0.0,
+            "name": "volatility-elevated",
+            "weight": 1.0
+          },
+          {
+            "antecedent_grade": 0.0,
+            "consequent": "stress",
+            "firing_strength": 0.0,
+            "name": "both-elevated",
+            "weight": 1.0
+          }
+        ],
+        "score": 0.25,
+        "start_utc": "2024-10-11T00:00:00+00:00",
+        "volatility_ratio": 0.8091537042216917
+      },
+      {
+        "activity_ratio": 0.397202859600476,
+        "end_utc": "2024-10-12T23:00:00+00:00",
+        "fuzzyroutines_version": "2.1.0",
+        "input_grades": [
+          {
+            "coordinate": 0.37784434660070826,
+            "grade": 1.0,
+            "term": "ordinary",
+            "variable": "volatility"
+          },
+          {
+            "coordinate": 0.37784434660070826,
+            "grade": 0.0,
+            "term": "elevated",
+            "variable": "volatility"
+          },
+          {
+            "coordinate": 0.397202859600476,
+            "grade": 1.0,
+            "term": "ordinary",
+            "variable": "activity"
+          },
+          {
+            "coordinate": 0.397202859600476,
+            "grade": 0.0,
+            "term": "elevated",
+            "variable": "activity"
+          }
+        ],
+        "method": "adaptive-simpson",
+        "profile_id": "relative-market-stress-v1",
+        "rules": [
+          {
+            "antecedent_grade": 1.0,
+            "consequent": "calm",
+            "firing_strength": 1.0,
+            "name": "both-ordinary",
+            "weight": 1.0
+          },
+          {
+            "antecedent_grade": 0.0,
+            "consequent": "watch",
+            "firing_strength": 0.0,
+            "name": "activity-elevated",
+            "weight": 1.0
+          },
+          {
+            "antecedent_grade": 0.0,
+            "consequent": "watch",
+            "firing_strength": 0.0,
+            "name": "volatility-elevated",
+            "weight": 1.0
+          },
+          {
+            "antecedent_grade": 0.0,
+            "consequent": "stress",
+            "firing_strength": 0.0,
+            "name": "both-elevated",
+            "weight": 1.0
+          }
+        ],
+        "score": 0.25,
+        "start_utc": "2024-10-12T00:00:00+00:00",
+        "volatility_ratio": 0.37784434660070826
+      },
+      {
+        "activity_ratio": 0.37836101137099565,
+        "end_utc": "2024-10-13T23:00:00+00:00",
+        "fuzzyroutines_version": "2.1.0",
+        "input_grades": [
+          {
+            "coordinate": 0.5732103805104508,
+            "grade": 1.0,
+            "term": "ordinary",
+            "variable": "volatility"
+          },
+          {
+            "coordinate": 0.5732103805104508,
+            "grade": 0.0,
+            "term": "elevated",
+            "variable": "volatility"
+          },
+          {
+            "coordinate": 0.37836101137099565,
+            "grade": 1.0,
+            "term": "ordinary",
+            "variable": "activity"
+          },
+          {
+            "coordinate": 0.37836101137099565,
+            "grade": 0.0,
+            "term": "elevated",
+            "variable": "activity"
+          }
+        ],
+        "method": "adaptive-simpson",
+        "profile_id": "relative-market-stress-v1",
+        "rules": [
+          {
+            "antecedent_grade": 1.0,
+            "consequent": "calm",
+            "firing_strength": 1.0,
+            "name": "both-ordinary",
+            "weight": 1.0
+          },
+          {
+            "antecedent_grade": 0.0,
+            "consequent": "watch",
+            "firing_strength": 0.0,
+            "name": "activity-elevated",
+            "weight": 1.0
+          },
+          {
+            "antecedent_grade": 0.0,
+            "consequent": "watch",
+            "firing_strength": 0.0,
+            "name": "volatility-elevated",
+            "weight": 1.0
+          },
+          {
+            "antecedent_grade": 0.0,
+            "consequent": "stress",
+            "firing_strength": 0.0,
+            "name": "both-elevated",
+            "weight": 1.0
+          }
+        ],
+        "score": 0.25,
+        "start_utc": "2024-10-13T00:00:00+00:00",
+        "volatility_ratio": 0.5732103805104508
+      },
+      {
+        "activity_ratio": 1.384686274200626,
+        "end_utc": "2024-10-14T23:00:00+00:00",
+        "fuzzyroutines_version": "2.1.0",
+        "input_grades": [
+          {
+            "coordinate": 1.4059041954046656,
+            "grade": 0.5940958045953344,
+            "term": "ordinary",
+            "variable": "volatility"
+          },
+          {
+            "coordinate": 1.4059041954046656,
+            "grade": 0.4059041954046656,
+            "term": "elevated",
+            "variable": "volatility"
+          },
+          {
+            "coordinate": 1.384686274200626,
+            "grade": 0.6153137257993739,
+            "term": "ordinary",
+            "variable": "activity"
+          },
+          {
+            "coordinate": 1.384686274200626,
+            "grade": 0.38468627420062607,
+            "term": "elevated",
+            "variable": "activity"
+          }
+        ],
+        "method": "adaptive-simpson",
+        "profile_id": "relative-market-stress-v1",
+        "rules": [
+          {
+            "antecedent_grade": 0.5940958045953344,
+            "consequent": "calm",
+            "firing_strength": 0.5940958045953344,
+            "name": "both-ordinary",
+            "weight": 1.0
+          },
+          {
+            "antecedent_grade": 0.38468627420062607,
+            "consequent": "watch",
+            "firing_strength": 0.38468627420062607,
+            "name": "activity-elevated",
+            "weight": 1.0
+          },
+          {
+            "antecedent_grade": 0.4059041954046656,
+            "consequent": "watch",
+            "firing_strength": 0.4059041954046656,
+            "name": "volatility-elevated",
+            "weight": 1.0
+          },
+          {
+            "antecedent_grade": 0.38468627420062607,
+            "consequent": "stress",
+            "firing_strength": 0.38468627420062607,
+            "name": "both-elevated",
+            "weight": 1.0
+          }
+        ],
+        "score": 0.46745802843970025,
+        "start_utc": "2024-10-14T00:00:00+00:00",
+        "volatility_ratio": 1.4059041954046656
+      },
+      {
+        "activity_ratio": 1.4418039120019244,
+        "end_utc": "2024-10-15T23:00:00+00:00",
+        "fuzzyroutines_version": "2.1.0",
+        "input_grades": [
+          {
+            "coordinate": 2.0,
+            "grade": 0.0,
+            "term": "ordinary",
+            "variable": "volatility"
+          },
+          {
+            "coordinate": 2.0,
+            "grade": 1.0,
+            "term": "elevated",
+            "variable": "volatility"
+          },
+          {
+            "coordinate": 1.4418039120019244,
+            "grade": 0.5581960879980756,
+            "term": "ordinary",
+            "variable": "activity"
+          },
+          {
+            "coordinate": 1.4418039120019244,
+            "grade": 0.44180391200192437,
+            "term": "elevated",
+            "variable": "activity"
+          }
+        ],
+        "method": "adaptive-simpson",
+        "profile_id": "relative-market-stress-v1",
+        "rules": [
+          {
+            "antecedent_grade": 0.0,
+            "consequent": "calm",
+            "firing_strength": 0.0,
+            "name": "both-ordinary",
+            "weight": 1.0
+          },
+          {
+            "antecedent_grade": 0.0,
+            "consequent": "watch",
+            "firing_strength": 0.0,
+            "name": "activity-elevated",
+            "weight": 1.0
+          },
+          {
+            "antecedent_grade": 0.5581960879980756,
+            "consequent": "watch",
+            "firing_strength": 0.5581960879980756,
+            "name": "volatility-elevated",
+            "weight": 1.0
+          },
+          {
+            "antecedent_grade": 0.44180391200192437,
+            "consequent": "stress",
+            "firing_strength": 0.44180391200192437,
+            "name": "both-elevated",
+            "weight": 1.0
+          }
+        ],
+        "score": 0.6133291611094078,
+        "start_utc": "2024-10-15T00:00:00+00:00",
+        "volatility_ratio": 2.177163439011677
+      },
+      {
+        "activity_ratio": 0.9945871335216714,
+        "end_utc": "2024-10-16T23:00:00+00:00",
+        "fuzzyroutines_version": "2.1.0",
+        "input_grades": [
+          {
+            "coordinate": 0.6728963054070541,
+            "grade": 1.0,
+            "term": "ordinary",
+            "variable": "volatility"
+          },
+          {
+            "coordinate": 0.6728963054070541,
+            "grade": 0.0,
+            "term": "elevated",
+            "variable": "volatility"
+          },
+          {
+            "coordinate": 0.9945871335216714,
+            "grade": 1.0,
+            "term": "ordinary",
+            "variable": "activity"
+          },
+          {
+            "coordinate": 0.9945871335216714,
+            "grade": 0.0,
+            "term": "elevated",
+            "variable": "activity"
+          }
+        ],
+        "method": "adaptive-simpson",
+        "profile_id": "relative-market-stress-v1",
+        "rules": [
+          {
+            "antecedent_grade": 1.0,
+            "consequent": "calm",
+            "firing_strength": 1.0,
+            "name": "both-ordinary",
+            "weight": 1.0
+          },
+          {
+            "antecedent_grade": 0.0,
+            "consequent": "watch",
+            "firing_strength": 0.0,
+            "name": "activity-elevated",
+            "weight": 1.0
+          },
+          {
+            "antecedent_grade": 0.0,
+            "consequent": "watch",
+            "firing_strength": 0.0,
+            "name": "volatility-elevated",
+            "weight": 1.0
+          },
+          {
+            "antecedent_grade": 0.0,
+            "consequent": "stress",
+            "firing_strength": 0.0,
+            "name": "both-elevated",
+            "weight": 1.0
+          }
+        ],
+        "score": 0.25,
+        "start_utc": "2024-10-16T00:00:00+00:00",
+        "volatility_ratio": 0.6728963054070541
+      },
+      {
+        "activity_ratio": 0.7520236875409546,
+        "end_utc": "2024-10-17T23:00:00+00:00",
+        "fuzzyroutines_version": "2.1.0",
+        "input_grades": [
+          {
+            "coordinate": 0.7523129133022893,
+            "grade": 1.0,
+            "term": "ordinary",
+            "variable": "volatility"
+          },
+          {
+            "coordinate": 0.7523129133022893,
+            "grade": 0.0,
+            "term": "elevated",
+            "variable": "volatility"
+          },
+          {
+            "coordinate": 0.7520236875409546,
+            "grade": 1.0,
+            "term": "ordinary",
+            "variable": "activity"
+          },
+          {
+            "coordinate": 0.7520236875409546,
+            "grade": 0.0,
+            "term": "elevated",
+            "variable": "activity"
+          }
+        ],
+        "method": "adaptive-simpson",
+        "profile_id": "relative-market-stress-v1",
+        "rules": [
+          {
+            "antecedent_grade": 1.0,
+            "consequent": "calm",
+            "firing_strength": 1.0,
+            "name": "both-ordinary",
+            "weight": 1.0
+          },
+          {
+            "antecedent_grade": 0.0,
+            "consequent": "watch",
+            "firing_strength": 0.0,
+            "name": "activity-elevated",
+            "weight": 1.0
+          },
+          {
+            "antecedent_grade": 0.0,
+            "consequent": "watch",
+            "firing_strength": 0.0,
+            "name": "volatility-elevated",
+            "weight": 1.0
+          },
+          {
+            "antecedent_grade": 0.0,
+            "consequent": "stress",
+            "firing_strength": 0.0,
+            "name": "both-elevated",
+            "weight": 1.0
+          }
+        ],
+        "score": 0.25,
+        "start_utc": "2024-10-17T00:00:00+00:00",
+        "volatility_ratio": 0.7523129133022893
+      },
+      {
+        "activity_ratio": 0.8308683236042795,
+        "end_utc": "2024-10-18T23:00:00+00:00",
+        "fuzzyroutines_version": "2.1.0",
+        "input_grades": [
+          {
+            "coordinate": 0.8894670967902741,
+            "grade": 1.0,
+            "term": "ordinary",
+            "variable": "volatility"
+          },
+          {
+            "coordinate": 0.8894670967902741,
+            "grade": 0.0,
+            "term": "elevated",
+            "variable": "volatility"
+          },
+          {
+            "coordinate": 0.8308683236042795,
+            "grade": 1.0,
+            "term": "ordinary",
+            "variable": "activity"
+          },
+          {
+            "coordinate": 0.8308683236042795,
+            "grade": 0.0,
+            "term": "elevated",
+            "variable": "activity"
+          }
+        ],
+        "method": "adaptive-simpson",
+        "profile_id": "relative-market-stress-v1",
+        "rules": [
+          {
+            "antecedent_grade": 1.0,
+            "consequent": "calm",
+            "firing_strength": 1.0,
+            "name": "both-ordinary",
+            "weight": 1.0
+          },
+          {
+            "antecedent_grade": 0.0,
+            "consequent": "watch",
+            "firing_strength": 0.0,
+            "name": "activity-elevated",
+            "weight": 1.0
+          },
+          {
+            "antecedent_grade": 0.0,
+            "consequent": "watch",
+            "firing_strength": 0.0,
+            "name": "volatility-elevated",
+            "weight": 1.0
+          },
+          {
+            "antecedent_grade": 0.0,
+            "consequent": "stress",
+            "firing_strength": 0.0,
+            "name": "both-elevated",
+            "weight": 1.0
+          }
+        ],
+        "score": 0.25,
+        "start_utc": "2024-10-18T00:00:00+00:00",
+        "volatility_ratio": 0.8894670967902741
+      },
+      {
+        "activity_ratio": 0.2403467626683139,
+        "end_utc": "2024-10-19T23:00:00+00:00",
+        "fuzzyroutines_version": "2.1.0",
+        "input_grades": [
+          {
+            "coordinate": 0.29005060786586195,
+            "grade": 1.0,
+            "term": "ordinary",
+            "variable": "volatility"
+          },
+          {
+            "coordinate": 0.29005060786586195,
+            "grade": 0.0,
+            "term": "elevated",
+            "variable": "volatility"
+          },
+          {
+            "coordinate": 0.2403467626683139,
+            "grade": 1.0,
+            "term": "ordinary",
+            "variable": "activity"
+          },
+          {
+            "coordinate": 0.2403467626683139,
+            "grade": 0.0,
+            "term": "elevated",
+            "variable": "activity"
+          }
+        ],
+        "method": "adaptive-simpson",
+        "profile_id": "relative-market-stress-v1",
+        "rules": [
+          {
+            "antecedent_grade": 1.0,
+            "consequent": "calm",
+            "firing_strength": 1.0,
+            "name": "both-ordinary",
+            "weight": 1.0
+          },
+          {
+            "antecedent_grade": 0.0,
+            "consequent": "watch",
+            "firing_strength": 0.0,
+            "name": "activity-elevated",
+            "weight": 1.0
+          },
+          {
+            "antecedent_grade": 0.0,
+            "consequent": "watch",
+            "firing_strength": 0.0,
+            "name": "volatility-elevated",
+            "weight": 1.0
+          },
+          {
+            "antecedent_grade": 0.0,
+            "consequent": "stress",
+            "firing_strength": 0.0,
+            "name": "both-elevated",
+            "weight": 1.0
+          }
+        ],
+        "score": 0.25,
+        "start_utc": "2024-10-19T00:00:00+00:00",
+        "volatility_ratio": 0.29005060786586195
+      },
+      {
+        "activity_ratio": 0.3510987120368394,
+        "end_utc": "2024-10-20T23:00:00+00:00",
+        "fuzzyroutines_version": "2.1.0",
+        "input_grades": [
+          {
+            "coordinate": 0.37896554142031247,
+            "grade": 1.0,
+            "term": "ordinary",
+            "variable": "volatility"
+          },
+          {
+            "coordinate": 0.37896554142031247,
+            "grade": 0.0,
+            "term": "elevated",
+            "variable": "volatility"
+          },
+          {
+            "coordinate": 0.3510987120368394,
+            "grade": 1.0,
+            "term": "ordinary",
+            "variable": "activity"
+          },
+          {
+            "coordinate": 0.3510987120368394,
+            "grade": 0.0,
+            "term": "elevated",
+            "variable": "activity"
+          }
+        ],
+        "method": "adaptive-simpson",
+        "profile_id": "relative-market-stress-v1",
+        "rules": [
+          {
+            "antecedent_grade": 1.0,
+            "consequent": "calm",
+            "firing_strength": 1.0,
+            "name": "both-ordinary",
+            "weight": 1.0
+          },
+          {
+            "antecedent_grade": 0.0,
+            "consequent": "watch",
+            "firing_strength": 0.0,
+            "name": "activity-elevated",
+            "weight": 1.0
+          },
+          {
+            "antecedent_grade": 0.0,
+            "consequent": "watch",
+            "firing_strength": 0.0,
+            "name": "volatility-elevated",
+            "weight": 1.0
+          },
+          {
+            "antecedent_grade": 0.0,
+            "consequent": "stress",
+            "firing_strength": 0.0,
+            "name": "both-elevated",
+            "weight": 1.0
+          }
+        ],
+        "score": 0.25,
+        "start_utc": "2024-10-20T00:00:00+00:00",
+        "volatility_ratio": 0.37896554142031247
+      },
+      {
+        "activity_ratio": 1.015302399325383,
+        "end_utc": "2024-10-21T23:00:00+00:00",
+        "fuzzyroutines_version": "2.1.0",
+        "input_grades": [
+          {
+            "coordinate": 0.8089740498481305,
+            "grade": 1.0,
+            "term": "ordinary",
+            "variable": "volatility"
+          },
+          {
+            "coordinate": 0.8089740498481305,
+            "grade": 0.0,
+            "term": "elevated",
+            "variable": "volatility"
+          },
+          {
+            "coordinate": 1.015302399325383,
+            "grade": 0.9846976006746171,
+            "term": "ordinary",
+            "variable": "activity"
+          },
+          {
+            "coordinate": 1.015302399325383,
+            "grade": 0.01530239932538291,
+            "term": "elevated",
+            "variable": "activity"
+          }
+        ],
+        "method": "adaptive-simpson",
+        "profile_id": "relative-market-stress-v1",
+        "rules": [
+          {
+            "antecedent_grade": 0.9846976006746171,
+            "consequent": "calm",
+            "firing_strength": 0.9846976006746171,
+            "name": "both-ordinary",
+            "weight": 1.0
+          },
+          {
+            "antecedent_grade": 0.01530239932538291,
+            "consequent": "watch",
+            "firing_strength": 0.01530239932538291,
+            "name": "activity-elevated",
+            "weight": 1.0
+          },
+          {
+            "antecedent_grade": 0.0,
+            "consequent": "watch",
+            "firing_strength": 0.0,
+            "name": "volatility-elevated",
+            "weight": 1.0
+          },
+          {
+            "antecedent_grade": 0.0,
+            "consequent": "stress",
+            "firing_strength": 0.0,
+            "name": "both-elevated",
+            "weight": 1.0
+          }
+        ],
+        "score": 0.2556243798545442,
+        "start_utc": "2024-10-21T00:00:00+00:00",
+        "volatility_ratio": 0.8089740498481305
+      },
+      {
+        "activity_ratio": 0.9423946720346482,
+        "end_utc": "2024-10-22T23:00:00+00:00",
+        "fuzzyroutines_version": "2.1.0",
+        "input_grades": [
+          {
+            "coordinate": 0.7831165398893268,
+            "grade": 1.0,
+            "term": "ordinary",
+            "variable": "volatility"
+          },
+          {
+            "coordinate": 0.7831165398893268,
+            "grade": 0.0,
+            "term": "elevated",
+            "variable": "volatility"
+          },
+          {
+            "coordinate": 0.9423946720346482,
+            "grade": 1.0,
+            "term": "ordinary",
+            "variable": "activity"
+          },
+          {
+            "coordinate": 0.9423946720346482,
+            "grade": 0.0,
+            "term": "elevated",
+            "variable": "activity"
+          }
+        ],
+        "method": "adaptive-simpson",
+        "profile_id": "relative-market-stress-v1",
+        "rules": [
+          {
+            "antecedent_grade": 1.0,
+            "consequent": "calm",
+            "firing_strength": 1.0,
+            "name": "both-ordinary",
+            "weight": 1.0
+          },
+          {
+            "antecedent_grade": 0.0,
+            "consequent": "watch",
+            "firing_strength": 0.0,
+            "name": "activity-elevated",
+            "weight": 1.0
+          },
+          {
+            "antecedent_grade": 0.0,
+            "consequent": "watch",
+            "firing_strength": 0.0,
+            "name": "volatility-elevated",
+            "weight": 1.0
+          },
+          {
+            "antecedent_grade": 0.0,
+            "consequent": "stress",
+            "firing_strength": 0.0,
+            "name": "both-elevated",
+            "weight": 1.0
+          }
+        ],
+        "score": 0.25,
+        "start_utc": "2024-10-22T00:00:00+00:00",
+        "volatility_ratio": 0.7831165398893268
+      },
+      {
+        "activity_ratio": 1.1167452339855617,
+        "end_utc": "2024-10-23T23:00:00+00:00",
+        "fuzzyroutines_version": "2.1.0",
+        "input_grades": [
+          {
+            "coordinate": 0.7238902858614005,
+            "grade": 1.0,
+            "term": "ordinary",
+            "variable": "volatility"
+          },
+          {
+            "coordinate": 0.7238902858614005,
+            "grade": 0.0,
+            "term": "elevated",
+            "variable": "volatility"
+          },
+          {
+            "coordinate": 1.1167452339855617,
+            "grade": 0.8832547660144383,
+            "term": "ordinary",
+            "variable": "activity"
+          },
+          {
+            "coordinate": 1.1167452339855617,
+            "grade": 0.11674523398556169,
+            "term": "elevated",
+            "variable": "activity"
+          }
+        ],
+        "method": "adaptive-simpson",
+        "profile_id": "relative-market-stress-v1",
+        "rules": [
+          {
+            "antecedent_grade": 0.8832547660144383,
+            "consequent": "calm",
+            "firing_strength": 0.8832547660144383,
+            "name": "both-ordinary",
+            "weight": 1.0
+          },
+          {
+            "antecedent_grade": 0.11674523398556169,
+            "consequent": "watch",
+            "firing_strength": 0.11674523398556169,
+            "name": "activity-elevated",
+            "weight": 1.0
+          },
+          {
+            "antecedent_grade": 0.0,
+            "consequent": "watch",
+            "firing_strength": 0.0,
+            "name": "volatility-elevated",
+            "weight": 1.0
+          },
+          {
+            "antecedent_grade": 0.0,
+            "consequent": "stress",
+            "firing_strength": 0.0,
+            "name": "both-elevated",
+            "weight": 1.0
+          }
+        ],
+        "score": 0.28814267017312306,
+        "start_utc": "2024-10-23T00:00:00+00:00",
+        "volatility_ratio": 0.7238902858614005
+      },
+      {
+        "activity_ratio": 1.23969373041612,
+        "end_utc": "2024-10-24T23:00:00+00:00",
+        "fuzzyroutines_version": "2.1.0",
+        "input_grades": [
+          {
+            "coordinate": 0.6121325274791214,
+            "grade": 1.0,
+            "term": "ordinary",
+            "variable": "volatility"
+          },
+          {
+            "coordinate": 0.6121325274791214,
+            "grade": 0.0,
+            "term": "elevated",
+            "variable": "volatility"
+          },
+          {
+            "coordinate": 1.23969373041612,
+            "grade": 0.76030626958388,
+            "term": "ordinary",
+            "variable": "activity"
+          },
+          {
+            "coordinate": 1.23969373041612,
+            "grade": 0.23969373041611997,
+            "term": "elevated",
+            "variable": "activity"
+          }
+        ],
+        "method": "adaptive-simpson",
+        "profile_id": "relative-market-stress-v1",
+        "rules": [
+          {
+            "antecedent_grade": 0.76030626958388,
+            "consequent": "calm",
+            "firing_strength": 0.76030626958388,
+            "name": "both-ordinary",
+            "weight": 1.0
+          },
+          {
+            "antecedent_grade": 0.23969373041611997,
+            "consequent": "watch",
+            "firing_strength": 0.23969373041611997,
+            "name": "activity-elevated",
+            "weight": 1.0
+          },
+          {
+            "antecedent_grade": 0.0,
+            "consequent": "watch",
+            "firing_strength": 0.0,
+            "name": "volatility-elevated",
+            "weight": 1.0
+          },
+          {
+            "antecedent_grade": 0.0,
+            "consequent": "stress",
+            "firing_strength": 0.0,
+            "name": "both-elevated",
+            "weight": 1.0
+          }
+        ],
+        "score": 0.3199548891505779,
+        "start_utc": "2024-10-24T00:00:00+00:00",
+        "volatility_ratio": 0.6121325274791214
+      },
+      {
+        "activity_ratio": 1.581884597196412,
+        "end_utc": "2024-10-25T23:00:00+00:00",
+        "fuzzyroutines_version": "2.1.0",
+        "input_grades": [
+          {
+            "coordinate": 0.9327164570625993,
+            "grade": 1.0,
+            "term": "ordinary",
+            "variable": "volatility"
+          },
+          {
+            "coordinate": 0.9327164570625993,
+            "grade": 0.0,
+            "term": "elevated",
+            "variable": "volatility"
+          },
+          {
+            "coordinate": 1.581884597196412,
+            "grade": 0.41811540280358805,
+            "term": "ordinary",
+            "variable": "activity"
+          },
+          {
+            "coordinate": 1.581884597196412,
+            "grade": 0.581884597196412,
+            "term": "elevated",
+            "variable": "activity"
+          }
+        ],
+        "method": "adaptive-simpson",
+        "profile_id": "relative-market-stress-v1",
+        "rules": [
+          {
+            "antecedent_grade": 0.41811540280358805,
+            "consequent": "calm",
+            "firing_strength": 0.41811540280358805,
+            "name": "both-ordinary",
+            "weight": 1.0
+          },
+          {
+            "antecedent_grade": 0.581884597196412,
+            "consequent": "watch",
+            "firing_strength": 0.581884597196412,
+            "name": "activity-elevated",
+            "weight": 1.0
+          },
+          {
+            "antecedent_grade": 0.0,
+            "consequent": "watch",
+            "firing_strength": 0.0,
+            "name": "volatility-elevated",
+            "weight": 1.0
+          },
+          {
+            "antecedent_grade": 0.0,
+            "consequent": "stress",
+            "firing_strength": 0.0,
+            "name": "both-elevated",
+            "weight": 1.0
+          }
+        ],
+        "score": 0.3914652401391645,
+        "start_utc": "2024-10-25T00:00:00+00:00",
+        "volatility_ratio": 0.9327164570625993
+      },
+      {
+        "activity_ratio": 0.2834528544565289,
+        "end_utc": "2024-10-26T23:00:00+00:00",
+        "fuzzyroutines_version": "2.1.0",
+        "input_grades": [
+          {
+            "coordinate": 0.30378266468091003,
+            "grade": 1.0,
+            "term": "ordinary",
+            "variable": "volatility"
+          },
+          {
+            "coordinate": 0.30378266468091003,
+            "grade": 0.0,
+            "term": "elevated",
+            "variable": "volatility"
+          },
+          {
+            "coordinate": 0.2834528544565289,
+            "grade": 1.0,
+            "term": "ordinary",
+            "variable": "activity"
+          },
+          {
+            "coordinate": 0.2834528544565289,
+            "grade": 0.0,
+            "term": "elevated",
+            "variable": "activity"
+          }
+        ],
+        "method": "adaptive-simpson",
+        "profile_id": "relative-market-stress-v1",
+        "rules": [
+          {
+            "antecedent_grade": 1.0,
+            "consequent": "calm",
+            "firing_strength": 1.0,
+            "name": "both-ordinary",
+            "weight": 1.0
+          },
+          {
+            "antecedent_grade": 0.0,
+            "consequent": "watch",
+            "firing_strength": 0.0,
+            "name": "activity-elevated",
+            "weight": 1.0
+          },
+          {
+            "antecedent_grade": 0.0,
+            "consequent": "watch",
+            "firing_strength": 0.0,
+            "name": "volatility-elevated",
+            "weight": 1.0
+          },
+          {
+            "antecedent_grade": 0.0,
+            "consequent": "stress",
+            "firing_strength": 0.0,
+            "name": "both-elevated",
+            "weight": 1.0
+          }
+        ],
+        "score": 0.25,
+        "start_utc": "2024-10-26T00:00:00+00:00",
+        "volatility_ratio": 0.30378266468091003
+      },
+      {
+        "activity_ratio": 0.42864928690723764,
+        "end_utc": "2024-10-27T23:00:00+00:00",
+        "fuzzyroutines_version": "2.1.0",
+        "input_grades": [
+          {
+            "coordinate": 0.40225203643252216,
+            "grade": 1.0,
+            "term": "ordinary",
+            "variable": "volatility"
+          },
+          {
+            "coordinate": 0.40225203643252216,
+            "grade": 0.0,
+            "term": "elevated",
+            "variable": "volatility"
+          },
+          {
+            "coordinate": 0.42864928690723764,
+            "grade": 1.0,
+            "term": "ordinary",
+            "variable": "activity"
+          },
+          {
+            "coordinate": 0.42864928690723764,
+            "grade": 0.0,
+            "term": "elevated",
+            "variable": "activity"
+          }
+        ],
+        "method": "adaptive-simpson",
+        "profile_id": "relative-market-stress-v1",
+        "rules": [
+          {
+            "antecedent_grade": 1.0,
+            "consequent": "calm",
+            "firing_strength": 1.0,
+            "name": "both-ordinary",
+            "weight": 1.0
+          },
+          {
+            "antecedent_grade": 0.0,
+            "consequent": "watch",
+            "firing_strength": 0.0,
+            "name": "activity-elevated",
+            "weight": 1.0
+          },
+          {
+            "antecedent_grade": 0.0,
+            "consequent": "watch",
+            "firing_strength": 0.0,
+            "name": "volatility-elevated",
+            "weight": 1.0
+          },
+          {
+            "antecedent_grade": 0.0,
+            "consequent": "stress",
+            "firing_strength": 0.0,
+            "name": "both-elevated",
+            "weight": 1.0
+          }
+        ],
+        "score": 0.25,
+        "start_utc": "2024-10-27T00:00:00+00:00",
+        "volatility_ratio": 0.40225203643252216
+      },
+      {
+        "activity_ratio": 1.1955387830430575,
+        "end_utc": "2024-10-28T23:00:00+00:00",
+        "fuzzyroutines_version": "2.1.0",
+        "input_grades": [
+          {
+            "coordinate": 0.5437587925644439,
+            "grade": 1.0,
+            "term": "ordinary",
+            "variable": "volatility"
+          },
+          {
+            "coordinate": 0.5437587925644439,
+            "grade": 0.0,
+            "term": "elevated",
+            "variable": "volatility"
+          },
+          {
+            "coordinate": 1.1955387830430575,
+            "grade": 0.8044612169569425,
+            "term": "ordinary",
+            "variable": "activity"
+          },
+          {
+            "coordinate": 1.1955387830430575,
+            "grade": 0.1955387830430575,
+            "term": "elevated",
+            "variable": "activity"
+          }
+        ],
+        "method": "adaptive-simpson",
+        "profile_id": "relative-market-stress-v1",
+        "rules": [
+          {
+            "antecedent_grade": 0.8044612169569425,
+            "consequent": "calm",
+            "firing_strength": 0.8044612169569425,
+            "name": "both-ordinary",
+            "weight": 1.0
+          },
+          {
+            "antecedent_grade": 0.1955387830430575,
+            "consequent": "watch",
+            "firing_strength": 0.1955387830430575,
+            "name": "activity-elevated",
+            "weight": 1.0
+          },
+          {
+            "antecedent_grade": 0.0,
+            "consequent": "watch",
+            "firing_strength": 0.0,
+            "name": "volatility-elevated",
+            "weight": 1.0
+          },
+          {
+            "antecedent_grade": 0.0,
+            "consequent": "stress",
+            "firing_strength": 0.0,
+            "name": "both-elevated",
+            "weight": 1.0
+          }
+        ],
+        "score": 0.3092304650675498,
+        "start_utc": "2024-10-28T00:00:00+00:00",
+        "volatility_ratio": 0.5437587925644439
+      },
+      {
+        "activity_ratio": 2.3030070695987943,
+        "end_utc": "2024-10-29T23:00:00+00:00",
+        "fuzzyroutines_version": "2.1.0",
+        "input_grades": [
+          {
+            "coordinate": 1.0350591339840947,
+            "grade": 0.9649408660159053,
+            "term": "ordinary",
+            "variable": "volatility"
+          },
+          {
+            "coordinate": 1.0350591339840947,
+            "grade": 0.03505913398409466,
+            "term": "elevated",
+            "variable": "volatility"
+          },
+          {
+            "coordinate": 2.0,
+            "grade": 0.0,
+            "term": "ordinary",
+            "variable": "activity"
+          },
+          {
+            "coordinate": 2.0,
+            "grade": 1.0,
+            "term": "elevated",
+            "variable": "activity"
+          }
+        ],
+        "method": "adaptive-simpson",
+        "profile_id": "relative-market-stress-v1",
+        "rules": [
+          {
+            "antecedent_grade": 0.0,
+            "consequent": "calm",
+            "firing_strength": 0.0,
+            "name": "both-ordinary",
+            "weight": 1.0
+          },
+          {
+            "antecedent_grade": 0.9649408660159053,
+            "consequent": "watch",
+            "firing_strength": 0.9649408660159053,
+            "name": "activity-elevated",
+            "weight": 1.0
+          },
+          {
+            "antecedent_grade": 0.0,
+            "consequent": "watch",
+            "firing_strength": 0.0,
+            "name": "volatility-elevated",
+            "weight": 1.0
+          },
+          {
+            "antecedent_grade": 0.03505913398409466,
+            "consequent": "stress",
+            "firing_strength": 0.03505913398409466,
+            "name": "both-elevated",
+            "weight": 1.0
+          }
+        ],
+        "score": 0.5125683453796028,
+        "start_utc": "2024-10-29T00:00:00+00:00",
+        "volatility_ratio": 1.0350591339840947
+      },
+      {
+        "activity_ratio": 1.3112890952872034,
+        "end_utc": "2024-10-30T23:00:00+00:00",
+        "fuzzyroutines_version": "2.1.0",
+        "input_grades": [
+          {
+            "coordinate": 0.8994632778281304,
+            "grade": 1.0,
+            "term": "ordinary",
+            "variable": "volatility"
+          },
+          {
+            "coordinate": 0.8994632778281304,
+            "grade": 0.0,
+            "term": "elevated",
+            "variable": "volatility"
+          },
+          {
+            "coordinate": 1.3112890952872034,
+            "grade": 0.6887109047127966,
+            "term": "ordinary",
+            "variable": "activity"
+          },
+          {
+            "coordinate": 1.3112890952872034,
+            "grade": 0.3112890952872034,
+            "term": "elevated",
+            "variable": "activity"
+          }
+        ],
+        "method": "adaptive-simpson",
+        "profile_id": "relative-market-stress-v1",
+        "rules": [
+          {
+            "antecedent_grade": 0.6887109047127966,
+            "consequent": "calm",
+            "firing_strength": 0.6887109047127966,
+            "name": "both-ordinary",
+            "weight": 1.0
+          },
+          {
+            "antecedent_grade": 0.3112890952872034,
+            "consequent": "watch",
+            "firing_strength": 0.3112890952872034,
+            "name": "activity-elevated",
+            "weight": 1.0
+          },
+          {
+            "antecedent_grade": 0.0,
+            "consequent": "watch",
+            "firing_strength": 0.0,
+            "name": "volatility-elevated",
+            "weight": 1.0
+          },
+          {
+            "antecedent_grade": 0.0,
+            "consequent": "stress",
+            "firing_strength": 0.0,
+            "name": "both-elevated",
+            "weight": 1.0
+          }
+        ],
+        "score": 0.336151033583064,
+        "start_utc": "2024-10-30T00:00:00+00:00",
+        "volatility_ratio": 0.8994632778281304
+      },
+      {
+        "activity_ratio": 1.0290245550606116,
+        "end_utc": "2024-10-31T23:00:00+00:00",
+        "fuzzyroutines_version": "2.1.0",
+        "input_grades": [
+          {
+            "coordinate": 0.9075152433567955,
+            "grade": 1.0,
+            "term": "ordinary",
+            "variable": "volatility"
+          },
+          {
+            "coordinate": 0.9075152433567955,
+            "grade": 0.0,
+            "term": "elevated",
+            "variable": "volatility"
+          },
+          {
+            "coordinate": 1.0290245550606116,
+            "grade": 0.9709754449393884,
+            "term": "ordinary",
+            "variable": "activity"
+          },
+          {
+            "coordinate": 1.0290245550606116,
+            "grade": 0.029024555060611634,
+            "term": "elevated",
+            "variable": "activity"
+          }
+        ],
+        "method": "adaptive-simpson",
+        "profile_id": "relative-market-stress-v1",
+        "rules": [
+          {
+            "antecedent_grade": 0.9709754449393884,
+            "consequent": "calm",
+            "firing_strength": 0.9709754449393884,
+            "name": "both-ordinary",
+            "weight": 1.0
+          },
+          {
+            "antecedent_grade": 0.029024555060611634,
+            "consequent": "watch",
+            "firing_strength": 0.029024555060611634,
+            "name": "activity-elevated",
+            "weight": 1.0
+          },
+          {
+            "antecedent_grade": 0.0,
+            "consequent": "watch",
+            "firing_strength": 0.0,
+            "name": "volatility-elevated",
+            "weight": 1.0
+          },
+          {
+            "antecedent_grade": 0.0,
+            "consequent": "stress",
+            "firing_strength": 0.0,
+            "name": "both-elevated",
+            "weight": 1.0
+          }
+        ],
+        "score": 0.26048345885166646,
+        "start_utc": "2024-10-31T00:00:00+00:00",
+        "volatility_ratio": 0.9075152433567955
+      }
+    ]
+  },
+  "holdout": {
+    "canonical_fingerprint": "366ae14c4ea41cc934d7c626dac46e35c7fb66fd92c3cc78fc868846f384c127",
+    "end_utc_exclusive": "2024-11-01T00:00:00+00:00",
+    "rows": 744,
+    "start_utc": "2024-10-01T00:00:00+00:00"
+  },
+  "missing_archive_minute_slots": 0,
+  "quantile_levels": [
+    0.05,
+    0.5,
+    0.95
+  ],
+  "recipe": "bitstamp-btcusd-hourly-holdout-v1",
+  "recipe_sha256": "233e1e5bfa61157ed906c5e7b23bb1ed2b9d09eb15e108b86590653a0a036222",
+  "runs": [
+    {
+      "manifest": {
+        "configuration": {
+          "drift": 0.00011276947197927069,
+          "horizon": 744,
+          "initial_price": 63302.0,
+          "model": "regime_v2",
+          "price_ceiling": 1000000000000.0,
+          "price_floor": 1e-06,
+          "regime_persistence": 0.95,
+          "regime_scale": 1.0,
+          "seed": 0,
+          "shock_probability": 0.0,
+          "shock_scale": 5.0,
+          "start": "2024-10-01T00:00:00+00:00",
+          "timeframe_seconds": 3600,
+          "volatility": 0.004670841598593839,
+          "volume_base": 71.92933128570833,
+          "volume_ceiling": 1000000000000.0,
+          "volume_persistence": 0.0,
+          "volume_return_coupling": 0.0,
+          "volume_sigma": 0.0,
+          "wick_outlier_probability": 0.0,
+          "wick_outlier_scale": 5.0,
+          "wick_scale": 0.5
+        },
+        "environment": {
+          "implementation": "CPython",
+          "numpy": "2.2.6",
+          "pandas": "2.2.3",
+          "platform": "Linux-6.18.57-x86_64-with-glibc2.39",
+          "python": "3.13.17"
+        },
+        "fingerprint": "242a556c25a586e49436c3c81acf176a3a0a923df44d11128fd115b6e2d08741",
+        "library_version": "2.0.0",
+        "manifest_version": 1,
+        "metadata": {
+          "fitted_parameters": [
+            "drift",
+            "volatility",
+            "volume_base"
+          ],
+          "fixed_restrictions": {
+            "regime_scale": 1.0,
+            "shock_probability": 0.0,
+            "volume_persistence": 0.0,
+            "volume_return_coupling": 0.0,
+            "volume_sigma": 0.0,
+            "wick_outlier_probability": 0.0
+          },
+          "profile": {
+            "data_schema": "datetime:UTC-ns;OHLCV:float64/v1",
+            "drift": 0.00011276947197927069,
+            "estimator": "body-log-return-population-moments/volume-arithmetic-mean/v1",
+            "model": "regime_v2",
+            "model_version": 2,
+            "schema_version": 1,
+            "source_end": "2024-09-30T23:00:00+00:00",
+            "source_fingerprint": "05f1e1d87dfa3b14c7056797b901e639e5f82b1fa320d6df44dda47f5db4195a",
+            "source_rows": 720,
+            "source_semantics": "training-only; regular bars; candle-body returns exclude inter-bar price gaps",
+            "source_start": "2024-09-01T00:00:00+00:00",
+            "timeframe_seconds": 3600.0,
+            "volatility": 0.004670841598593839,
+            "volume_base": 71.92933128570833
+          },
+          "profile_reference": "e34ba860cfe84065248a48aa6b2bb6320b4b0d2bf7c4a1946b6d09433b7a9a99",
+          "unidentified_parameters": [
+            "regime_persistence",
+            "regime_scale",
+            "shock_probability",
+            "shock_scale",
+            "wick_scale",
+            "wick_outlier_probability",
+            "wick_outlier_scale",
+            "volume_sigma",
+            "volume_return_coupling",
+            "volume_persistence"
+          ]
+        },
+        "model": "regime_v2",
+        "rng": "python.random.Random/MT19937",
+        "scenario_fingerprint": "5c243b862b56ff28e288452532eba4fad7e2bc46c845879be624a5067b68f1cb",
+        "seed": 0
+      },
+      "metrics": [
+        {
+          "absolute_tolerance": null,
+          "difference": -2.558552325724025e-05,
+          "name": "log_return_mean",
+          "reason": null,
+          "reference": 0.00013525971242925723,
+          "synthetic": 0.00010967418917201698,
+          "within_tolerance": null
+        },
+        {
+          "absolute_tolerance": 0.0011733413842785329,
+          "difference": 0.0002515995331709023,
+          "name": "log_return_std",
+          "reason": null,
+          "reference": 0.004368032645288693,
+          "synthetic": 0.0046196321784595954,
+          "within_tolerance": true
+        },
+        {
+          "absolute_tolerance": null,
+          "difference": -0.022827724741030675,
+          "name": "body_fraction_mean",
+          "reason": null,
+          "reference": 0.4832217417959472,
+          "synthetic": 0.4603940170549165,
+          "within_tolerance": null
+        },
+        {
+          "absolute_tolerance": 17.982332821427082,
+          "difference": 4.4778727431679926,
+          "name": "volume_mean",
+          "reason": null,
+          "reference": 67.45145854254034,
+          "synthetic": 71.92933128570833,
+          "within_tolerance": true
+        },
+        {
+          "absolute_tolerance": null,
+          "difference": -0.3617142344471759,
+          "name": "squared_return_acf_lag1",
+          "reason": null,
+          "reference": 0.33447231440171,
+          "synthetic": -0.027241920045465884,
+          "within_tolerance": null
+        },
+        {
+          "absolute_tolerance": null,
+          "difference": null,
+          "name": "volume_absolute_return_correlation",
+          "reason": "Undefined statistic; inspect independent analysis reasons",
+          "reference": 0.5219057446489105,
+          "synthetic": null,
+          "within_tolerance": null
+        },
+        {
+          "absolute_tolerance": null,
+          "difference": -0.0014152366333445299,
+          "name": "maximum_drawdown",
+          "reason": null,
+          "reference": 0.07199075520019993,
+          "synthetic": 0.0705755185668554,
+          "within_tolerance": null
+        }
+      ]
+    },
+    {
+      "manifest": {
+        "configuration": {
+          "drift": 0.00011276947197927069,
+          "horizon": 744,
+          "initial_price": 63302.0,
+          "model": "regime_v2",
+          "price_ceiling": 1000000000000.0,
+          "price_floor": 1e-06,
+          "regime_persistence": 0.95,
+          "regime_scale": 1.0,
+          "seed": 1,
+          "shock_probability": 0.0,
+          "shock_scale": 5.0,
+          "start": "2024-10-01T00:00:00+00:00",
+          "timeframe_seconds": 3600,
+          "volatility": 0.004670841598593839,
+          "volume_base": 71.92933128570833,
+          "volume_ceiling": 1000000000000.0,
+          "volume_persistence": 0.0,
+          "volume_return_coupling": 0.0,
+          "volume_sigma": 0.0,
+          "wick_outlier_probability": 0.0,
+          "wick_outlier_scale": 5.0,
+          "wick_scale": 0.5
+        },
+        "environment": {
+          "implementation": "CPython",
+          "numpy": "2.2.6",
+          "pandas": "2.2.3",
+          "platform": "Linux-6.18.57-x86_64-with-glibc2.39",
+          "python": "3.13.17"
+        },
+        "fingerprint": "e31f4e32fee155fe27b047b19c908cce9078f93ebed8c1151560f1c92da702cf",
+        "library_version": "2.0.0",
+        "manifest_version": 1,
+        "metadata": {
+          "fitted_parameters": [
+            "drift",
+            "volatility",
+            "volume_base"
+          ],
+          "fixed_restrictions": {
+            "regime_scale": 1.0,
+            "shock_probability": 0.0,
+            "volume_persistence": 0.0,
+            "volume_return_coupling": 0.0,
+            "volume_sigma": 0.0,
+            "wick_outlier_probability": 0.0
+          },
+          "profile": {
+            "data_schema": "datetime:UTC-ns;OHLCV:float64/v1",
+            "drift": 0.00011276947197927069,
+            "estimator": "body-log-return-population-moments/volume-arithmetic-mean/v1",
+            "model": "regime_v2",
+            "model_version": 2,
+            "schema_version": 1,
+            "source_end": "2024-09-30T23:00:00+00:00",
+            "source_fingerprint": "05f1e1d87dfa3b14c7056797b901e639e5f82b1fa320d6df44dda47f5db4195a",
+            "source_rows": 720,
+            "source_semantics": "training-only; regular bars; candle-body returns exclude inter-bar price gaps",
+            "source_start": "2024-09-01T00:00:00+00:00",
+            "timeframe_seconds": 3600.0,
+            "volatility": 0.004670841598593839,
+            "volume_base": 71.92933128570833
+          },
+          "profile_reference": "e34ba860cfe84065248a48aa6b2bb6320b4b0d2bf7c4a1946b6d09433b7a9a99",
+          "unidentified_parameters": [
+            "regime_persistence",
+            "regime_scale",
+            "shock_probability",
+            "shock_scale",
+            "wick_scale",
+            "wick_outlier_probability",
+            "wick_outlier_scale",
+            "volume_sigma",
+            "volume_return_coupling",
+            "volume_persistence"
+          ]
+        },
+        "model": "regime_v2",
+        "rng": "python.random.Random/MT19937",
+        "scenario_fingerprint": "f6e43b0c1515fb0c3f651d9817dac35160e164f7fe0ccb96c7f568f9496c6765",
+        "seed": 1
+      },
+      "metrics": [
+        {
+          "absolute_tolerance": null,
+          "difference": 5.649689720970861e-05,
+          "name": "log_return_mean",
+          "reason": null,
+          "reference": 0.00013525971242925723,
+          "synthetic": 0.00019175660963896584,
+          "within_tolerance": null
+        },
+        {
+          "absolute_tolerance": 0.0011733413842785329,
+          "difference": 0.0005023953279391447,
+          "name": "log_return_std",
+          "reason": null,
+          "reference": 0.004368032645288693,
+          "synthetic": 0.004870427973227838,
+          "within_tolerance": true
+        },
+        {
+          "absolute_tolerance": null,
+          "difference": -0.0033502668917090306,
+          "name": "body_fraction_mean",
+          "reason": null,
+          "reference": 0.4832217417959472,
+          "synthetic": 0.47987147490423815,
+          "within_tolerance": null
+        },
+        {
+          "absolute_tolerance": 17.982332821427082,
+          "difference": 4.4778727431679926,
+          "name": "volume_mean",
+          "reason": null,
+          "reference": 67.45145854254034,
+          "synthetic": 71.92933128570833,
+          "within_tolerance": true
+        },
+        {
+          "absolute_tolerance": null,
+          "difference": -0.32682114158043707,
+          "name": "squared_return_acf_lag1",
+          "reason": null,
+          "reference": 0.33447231440171,
+          "synthetic": 0.007651172821272939,
+          "within_tolerance": null
+        },
+        {
+          "absolute_tolerance": null,
+          "difference": null,
+          "name": "volume_absolute_return_correlation",
+          "reason": "Undefined statistic; inspect independent analysis reasons",
+          "reference": 0.5219057446489105,
+          "synthetic": null,
+          "within_tolerance": null
+        },
+        {
+          "absolute_tolerance": null,
+          "difference": -0.014835553899592235,
+          "name": "maximum_drawdown",
+          "reason": null,
+          "reference": 0.07199075520019993,
+          "synthetic": 0.057155201300607694,
+          "within_tolerance": null
+        }
+      ]
+    },
+    {
+      "manifest": {
+        "configuration": {
+          "drift": 0.00011276947197927069,
+          "horizon": 744,
+          "initial_price": 63302.0,
+          "model": "regime_v2",
+          "price_ceiling": 1000000000000.0,
+          "price_floor": 1e-06,
+          "regime_persistence": 0.95,
+          "regime_scale": 1.0,
+          "seed": 2,
+          "shock_probability": 0.0,
+          "shock_scale": 5.0,
+          "start": "2024-10-01T00:00:00+00:00",
+          "timeframe_seconds": 3600,
+          "volatility": 0.004670841598593839,
+          "volume_base": 71.92933128570833,
+          "volume_ceiling": 1000000000000.0,
+          "volume_persistence": 0.0,
+          "volume_return_coupling": 0.0,
+          "volume_sigma": 0.0,
+          "wick_outlier_probability": 0.0,
+          "wick_outlier_scale": 5.0,
+          "wick_scale": 0.5
+        },
+        "environment": {
+          "implementation": "CPython",
+          "numpy": "2.2.6",
+          "pandas": "2.2.3",
+          "platform": "Linux-6.18.57-x86_64-with-glibc2.39",
+          "python": "3.13.17"
+        },
+        "fingerprint": "685a38c5307f4edbcb9d511bedc3ed358cf86e0a29eb1ab942c0c44bf1932f08",
+        "library_version": "2.0.0",
+        "manifest_version": 1,
+        "metadata": {
+          "fitted_parameters": [
+            "drift",
+            "volatility",
+            "volume_base"
+          ],
+          "fixed_restrictions": {
+            "regime_scale": 1.0,
+            "shock_probability": 0.0,
+            "volume_persistence": 0.0,
+            "volume_return_coupling": 0.0,
+            "volume_sigma": 0.0,
+            "wick_outlier_probability": 0.0
+          },
+          "profile": {
+            "data_schema": "datetime:UTC-ns;OHLCV:float64/v1",
+            "drift": 0.00011276947197927069,
+            "estimator": "body-log-return-population-moments/volume-arithmetic-mean/v1",
+            "model": "regime_v2",
+            "model_version": 2,
+            "schema_version": 1,
+            "source_end": "2024-09-30T23:00:00+00:00",
+            "source_fingerprint": "05f1e1d87dfa3b14c7056797b901e639e5f82b1fa320d6df44dda47f5db4195a",
+            "source_rows": 720,
+            "source_semantics": "training-only; regular bars; candle-body returns exclude inter-bar price gaps",
+            "source_start": "2024-09-01T00:00:00+00:00",
+            "timeframe_seconds": 3600.0,
+            "volatility": 0.004670841598593839,
+            "volume_base": 71.92933128570833
+          },
+          "profile_reference": "e34ba860cfe84065248a48aa6b2bb6320b4b0d2bf7c4a1946b6d09433b7a9a99",
+          "unidentified_parameters": [
+            "regime_persistence",
+            "regime_scale",
+            "shock_probability",
+            "shock_scale",
+            "wick_scale",
+            "wick_outlier_probability",
+            "wick_outlier_scale",
+            "volume_sigma",
+            "volume_return_coupling",
+            "volume_persistence"
+          ]
+        },
+        "model": "regime_v2",
+        "rng": "python.random.Random/MT19937",
+        "scenario_fingerprint": "6f13a27a6a53a82bda4b424a9fb60b5e651d67c96884bd8f34284032cf0b02f0",
+        "seed": 2
+      },
+      "metrics": [
+        {
+          "absolute_tolerance": null,
+          "difference": 0.00012107222246288205,
+          "name": "log_return_mean",
+          "reason": null,
+          "reference": 0.00013525971242925723,
+          "synthetic": 0.0002563319348921393,
+          "within_tolerance": null
+        },
+        {
+          "absolute_tolerance": 0.0011733413842785329,
+          "difference": 0.00018259494937210557,
+          "name": "log_return_std",
+          "reason": null,
+          "reference": 0.004368032645288693,
+          "synthetic": 0.004550627594660799,
+          "within_tolerance": true
+        },
+        {
+          "absolute_tolerance": null,
+          "difference": -0.023369430298697647,
+          "name": "body_fraction_mean",
+          "reason": null,
+          "reference": 0.4832217417959472,
+          "synthetic": 0.45985231149724953,
+          "within_tolerance": null
+        },
+        {
+          "absolute_tolerance": 17.982332821427082,
+          "difference": 4.4778727431679926,
+          "name": "volume_mean",
+          "reason": null,
+          "reference": 67.45145854254034,
+          "synthetic": 71.92933128570833,
+          "within_tolerance": true
+        },
+        {
+          "absolute_tolerance": null,
+          "difference": -0.3331969352688902,
+          "name": "squared_return_acf_lag1",
+          "reason": null,
+          "reference": 0.33447231440171,
+          "synthetic": 0.0012753791328197633,
+          "within_tolerance": null
+        },
+        {
+          "absolute_tolerance": null,
+          "difference": null,
+          "name": "volume_absolute_return_correlation",
+          "reason": "Undefined statistic; inspect independent analysis reasons",
+          "reference": 0.5219057446489105,
+          "synthetic": null,
+          "within_tolerance": null
+        },
+        {
+          "absolute_tolerance": null,
+          "difference": -0.00844599953921843,
+          "name": "maximum_drawdown",
+          "reason": null,
+          "reference": 0.07199075520019993,
+          "synthetic": 0.0635447556609815,
+          "within_tolerance": null
+        }
+      ]
+    },
+    {
+      "manifest": {
+        "configuration": {
+          "drift": 0.00011276947197927069,
+          "horizon": 744,
+          "initial_price": 63302.0,
+          "model": "regime_v2",
+          "price_ceiling": 1000000000000.0,
+          "price_floor": 1e-06,
+          "regime_persistence": 0.95,
+          "regime_scale": 1.0,
+          "seed": 3,
+          "shock_probability": 0.0,
+          "shock_scale": 5.0,
+          "start": "2024-10-01T00:00:00+00:00",
+          "timeframe_seconds": 3600,
+          "volatility": 0.004670841598593839,
+          "volume_base": 71.92933128570833,
+          "volume_ceiling": 1000000000000.0,
+          "volume_persistence": 0.0,
+          "volume_return_coupling": 0.0,
+          "volume_sigma": 0.0,
+          "wick_outlier_probability": 0.0,
+          "wick_outlier_scale": 5.0,
+          "wick_scale": 0.5
+        },
+        "environment": {
+          "implementation": "CPython",
+          "numpy": "2.2.6",
+          "pandas": "2.2.3",
+          "platform": "Linux-6.18.57-x86_64-with-glibc2.39",
+          "python": "3.13.17"
+        },
+        "fingerprint": "cd998d36f08705225ee0d121ab507a1f29fc400f4f01ec9945c7c971c1f487eb",
+        "library_version": "2.0.0",
+        "manifest_version": 1,
+        "metadata": {
+          "fitted_parameters": [
+            "drift",
+            "volatility",
+            "volume_base"
+          ],
+          "fixed_restrictions": {
+            "regime_scale": 1.0,
+            "shock_probability": 0.0,
+            "volume_persistence": 0.0,
+            "volume_return_coupling": 0.0,
+            "volume_sigma": 0.0,
+            "wick_outlier_probability": 0.0
+          },
+          "profile": {
+            "data_schema": "datetime:UTC-ns;OHLCV:float64/v1",
+            "drift": 0.00011276947197927069,
+            "estimator": "body-log-return-population-moments/volume-arithmetic-mean/v1",
+            "model": "regime_v2",
+            "model_version": 2,
+            "schema_version": 1,
+            "source_end": "2024-09-30T23:00:00+00:00",
+            "source_fingerprint": "05f1e1d87dfa3b14c7056797b901e639e5f82b1fa320d6df44dda47f5db4195a",
+            "source_rows": 720,
+            "source_semantics": "training-only; regular bars; candle-body returns exclude inter-bar price gaps",
+            "source_start": "2024-09-01T00:00:00+00:00",
+            "timeframe_seconds": 3600.0,
+            "volatility": 0.004670841598593839,
+            "volume_base": 71.92933128570833
+          },
+          "profile_reference": "e34ba860cfe84065248a48aa6b2bb6320b4b0d2bf7c4a1946b6d09433b7a9a99",
+          "unidentified_parameters": [
+            "regime_persistence",
+            "regime_scale",
+            "shock_probability",
+            "shock_scale",
+            "wick_scale",
+            "wick_outlier_probability",
+            "wick_outlier_scale",
+            "volume_sigma",
+            "volume_return_coupling",
+            "volume_persistence"
+          ]
+        },
+        "model": "regime_v2",
+        "rng": "python.random.Random/MT19937",
+        "scenario_fingerprint": "893690ba150dacbf39f9070c3d98d5273c7fb21e27bc3819ad5a951c8b9be597",
+        "seed": 3
+      },
+      "metrics": [
+        {
+          "absolute_tolerance": null,
+          "difference": -6.181437278455789e-05,
+          "name": "log_return_mean",
+          "reason": null,
+          "reference": 0.00013525971242925723,
+          "synthetic": 7.344533964469934e-05,
+          "within_tolerance": null
+        },
+        {
+          "absolute_tolerance": 0.0011733413842785329,
+          "difference": 0.0003060191122460634,
+          "name": "log_return_std",
+          "reason": null,
+          "reference": 0.004368032645288693,
+          "synthetic": 0.0046740517575347565,
+          "within_tolerance": true
+        },
+        {
+          "absolute_tolerance": null,
+          "difference": -0.020246763345527108,
+          "name": "body_fraction_mean",
+          "reason": null,
+          "reference": 0.4832217417959472,
+          "synthetic": 0.46297497845042007,
+          "within_tolerance": null
+        },
+        {
+          "absolute_tolerance": 17.982332821427082,
+          "difference": 4.4778727431679926,
+          "name": "volume_mean",
+          "reason": null,
+          "reference": 67.45145854254034,
+          "synthetic": 71.92933128570833,
+          "within_tolerance": true
+        },
+        {
+          "absolute_tolerance": null,
+          "difference": -0.296951713334725,
+          "name": "squared_return_acf_lag1",
+          "reason": null,
+          "reference": 0.33447231440171,
+          "synthetic": 0.03752060106698503,
+          "within_tolerance": null
+        },
+        {
+          "absolute_tolerance": null,
+          "difference": null,
+          "name": "volume_absolute_return_correlation",
+          "reason": "Undefined statistic; inspect independent analysis reasons",
+          "reference": 0.5219057446489105,
+          "synthetic": null,
+          "within_tolerance": null
+        },
+        {
+          "absolute_tolerance": null,
+          "difference": 0.04059518653781713,
+          "name": "maximum_drawdown",
+          "reason": null,
+          "reference": 0.07199075520019993,
+          "synthetic": 0.11258594173801706,
+          "within_tolerance": null
+        }
+      ]
+    },
+    {
+      "manifest": {
+        "configuration": {
+          "drift": 0.00011276947197927069,
+          "horizon": 744,
+          "initial_price": 63302.0,
+          "model": "regime_v2",
+          "price_ceiling": 1000000000000.0,
+          "price_floor": 1e-06,
+          "regime_persistence": 0.95,
+          "regime_scale": 1.0,
+          "seed": 4,
+          "shock_probability": 0.0,
+          "shock_scale": 5.0,
+          "start": "2024-10-01T00:00:00+00:00",
+          "timeframe_seconds": 3600,
+          "volatility": 0.004670841598593839,
+          "volume_base": 71.92933128570833,
+          "volume_ceiling": 1000000000000.0,
+          "volume_persistence": 0.0,
+          "volume_return_coupling": 0.0,
+          "volume_sigma": 0.0,
+          "wick_outlier_probability": 0.0,
+          "wick_outlier_scale": 5.0,
+          "wick_scale": 0.5
+        },
+        "environment": {
+          "implementation": "CPython",
+          "numpy": "2.2.6",
+          "pandas": "2.2.3",
+          "platform": "Linux-6.18.57-x86_64-with-glibc2.39",
+          "python": "3.13.17"
+        },
+        "fingerprint": "1491db6ee83360d7a81fcbb40dad1793f9f23d5e1914f72f42979a062cc720a1",
+        "library_version": "2.0.0",
+        "manifest_version": 1,
+        "metadata": {
+          "fitted_parameters": [
+            "drift",
+            "volatility",
+            "volume_base"
+          ],
+          "fixed_restrictions": {
+            "regime_scale": 1.0,
+            "shock_probability": 0.0,
+            "volume_persistence": 0.0,
+            "volume_return_coupling": 0.0,
+            "volume_sigma": 0.0,
+            "wick_outlier_probability": 0.0
+          },
+          "profile": {
+            "data_schema": "datetime:UTC-ns;OHLCV:float64/v1",
+            "drift": 0.00011276947197927069,
+            "estimator": "body-log-return-population-moments/volume-arithmetic-mean/v1",
+            "model": "regime_v2",
+            "model_version": 2,
+            "schema_version": 1,
+            "source_end": "2024-09-30T23:00:00+00:00",
+            "source_fingerprint": "05f1e1d87dfa3b14c7056797b901e639e5f82b1fa320d6df44dda47f5db4195a",
+            "source_rows": 720,
+            "source_semantics": "training-only; regular bars; candle-body returns exclude inter-bar price gaps",
+            "source_start": "2024-09-01T00:00:00+00:00",
+            "timeframe_seconds": 3600.0,
+            "volatility": 0.004670841598593839,
+            "volume_base": 71.92933128570833
+          },
+          "profile_reference": "e34ba860cfe84065248a48aa6b2bb6320b4b0d2bf7c4a1946b6d09433b7a9a99",
+          "unidentified_parameters": [
+            "regime_persistence",
+            "regime_scale",
+            "shock_probability",
+            "shock_scale",
+            "wick_scale",
+            "wick_outlier_probability",
+            "wick_outlier_scale",
+            "volume_sigma",
+            "volume_return_coupling",
+            "volume_persistence"
+          ]
+        },
+        "model": "regime_v2",
+        "rng": "python.random.Random/MT19937",
+        "scenario_fingerprint": "4a698cfc6dac71464e19eea50bb555689f0a78277a732d14b650a51f5212b6c5",
+        "seed": 4
+      },
+      "metrics": [
+        {
+          "absolute_tolerance": null,
+          "difference": 1.947235626313513e-05,
+          "name": "log_return_mean",
+          "reason": null,
+          "reference": 0.00013525971242925723,
+          "synthetic": 0.00015473206869239236,
+          "within_tolerance": null
+        },
+        {
+          "absolute_tolerance": 0.0011733413842785329,
+          "difference": 0.00031844455463008077,
+          "name": "log_return_std",
+          "reason": null,
+          "reference": 0.004368032645288693,
+          "synthetic": 0.004686477199918774,
+          "within_tolerance": true
+        },
+        {
+          "absolute_tolerance": null,
+          "difference": -0.017928854921875015,
+          "name": "body_fraction_mean",
+          "reason": null,
+          "reference": 0.4832217417959472,
+          "synthetic": 0.46529288687407216,
+          "within_tolerance": null
+        },
+        {
+          "absolute_tolerance": 17.982332821427082,
+          "difference": 4.4778727431679926,
+          "name": "volume_mean",
+          "reason": null,
+          "reference": 67.45145854254034,
+          "synthetic": 71.92933128570833,
+          "within_tolerance": true
+        },
+        {
+          "absolute_tolerance": null,
+          "difference": -0.32649767305239674,
+          "name": "squared_return_acf_lag1",
+          "reason": null,
+          "reference": 0.33447231440171,
+          "synthetic": 0.007974641349313244,
+          "within_tolerance": null
+        },
+        {
+          "absolute_tolerance": null,
+          "difference": null,
+          "name": "volume_absolute_return_correlation",
+          "reason": "Undefined statistic; inspect independent analysis reasons",
+          "reference": 0.5219057446489105,
+          "synthetic": null,
+          "within_tolerance": null
+        },
+        {
+          "absolute_tolerance": null,
+          "difference": 0.02333599875806125,
+          "name": "maximum_drawdown",
+          "reason": null,
+          "reference": 0.07199075520019993,
+          "synthetic": 0.09532675395826118,
+          "within_tolerance": null
+        }
+      ]
+    },
+    {
+      "manifest": {
+        "configuration": {
+          "drift": 0.00011276947197927069,
+          "horizon": 744,
+          "initial_price": 63302.0,
+          "model": "regime_v2",
+          "price_ceiling": 1000000000000.0,
+          "price_floor": 1e-06,
+          "regime_persistence": 0.95,
+          "regime_scale": 1.0,
+          "seed": 5,
+          "shock_probability": 0.0,
+          "shock_scale": 5.0,
+          "start": "2024-10-01T00:00:00+00:00",
+          "timeframe_seconds": 3600,
+          "volatility": 0.004670841598593839,
+          "volume_base": 71.92933128570833,
+          "volume_ceiling": 1000000000000.0,
+          "volume_persistence": 0.0,
+          "volume_return_coupling": 0.0,
+          "volume_sigma": 0.0,
+          "wick_outlier_probability": 0.0,
+          "wick_outlier_scale": 5.0,
+          "wick_scale": 0.5
+        },
+        "environment": {
+          "implementation": "CPython",
+          "numpy": "2.2.6",
+          "pandas": "2.2.3",
+          "platform": "Linux-6.18.57-x86_64-with-glibc2.39",
+          "python": "3.13.17"
+        },
+        "fingerprint": "327345ca8371aa9c241d1f25c13de4b29f80f104c1376bbcd4d9832a3a338cbe",
+        "library_version": "2.0.0",
+        "manifest_version": 1,
+        "metadata": {
+          "fitted_parameters": [
+            "drift",
+            "volatility",
+            "volume_base"
+          ],
+          "fixed_restrictions": {
+            "regime_scale": 1.0,
+            "shock_probability": 0.0,
+            "volume_persistence": 0.0,
+            "volume_return_coupling": 0.0,
+            "volume_sigma": 0.0,
+            "wick_outlier_probability": 0.0
+          },
+          "profile": {
+            "data_schema": "datetime:UTC-ns;OHLCV:float64/v1",
+            "drift": 0.00011276947197927069,
+            "estimator": "body-log-return-population-moments/volume-arithmetic-mean/v1",
+            "model": "regime_v2",
+            "model_version": 2,
+            "schema_version": 1,
+            "source_end": "2024-09-30T23:00:00+00:00",
+            "source_fingerprint": "05f1e1d87dfa3b14c7056797b901e639e5f82b1fa320d6df44dda47f5db4195a",
+            "source_rows": 720,
+            "source_semantics": "training-only; regular bars; candle-body returns exclude inter-bar price gaps",
+            "source_start": "2024-09-01T00:00:00+00:00",
+            "timeframe_seconds": 3600.0,
+            "volatility": 0.004670841598593839,
+            "volume_base": 71.92933128570833
+          },
+          "profile_reference": "e34ba860cfe84065248a48aa6b2bb6320b4b0d2bf7c4a1946b6d09433b7a9a99",
+          "unidentified_parameters": [
+            "regime_persistence",
+            "regime_scale",
+            "shock_probability",
+            "shock_scale",
+            "wick_scale",
+            "wick_outlier_probability",
+            "wick_outlier_scale",
+            "volume_sigma",
+            "volume_return_coupling",
+            "volume_persistence"
+          ]
+        },
+        "model": "regime_v2",
+        "rng": "python.random.Random/MT19937",
+        "scenario_fingerprint": "9455d357a96199e6304ae3363ef8fc12199194925849260667c8ba124530542b",
+        "seed": 5
+      },
+      "metrics": [
+        {
+          "absolute_tolerance": null,
+          "difference": -0.0003165837262279462,
+          "name": "log_return_mean",
+          "reason": null,
+          "reference": 0.00013525971242925723,
+          "synthetic": -0.00018132401379868896,
+          "within_tolerance": null
+        },
+        {
+          "absolute_tolerance": 0.0011733413842785329,
+          "difference": 0.00042654558618269566,
+          "name": "log_return_std",
+          "reason": null,
+          "reference": 0.004368032645288693,
+          "synthetic": 0.004794578231471389,
+          "within_tolerance": true
+        },
+        {
+          "absolute_tolerance": null,
+          "difference": -0.015991268794096958,
+          "name": "body_fraction_mean",
+          "reason": null,
+          "reference": 0.4832217417959472,
+          "synthetic": 0.4672304730018502,
+          "within_tolerance": null
+        },
+        {
+          "absolute_tolerance": 17.982332821427082,
+          "difference": 4.4778727431679926,
+          "name": "volume_mean",
+          "reason": null,
+          "reference": 67.45145854254034,
+          "synthetic": 71.92933128570833,
+          "within_tolerance": true
+        },
+        {
+          "absolute_tolerance": null,
+          "difference": -0.36546977473157616,
+          "name": "squared_return_acf_lag1",
+          "reason": null,
+          "reference": 0.33447231440171,
+          "synthetic": -0.03099746032986615,
+          "within_tolerance": null
+        },
+        {
+          "absolute_tolerance": null,
+          "difference": null,
+          "name": "volume_absolute_return_correlation",
+          "reason": "Undefined statistic; inspect independent analysis reasons",
+          "reference": 0.5219057446489105,
+          "synthetic": null,
+          "within_tolerance": null
+        },
+        {
+          "absolute_tolerance": null,
+          "difference": 0.11852236035041896,
+          "name": "maximum_drawdown",
+          "reason": null,
+          "reference": 0.07199075520019993,
+          "synthetic": 0.1905131155506189,
+          "within_tolerance": null
+        }
+      ]
+    },
+    {
+      "manifest": {
+        "configuration": {
+          "drift": 0.00011276947197927069,
+          "horizon": 744,
+          "initial_price": 63302.0,
+          "model": "regime_v2",
+          "price_ceiling": 1000000000000.0,
+          "price_floor": 1e-06,
+          "regime_persistence": 0.95,
+          "regime_scale": 1.0,
+          "seed": 6,
+          "shock_probability": 0.0,
+          "shock_scale": 5.0,
+          "start": "2024-10-01T00:00:00+00:00",
+          "timeframe_seconds": 3600,
+          "volatility": 0.004670841598593839,
+          "volume_base": 71.92933128570833,
+          "volume_ceiling": 1000000000000.0,
+          "volume_persistence": 0.0,
+          "volume_return_coupling": 0.0,
+          "volume_sigma": 0.0,
+          "wick_outlier_probability": 0.0,
+          "wick_outlier_scale": 5.0,
+          "wick_scale": 0.5
+        },
+        "environment": {
+          "implementation": "CPython",
+          "numpy": "2.2.6",
+          "pandas": "2.2.3",
+          "platform": "Linux-6.18.57-x86_64-with-glibc2.39",
+          "python": "3.13.17"
+        },
+        "fingerprint": "be9ad3a64ccf54bf046ec814b034686b8e79f810b0b9dbbe06d3740bc24a8c18",
+        "library_version": "2.0.0",
+        "manifest_version": 1,
+        "metadata": {
+          "fitted_parameters": [
+            "drift",
+            "volatility",
+            "volume_base"
+          ],
+          "fixed_restrictions": {
+            "regime_scale": 1.0,
+            "shock_probability": 0.0,
+            "volume_persistence": 0.0,
+            "volume_return_coupling": 0.0,
+            "volume_sigma": 0.0,
+            "wick_outlier_probability": 0.0
+          },
+          "profile": {
+            "data_schema": "datetime:UTC-ns;OHLCV:float64/v1",
+            "drift": 0.00011276947197927069,
+            "estimator": "body-log-return-population-moments/volume-arithmetic-mean/v1",
+            "model": "regime_v2",
+            "model_version": 2,
+            "schema_version": 1,
+            "source_end": "2024-09-30T23:00:00+00:00",
+            "source_fingerprint": "05f1e1d87dfa3b14c7056797b901e639e5f82b1fa320d6df44dda47f5db4195a",
+            "source_rows": 720,
+            "source_semantics": "training-only; regular bars; candle-body returns exclude inter-bar price gaps",
+            "source_start": "2024-09-01T00:00:00+00:00",
+            "timeframe_seconds": 3600.0,
+            "volatility": 0.004670841598593839,
+            "volume_base": 71.92933128570833
+          },
+          "profile_reference": "e34ba860cfe84065248a48aa6b2bb6320b4b0d2bf7c4a1946b6d09433b7a9a99",
+          "unidentified_parameters": [
+            "regime_persistence",
+            "regime_scale",
+            "shock_probability",
+            "shock_scale",
+            "wick_scale",
+            "wick_outlier_probability",
+            "wick_outlier_scale",
+            "volume_sigma",
+            "volume_return_coupling",
+            "volume_persistence"
+          ]
+        },
+        "model": "regime_v2",
+        "rng": "python.random.Random/MT19937",
+        "scenario_fingerprint": "0757c7c7568434c5f32e39b2cbdfbd189f38e66c70818ff7fa144cdea4d70358",
+        "seed": 6
+      },
+      "metrics": [
+        {
+          "absolute_tolerance": null,
+          "difference": 3.51981817028147e-05,
+          "name": "log_return_mean",
+          "reason": null,
+          "reference": 0.00013525971242925723,
+          "synthetic": 0.00017045789413207193,
+          "within_tolerance": null
+        },
+        {
+          "absolute_tolerance": 0.0011733413842785329,
+          "difference": 0.0003163728321886987,
+          "name": "log_return_std",
+          "reason": null,
+          "reference": 0.004368032645288693,
+          "synthetic": 0.004684405477477392,
+          "within_tolerance": true
+        },
+        {
+          "absolute_tolerance": null,
+          "difference": -0.018206531505340795,
+          "name": "body_fraction_mean",
+          "reason": null,
+          "reference": 0.4832217417959472,
+          "synthetic": 0.4650152102906064,
+          "within_tolerance": null
+        },
+        {
+          "absolute_tolerance": 17.982332821427082,
+          "difference": 4.4778727431679926,
+          "name": "volume_mean",
+          "reason": null,
+          "reference": 67.45145854254034,
+          "synthetic": 71.92933128570833,
+          "within_tolerance": true
+        },
+        {
+          "absolute_tolerance": null,
+          "difference": -0.33925243661448035,
+          "name": "squared_return_acf_lag1",
+          "reason": null,
+          "reference": 0.33447231440171,
+          "synthetic": -0.0047801222127703425,
+          "within_tolerance": null
+        },
+        {
+          "absolute_tolerance": null,
+          "difference": null,
+          "name": "volume_absolute_return_correlation",
+          "reason": "Undefined statistic; inspect independent analysis reasons",
+          "reference": 0.5219057446489105,
+          "synthetic": null,
+          "within_tolerance": null
+        },
+        {
+          "absolute_tolerance": null,
+          "difference": 0.024553697362740712,
+          "name": "maximum_drawdown",
+          "reason": null,
+          "reference": 0.07199075520019993,
+          "synthetic": 0.09654445256294064,
+          "within_tolerance": null
+        }
+      ]
+    },
+    {
+      "manifest": {
+        "configuration": {
+          "drift": 0.00011276947197927069,
+          "horizon": 744,
+          "initial_price": 63302.0,
+          "model": "regime_v2",
+          "price_ceiling": 1000000000000.0,
+          "price_floor": 1e-06,
+          "regime_persistence": 0.95,
+          "regime_scale": 1.0,
+          "seed": 7,
+          "shock_probability": 0.0,
+          "shock_scale": 5.0,
+          "start": "2024-10-01T00:00:00+00:00",
+          "timeframe_seconds": 3600,
+          "volatility": 0.004670841598593839,
+          "volume_base": 71.92933128570833,
+          "volume_ceiling": 1000000000000.0,
+          "volume_persistence": 0.0,
+          "volume_return_coupling": 0.0,
+          "volume_sigma": 0.0,
+          "wick_outlier_probability": 0.0,
+          "wick_outlier_scale": 5.0,
+          "wick_scale": 0.5
+        },
+        "environment": {
+          "implementation": "CPython",
+          "numpy": "2.2.6",
+          "pandas": "2.2.3",
+          "platform": "Linux-6.18.57-x86_64-with-glibc2.39",
+          "python": "3.13.17"
+        },
+        "fingerprint": "14a31e5147635ccde3dbed47d25a0550448799c8f39d0a6c402988264827b2dd",
+        "library_version": "2.0.0",
+        "manifest_version": 1,
+        "metadata": {
+          "fitted_parameters": [
+            "drift",
+            "volatility",
+            "volume_base"
+          ],
+          "fixed_restrictions": {
+            "regime_scale": 1.0,
+            "shock_probability": 0.0,
+            "volume_persistence": 0.0,
+            "volume_return_coupling": 0.0,
+            "volume_sigma": 0.0,
+            "wick_outlier_probability": 0.0
+          },
+          "profile": {
+            "data_schema": "datetime:UTC-ns;OHLCV:float64/v1",
+            "drift": 0.00011276947197927069,
+            "estimator": "body-log-return-population-moments/volume-arithmetic-mean/v1",
+            "model": "regime_v2",
+            "model_version": 2,
+            "schema_version": 1,
+            "source_end": "2024-09-30T23:00:00+00:00",
+            "source_fingerprint": "05f1e1d87dfa3b14c7056797b901e639e5f82b1fa320d6df44dda47f5db4195a",
+            "source_rows": 720,
+            "source_semantics": "training-only; regular bars; candle-body returns exclude inter-bar price gaps",
+            "source_start": "2024-09-01T00:00:00+00:00",
+            "timeframe_seconds": 3600.0,
+            "volatility": 0.004670841598593839,
+            "volume_base": 71.92933128570833
+          },
+          "profile_reference": "e34ba860cfe84065248a48aa6b2bb6320b4b0d2bf7c4a1946b6d09433b7a9a99",
+          "unidentified_parameters": [
+            "regime_persistence",
+            "regime_scale",
+            "shock_probability",
+            "shock_scale",
+            "wick_scale",
+            "wick_outlier_probability",
+            "wick_outlier_scale",
+            "volume_sigma",
+            "volume_return_coupling",
+            "volume_persistence"
+          ]
+        },
+        "model": "regime_v2",
+        "rng": "python.random.Random/MT19937",
+        "scenario_fingerprint": "e11ebd26dc1d460b1dea82ffba64bdf4beb7186e56ba8593bb7bd5f91cf13a9b",
+        "seed": 7
+      },
+      "metrics": [
+        {
+          "absolute_tolerance": null,
+          "difference": 0.00022667913333290914,
+          "name": "log_return_mean",
+          "reason": null,
+          "reference": 0.00013525971242925723,
+          "synthetic": 0.0003619388457621664,
+          "within_tolerance": null
+        },
+        {
+          "absolute_tolerance": 0.0011733413842785329,
+          "difference": 0.00022220039673412524,
+          "name": "log_return_std",
+          "reason": null,
+          "reference": 0.004368032645288693,
+          "synthetic": 0.004590233042022818,
+          "within_tolerance": true
+        },
+        {
+          "absolute_tolerance": null,
+          "difference": -0.015473131618495117,
+          "name": "body_fraction_mean",
+          "reason": null,
+          "reference": 0.4832217417959472,
+          "synthetic": 0.46774861017745206,
+          "within_tolerance": null
+        },
+        {
+          "absolute_tolerance": 17.982332821427082,
+          "difference": 4.4778727431679926,
+          "name": "volume_mean",
+          "reason": null,
+          "reference": 67.45145854254034,
+          "synthetic": 71.92933128570833,
+          "within_tolerance": true
+        },
+        {
+          "absolute_tolerance": null,
+          "difference": -0.37698260805671063,
+          "name": "squared_return_acf_lag1",
+          "reason": null,
+          "reference": 0.33447231440171,
+          "synthetic": -0.04251029365500065,
+          "within_tolerance": null
+        },
+        {
+          "absolute_tolerance": null,
+          "difference": null,
+          "name": "volume_absolute_return_correlation",
+          "reason": "Undefined statistic; inspect independent analysis reasons",
+          "reference": 0.5219057446489105,
+          "synthetic": null,
+          "within_tolerance": null
+        },
+        {
+          "absolute_tolerance": null,
+          "difference": -0.014203661729585315,
+          "name": "maximum_drawdown",
+          "reason": null,
+          "reference": 0.07199075520019993,
+          "synthetic": 0.057787093470614614,
+          "within_tolerance": null
+        }
+      ]
+    },
+    {
+      "manifest": {
+        "configuration": {
+          "drift": 0.00011276947197927069,
+          "horizon": 744,
+          "initial_price": 63302.0,
+          "model": "regime_v2",
+          "price_ceiling": 1000000000000.0,
+          "price_floor": 1e-06,
+          "regime_persistence": 0.95,
+          "regime_scale": 1.0,
+          "seed": 8,
+          "shock_probability": 0.0,
+          "shock_scale": 5.0,
+          "start": "2024-10-01T00:00:00+00:00",
+          "timeframe_seconds": 3600,
+          "volatility": 0.004670841598593839,
+          "volume_base": 71.92933128570833,
+          "volume_ceiling": 1000000000000.0,
+          "volume_persistence": 0.0,
+          "volume_return_coupling": 0.0,
+          "volume_sigma": 0.0,
+          "wick_outlier_probability": 0.0,
+          "wick_outlier_scale": 5.0,
+          "wick_scale": 0.5
+        },
+        "environment": {
+          "implementation": "CPython",
+          "numpy": "2.2.6",
+          "pandas": "2.2.3",
+          "platform": "Linux-6.18.57-x86_64-with-glibc2.39",
+          "python": "3.13.17"
+        },
+        "fingerprint": "dce12ca02a22ef7262c0de21b8259049a689f50d8c18ffcb33d701c06acc59aa",
+        "library_version": "2.0.0",
+        "manifest_version": 1,
+        "metadata": {
+          "fitted_parameters": [
+            "drift",
+            "volatility",
+            "volume_base"
+          ],
+          "fixed_restrictions": {
+            "regime_scale": 1.0,
+            "shock_probability": 0.0,
+            "volume_persistence": 0.0,
+            "volume_return_coupling": 0.0,
+            "volume_sigma": 0.0,
+            "wick_outlier_probability": 0.0
+          },
+          "profile": {
+            "data_schema": "datetime:UTC-ns;OHLCV:float64/v1",
+            "drift": 0.00011276947197927069,
+            "estimator": "body-log-return-population-moments/volume-arithmetic-mean/v1",
+            "model": "regime_v2",
+            "model_version": 2,
+            "schema_version": 1,
+            "source_end": "2024-09-30T23:00:00+00:00",
+            "source_fingerprint": "05f1e1d87dfa3b14c7056797b901e639e5f82b1fa320d6df44dda47f5db4195a",
+            "source_rows": 720,
+            "source_semantics": "training-only; regular bars; candle-body returns exclude inter-bar price gaps",
+            "source_start": "2024-09-01T00:00:00+00:00",
+            "timeframe_seconds": 3600.0,
+            "volatility": 0.004670841598593839,
+            "volume_base": 71.92933128570833
+          },
+          "profile_reference": "e34ba860cfe84065248a48aa6b2bb6320b4b0d2bf7c4a1946b6d09433b7a9a99",
+          "unidentified_parameters": [
+            "regime_persistence",
+            "regime_scale",
+            "shock_probability",
+            "shock_scale",
+            "wick_scale",
+            "wick_outlier_probability",
+            "wick_outlier_scale",
+            "volume_sigma",
+            "volume_return_coupling",
+            "volume_persistence"
+          ]
+        },
+        "model": "regime_v2",
+        "rng": "python.random.Random/MT19937",
+        "scenario_fingerprint": "524729886b3041fcd0c1942fb9f8d2fb496e3af16c26d0337829154d7f2730e5",
+        "seed": 8
+      },
+      "metrics": [
+        {
+          "absolute_tolerance": null,
+          "difference": 1.3164349165881834e-05,
+          "name": "log_return_mean",
+          "reason": null,
+          "reference": 0.00013525971242925723,
+          "synthetic": 0.00014842406159513906,
+          "within_tolerance": null
+        },
+        {
+          "absolute_tolerance": 0.0011733413842785329,
+          "difference": 0.0005852982996576951,
+          "name": "log_return_std",
+          "reason": null,
+          "reference": 0.004368032645288693,
+          "synthetic": 0.004953330944946388,
+          "within_tolerance": true
+        },
+        {
+          "absolute_tolerance": null,
+          "difference": -0.007283480870619696,
+          "name": "body_fraction_mean",
+          "reason": null,
+          "reference": 0.4832217417959472,
+          "synthetic": 0.4759382609253275,
+          "within_tolerance": null
+        },
+        {
+          "absolute_tolerance": 17.982332821427082,
+          "difference": 4.4778727431679926,
+          "name": "volume_mean",
+          "reason": null,
+          "reference": 67.45145854254034,
+          "synthetic": 71.92933128570833,
+          "within_tolerance": true
+        },
+        {
+          "absolute_tolerance": null,
+          "difference": -0.2891779799975098,
+          "name": "squared_return_acf_lag1",
+          "reason": null,
+          "reference": 0.33447231440171,
+          "synthetic": 0.04529433440420018,
+          "within_tolerance": null
+        },
+        {
+          "absolute_tolerance": null,
+          "difference": null,
+          "name": "volume_absolute_return_correlation",
+          "reason": "Undefined statistic; inspect independent analysis reasons",
+          "reference": 0.5219057446489105,
+          "synthetic": null,
+          "within_tolerance": null
+        },
+        {
+          "absolute_tolerance": null,
+          "difference": 0.035992348353471204,
+          "name": "maximum_drawdown",
+          "reason": null,
+          "reference": 0.07199075520019993,
+          "synthetic": 0.10798310355367113,
+          "within_tolerance": null
+        }
+      ]
+    },
+    {
+      "manifest": {
+        "configuration": {
+          "drift": 0.00011276947197927069,
+          "horizon": 744,
+          "initial_price": 63302.0,
+          "model": "regime_v2",
+          "price_ceiling": 1000000000000.0,
+          "price_floor": 1e-06,
+          "regime_persistence": 0.95,
+          "regime_scale": 1.0,
+          "seed": 9,
+          "shock_probability": 0.0,
+          "shock_scale": 5.0,
+          "start": "2024-10-01T00:00:00+00:00",
+          "timeframe_seconds": 3600,
+          "volatility": 0.004670841598593839,
+          "volume_base": 71.92933128570833,
+          "volume_ceiling": 1000000000000.0,
+          "volume_persistence": 0.0,
+          "volume_return_coupling": 0.0,
+          "volume_sigma": 0.0,
+          "wick_outlier_probability": 0.0,
+          "wick_outlier_scale": 5.0,
+          "wick_scale": 0.5
+        },
+        "environment": {
+          "implementation": "CPython",
+          "numpy": "2.2.6",
+          "pandas": "2.2.3",
+          "platform": "Linux-6.18.57-x86_64-with-glibc2.39",
+          "python": "3.13.17"
+        },
+        "fingerprint": "6ad7a4af48dbac5ed43c193c3aab27cad10b094bf8e569c16a61fe1de99d04f2",
+        "library_version": "2.0.0",
+        "manifest_version": 1,
+        "metadata": {
+          "fitted_parameters": [
+            "drift",
+            "volatility",
+            "volume_base"
+          ],
+          "fixed_restrictions": {
+            "regime_scale": 1.0,
+            "shock_probability": 0.0,
+            "volume_persistence": 0.0,
+            "volume_return_coupling": 0.0,
+            "volume_sigma": 0.0,
+            "wick_outlier_probability": 0.0
+          },
+          "profile": {
+            "data_schema": "datetime:UTC-ns;OHLCV:float64/v1",
+            "drift": 0.00011276947197927069,
+            "estimator": "body-log-return-population-moments/volume-arithmetic-mean/v1",
+            "model": "regime_v2",
+            "model_version": 2,
+            "schema_version": 1,
+            "source_end": "2024-09-30T23:00:00+00:00",
+            "source_fingerprint": "05f1e1d87dfa3b14c7056797b901e639e5f82b1fa320d6df44dda47f5db4195a",
+            "source_rows": 720,
+            "source_semantics": "training-only; regular bars; candle-body returns exclude inter-bar price gaps",
+            "source_start": "2024-09-01T00:00:00+00:00",
+            "timeframe_seconds": 3600.0,
+            "volatility": 0.004670841598593839,
+            "volume_base": 71.92933128570833
+          },
+          "profile_reference": "e34ba860cfe84065248a48aa6b2bb6320b4b0d2bf7c4a1946b6d09433b7a9a99",
+          "unidentified_parameters": [
+            "regime_persistence",
+            "regime_scale",
+            "shock_probability",
+            "shock_scale",
+            "wick_scale",
+            "wick_outlier_probability",
+            "wick_outlier_scale",
+            "volume_sigma",
+            "volume_return_coupling",
+            "volume_persistence"
+          ]
+        },
+        "model": "regime_v2",
+        "rng": "python.random.Random/MT19937",
+        "scenario_fingerprint": "7a63219c02dac7ed18d78fe3373cf325c11fd987081198749afa3f9f693bafa5",
+        "seed": 9
+      },
+      "metrics": [
+        {
+          "absolute_tolerance": null,
+          "difference": -5.6364341116427386e-05,
+          "name": "log_return_mean",
+          "reason": null,
+          "reference": 0.00013525971242925723,
+          "synthetic": 7.889537131282984e-05,
+          "within_tolerance": null
+        },
+        {
+          "absolute_tolerance": 0.0011733413842785329,
+          "difference": 0.00023851233271853216,
+          "name": "log_return_std",
+          "reason": null,
+          "reference": 0.004368032645288693,
+          "synthetic": 0.004606544978007225,
+          "within_tolerance": true
+        },
+        {
+          "absolute_tolerance": null,
+          "difference": -0.017432339757555204,
+          "name": "body_fraction_mean",
+          "reason": null,
+          "reference": 0.4832217417959472,
+          "synthetic": 0.465789402038392,
+          "within_tolerance": null
+        },
+        {
+          "absolute_tolerance": 17.982332821427082,
+          "difference": 4.4778727431679926,
+          "name": "volume_mean",
+          "reason": null,
+          "reference": 67.45145854254034,
+          "synthetic": 71.92933128570833,
+          "within_tolerance": true
+        },
+        {
+          "absolute_tolerance": null,
+          "difference": -0.3188749331117495,
+          "name": "squared_return_acf_lag1",
+          "reason": null,
+          "reference": 0.33447231440171,
+          "synthetic": 0.015597381289960466,
+          "within_tolerance": null
+        },
+        {
+          "absolute_tolerance": null,
+          "difference": null,
+          "name": "volume_absolute_return_correlation",
+          "reason": "Undefined statistic; inspect independent analysis reasons",
+          "reference": 0.5219057446489105,
+          "synthetic": null,
+          "within_tolerance": null
+        },
+        {
+          "absolute_tolerance": null,
+          "difference": 0.0498168459186491,
+          "name": "maximum_drawdown",
+          "reason": null,
+          "reference": 0.07199075520019993,
+          "synthetic": 0.12180760111884903,
+          "within_tolerance": null
+        }
+      ]
+    },
+    {
+      "manifest": {
+        "configuration": {
+          "drift": 0.00011276947197927069,
+          "horizon": 744,
+          "initial_price": 63302.0,
+          "model": "regime_v2",
+          "price_ceiling": 1000000000000.0,
+          "price_floor": 1e-06,
+          "regime_persistence": 0.95,
+          "regime_scale": 1.0,
+          "seed": 10,
+          "shock_probability": 0.0,
+          "shock_scale": 5.0,
+          "start": "2024-10-01T00:00:00+00:00",
+          "timeframe_seconds": 3600,
+          "volatility": 0.004670841598593839,
+          "volume_base": 71.92933128570833,
+          "volume_ceiling": 1000000000000.0,
+          "volume_persistence": 0.0,
+          "volume_return_coupling": 0.0,
+          "volume_sigma": 0.0,
+          "wick_outlier_probability": 0.0,
+          "wick_outlier_scale": 5.0,
+          "wick_scale": 0.5
+        },
+        "environment": {
+          "implementation": "CPython",
+          "numpy": "2.2.6",
+          "pandas": "2.2.3",
+          "platform": "Linux-6.18.57-x86_64-with-glibc2.39",
+          "python": "3.13.17"
+        },
+        "fingerprint": "8f0d73bcd5090225779ab9c59266c1ab510d17c2dcd5ef08eb1b268d97dd7385",
+        "library_version": "2.0.0",
+        "manifest_version": 1,
+        "metadata": {
+          "fitted_parameters": [
+            "drift",
+            "volatility",
+            "volume_base"
+          ],
+          "fixed_restrictions": {
+            "regime_scale": 1.0,
+            "shock_probability": 0.0,
+            "volume_persistence": 0.0,
+            "volume_return_coupling": 0.0,
+            "volume_sigma": 0.0,
+            "wick_outlier_probability": 0.0
+          },
+          "profile": {
+            "data_schema": "datetime:UTC-ns;OHLCV:float64/v1",
+            "drift": 0.00011276947197927069,
+            "estimator": "body-log-return-population-moments/volume-arithmetic-mean/v1",
+            "model": "regime_v2",
+            "model_version": 2,
+            "schema_version": 1,
+            "source_end": "2024-09-30T23:00:00+00:00",
+            "source_fingerprint": "05f1e1d87dfa3b14c7056797b901e639e5f82b1fa320d6df44dda47f5db4195a",
+            "source_rows": 720,
+            "source_semantics": "training-only; regular bars; candle-body returns exclude inter-bar price gaps",
+            "source_start": "2024-09-01T00:00:00+00:00",
+            "timeframe_seconds": 3600.0,
+            "volatility": 0.004670841598593839,
+            "volume_base": 71.92933128570833
+          },
+          "profile_reference": "e34ba860cfe84065248a48aa6b2bb6320b4b0d2bf7c4a1946b6d09433b7a9a99",
+          "unidentified_parameters": [
+            "regime_persistence",
+            "regime_scale",
+            "shock_probability",
+            "shock_scale",
+            "wick_scale",
+            "wick_outlier_probability",
+            "wick_outlier_scale",
+            "volume_sigma",
+            "volume_return_coupling",
+            "volume_persistence"
+          ]
+        },
+        "model": "regime_v2",
+        "rng": "python.random.Random/MT19937",
+        "scenario_fingerprint": "923b320ba4d79235b72c60f21822f8fb77f899649caeedd58e0899017a7c38a0",
+        "seed": 10
+      },
+      "metrics": [
+        {
+          "absolute_tolerance": null,
+          "difference": -0.00025039908367082266,
+          "name": "log_return_mean",
+          "reason": null,
+          "reference": 0.00013525971242925723,
+          "synthetic": -0.00011513937124156543,
+          "within_tolerance": null
+        },
+        {
+          "absolute_tolerance": 0.0011733413842785329,
+          "difference": 0.0003154288948464144,
+          "name": "log_return_std",
+          "reason": null,
+          "reference": 0.004368032645288693,
+          "synthetic": 0.0046834615401351075,
+          "within_tolerance": true
+        },
+        {
+          "absolute_tolerance": null,
+          "difference": -0.020977346405642583,
+          "name": "body_fraction_mean",
+          "reason": null,
+          "reference": 0.4832217417959472,
+          "synthetic": 0.4622443953903046,
+          "within_tolerance": null
+        },
+        {
+          "absolute_tolerance": 17.982332821427082,
+          "difference": 4.4778727431679926,
+          "name": "volume_mean",
+          "reason": null,
+          "reference": 67.45145854254034,
+          "synthetic": 71.92933128570833,
+          "within_tolerance": true
+        },
+        {
+          "absolute_tolerance": null,
+          "difference": -0.30309181441153465,
+          "name": "squared_return_acf_lag1",
+          "reason": null,
+          "reference": 0.33447231440171,
+          "synthetic": 0.031380499990175344,
+          "within_tolerance": null
+        },
+        {
+          "absolute_tolerance": null,
+          "difference": null,
+          "name": "volume_absolute_return_correlation",
+          "reason": "Undefined statistic; inspect independent analysis reasons",
+          "reference": 0.5219057446489105,
+          "synthetic": null,
+          "within_tolerance": null
+        },
+        {
+          "absolute_tolerance": null,
+          "difference": 0.07180987717258702,
+          "name": "maximum_drawdown",
+          "reason": null,
+          "reference": 0.07199075520019993,
+          "synthetic": 0.14380063237278695,
+          "within_tolerance": null
+        }
+      ]
+    },
+    {
+      "manifest": {
+        "configuration": {
+          "drift": 0.00011276947197927069,
+          "horizon": 744,
+          "initial_price": 63302.0,
+          "model": "regime_v2",
+          "price_ceiling": 1000000000000.0,
+          "price_floor": 1e-06,
+          "regime_persistence": 0.95,
+          "regime_scale": 1.0,
+          "seed": 11,
+          "shock_probability": 0.0,
+          "shock_scale": 5.0,
+          "start": "2024-10-01T00:00:00+00:00",
+          "timeframe_seconds": 3600,
+          "volatility": 0.004670841598593839,
+          "volume_base": 71.92933128570833,
+          "volume_ceiling": 1000000000000.0,
+          "volume_persistence": 0.0,
+          "volume_return_coupling": 0.0,
+          "volume_sigma": 0.0,
+          "wick_outlier_probability": 0.0,
+          "wick_outlier_scale": 5.0,
+          "wick_scale": 0.5
+        },
+        "environment": {
+          "implementation": "CPython",
+          "numpy": "2.2.6",
+          "pandas": "2.2.3",
+          "platform": "Linux-6.18.57-x86_64-with-glibc2.39",
+          "python": "3.13.17"
+        },
+        "fingerprint": "a00c704b1bab43cdd8bca10a20668966a7d5bdf61a8b55580f3b66e3797bf1a4",
+        "library_version": "2.0.0",
+        "manifest_version": 1,
+        "metadata": {
+          "fitted_parameters": [
+            "drift",
+            "volatility",
+            "volume_base"
+          ],
+          "fixed_restrictions": {
+            "regime_scale": 1.0,
+            "shock_probability": 0.0,
+            "volume_persistence": 0.0,
+            "volume_return_coupling": 0.0,
+            "volume_sigma": 0.0,
+            "wick_outlier_probability": 0.0
+          },
+          "profile": {
+            "data_schema": "datetime:UTC-ns;OHLCV:float64/v1",
+            "drift": 0.00011276947197927069,
+            "estimator": "body-log-return-population-moments/volume-arithmetic-mean/v1",
+            "model": "regime_v2",
+            "model_version": 2,
+            "schema_version": 1,
+            "source_end": "2024-09-30T23:00:00+00:00",
+            "source_fingerprint": "05f1e1d87dfa3b14c7056797b901e639e5f82b1fa320d6df44dda47f5db4195a",
+            "source_rows": 720,
+            "source_semantics": "training-only; regular bars; candle-body returns exclude inter-bar price gaps",
+            "source_start": "2024-09-01T00:00:00+00:00",
+            "timeframe_seconds": 3600.0,
+            "volatility": 0.004670841598593839,
+            "volume_base": 71.92933128570833
+          },
+          "profile_reference": "e34ba860cfe84065248a48aa6b2bb6320b4b0d2bf7c4a1946b6d09433b7a9a99",
+          "unidentified_parameters": [
+            "regime_persistence",
+            "regime_scale",
+            "shock_probability",
+            "shock_scale",
+            "wick_scale",
+            "wick_outlier_probability",
+            "wick_outlier_scale",
+            "volume_sigma",
+            "volume_return_coupling",
+            "volume_persistence"
+          ]
+        },
+        "model": "regime_v2",
+        "rng": "python.random.Random/MT19937",
+        "scenario_fingerprint": "6b0f180b54eaaf15fd75f373e39e89f451f00ea54da08f9cc9a17a3207917253",
+        "seed": 11
+      },
+      "metrics": [
+        {
+          "absolute_tolerance": null,
+          "difference": 0.0001064161719092073,
+          "name": "log_return_mean",
+          "reason": null,
+          "reference": 0.00013525971242925723,
+          "synthetic": 0.00024167588433846452,
+          "within_tolerance": null
+        },
+        {
+          "absolute_tolerance": 0.0011733413842785329,
+          "difference": 0.0005038999567953898,
+          "name": "log_return_std",
+          "reason": null,
+          "reference": 0.004368032645288693,
+          "synthetic": 0.004871932602084083,
+          "within_tolerance": true
+        },
+        {
+          "absolute_tolerance": null,
+          "difference": 0.00200108778225766,
+          "name": "body_fraction_mean",
+          "reason": null,
+          "reference": 0.4832217417959472,
+          "synthetic": 0.48522282957820484,
+          "within_tolerance": null
+        },
+        {
+          "absolute_tolerance": 17.982332821427082,
+          "difference": 4.4778727431679926,
+          "name": "volume_mean",
+          "reason": null,
+          "reference": 67.45145854254034,
+          "synthetic": 71.92933128570833,
+          "within_tolerance": true
+        },
+        {
+          "absolute_tolerance": null,
+          "difference": -0.3475541377773279,
+          "name": "squared_return_acf_lag1",
+          "reason": null,
+          "reference": 0.33447231440171,
+          "synthetic": -0.013081823375617937,
+          "within_tolerance": null
+        },
+        {
+          "absolute_tolerance": null,
+          "difference": null,
+          "name": "volume_absolute_return_correlation",
+          "reason": "Undefined statistic; inspect independent analysis reasons",
+          "reference": 0.5219057446489105,
+          "synthetic": null,
+          "within_tolerance": null
+        },
+        {
+          "absolute_tolerance": null,
+          "difference": 0.010394361925017748,
+          "name": "maximum_drawdown",
+          "reason": null,
+          "reference": 0.07199075520019993,
+          "synthetic": 0.08238511712521768,
+          "within_tolerance": null
+        }
+      ]
+    },
+    {
+      "manifest": {
+        "configuration": {
+          "drift": 0.00011276947197927069,
+          "horizon": 744,
+          "initial_price": 63302.0,
+          "model": "regime_v2",
+          "price_ceiling": 1000000000000.0,
+          "price_floor": 1e-06,
+          "regime_persistence": 0.95,
+          "regime_scale": 1.0,
+          "seed": 12,
+          "shock_probability": 0.0,
+          "shock_scale": 5.0,
+          "start": "2024-10-01T00:00:00+00:00",
+          "timeframe_seconds": 3600,
+          "volatility": 0.004670841598593839,
+          "volume_base": 71.92933128570833,
+          "volume_ceiling": 1000000000000.0,
+          "volume_persistence": 0.0,
+          "volume_return_coupling": 0.0,
+          "volume_sigma": 0.0,
+          "wick_outlier_probability": 0.0,
+          "wick_outlier_scale": 5.0,
+          "wick_scale": 0.5
+        },
+        "environment": {
+          "implementation": "CPython",
+          "numpy": "2.2.6",
+          "pandas": "2.2.3",
+          "platform": "Linux-6.18.57-x86_64-with-glibc2.39",
+          "python": "3.13.17"
+        },
+        "fingerprint": "764f7d5ea227c50aff4fab7e7bb400ef893a0753be10984d4cf6bcaefddde339",
+        "library_version": "2.0.0",
+        "manifest_version": 1,
+        "metadata": {
+          "fitted_parameters": [
+            "drift",
+            "volatility",
+            "volume_base"
+          ],
+          "fixed_restrictions": {
+            "regime_scale": 1.0,
+            "shock_probability": 0.0,
+            "volume_persistence": 0.0,
+            "volume_return_coupling": 0.0,
+            "volume_sigma": 0.0,
+            "wick_outlier_probability": 0.0
+          },
+          "profile": {
+            "data_schema": "datetime:UTC-ns;OHLCV:float64/v1",
+            "drift": 0.00011276947197927069,
+            "estimator": "body-log-return-population-moments/volume-arithmetic-mean/v1",
+            "model": "regime_v2",
+            "model_version": 2,
+            "schema_version": 1,
+            "source_end": "2024-09-30T23:00:00+00:00",
+            "source_fingerprint": "05f1e1d87dfa3b14c7056797b901e639e5f82b1fa320d6df44dda47f5db4195a",
+            "source_rows": 720,
+            "source_semantics": "training-only; regular bars; candle-body returns exclude inter-bar price gaps",
+            "source_start": "2024-09-01T00:00:00+00:00",
+            "timeframe_seconds": 3600.0,
+            "volatility": 0.004670841598593839,
+            "volume_base": 71.92933128570833
+          },
+          "profile_reference": "e34ba860cfe84065248a48aa6b2bb6320b4b0d2bf7c4a1946b6d09433b7a9a99",
+          "unidentified_parameters": [
+            "regime_persistence",
+            "regime_scale",
+            "shock_probability",
+            "shock_scale",
+            "wick_scale",
+            "wick_outlier_probability",
+            "wick_outlier_scale",
+            "volume_sigma",
+            "volume_return_coupling",
+            "volume_persistence"
+          ]
+        },
+        "model": "regime_v2",
+        "rng": "python.random.Random/MT19937",
+        "scenario_fingerprint": "f87527669e493534d0fa33cda401b81d62e317295a22f69d40cca0fd07442194",
+        "seed": 12
+      },
+      "metrics": [
+        {
+          "absolute_tolerance": null,
+          "difference": 0.00015315661962393592,
+          "name": "log_return_mean",
+          "reason": null,
+          "reference": 0.00013525971242925723,
+          "synthetic": 0.00028841633205319315,
+          "within_tolerance": null
+        },
+        {
+          "absolute_tolerance": 0.0011733413842785329,
+          "difference": 0.00025674368724139165,
+          "name": "log_return_std",
+          "reason": null,
+          "reference": 0.004368032645288693,
+          "synthetic": 0.004624776332530085,
+          "within_tolerance": true
+        },
+        {
+          "absolute_tolerance": null,
+          "difference": -0.02001770791234936,
+          "name": "body_fraction_mean",
+          "reason": null,
+          "reference": 0.4832217417959472,
+          "synthetic": 0.4632040338835978,
+          "within_tolerance": null
+        },
+        {
+          "absolute_tolerance": 17.982332821427082,
+          "difference": 4.4778727431679926,
+          "name": "volume_mean",
+          "reason": null,
+          "reference": 67.45145854254034,
+          "synthetic": 71.92933128570833,
+          "within_tolerance": true
+        },
+        {
+          "absolute_tolerance": null,
+          "difference": -0.368498744677692,
+          "name": "squared_return_acf_lag1",
+          "reason": null,
+          "reference": 0.33447231440171,
+          "synthetic": -0.03402643027598203,
+          "within_tolerance": null
+        },
+        {
+          "absolute_tolerance": null,
+          "difference": null,
+          "name": "volume_absolute_return_correlation",
+          "reason": "Undefined statistic; inspect independent analysis reasons",
+          "reference": 0.5219057446489105,
+          "synthetic": null,
+          "within_tolerance": null
+        },
+        {
+          "absolute_tolerance": null,
+          "difference": -0.017447180658821004,
+          "name": "maximum_drawdown",
+          "reason": null,
+          "reference": 0.07199075520019993,
+          "synthetic": 0.054543574541378925,
+          "within_tolerance": null
+        }
+      ]
+    },
+    {
+      "manifest": {
+        "configuration": {
+          "drift": 0.00011276947197927069,
+          "horizon": 744,
+          "initial_price": 63302.0,
+          "model": "regime_v2",
+          "price_ceiling": 1000000000000.0,
+          "price_floor": 1e-06,
+          "regime_persistence": 0.95,
+          "regime_scale": 1.0,
+          "seed": 13,
+          "shock_probability": 0.0,
+          "shock_scale": 5.0,
+          "start": "2024-10-01T00:00:00+00:00",
+          "timeframe_seconds": 3600,
+          "volatility": 0.004670841598593839,
+          "volume_base": 71.92933128570833,
+          "volume_ceiling": 1000000000000.0,
+          "volume_persistence": 0.0,
+          "volume_return_coupling": 0.0,
+          "volume_sigma": 0.0,
+          "wick_outlier_probability": 0.0,
+          "wick_outlier_scale": 5.0,
+          "wick_scale": 0.5
+        },
+        "environment": {
+          "implementation": "CPython",
+          "numpy": "2.2.6",
+          "pandas": "2.2.3",
+          "platform": "Linux-6.18.57-x86_64-with-glibc2.39",
+          "python": "3.13.17"
+        },
+        "fingerprint": "f93b041827b58d985144195c66b23f27518a73397c1427178290f7f6dc62615b",
+        "library_version": "2.0.0",
+        "manifest_version": 1,
+        "metadata": {
+          "fitted_parameters": [
+            "drift",
+            "volatility",
+            "volume_base"
+          ],
+          "fixed_restrictions": {
+            "regime_scale": 1.0,
+            "shock_probability": 0.0,
+            "volume_persistence": 0.0,
+            "volume_return_coupling": 0.0,
+            "volume_sigma": 0.0,
+            "wick_outlier_probability": 0.0
+          },
+          "profile": {
+            "data_schema": "datetime:UTC-ns;OHLCV:float64/v1",
+            "drift": 0.00011276947197927069,
+            "estimator": "body-log-return-population-moments/volume-arithmetic-mean/v1",
+            "model": "regime_v2",
+            "model_version": 2,
+            "schema_version": 1,
+            "source_end": "2024-09-30T23:00:00+00:00",
+            "source_fingerprint": "05f1e1d87dfa3b14c7056797b901e639e5f82b1fa320d6df44dda47f5db4195a",
+            "source_rows": 720,
+            "source_semantics": "training-only; regular bars; candle-body returns exclude inter-bar price gaps",
+            "source_start": "2024-09-01T00:00:00+00:00",
+            "timeframe_seconds": 3600.0,
+            "volatility": 0.004670841598593839,
+            "volume_base": 71.92933128570833
+          },
+          "profile_reference": "e34ba860cfe84065248a48aa6b2bb6320b4b0d2bf7c4a1946b6d09433b7a9a99",
+          "unidentified_parameters": [
+            "regime_persistence",
+            "regime_scale",
+            "shock_probability",
+            "shock_scale",
+            "wick_scale",
+            "wick_outlier_probability",
+            "wick_outlier_scale",
+            "volume_sigma",
+            "volume_return_coupling",
+            "volume_persistence"
+          ]
+        },
+        "model": "regime_v2",
+        "rng": "python.random.Random/MT19937",
+        "scenario_fingerprint": "0cb2e1bbb000c1c16096f29f23f6842f521c3d1320dd176db2e5a0cd9574cf91",
+        "seed": 13
+      },
+      "metrics": [
+        {
+          "absolute_tolerance": null,
+          "difference": 0.00013289016883886009,
+          "name": "log_return_mean",
+          "reason": null,
+          "reference": 0.00013525971242925723,
+          "synthetic": 0.0002681498812681173,
+          "within_tolerance": null
+        },
+        {
+          "absolute_tolerance": 0.0011733413842785329,
+          "difference": 0.0002107783193081329,
+          "name": "log_return_std",
+          "reason": null,
+          "reference": 0.004368032645288693,
+          "synthetic": 0.004578810964596826,
+          "within_tolerance": true
+        },
+        {
+          "absolute_tolerance": null,
+          "difference": -0.018173339240112385,
+          "name": "body_fraction_mean",
+          "reason": null,
+          "reference": 0.4832217417959472,
+          "synthetic": 0.4650484025558348,
+          "within_tolerance": null
+        },
+        {
+          "absolute_tolerance": 17.982332821427082,
+          "difference": 4.4778727431679926,
+          "name": "volume_mean",
+          "reason": null,
+          "reference": 67.45145854254034,
+          "synthetic": 71.92933128570833,
+          "within_tolerance": true
+        },
+        {
+          "absolute_tolerance": null,
+          "difference": -0.4055771597136197,
+          "name": "squared_return_acf_lag1",
+          "reason": null,
+          "reference": 0.33447231440171,
+          "synthetic": -0.07110484531190968,
+          "within_tolerance": null
+        },
+        {
+          "absolute_tolerance": null,
+          "difference": null,
+          "name": "volume_absolute_return_correlation",
+          "reason": "Undefined statistic; inspect independent analysis reasons",
+          "reference": 0.5219057446489105,
+          "synthetic": null,
+          "within_tolerance": null
+        },
+        {
+          "absolute_tolerance": null,
+          "difference": 0.027046859990016214,
+          "name": "maximum_drawdown",
+          "reason": null,
+          "reference": 0.07199075520019993,
+          "synthetic": 0.09903761519021614,
+          "within_tolerance": null
+        }
+      ]
+    },
+    {
+      "manifest": {
+        "configuration": {
+          "drift": 0.00011276947197927069,
+          "horizon": 744,
+          "initial_price": 63302.0,
+          "model": "regime_v2",
+          "price_ceiling": 1000000000000.0,
+          "price_floor": 1e-06,
+          "regime_persistence": 0.95,
+          "regime_scale": 1.0,
+          "seed": 14,
+          "shock_probability": 0.0,
+          "shock_scale": 5.0,
+          "start": "2024-10-01T00:00:00+00:00",
+          "timeframe_seconds": 3600,
+          "volatility": 0.004670841598593839,
+          "volume_base": 71.92933128570833,
+          "volume_ceiling": 1000000000000.0,
+          "volume_persistence": 0.0,
+          "volume_return_coupling": 0.0,
+          "volume_sigma": 0.0,
+          "wick_outlier_probability": 0.0,
+          "wick_outlier_scale": 5.0,
+          "wick_scale": 0.5
+        },
+        "environment": {
+          "implementation": "CPython",
+          "numpy": "2.2.6",
+          "pandas": "2.2.3",
+          "platform": "Linux-6.18.57-x86_64-with-glibc2.39",
+          "python": "3.13.17"
+        },
+        "fingerprint": "5f5d5129c6baa67600afdd9a74af0eacc422648b3138c65bbd55a834267740dc",
+        "library_version": "2.0.0",
+        "manifest_version": 1,
+        "metadata": {
+          "fitted_parameters": [
+            "drift",
+            "volatility",
+            "volume_base"
+          ],
+          "fixed_restrictions": {
+            "regime_scale": 1.0,
+            "shock_probability": 0.0,
+            "volume_persistence": 0.0,
+            "volume_return_coupling": 0.0,
+            "volume_sigma": 0.0,
+            "wick_outlier_probability": 0.0
+          },
+          "profile": {
+            "data_schema": "datetime:UTC-ns;OHLCV:float64/v1",
+            "drift": 0.00011276947197927069,
+            "estimator": "body-log-return-population-moments/volume-arithmetic-mean/v1",
+            "model": "regime_v2",
+            "model_version": 2,
+            "schema_version": 1,
+            "source_end": "2024-09-30T23:00:00+00:00",
+            "source_fingerprint": "05f1e1d87dfa3b14c7056797b901e639e5f82b1fa320d6df44dda47f5db4195a",
+            "source_rows": 720,
+            "source_semantics": "training-only; regular bars; candle-body returns exclude inter-bar price gaps",
+            "source_start": "2024-09-01T00:00:00+00:00",
+            "timeframe_seconds": 3600.0,
+            "volatility": 0.004670841598593839,
+            "volume_base": 71.92933128570833
+          },
+          "profile_reference": "e34ba860cfe84065248a48aa6b2bb6320b4b0d2bf7c4a1946b6d09433b7a9a99",
+          "unidentified_parameters": [
+            "regime_persistence",
+            "regime_scale",
+            "shock_probability",
+            "shock_scale",
+            "wick_scale",
+            "wick_outlier_probability",
+            "wick_outlier_scale",
+            "volume_sigma",
+            "volume_return_coupling",
+            "volume_persistence"
+          ]
+        },
+        "model": "regime_v2",
+        "rng": "python.random.Random/MT19937",
+        "scenario_fingerprint": "be0bf3f5163f248ff473b55944659779fdee5d8bd3457e3584f918a070e5dd8d",
+        "seed": 14
+      },
+      "metrics": [
+        {
+          "absolute_tolerance": null,
+          "difference": 0.00011859060701906811,
+          "name": "log_return_mean",
+          "reason": null,
+          "reference": 0.00013525971242925723,
+          "synthetic": 0.00025385031944832534,
+          "within_tolerance": null
+        },
+        {
+          "absolute_tolerance": 0.0011733413842785329,
+          "difference": 0.0003143508871279845,
+          "name": "log_return_std",
+          "reason": null,
+          "reference": 0.004368032645288693,
+          "synthetic": 0.004682383532416678,
+          "within_tolerance": true
+        },
+        {
+          "absolute_tolerance": null,
+          "difference": -0.01881910451949914,
+          "name": "body_fraction_mean",
+          "reason": null,
+          "reference": 0.4832217417959472,
+          "synthetic": 0.46440263727644804,
+          "within_tolerance": null
+        },
+        {
+          "absolute_tolerance": 17.982332821427082,
+          "difference": 4.4778727431679926,
+          "name": "volume_mean",
+          "reason": null,
+          "reference": 67.45145854254034,
+          "synthetic": 71.92933128570833,
+          "within_tolerance": true
+        },
+        {
+          "absolute_tolerance": null,
+          "difference": -0.35593043180784056,
+          "name": "squared_return_acf_lag1",
+          "reason": null,
+          "reference": 0.33447231440171,
+          "synthetic": -0.02145811740613055,
+          "within_tolerance": null
+        },
+        {
+          "absolute_tolerance": null,
+          "difference": null,
+          "name": "volume_absolute_return_correlation",
+          "reason": "Undefined statistic; inspect independent analysis reasons",
+          "reference": 0.5219057446489105,
+          "synthetic": null,
+          "within_tolerance": null
+        },
+        {
+          "absolute_tolerance": null,
+          "difference": 0.022344012257556334,
+          "name": "maximum_drawdown",
+          "reason": null,
+          "reference": 0.07199075520019993,
+          "synthetic": 0.09433476745775626,
+          "within_tolerance": null
+        }
+      ]
+    },
+    {
+      "manifest": {
+        "configuration": {
+          "drift": 0.00011276947197927069,
+          "horizon": 744,
+          "initial_price": 63302.0,
+          "model": "regime_v2",
+          "price_ceiling": 1000000000000.0,
+          "price_floor": 1e-06,
+          "regime_persistence": 0.95,
+          "regime_scale": 1.0,
+          "seed": 15,
+          "shock_probability": 0.0,
+          "shock_scale": 5.0,
+          "start": "2024-10-01T00:00:00+00:00",
+          "timeframe_seconds": 3600,
+          "volatility": 0.004670841598593839,
+          "volume_base": 71.92933128570833,
+          "volume_ceiling": 1000000000000.0,
+          "volume_persistence": 0.0,
+          "volume_return_coupling": 0.0,
+          "volume_sigma": 0.0,
+          "wick_outlier_probability": 0.0,
+          "wick_outlier_scale": 5.0,
+          "wick_scale": 0.5
+        },
+        "environment": {
+          "implementation": "CPython",
+          "numpy": "2.2.6",
+          "pandas": "2.2.3",
+          "platform": "Linux-6.18.57-x86_64-with-glibc2.39",
+          "python": "3.13.17"
+        },
+        "fingerprint": "96bc15d11af21a339b87d554ed9081f10d8d819a62278a204a9c8ffc2fbf4afc",
+        "library_version": "2.0.0",
+        "manifest_version": 1,
+        "metadata": {
+          "fitted_parameters": [
+            "drift",
+            "volatility",
+            "volume_base"
+          ],
+          "fixed_restrictions": {
+            "regime_scale": 1.0,
+            "shock_probability": 0.0,
+            "volume_persistence": 0.0,
+            "volume_return_coupling": 0.0,
+            "volume_sigma": 0.0,
+            "wick_outlier_probability": 0.0
+          },
+          "profile": {
+            "data_schema": "datetime:UTC-ns;OHLCV:float64/v1",
+            "drift": 0.00011276947197927069,
+            "estimator": "body-log-return-population-moments/volume-arithmetic-mean/v1",
+            "model": "regime_v2",
+            "model_version": 2,
+            "schema_version": 1,
+            "source_end": "2024-09-30T23:00:00+00:00",
+            "source_fingerprint": "05f1e1d87dfa3b14c7056797b901e639e5f82b1fa320d6df44dda47f5db4195a",
+            "source_rows": 720,
+            "source_semantics": "training-only; regular bars; candle-body returns exclude inter-bar price gaps",
+            "source_start": "2024-09-01T00:00:00+00:00",
+            "timeframe_seconds": 3600.0,
+            "volatility": 0.004670841598593839,
+            "volume_base": 71.92933128570833
+          },
+          "profile_reference": "e34ba860cfe84065248a48aa6b2bb6320b4b0d2bf7c4a1946b6d09433b7a9a99",
+          "unidentified_parameters": [
+            "regime_persistence",
+            "regime_scale",
+            "shock_probability",
+            "shock_scale",
+            "wick_scale",
+            "wick_outlier_probability",
+            "wick_outlier_scale",
+            "volume_sigma",
+            "volume_return_coupling",
+            "volume_persistence"
+          ]
+        },
+        "model": "regime_v2",
+        "rng": "python.random.Random/MT19937",
+        "scenario_fingerprint": "b4ab1074eadd6580e272abaec885b512f0ba543da754b0581c69a2f55383cd04",
+        "seed": 15
+      },
+      "metrics": [
+        {
+          "absolute_tolerance": null,
+          "difference": 4.44529367685984e-05,
+          "name": "log_return_mean",
+          "reason": null,
+          "reference": 0.00013525971242925723,
+          "synthetic": 0.00017971264919785563,
+          "within_tolerance": null
+        },
+        {
+          "absolute_tolerance": 0.0011733413842785329,
+          "difference": 0.00036764515258152185,
+          "name": "log_return_std",
+          "reason": null,
+          "reference": 0.004368032645288693,
+          "synthetic": 0.004735677797870215,
+          "within_tolerance": true
+        },
+        {
+          "absolute_tolerance": null,
+          "difference": -0.022148714939006442,
+          "name": "body_fraction_mean",
+          "reason": null,
+          "reference": 0.4832217417959472,
+          "synthetic": 0.46107302685694074,
+          "within_tolerance": null
+        },
+        {
+          "absolute_tolerance": 17.982332821427082,
+          "difference": 4.4778727431679926,
+          "name": "volume_mean",
+          "reason": null,
+          "reference": 67.45145854254034,
+          "synthetic": 71.92933128570833,
+          "within_tolerance": true
+        },
+        {
+          "absolute_tolerance": null,
+          "difference": -0.3652938447074723,
+          "name": "squared_return_acf_lag1",
+          "reason": null,
+          "reference": 0.33447231440171,
+          "synthetic": -0.030821530305762273,
+          "within_tolerance": null
+        },
+        {
+          "absolute_tolerance": null,
+          "difference": null,
+          "name": "volume_absolute_return_correlation",
+          "reason": "Undefined statistic; inspect independent analysis reasons",
+          "reference": 0.5219057446489105,
+          "synthetic": null,
+          "within_tolerance": null
+        },
+        {
+          "absolute_tolerance": null,
+          "difference": 0.03177719225531073,
+          "name": "maximum_drawdown",
+          "reason": null,
+          "reference": 0.07199075520019993,
+          "synthetic": 0.10376794745551066,
+          "within_tolerance": null
+        }
+      ]
+    }
+  ],
+  "source_commit": "0bbc1f9f4dde50520e3ee2d1fba1b26fc3bb217e",
+  "source_sha256": "1be152060b39327b669cbed236eeb283191fadaf3862f76c1e974be54ceb1a20",
+  "tolerance_method": "absolute gaps bounded by 25% of the corresponding training statistic",
+  "tolerances": {
+    "log_return_std": 0.0011733413842785329,
+    "volume_mean": 17.982332821427082
+  },
+  "training": {
+    "canonical_fingerprint": "05f1e1d87dfa3b14c7056797b901e639e5f82b1fa320d6df44dda47f5db4195a",
+    "end_utc_exclusive": "2024-10-01T00:00:00+00:00",
+    "rows": 720,
+    "start_utc": "2024-09-01T00:00:00+00:00"
+  }
+}
