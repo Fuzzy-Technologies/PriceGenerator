@@ -1,6 +1,6 @@
 """Exercise renderer-independent validation, isolation, and safe serialization."""
 
-from dataclasses import FrozenInstanceError, replace
+from dataclasses import FrozenInstanceError, dataclass, replace
 import json
 from pathlib import Path
 import subprocess
@@ -119,6 +119,33 @@ def test_SerializationRoundtripEscapesEmbeddedMarkup() -> None:
     detached = spec.ToDict()
     detached["candles"][0]["open"] = 0
     assert spec.candles[0].open == 10, "ToDict exposed mutable chart internals"
+
+
+def test_JSONPreservesCanonicalFieldOrderAndExtendedRecords() -> None:
+    """Keep the detached snapshot's exact JSON bytes for base and derived records."""
+
+    @dataclass(frozen=True)
+    class ExtendedCandle(ChartCandle):
+        """Add metadata through the existing dataclass serialization path."""
+
+        source: str = "Fixture"
+
+    @dataclass(frozen=True)
+    class ExtendedSpec(ChartSpec):
+        """Add an extension field to the public chart spec."""
+
+        release: int = 1
+
+    candles = (
+        ChartCandle("2026-10-15T12:00:00.123Z", -0.0, 1e20, -1e-20, 0.1, 0),
+        ExtendedCandle("2026-10-15T12:01:00Z", 10, 12, 8, 11, 100),
+    )
+    overlay = ChartSeries("example", "示例", (None, 11))
+
+    for spec_type in (ChartSpec, ExtendedSpec):
+        spec = spec_type(candles, series=(overlay,), markers=(ChartMarker(1, "Signal"),))
+        expected = json.dumps(spec.ToDict(), ensure_ascii=False, allow_nan=False, separators=(",", ":"))
+        assert spec.ToJSON() == expected, "Chart JSON changed canonical field order or record values"
 
 
 @pytest.mark.parametrize("data", [{}, {"schema_version": True}, {"schema_version": 2}, {"schema_version": 1, "unknown": 1}])
