@@ -20,6 +20,25 @@ def Run(arguments, directory):
     subprocess.run(list(map(str, arguments)), cwd=directory, env=environment, check=True)
 
 
+def VerifyEnsemble(python: Path, directory: Path) -> None:
+    """Exercise the installed console launcher and process-worker replay."""
+
+    executable = python.with_name("pricegenerator.exe" if os.name == "nt" else "pricegenerator")
+    report = directory / "ensemble.json"
+    manifest = directory / "ensemble-manifest.json"
+    replayed = directory / "ensemble-replayed.json"
+    Run([
+        executable, "monte-carlo", "--seed", "0", "--horizon", "4", "--paths", "4", "--workers", "2",
+        "--output", report, "--manifest", manifest,
+    ], directory)
+    Run([executable, "replay-ensemble", manifest, "--workers", "1", "--output", replayed], directory)
+
+    if report.read_bytes() != replayed.read_bytes():
+        raise ValueError("Installed Monte Carlo reports differ between parallel generation and serial replay")
+
+    print("Verified byte-identical installed Monte Carlo reports with two and one worker", flush=True)
+
+
 def Verify(artifact, modes=DEFAULT_MODES):
     """Install the requested artifact modes and run the public APIs."""
 
@@ -35,6 +54,9 @@ def Verify(artifact, modes=DEFAULT_MODES):
             requirement = artifact if mode == "core" else f"{artifact}[{mode}]"
             Run([python, "-m", "pip", "install", "-c", constraints, requirement], directory)
             Run([python, "-I", smoke, mode], directory)
+
+            if mode == "core":
+                VerifyEnsemble(python, directory)
 
         Run([python, "-m", "pip", "check"], directory)
         Run([python, "-m", "pip", "freeze"], directory)
