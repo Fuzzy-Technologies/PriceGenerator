@@ -84,6 +84,37 @@ of one statistic does not validate the remaining distributions or dynamics.
 No tolerances were supplied: every decision is `not assessed`. The evidence
 is an auditable descriptive comparison, not calibration or a realism claim.
 
+## Independent holdout protocol
+
+1. Record the question, instrument, venue, sampling cadence, time zone, price
+   adjustments, volume units, missing-bar policy, source version and permitted
+   use. Record the source hash and exact UTC windows and row counts. Publish
+   raw data only when redistribution is permitted.
+2. Split observations chronologically. Use the earlier window for fitting
+   parameters, choosing metrics and setting numerical acceptance thresholds.
+   Reserve the later window for evaluation. For rolling metrics, use only
+   inputs available at the observation time and keep each scored window inside
+   the holdout. Declare how much history each metric needs before scoring.
+3. Before opening the holdout, record the effective config, model and library
+   versions, seed list, simulated horizon, metrics, acceptance rule and
+   uncertainty method. Match the comparison cadence and effective horizon, or
+   disclose the discrepancy. For a multi-seed claim, report the distribution
+   across the declared runs and retain every run, including failures and
+   undefined metrics. Account for dependence between overlapping observations
+   when quantifying uncertainty.
+4. Record which tests passed, failed or could not be assessed, with actual
+   sample sizes, limits and report or manifest hashes. Treat changes made
+   after viewing the evaluation as new hypotheses and reserve a fresh holdout.
+
+For the [fuzzy diagnostic](fuzzy-diagnostics.md), fit the reference volatility
+and activity levels on the earlier window and freeze the feature definitions,
+lookback, profile and backend version. To claim that the score detects a
+regime, declare an independent target and baseline before evaluating. Otherwise
+report score and clipping distributions as descriptive results.
+
+The AFLT report above does not provide independently verified provenance or an
+acceptance threshold. The protocol has no independent holdout result yet.
+
 Focused validation:
 
 ```bash
