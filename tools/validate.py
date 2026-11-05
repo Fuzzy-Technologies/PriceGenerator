@@ -32,6 +32,7 @@ def Main() -> None:
 
     Run("compileall", "-q", "pricegenerator", "tools", "tests")
     Run("ruff", "check", "--config", "pyproject.toml", "pricegenerator", "tools", "tests")
+    Run("tools.markdown_tables")
 
     if arguments.tests:
         Run("pytest", "-q", *arguments.tests)

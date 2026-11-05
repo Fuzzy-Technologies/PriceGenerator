@@ -33,20 +33,20 @@ ECharts 6.1.0 and native Canvas 0.1.100. Each case used fresh Python and Node
 processes, without warmup or repeated-run aggregation.
 
 | Input candles | Initial visible candles | Canvas Mount, ms | PNG export, ms | Full-range drawing, ms | Node peak RSS, MiB |
-| ---: | ---: | ---: | ---: | ---: | ---: |
-| 1,000 | 1,000 | 166.1 | 257.8 | 43.1 | 256.7 |
-| 10,000 | 1,000 | 259.9 | 215.7 | 320.3 | 382.7 |
-| 100,000 | 1,000 | 798.1 | 267.0 | 1,824.6 | 1,133.5 |
+| ------------: | ----------------------: | ---------------: | -------------: | ---------------------: | -----------------: |
+| 1,000         | 1,000                   | 166.1            | 257.8          | 43.1                   | 256.7              |
+| 10,000        | 1,000                   | 259.9            | 215.7          | 320.3                  | 382.7              |
+| 100,000       | 1,000                   | 798.1            | 267.0          | 1,824.6                | 1,133.5            |
 
 Node RSS covers its complete workflow, including PNG decoding, array copies and
 full-range rendering; it is not the memory cost of the initial 1,000-candle view.
 The report also records zoom, pan, reset and update timings with verified counts.
 
 | Input candles | New HTML pipeline, s | Bokeh HTML pipeline, s | New HTML, bytes | Bokeh INLINE HTML, bytes | SVG, bytes |
-| ---: | ---: | ---: | ---: | ---: | ---: |
-| 1,000 | 0.029 | 0.181 | 907,629 | 1,298,884 | 488,899 |
-| 10,000 | 0.216 | 0.450 | 2,086,964 | 2,939,907 | 4,167,292 |
-| 100,000 | 2.190 | 3.093 | 13,879,248 | 19,529,930 | 41,125,531 |
+| ------------: | -------------------: | ---------------------: | --------------: | -----------------------: | ---------: |
+| 1,000         | 0.029                | 0.181                  | 907,629         | 1,298,884                | 488,899    |
+| 10,000        | 0.216                | 0.450                  | 2,086,964       | 2,939,907                | 4,167,292  |
+| 100,000       | 2.190                | 3.093                  | 13,879,248      | 19,529,930               | 41,125,531 |
 
 New HTML pipeline means adapter + HTML renderer + write; Bokeh means model +
 INLINE serialization + write. Separate diagnostic snapshot serialization is
@@ -73,10 +73,10 @@ differently typed and object columns retain scalar validation. Snapshot copying
 and numeric validation remain intact.
 
 | Input candles | Adapter before, s | Adapter after, s |
-| ---: | ---: | ---: |
-| 1,000 | 0.032 | 0.017 |
-| 10,000 | 0.228 | 0.118 |
-| 100,000 | 2.955 | 1.337 |
+| ------------: | ----------------: | ---------------: |
+| 1,000         | 0.032             | 0.017            |
+| 10,000        | 0.228             | 0.118            |
+| 100,000       | 2.955             | 1.337            |
 
 Both runs use identical benchmark recipes and ChartSpec fingerprints for all
 three sizes; their SVG bytes and digests also match. Final interactive visual

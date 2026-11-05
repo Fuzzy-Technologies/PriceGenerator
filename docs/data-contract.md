@@ -7,11 +7,11 @@ see the quick start in [English](site/content/en/quick-start.md),
 
 PriceGenerator v2 exchanges one explicit six-column table, in this order:
 
-| Column | Canonical pandas dtype | Domain |
-| --- | --- | --- |
-| `datetime` | `datetime64[ns, UTC]` | Unique, strictly increasing UTC instants |
-| `open`, `high`, `low`, `close` | `float64` | Finite real values satisfying candle geometry |
-| `volume` | `float64` | Finite, nonnegative values, including fractional volume |
+| Column                         | Canonical pandas dtype | Domain                                                  |
+| ------------------------------ | ---------------------- | ------------------------------------------------------- |
+| `datetime`                     | `datetime64[ns, UTC]`  | Unique, strictly increasing UTC instants                |
+| `open`, `high`, `low`, `close` | `float64`              | Finite real values satisfying candle geometry           |
+| `volume`                       | `float64`              | Finite, nonnegative values, including fractional volume |
 
 `pricegenerator.market_data.ValidateOHLCV(frame, *, assume_timezone=None,
 timeframe_seconds=None, allow_gaps=True)` returns a detached canonical frame

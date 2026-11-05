@@ -104,10 +104,10 @@ observations per size, with identical complete configuration and output hashes.
 Only `market_data.py` differs among package source hashes. Under the shared
 Linux CPython 3.12.14 / pandas 2.2.3 / NumPy 2.2.6 environment:
 
-| Rows | Before median | After median | Observed reduction |
-| ---: | ---: | ---: | ---: |
-| 10,000 | 1.07465 s | 1.01074 s | 5.95% |
-| 100,000 | 11.54514 s | 10.20701 s | 11.59% |
+| Rows    | Before median | After median | Observed reduction |
+| ------: | ------------: | -----------: | -----------------: |
+| 10,000  | 1.07465 s     | 1.01074 s    | 5.95%              |
+| 100,000 | 11.54514 s    | 10.20701 s   | 11.59%             |
 
 These observations include tracemalloc and fingerprinting, are sensitive to
 machine load, and support this narrow boundary optimization only. They do not
@@ -143,13 +143,13 @@ measurements and are absent from the maintained tracked runtime. Equal source
 inventories across reports establish equal inventoried snapshots; they do not
 establish identity with the final release's file inventory.
 
-| Rows | Full time | Chunked time | Full traced peak | Chunked traced peak |
-| ---: | ---: | ---: | ---: | ---: |
-| 100 | 0.028 s | 0.030 s | 90,123 B | 102,926 B |
-| 1,000 | 0.125 s | 0.108 s | 391,555 B | 487,965 B |
-| 10,000 | 1.045 s | 0.964 s | 2,993,661 B | 4,317,272 B |
-| 100,000 | 10.739 s | 10.843 s | 29,809,469 B | 4,974,775 B |
-| 1,000,000 | 102.641 s | 103.038 s | 298,457,213 B | 4,975,865 B |
+| Rows      | Full time | Chunked time | Full traced peak | Chunked traced peak |
+| --------: | --------: | -----------: | ---------------: | ------------------: |
+| 100       | 0.028 s   | 0.030 s      | 90,123 B         | 102,926 B           |
+| 1,000     | 0.125 s   | 0.108 s      | 391,555 B        | 487,965 B           |
+| 10,000    | 1.045 s   | 0.964 s      | 2,993,661 B      | 4,317,272 B         |
+| 100,000   | 10.739 s  | 10.843 s     | 29,809,469 B     | 4,974,775 B         |
+| 1,000,000 | 102.641 s | 103.038 s    | 298,457,213 B    | 4,975,865 B         |
 
 At one million rows the traced peak was about 298.5 MB for a complete frame
 versus 5.0 MB for chunked traversal. Worker lifetime peak RSS was 920,076,288 B

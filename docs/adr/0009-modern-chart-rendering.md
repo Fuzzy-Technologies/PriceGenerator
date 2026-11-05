@@ -27,12 +27,12 @@ The [capability matrix](../rendering-capabilities.md) is the migration checklist
 
 Measured distribution sizes on 2026-10-16:
 
-| Candidate | Raw bytes | Gzip bytes | Assessment |
-| --- | ---: | ---: | --- |
-| ECharts 6.1.0, full distribution | 1,121,883 | 369,080 | Unnecessary chart types; do not ship this default |
-| ECharts 6.1.0, selected financial components | 663,962 | 225,182 | Native candle/line/scatter/bar rendering, shared axes, legend, zoom, toolbox, and graphic primitives |
-| Lightweight Charts 5.2.1, standalone production | 197,922 | 62,165 | Smaller financial engine; extra work for the old box zoom and report controls; public attribution requirement |
-| uPlot 1.6.32, minified IIFE | 51,081 | 22,080 | Smallest candidate; panning and the financial presentation need more custom adapter work |
+| Candidate                                       | Raw bytes | Gzip bytes | Assessment                                                                                                    |
+| ----------------------------------------------- | --------: | ---------: | ------------------------------------------------------------------------------------------------------------- |
+| ECharts 6.1.0, full distribution                | 1,121,883 | 369,080    | Unnecessary chart types; do not ship this default                                                             |
+| ECharts 6.1.0, selected financial components    | 663,962   | 225,182    | Native candle/line/scatter/bar rendering, shared axes, legend, zoom, toolbox, and graphic primitives          |
+| Lightweight Charts 5.2.1, standalone production | 197,922   | 62,165     | Smaller financial engine; extra work for the old box zoom and report controls; public attribution requirement |
+| uPlot 1.6.32, minified IIFE                     | 51,081    | 22,080     | Smallest candidate; panning and the financial presentation need more custom adapter work                      |
 
 These are actual installed npm artifact measurements, including a locally built ECharts profile, not browser performance rankings. Smaller download size alone does not establish feature parity or frame latency. The initial interactive runtime budget is 700 KiB raw / 240 KiB gzip including the adapter, excluding candle data and the separately measured branding payload. Changes to that budget require recorded evidence.
 

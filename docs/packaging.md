@@ -12,15 +12,15 @@ APIs from clean installed wheel and sdist environments on each version. An
 additional Python version needs installation and behavioral evidence before
 metadata can promise support.
 
-| Installation | Purpose | Direct dependencies |
-| --- | --- | --- |
-| `pricegenerator` | Generation, replay, CSV, analysis, indicators, SVG and offline HTML | NumPy, pandas, python-dateutil |
-| `pricegenerator[export]` | Optional PNG/JPEG export | resvg-py 0.5.0, Pillow 12.0.0 |
-| `pricegenerator[notebook]` | Notebook host tooling | IPython, ipykernel |
-| `pricegenerator[test]` | Tests and metadata parsing | pytest, tomli on Python 3.10 |
-| `pricegenerator[docs]` | API documentation | pdoc |
-| `pricegenerator[release]` | Build and metadata validation | build, twine |
-| `pricegenerator[dev]` | Tests, release tools, coverage and lint | test/release tools, pytest-cov, Ruff |
+| Installation               | Purpose                                                             | Direct dependencies                  |
+| -------------------------- | ------------------------------------------------------------------- | ------------------------------------ |
+| `pricegenerator`           | Generation, replay, CSV, analysis, indicators, SVG and offline HTML | NumPy, pandas, python-dateutil       |
+| `pricegenerator[export]`   | Optional PNG/JPEG export                                            | resvg-py 0.5.0, Pillow 12.0.0        |
+| `pricegenerator[notebook]` | Notebook host tooling                                               | IPython, ipykernel                   |
+| `pricegenerator[test]`     | Tests and metadata parsing                                          | pytest, tomli on Python 3.10         |
+| `pricegenerator[docs]`     | API documentation                                                   | pdoc                                 |
+| `pricegenerator[release]`  | Build and metadata validation                                       | build, twine                         |
+| `pricegenerator[dev]`      | Tests, release tools, coverage and lint                             | test/release tools, pytest-cov, Ruff |
 
 Bokeh, Jinja2, pandas-ta and pandas-ta-classic are absent from all modern
 runtime extras. Indicator formulas use NumPy/pandas directly. Renderer assets,
