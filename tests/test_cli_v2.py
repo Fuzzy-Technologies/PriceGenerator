@@ -10,6 +10,7 @@ import pytest
 
 from pricegenerator import Generate, GenerationConfig, ReadCSV, WriteCSV
 from pricegenerator.cli import Main
+from pricegenerator.monte_carlo import DerivePathSeed
 
 
 def test_GenerateReplayAndValidateRealCSV(tmp_path, capsys):
@@ -119,5 +120,52 @@ def test_ModuleEntryPointHasOnlyModernCommands():
 
     completed = subprocess.run([sys.executable, "-m", "pricegenerator", "--help"], capture_output=True, text=True, check=False)
     assert completed.returncode == 0, f"Module entry point failed: {completed.stderr}"
-    assert "generate,replay,validate,analyze,chart" in completed.stdout, "Module entry point did not expose modern commands"
+    assert "generate,replay,validate,analyze,chart,monte-carlo,replay-ensemble" in completed.stdout, "Module entry point did not expose modern commands"
     assert "--legacy" not in completed.stdout, "Historical command alias remains active"
+
+
+def test_EnsembleCLIExportsReportManifestAndRealPathChart(tmp_path):
+    """Export real path-zero candles and reproduce the report with two workers."""
+
+    output, manifest, chart, replay = (tmp_path / name for name in ("report.json", "experiment.json", "quantiles.svg", "replay.json"))
+    assert Main([
+        "monte-carlo", "--seed", "42", "--horizon", "16", "--paths", "7",
+        "--output", str(output), "--manifest", str(manifest), "--chart", str(chart),
+    ]) == 0, "Monte Carlo CLI failed to write the ensemble artifacts"
+    assert Main(["replay-ensemble", str(manifest), "--workers", "2", "--output", str(replay)]) == 0, "Parallel replay CLI failed"
+    assert output.read_bytes() == replay.read_bytes(), "Worker count changed the serialized result"
+
+    actual_path = Generate(GenerationConfig(seed=DerivePathSeed(42, 0), horizon=16))
+    svg = chart.read_text(encoding="utf-8")
+    assert "Monte Carlo | regime_v2 | 7 paths" in svg, "The chart must identify the model and sample size"
+    assert "Candles and volume: ensemble path 0" in svg, "The chart must disclose the candle source"
+    assert "pointwise synthetic range" in svg, "The chart must describe the quantile range"
+    assert f"C={actual_path.close.iloc[0]} " in svg, "Displayed candles must come from an actual derived path"
+
+    for level in ("05", "50", "95"):
+        assert f'data-series="close-p{level}"' in svg, f"The chart lost the P{level} quantile"
+
+
+def test_EnsembleCLIProtectsManifestAndConfiguration(tmp_path):
+    """Reject output aliases and a tampered replay before writing results."""
+
+    config, manifest, output = (tmp_path / name for name in ("config.json", "manifest.json", "report.json"))
+    config.write_text('{"seed": 0, "horizon": 2}', encoding="utf-8")
+
+    with pytest.raises(SystemExit) as error:
+        Main(["monte-carlo", "--paths", "2", "--config", str(config), "--manifest", str(config)])
+
+    assert error.value.code == 2 and json.loads(config.read_text())["horizon"] == 2, "The CLI overwrote an aliased configuration"
+    Main(["monte-carlo", "--paths", "2", "--config", str(config), "--manifest", str(manifest)])
+    valid = json.loads(manifest.read_text())
+
+    with pytest.raises(SystemExit) as error:
+        Main(["replay-ensemble", str(manifest), "--output", str(manifest)])
+
+    assert error.value.code == 2 and json.loads(manifest.read_text()) == valid, "Replay overwrote its input manifest"
+    manifest.write_text(json.dumps({**valid, "path_count": 3}), encoding="utf-8")
+
+    with pytest.raises(SystemExit) as error:
+        Main(["replay-ensemble", str(manifest), "--output", str(output)])
+
+    assert error.value.code == 2 and not output.exists(), "Tampered replay wrote a result"
