@@ -1,9 +1,11 @@
 """Check ensemble seed identity, aggregation and resource bounds."""
 
 from dataclasses import replace
+import hashlib
 import json
 import random
 from statistics import quantiles
+from struct import pack
 
 import pytest
 
@@ -11,7 +13,7 @@ from pricegenerator import monte_carlo
 from pricegenerator.analysis import Analyze
 from pricegenerator.config import GenerationConfig
 from pricegenerator.generation import Generate
-from pricegenerator.monte_carlo import DerivePathSeed, RunEnsemble
+from pricegenerator.monte_carlo import CreateEnsembleManifest, DerivePathSeed, ReplayEnsemble, RunEnsemble
 
 
 @pytest.mark.parametrize("root_seed,path_index,digest", [
@@ -107,3 +109,67 @@ def test_EnsembleRejectsUnsupportedConfigAndCandleBudget() -> None:
 
     with pytest.raises(ValueError, match="total candles"):
         RunEnsemble(oversized, path_count=2)
+
+
+def test_ParallelReplayMatchesExactSerialReport() -> None:
+    """Verify worker-count invariance and the output wire format independently."""
+
+    serial = RunEnsemble(GenerationConfig(seed=-42, horizon=12, volatility=.03), path_count=9)
+    manifest = json.loads(json.dumps(CreateEnsembleManifest(serial), allow_nan=False))
+    expected = hashlib.sha256(b"pricegenerator-ensemble-output-v1\n")
+
+    for values in (*serial.close_quantiles, serial.maximum_drawdowns, serial.drawdown_quantiles):
+        for value in values:
+            expected.update(pack("<d", value))
+
+    assert manifest["output_fingerprint"] == expected.hexdigest(), "The binary64 report fingerprint format changed"
+
+    parallel = ReplayEnsemble(manifest, workers=2)
+    assert parallel == serial, "Parallel replay must preserve every quantile and path-indexed drawdown"
+    assert CreateEnsembleManifest(parallel) == manifest, "Worker count must not alter the experiment identity"
+
+
+def test_EnsembleReplayRejectsEditedInputsAndOutputs() -> None:
+    """Distinguish tampered identity and changed result fingerprints."""
+
+    report = RunEnsemble(GenerationConfig(horizon=2), path_count=3)
+    manifest = CreateEnsembleManifest(report)
+
+    with pytest.raises(ValueError, match="identity fingerprint"):
+        ReplayEnsemble({**manifest, "path_count": 4})
+
+    with pytest.raises(ValueError, match="output fingerprint"):
+        ReplayEnsemble({**manifest, "output_fingerprint": "0" * 64})
+
+    with pytest.raises(ValueError, match="SHA-256 digest"):
+        ReplayEnsemble({**manifest, "output_fingerprint": "invalid"})
+
+    with pytest.raises(ValueError, match="manifest_version"):
+        ReplayEnsemble({**manifest, "manifest_version": 2})
+
+    with pytest.raises(ValueError, match="complete generation configuration"):
+        ReplayEnsemble({**manifest, "configuration": {"seed": 0}})
+
+    with pytest.raises(ValueError, match="complete string-valued environment"):
+        ReplayEnsemble({**manifest, "environment": {"python": "3.13"}})
+
+
+def test_EnsembleReplayRequiresExplicitEnvironmentOverride() -> None:
+    """Allow portability verification only with exact result equality."""
+
+    report = RunEnsemble(GenerationConfig(horizon=2), path_count=3)
+    other_environment = dict(report.environment, platform="another platform")
+    manifest = CreateEnsembleManifest(replace(report, environment=tuple(sorted(other_environment.items()))))
+
+    with pytest.raises(ValueError, match="environment differs"):
+        ReplayEnsemble(manifest)
+
+    assert ReplayEnsemble(manifest, strict_environment=False) == report, "An explicit override must verify the result and record the current runtime"
+
+
+@pytest.mark.parametrize("workers", [True, 2.0, 0, monte_carlo.MAX_ENSEMBLE_WORKERS + 1])
+def test_EnsembleRejectsInvalidWorkerCounts(workers) -> None:
+    """Validate the worker count before generating paths or allocating arrays."""
+
+    with pytest.raises(ValueError, match="workers"):
+        RunEnsemble(GenerationConfig(), path_count=2, workers=workers)

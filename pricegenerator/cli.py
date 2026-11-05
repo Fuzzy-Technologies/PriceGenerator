@@ -58,17 +58,46 @@ def _WriteJSON(value: Any, destination: Path | None) -> None:
         destination.write_text(serialized, encoding="utf-8")
 
 
+def _GenerationArguments(parser: argparse.ArgumentParser) -> None:
+    """Expose the same generation options for single paths and ensembles."""
+
+    parser.add_argument("--config", type=Path, help="JSON GenerationConfig; explicit flags override fields.")
+    parser.add_argument("--seed", type=int)
+    parser.add_argument("--horizon", type=int)
+    parser.add_argument("--start", help="Timezone-aware ISO timestamp.")
+    parser.add_argument("--timeframe-seconds", type=int)
+
+
+def _ReadConfiguration(arguments: argparse.Namespace) -> GenerationConfig:
+    """Load validated configuration with explicit command-line overrides."""
+
+    configuration = {} if arguments.config is None else _ReadJSON(arguments.config)
+
+    if not isinstance(configuration, dict):
+        raise ValueError("configuration JSON must be an object")
+
+    for name in ("seed", "horizon", "start", "timeframe_seconds"):
+        if getattr(arguments, name) is not None:
+            configuration[name] = getattr(arguments, name)
+
+    return GenerationConfig.FromDict(configuration)
+
+
+def _EnsembleOutputArguments(parser: argparse.ArgumentParser) -> None:
+    """Define identical report and chart destinations for generation and replay."""
+
+    parser.add_argument("--workers", type=int, default=1, help="Number of worker processes (default: 1).")
+    parser.add_argument("--output", type=Path, help="Write the JSON report here instead of stdout.")
+    parser.add_argument("--chart", type=Path, help="Export path-zero candles and pointwise quantiles; choose format by suffix.")
+
+
 def _Parser() -> argparse.ArgumentParser:
     """Describe the intentional v2 commands without historical flag aliases."""
 
     parser = argparse.ArgumentParser(prog="pricegenerator", description=__doc__)
     commands = parser.add_subparsers(dest="command", required=True)
     generate = commands.add_parser("generate", help="Generate canonical OHLCV from explicit reproducible inputs.")
-    generate.add_argument("--config", type=Path, help="JSON GenerationConfig; explicit flags override fields.")
-    generate.add_argument("--seed", type=int)
-    generate.add_argument("--horizon", type=int)
-    generate.add_argument("--start", help="Timezone-aware ISO timestamp.")
-    generate.add_argument("--timeframe-seconds", type=int)
+    _GenerationArguments(generate)
     generate.add_argument("--output", type=Path, required=True)
     generate.add_argument("--manifest", type=Path)
     replay = commands.add_parser("replay", help="Verify a manifest and reproduce canonical OHLCV.")
@@ -102,6 +131,15 @@ def _Parser() -> argparse.ArgumentParser:
     chart.add_argument("--markers", type=Path)
     chart.add_argument("--summary", action="append", default=[])
     chart.add_argument("--report", type=Path)
+    monte_carlo = commands.add_parser("monte-carlo", help="Summarize a reproducible synthetic path ensemble.")
+    _GenerationArguments(monte_carlo)
+    _EnsembleOutputArguments(monte_carlo)
+    monte_carlo.add_argument("--paths", type=int, required=True)
+    monte_carlo.add_argument("--manifest", type=Path, help="Save the experiment inputs and result fingerprints for replay.")
+    replay_ensemble = commands.add_parser("replay-ensemble", help="Replay and verify a recorded synthetic path ensemble.")
+    _EnsembleOutputArguments(replay_ensemble)
+    replay_ensemble.add_argument("input", type=Path)
+    replay_ensemble.add_argument("--allow-environment-change", action="store_true", help="Still require exact fingerprint equality.")
 
     return parser
 
@@ -116,16 +154,7 @@ def _Execute(arguments: argparse.Namespace) -> None:
         from pricegenerator.scenario import CreateManifest
 
         _DistinctPaths([arguments.config], [arguments.output, arguments.manifest])
-        configuration = {} if arguments.config is None else _ReadJSON(arguments.config)
-
-        if not isinstance(configuration, dict):
-            raise ValueError("configuration JSON must be an object")
-
-        for name in ("seed", "horizon", "start", "timeframe_seconds"):
-            if getattr(arguments, name) is not None:
-                configuration[name] = getattr(arguments, name)
-
-        config = GenerationConfig.FromDict(configuration)
+        config = _ReadConfiguration(arguments)
         data = Generate(config)
         WriteCSV(data, arguments.output)
 
@@ -179,6 +208,34 @@ def _Execute(arguments: argparse.Namespace) -> None:
             options["markdown_report"] = arguments.report
 
         Chart(ReadCSV(arguments.input), arguments.output, format=arguments.format, view=arguments.view, quality=arguments.quality, **options)
+
+    elif arguments.command == "monte-carlo":
+        from pricegenerator.monte_carlo import ChartEnsemble, CreateEnsembleManifest, RunEnsemble
+
+        _DistinctPaths([arguments.config], [arguments.output, arguments.manifest, arguments.chart])
+        report = RunEnsemble(_ReadConfiguration(arguments), path_count=arguments.paths, workers=arguments.workers)
+
+        if arguments.chart is not None:
+            ChartEnsemble(report, arguments.chart)
+
+        if arguments.manifest is not None:
+            _WriteJSON(CreateEnsembleManifest(report), arguments.manifest)
+
+        _WriteJSON(report.ToDict(), arguments.output)
+
+    elif arguments.command == "replay-ensemble":
+        from pricegenerator.monte_carlo import ChartEnsemble, ReplayEnsemble
+
+        _DistinctPaths([arguments.input], [arguments.output, arguments.chart])
+        report = ReplayEnsemble(
+            _ReadJSON(arguments.input), workers=arguments.workers,
+            strict_environment=not arguments.allow_environment_change,
+        )
+
+        if arguments.chart is not None:
+            ChartEnsemble(report, arguments.chart)
+
+        _WriteJSON(report.ToDict(), arguments.output)
 
 
 def Main(argv: list[str] | None = None) -> int:
