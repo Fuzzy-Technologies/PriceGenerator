@@ -1,5 +1,7 @@
 # 复现合成 OHLCV 场景
 
+![Fuzzy Technologies 的 PriceGenerator 合成市场数据生成器。](../../../assets/pricegenerator-product-card.webp)
+
 [English](../en/quick-start.md) · [Русский](../ru/quick-start.md)
 
 使用固定随机种子生成行情序列，根据场景清单复现数据，并在不启动浏览器的情况下

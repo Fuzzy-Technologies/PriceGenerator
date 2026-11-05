@@ -1,5 +1,7 @@
 # Reproduce a synthetic OHLCV scenario
 
+![PriceGenerator by Fuzzy Technologies. Synthetic market data generator.](../../../assets/pricegenerator-product-card.webp)
+
 [Русский](../ru/quick-start.md) · [简体中文](../zh-CN/quick-start.md)
 
 Generate a seeded series, replay it from a manifest, and render it without
