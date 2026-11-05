@@ -2,11 +2,11 @@
 
 [Русский](../ru/migrate-to-2-1.md) · [简体中文](../zh-CN/migrate-to-2-1.md)
 
-| Version | Role |
-| --- | --- |
-| `1.4.93` | Historical PyPI release and starting point for 1.x migrations. |
-| `v2.0.0` | GitHub test tag for the modern runtime at `83b1b75a99be06947a93314d6c2509a257ed6b3e`. |
-| `2.1.0` | Target for the first public modern PyPI release. Final artifact and illustration verification is pending. |
+| Version  | Role                                                                                                      |
+| -------- | --------------------------------------------------------------------------------------------------------- |
+| `1.4.93` | Historical PyPI release and starting point for 1.x migrations.                                            |
+| `v2.0.0` | GitHub test tag for the modern runtime at `83b1b75a99be06947a93314d6c2509a257ed6b3e`.                     |
+| `2.1.0`  | Target for the first public modern PyPI release. Final artifact and illustration verification is pending. |
 
 ## Moving a 1.4.93 project
 
