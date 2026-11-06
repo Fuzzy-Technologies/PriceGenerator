@@ -97,6 +97,12 @@ fail early. The old mutable class, rendering methods and old CLI flags are
 removed; [migration](https://github.com/Fuzzy-Technologies/PriceGenerator/blob/v2.0.0/docs/chart-migration.md) and [ADR-0010](https://github.com/Fuzzy-Technologies/PriceGenerator/blob/v2.0.0/docs/adr/0010-modern-only-public-api.md)
 record the deliberate break. Historical evidence remains [archived](https://github.com/Fuzzy-Technologies/PriceGenerator/blob/v2.0.0/docs/baseline/README.md).
 
+## Run a complete experiment
+
+The [experiment bundle](docs/examples/experiment-bundle.md) creates two
+seeded OHLCV fixtures, verifies single-path and ensemble replay, and records a
+comparison report, an offline quantile chart, and checksums.
+
 ## Develop and extend
 
 ```bash
