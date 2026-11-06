@@ -9,7 +9,7 @@ a separate release operation.
 
 ## Locked modern environment
 
-CPython 3.10–3.13 is the supported package window. Create one environment per
+CPython 3.10–3.15 is the supported package window. Create one environment per
 runtime when verifying support; installing on one version does not certify the
 others. From the repository:
 
@@ -72,7 +72,7 @@ and heading fragments are outside this source check.
 The source gate enforces coverage floors of 95% for the lifecycle parser and
 90% for the package, calculated from statements and branches. The PR workflow runs it on
 Linux for every supported Python and adds an isolated wheel/sdist smoke on
-Windows with Python 3.13. Require the relevant hosted quality checks and
+Windows with Python 3.14 and 3.15. Require the relevant hosted quality checks and
 chart runtime check in branch protection/rulesets; committing a workflow does
 not configure those repository settings.
 

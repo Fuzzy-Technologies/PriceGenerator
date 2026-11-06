@@ -80,7 +80,7 @@ provenance for its separate 120-candle fixture.
   ensemble and pointwise price quantiles. A quantile at one candle is
   conditional on the model and is not a whole-path coverage guarantee.
 - [Fuzzy diagnostics](../../../fuzzy-diagnostics.md) describes the
-  experimental optional Python 3.13 integration. The scalar score
+  experimental optional integration on Python 3.13–3.15. The scalar score
   summarizes supplied volatility and activity ratios. It does not feed
   back into candle generation.
 - [Reference comparison](../../../reference-comparison.md) records the

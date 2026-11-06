@@ -82,6 +82,8 @@ def RenderSVG(spec: ChartSpec) -> str:
     position_y, ticks = _Scale(spec, price_top, price_bottom)
     label_width = max(len(_PriceLabel(tick, spec.price_precision)) for tick in ticks) * 7
     left, right = float(max(92, label_width + 20)), float(spec.width - 28)
+    wordmark_width = min(260.0, right - left - 16)
+    wordmark_height = wordmark_width * 0.18
     count = len(spec.candles)
     instants = [datetime.fromisoformat(candle.datetime.replace("Z", "+00:00")) for candle in spec.candles]
     deltas = [instant - instants[0] for instant in instants]
@@ -109,7 +111,7 @@ def RenderSVG(spec: ChartSpec) -> str:
         f'<clipPath id="{prefix}-volume"><rect x="{left}" y="{volume_top}" width="{right - left}" height="{volume_bottom - volume_top}"/></clipPath>',
         f'<clipPath id="{prefix}-emblem-clip"><circle cx="28" cy="28" r="28"/></clipPath>',
         f'<filter id="{prefix}-wordmark-tint"><feFlood flood-color="{theme["text"]}"/><feComposite in2="SourceAlpha" operator="in"/></filter>',
-        f'<image id="{prefix}-wordmark" xlink:href="{branding["wordmark"]}" width="160" height="28.8"/>',
+        f'<image id="{prefix}-wordmark" xlink:href="{branding["wordmark"]}" width="{_Coordinate(wordmark_width)}" height="{_Coordinate(wordmark_height)}"/>',
         f'<image id="{prefix}-emblem" xlink:href="{branding["emblem"]}" width="56" height="56" clip-path="url(#{prefix}-emblem-clip)"/></defs>',
         f'<rect width="100%" height="100%" fill="{theme["background"]}"/>',
         f'<g font-family="DejaVu Sans Mono,Consolas,monospace" fill="{theme["text"]}">',
@@ -172,8 +174,8 @@ def RenderSVG(spec: ChartSpec) -> str:
         pieces.append('</g>')
 
     pieces.append('</g>')
-    pieces.append(f'<g data-watermark-panel="price" clip-path="url(#{prefix}-plot)" opacity="0.28">')
-    pieces.append(f'<use href="#{prefix}-wordmark" xlink:href="#{prefix}-wordmark" x="{left + 8}" y="{price_bottom - 36.8}" filter="url(#{prefix}-wordmark-tint)"/></g>')
+    pieces.append(f'<g data-watermark-panel="price" clip-path="url(#{prefix}-plot)" opacity="0.9">')
+    pieces.append(f'<use href="#{prefix}-wordmark" xlink:href="#{prefix}-wordmark" x="{left + 8}" y="{_Coordinate(price_bottom - wordmark_height - 8)}" filter="url(#{prefix}-wordmark-tint)"/></g>')
 
     for marker in spec.markers:
         candle = spec.candles[marker.candle_index]

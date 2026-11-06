@@ -3,11 +3,12 @@
 `pyproject.toml` defines metadata, the build backend, dependencies, extras and
 `pricegenerator.cli:Main`. `_version.py` provides one deterministic literal for
 runtime, wheel and sdist versions. Builds never depend on Travis variables or
-the current date. This release candidate uses canonical version `2.0.0`;
-publication is a separate reviewed operation. Subsequent development versions
-use an explicit `.devN` suffix and are not published by the release workflow.
+the current date. Read the canonical version from `_version.py` at the exact
+source ref being built. Publication is a separate reviewed operation.
+Development versions use an explicit `.devN` suffix and are excluded from
+publication by the release workflow.
 
-The supported runtime is CPython **3.10–3.13** (`>=3.10,<3.14`). CI checks modern
+The supported runtime is CPython **3.10–3.15** (`>=3.10,<3.16`). CI checks modern
 APIs from clean installed wheel and sdist environments on each version. An
 additional Python version needs installation and behavioral evidence before
 metadata can promise support.
@@ -15,7 +16,7 @@ metadata can promise support.
 | Installation               | Purpose                                                             | Direct dependencies                  |
 | -------------------------- | ------------------------------------------------------------------- | ------------------------------------ |
 | `pricegenerator`           | Generation, replay, CSV, analysis, indicators, SVG and offline HTML | NumPy, pandas, python-dateutil       |
-| `pricegenerator[export]`   | Optional PNG/JPEG export                                            | resvg-py 0.5.0, Pillow 12.0.0        |
+| `pricegenerator[export]`   | Optional PNG/JPEG export                                            | resvg-py 0.5.0, Pillow               |
 | `pricegenerator[notebook]` | Notebook host tooling                                               | IPython, ipykernel                   |
 | `pricegenerator[test]`     | Tests and metadata parsing                                          | pytest, tomli on Python 3.10         |
 | `pricegenerator[docs]`     | API documentation                                                   | pdoc                                 |

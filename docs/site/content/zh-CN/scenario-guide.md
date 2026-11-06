@@ -72,7 +72,7 @@ python -I -m pricegenerator chart prices.csv --output analysis.html --analysis -
 - [蒙特卡洛](../../../monte-carlo.md)介绍实验性的固定种子集合模拟，
   以及每个时点的价格分位数。分位数取决于所选模型，
   逐时点区间无法保证对整条路径的同时覆盖。
-- [模糊诊断](../../../fuzzy-diagnostics.md)是 Python 3.13 上的可选实验功能。
+- [模糊诊断](../../../fuzzy-diagnostics.md)是 Python 3.13–3.15 上的可选实验功能。
   标量得分概括输入的波动率和活跃度比值，不会反过来改变 K 线生成。
 - [参考数据比较](../../../reference-comparison.md)记录历史样例的来源、
   假设和限制。分别检验结构、边际统计量和依赖关系。

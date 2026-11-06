@@ -81,7 +81,7 @@ project or past releases is unnecessary.
 5. When publication is authorized, run the workflow on the same master/tag with
    **publish** checked. This run builds its own reviewed candidate **once**,
    uploads its wheel and sdist as one immutable Actions artifact, and verifies
-   those exact downloaded bytes across CPython 3.10–3.13. Review **this run's**
+   those exact downloaded bytes across CPython 3.10–3.15. Review **this run's**
    hashes and verification evidence before approving the pending `pypi` job.
    The earlier verification run's artifacts are not silently reused.
 6. A configured required reviewer approves the pending environment deployment.

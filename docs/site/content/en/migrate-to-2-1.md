@@ -11,7 +11,7 @@
 ## Moving a 1.4.93 project
 
 Keep the old environment, input files and outputs if you need to reproduce
-1.x experiments. Set up a separate CPython 3.10–3.13 environment for the modern
+1.x experiments. Set up a separate CPython 3.10–3.15 environment for the modern
 package. Replace the mutable generator with `GenerationConfig` and
 `Generate(config)`, or replace old CLI flags with the `generate` subcommand.
 Convert existing files to canonical UTC OHLCV with the header

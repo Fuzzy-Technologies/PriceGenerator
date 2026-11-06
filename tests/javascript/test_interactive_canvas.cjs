@@ -8,7 +8,7 @@ const {CreateHarness} = require("../../tools/chart_runtime/canvas_environment.cj
 const adapter = require("../../pricegenerator/rendering/assets/interactive.js");
 const brandRoot = path.resolve(__dirname, "../../pricegenerator/rendering/assets/branding");
 const branding = {wordmark: "data:image/png;base64," + readFileSync(path.join(brandRoot,
-    "FuzzyTechnologies-Logo-transp.png")).toString("base64"), emblem: "data:image/png;base64," +
+    "FuzzyTechnologies-Logo-registered.png")).toString("base64"), emblem: "data:image/png;base64," +
     readFileSync(path.join(brandRoot, "ftech-emblem-192.png")).toString("base64")};
 const theme = {background: "#080d18", panel: "#111a2b", text: "#e3ecff", muted: "#95a6c6",
     grid: "#26344b", up: "#40e0cf", down: "#ee72d3", accent: "#57c7ff",
@@ -55,7 +55,7 @@ test("Mount followed immediately by PNG export contains decoded emblem and one p
         assert.equal(regions.filter((region) => region.name.startsWith("watermark-")).length, 1);
         assert.equal(regions[1].name, "watermark-price");
         assert.equal(regions[1].x, 90);
-        assert.equal(regions[1].width, 160);
+        assert.equal(regions[1].width, 260);
         for (const region of regions) assert.ok(Differences(exported, plain, region) > 20,
             region.name + " must survive PNG export as actual non-background pixels");
     } finally {
@@ -114,6 +114,36 @@ test("long text exports and edge annotations stay within the price panel", async
             assert.ok(rectangle.y >= 115 && rectangle.y + rectangle.height <= 217,
                 "Annotation text must remain inside the price panel vertically");
         }
+    } finally {
+        controller.Dispose();
+    }
+});
+
+test("PNG keeps the zoomed candles and volume without the interactive slider", async () => {
+    const harness = CreateHarness();
+    const spec = {...Spec(120), show_controls: true};
+    const images = await adapter.LoadBranding(branding, harness.environment);
+    images.watermark = adapter.TintWatermark(images.wordmark, theme, harness.environment);
+    const canvas = harness.Canvas(spec.width, spec.height);
+    const chart = harness.runtime.init(canvas, null, {renderer: "canvas"});
+    chart.setOption(adapter.BuildOptions(spec, theme, images, spec.width, spec.height));
+    const controller = adapter.CreateController(chart, spec, theme, images, canvas, harness.environment);
+    try {
+        chart.dispatchAction({type: "dataZoom", start: 20, end: 65});
+        const zoom = chart.getOption().dataZoom[0];
+        const snapshot = () => chart.getDataURL({type: "png", pixelRatio: 2, backgroundColor: theme.background});
+        const before = await harness.DecodePNG(snapshot());
+        const exported = await harness.DecodePNG(controller.ExportPNG());
+        const after = await harness.DecodePNG(snapshot());
+        const slider = {x: 82, y: 572, width: 850, height: 21};
+        const price = {x: 82, y: 112, width: 850, height: 280};
+        const volume = {x: 82, y: 421, width: 850, height: 72};
+        assert.ok(Differences(before, exported, slider) > 1000, "Export must omit the rendered slider");
+        assert.equal(Differences(before, after, slider), 0, "The live slider must remain visible");
+        assert.equal(Differences(before, exported, price), 0, "Export must preserve zoomed price pixels");
+        assert.equal(Differences(before, exported, volume), 0, "Export must preserve zoomed volume pixels");
+        assert.equal(chart.getOption().dataZoom[0].startValue, zoom.startValue);
+        assert.equal(chart.getOption().dataZoom[0].endValue, zoom.endValue);
     } finally {
         controller.Dispose();
     }

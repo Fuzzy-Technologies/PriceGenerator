@@ -68,7 +68,7 @@ def test_RejectMovedBranchTagAndDirtySource(master, tagged, dirty, monkeypatch):
         release_verify.CheckRef("v2.2.0", "2.2.0", publish=True)
 
 
-def MakeArtifacts(directory, version="2.0.0", obsolete=False, license_present=True, requires_python=">=3.10,<3.14"):
+def MakeArtifacts(directory, version="2.0.0", obsolete=False, license_present=True, requires_python=">=3.10,<3.16"):
     """Construct small real archives for deterministic metadata rejection tests."""
 
     identity = f"Name: pricegenerator\nVersion: {version}\nRequires-Python: {requires_python}\n"
@@ -255,11 +255,11 @@ def test_RejectMalformedCIResponse(response):
 def test_AcceptBuildBackendNormalizedPythonSpecifierOrder(tmp_path):
     """Setuptools canonical ordering must not reject the declared runtime window."""
 
-    MakeArtifacts(tmp_path, requires_python="<3.14,>=3.10")
+    MakeArtifacts(tmp_path, requires_python="<3.16,>=3.10")
     assert len(release_verify.CheckArtifacts(tmp_path, "2.0.0")) == 2, "Normalized equivalent metadata was rejected"
 
 
-@pytest.mark.parametrize("requires_python", [">=3.9,<3.14", ">=3.10", ">=3.10,<3.15", ""])
+@pytest.mark.parametrize("requires_python", [">=3.9,<3.16", ">=3.10", ">=3.10,<3.15", ">=3.10,<3.17", ""])
 def test_RejectDifferentOrMissingPythonWindow(tmp_path, requires_python):
     """Order-independent comparison must still reject unsupported runtime promises."""
 

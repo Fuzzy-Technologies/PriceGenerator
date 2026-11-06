@@ -80,7 +80,7 @@ def _BackendVersion() -> str:
     """Require the supported interpreter and the exact tested inference engine."""
 
     if sys.version_info < (3, 13):
-        raise ImportError("Fuzzy diagnostics require Python 3.13 in the supported PriceGenerator window")
+        raise ImportError("Fuzzy diagnostics require Python 3.13 or later")
 
     try:
         installed = version("fuzzyroutines")

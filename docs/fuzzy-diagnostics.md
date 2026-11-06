@@ -1,15 +1,13 @@
 # Experimental fuzzy market diagnostics
 
-Install the optional scalar backend in a Python 3.13 environment.
+Install the optional scalar backend in a Python 3.13–3.15 environment.
 
 ```bash
 python -m pip install '.[fuzzy]'
 ```
 
-The extra pins FuzzyRoutines 2.1.0. Generation and replay work on the existing
-Python 3.10–3.13 core. The integration uses the scalar API because the
-FuzzyRoutines NumPy extra requires NumPy `>=2.3.5,<3`, while PriceGenerator
-currently requires `>=2.0,<2.3`.
+The extra pins FuzzyRoutines 2.1.0 and uses its scalar API. Generation and
+replay work on Python 3.10–3.15 with the core installation.
 
 ```python
 import json
