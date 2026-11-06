@@ -195,7 +195,7 @@ def test_MultiCenturyContinuityFallbackRejectsOffGridAndContinuousClaims():
     """Retain exact policy checks when timestamp spans exceed signed int64."""
 
     frame = Candles().iloc[:2].copy()
-    frame["datetime"] = pd.to_datetime(["1700-01-01T00:00:00Z", "2200-01-01T00:00:00Z"])
+    frame["datetime"] = pd.to_datetime(["1700-01-01T00:00:00Z", "2200-01-01T00:00:00Z"]).as_unit("ns")
 
     with pytest.raises(OHLCVError, match="spacing"):
         ValidateOHLCV(frame, timeframe_seconds=1, allow_gaps=False)

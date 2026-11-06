@@ -6,6 +6,7 @@
 
 ## 2.2.0 (unreleased)
 
+- Run on CPython 3.14 and 3.15, including the optional fuzzy diagnostics and raster exports.
 - Compare two canonical OHLCV CSVs with the installed `pricegenerator compare`
   command. It checks the declared interval and records data fingerprints and
   the results of any supplied per-metric tolerances.

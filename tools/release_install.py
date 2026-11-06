@@ -67,7 +67,7 @@ def Main():
 
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("directory", type=Path)
-    parser.add_argument("--fuzzy", action="store_true", help="Verify the scalar fuzzy extra on Python 3.13.")
+    parser.add_argument("--fuzzy", action="store_true", help="Verify the scalar fuzzy extra on Python 3.13–3.15.")
     arguments = parser.parse_args()
     artifacts = sorted(arguments.directory.resolve().glob("*.whl")) + sorted(arguments.directory.resolve().glob("*.tar.gz"))
 

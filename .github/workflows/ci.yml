@@ -25,7 +25,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version: ["3.10", "3.11", "3.12", "3.13"]
+        python-version: ["3.10", "3.11", "3.12", "3.13", "3.14", "3.15"]
     steps:
       - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
         with:
@@ -53,7 +53,7 @@ jobs:
       - name: Test actual core and export artifacts in clean environments
         run: python tools/release_install.py dist
       - name: Test the installed scalar fuzzy extra in clean environments
-        if: matrix.python-version == '3.13'
+        if: contains(fromJSON('["3.13", "3.14", "3.15"]'), matrix.python-version)
         run: python tools/release_install.py dist --fuzzy
       - name: Retain build and test evidence
         if: always()
@@ -67,15 +67,24 @@ jobs:
           retention-days: 14
 
   windows-installed-smoke:
+    name: ${{ matrix.check }}
     runs-on: windows-2022
     timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - python-version: "3.14"
+            check: windows-installed-smoke
+          - python-version: "3.15"
+            check: windows-installed-smoke-315
     steps:
       - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
         with:
           persist-credentials: false
       - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
         with:
-          python-version: "3.13"
+          python-version: ${{ matrix.python-version }}
           cache: pip
           cache-dependency-path: requirements/*.txt
       - name: Build and verify Windows installations

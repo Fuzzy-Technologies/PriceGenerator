@@ -26,7 +26,7 @@ id==1.6.1
     # via twine
 idna==3.20
     # via requests
-importlib-metadata==9.0.1 ; (python_full_version < '3.10.2' and platform_machine == 'ppc64le') or (python_full_version < '3.10.2' and platform_machine == 's390x') or (python_full_version < '3.12' and platform_machine != 'ppc64le' and platform_machine != 's390x')
+importlib-metadata==9.0.1 ; python_full_version < '3.10.2' or (python_full_version >= '3.10.2' and python_full_version < '3.12' and platform_machine != 'ppc64le' and platform_machine != 's390x')
     # via
     #   build
     #   keyring
@@ -60,7 +60,15 @@ more-itertools==11.2.1 ; python_full_version >= '3.11' and platform_machine != '
     #   jaraco-functools
 nh3==0.3.7
     # via readme-renderer
-numpy==2.2.6
+numpy==2.2.6 ; python_full_version < '3.14'
+    # via
+    #   pricegenerator (pyproject.toml)
+    #   pandas
+numpy==2.3.5 ; python_full_version == '3.14.*'
+    # via
+    #   pricegenerator (pyproject.toml)
+    #   pandas
+numpy==2.5.4 ; python_full_version >= '3.15'
     # via
     #   pricegenerator (pyproject.toml)
     #   pandas
@@ -69,9 +77,15 @@ packaging==26.3
     #   build
     #   pytest
     #   twine
-pandas==2.2.3
+pandas==2.2.3 ; python_full_version < '3.14'
     # via pricegenerator (pyproject.toml)
-pillow==12.0.0
+pandas==2.3.3 ; python_full_version == '3.14.*'
+    # via pricegenerator (pyproject.toml)
+pandas==3.0.6 ; python_full_version >= '3.15'
+    # via pricegenerator (pyproject.toml)
+pillow==12.0.0 ; python_full_version < '3.15'
+    # via pricegenerator (pyproject.toml)
+pillow==13.0.0 ; python_full_version >= '3.15'
     # via pricegenerator (pyproject.toml)
 pluggy==1.7.0
     # via
@@ -96,7 +110,7 @@ python-dateutil==2.9.0.post0
     # via
     #   pricegenerator (pyproject.toml)
     #   pandas
-pytz==2026.5
+pytz==2026.5 ; python_full_version < '3.15'
     # via pandas
 pywin32-ctypes==0.2.3 ; platform_machine != 'ppc64le' and platform_machine != 's390x' and sys_platform == 'win32'
     # via keyring
@@ -132,12 +146,12 @@ typing-extensions==4.16.0 ; python_full_version < '3.11'
     # via
     #   cryptography
     #   exceptiongroup
-tzdata==2026.5
+tzdata==2026.5 ; python_full_version < '3.15' or sys_platform == 'emscripten' or sys_platform == 'win32'
     # via pandas
 urllib3==2.8.0
     # via
     #   id
     #   requests
     #   twine
-zipp==4.1.1 ; (python_full_version < '3.10.2' and platform_machine == 'ppc64le') or (python_full_version < '3.10.2' and platform_machine == 's390x') or (python_full_version < '3.12' and platform_machine != 'ppc64le' and platform_machine != 's390x')
+zipp==4.1.1 ; python_full_version < '3.10.2' or (python_full_version >= '3.10.2' and python_full_version < '3.12' and platform_machine != 'ppc64le' and platform_machine != 's390x')
     # via importlib-metadata
