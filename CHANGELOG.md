@@ -4,6 +4,17 @@
 [Documentation](https://github.com/Fuzzy-Technologies/PriceGenerator/blob/develop/README.md) ·
 [Release procedure](https://github.com/Fuzzy-Technologies/PriceGenerator/blob/develop/docs/releasing.md)
 
+## 2.2.0 (unreleased)
+
+- Compare two canonical OHLCV CSVs with the installed `pricegenerator compare`
+  command. It checks the declared interval and records data fingerprints and
+  the results of any supplied per-metric tolerances.
+- Run a [reproducible experiment](docs/examples/experiment-bundle.md) with
+  two synthetic fixtures, an offline quantile chart, exact replay and file
+  checksums.
+- Read revised Russian guides for market-data developers, including replay
+  across environments and bar exchange with MetaTrader 5.
+
 ## 2.1.0 (GitHub pre-release)
 
 - Generate and replay bounded Monte Carlo ensembles with stable path seeds,

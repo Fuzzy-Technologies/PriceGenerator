@@ -120,6 +120,14 @@ pricegenerator chart prices.csv --output chart.html --no-view --analysis
 [ADR-0010](docs/adr/0010-modern-only-public-api.md) ·
 [Архив 1.x](docs/baseline/README.md)
 
+## Сравнить два ряда свечей
+
+Команда `pricegenerator compare` проверяет шаг баров и сопоставляет
+показатели двух рядов OHLCV. В отчёте указаны хеши рядов и результаты
+проверки по заданным допускам. В полном примере можно сгенерировать
+оба ряда, повторить прогон и сохранить график с квантилями Монте-Карло.
+[Сравнение рядов](docs/reference-comparison.md) · [Пример эксперимента](docs/examples/experiment-bundle.md)
+
 ## Разработка и расширения
 
 ```bash
