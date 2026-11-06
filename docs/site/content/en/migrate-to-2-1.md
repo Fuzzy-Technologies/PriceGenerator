@@ -2,11 +2,11 @@
 
 [Русский](../ru/migrate-to-2-1.md) · [简体中文](../zh-CN/migrate-to-2-1.md)
 
-| Version  | Role                                                                                                      |
-| -------- | --------------------------------------------------------------------------------------------------------- |
-| `1.4.93` | Historical PyPI release and starting point for 1.x migrations.                                            |
-| `v2.0.0` | GitHub test tag for the modern runtime at `83b1b75a99be06947a93314d6c2509a257ed6b3e`.                     |
-| `2.1.0`  | Target for the first public modern PyPI release. Final artifact and illustration verification is pending. |
+| Version  | Role                                                                                  |
+| -------- | ------------------------------------------------------------------------------------- |
+| `1.4.93` | Historical PyPI release and starting point for 1.x migrations.                        |
+| `v2.0.0` | GitHub test tag for the modern runtime at `83b1b75a99be06947a93314d6c2509a257ed6b3e`. |
+| `2.1.0`  | GitHub pre-release with Monte Carlo, optional fuzzy diagnostics, and faster exports.  |
 
 ## Moving a 1.4.93 project
 
@@ -30,8 +30,8 @@ require the matching `export` extra. [Model assumptions and limits](../../../mod
 
 ## Check a seeded fixture
 
-Install the test tag as shown in the [CLI and Python quickstart](quick-start.md)
-and run the commands in a fresh output directory.
+Install the 2.1 archive from the [GitHub pre-release](release-2-1.md),
+then run the commands in a fresh output directory.
 
 ```sh
 python -I -m pricegenerator generate --seed 42 --horizon 240 --start 2025-01-06T00:00:00Z --timeframe-seconds 60 --output prices.csv --manifest scenario.json

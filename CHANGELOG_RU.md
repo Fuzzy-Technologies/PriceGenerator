@@ -4,7 +4,7 @@
 [Документация](https://github.com/Fuzzy-Technologies/PriceGenerator/blob/develop/README_RU.md) ·
 [Порядок выпуска](https://github.com/Fuzzy-Technologies/PriceGenerator/blob/develop/docs/releasing.md)
 
-## 2.1.0 (готовится)
+## 2.1.0 (предварительный выпуск на GitHub)
 
 - Воспроизводимые ансамбли Монте‑Карло с неизменными seed траекторий при
   разном числе процессов, распределениями просадок и графиками квантилей.
@@ -15,7 +15,7 @@
 - Добавлены быстрые старты, научные главы, справочник API, проверки ссылок,
   численные тесты модели и проверка на отложенном отрезке BTC/USD.
 
-[Обзор с примерами](docs/site/content/ru/release-2-1.md) ·
+[Что нового в 2.1](docs/site/content/ru/release-2-1.md) ·
 [Переход с 1.4.93](docs/site/content/ru/migrate-to-2-1.md)
 
 ## 2.0.0

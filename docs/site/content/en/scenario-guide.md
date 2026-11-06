@@ -4,8 +4,7 @@
 
 Start with the [quick start](quick-start.md) to generate, replay and export a
 minute-bar fixture from the verified GitHub 2.0 test baseline. The
-[migration guide](migrate-to-2-1.md) explains the changes planned for the
-first public 2.x release on PyPI, 2.1.0.
+[migration guide](migrate-to-2-1.md) covers the 2.1.0 GitHub pre-release.
 
 ## Interpret the candles
 
