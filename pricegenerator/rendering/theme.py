@@ -29,7 +29,7 @@ def _EncodedBranding() -> tuple[str, str]:
     asset_root = files("pricegenerator.rendering").joinpath("assets", "branding")
     encoded = []
 
-    for name in ("FuzzyTechnologies-Logo-transp.png", "ftech-emblem-192.png"):
+    for name in ("FuzzyTechnologies-Logo-registered.png", "ftech-emblem-192.png"):
         encoded.append("data:image/png;base64," + base64.b64encode(asset_root.joinpath(name).read_bytes()).decode("ascii"))
 
     return encoded[0], encoded[1]

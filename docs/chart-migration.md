@@ -23,9 +23,10 @@ The returned `Path` identifies the saved artifact. Static formats require an
 explicit output path and default to no browser launch; `view=True` explicitly
 requests opening their file URI.
 
-The HTML embeds its reviewed ECharts runtime, data, logo and license notices;
-SVG is standalone. Neither needs a CDN or Node at user runtime. Dark/light themes
-use the same semantics. Each chart has exactly **one translucent corporate
+The HTML embeds its ECharts runtime, data and logo. Third-party notices are
+retained in the HTML source. The PNG download includes the current price and
+volume view without the slider or other controls. SVG is standalone. Neither needs a CDN or Node at user runtime. Dark/light themes
+use the same semantics. Each chart has exactly **one Fuzzy Technologies®
 wordmark in the price panel**; there is no watermark in the volume panel and no
 repeated branding strip. The main corporate emblem is distinct from that wordmark.
 

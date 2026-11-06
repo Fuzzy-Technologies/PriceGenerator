@@ -87,8 +87,12 @@ def test_OfflineDocumentEmbedsRuntimeBrandingAndLicenses() -> None:
     assert all(source.startswith("data:image/png;base64,") for source in branding.values())
     assert set(branding) == {"wordmark", "emblem"}
     assert not any(attrs.get("src") or attrs.get("href") for _, attrs in parsed.tags), "No external resource references are allowed"
-    assert "Apache License" in document and "BSD 3-Clause License" in document
-    assert "Microsoft Corporation" in document and "Apache Software Foundation" in document
+    page, notices = document.split('<template id="third-party-notices">', 1)
+    notices = notices.split("</template>", 1)[0]
+    assert not any(tag in {"details", "summary", "pre"} for tag, _ in parsed.tags)
+    assert "Apache License" not in page and "BSD 3-Clause License" not in page
+    assert "Apache License" in notices and "BSD 3-Clause License" in notices
+    assert "Microsoft Corporation" in notices and "Apache Software Foundation" in notices
     assert "prefers-reduced-motion:reduce" in document
     assert "data-action=\"full\"" in document
 

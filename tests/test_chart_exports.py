@@ -70,7 +70,7 @@ def test_OnePriceWordmarkChangesOnlyItsNativeRasterRegion(monkeypatch) -> None:
     namespace = {"svg": "http://www.w3.org/2000/svg"}
     group = root.find('.//svg:g[@data-watermark-panel]', namespace)
     assert group.attrib["data-watermark-panel"] == "price"
-    assert group.attrib["opacity"] == "0.28"
+    assert group.attrib["opacity"] == "0.9"
     uses = group.findall("svg:use", namespace)
     assert len(uses) == 1
     use = uses[0]
@@ -82,8 +82,13 @@ def test_OnePriceWordmarkChangesOnlyItsNativeRasterRegion(monkeypatch) -> None:
     plain = image_module.open(BytesIO(RenderPNG(spec))).convert("RGB")
     bounds = difference_module.difference(branded, plain).getbbox()
     assert bounds is not None, "The wordmark filter rendered no actual pixels"
-    assert x <= bounds[0] < bounds[2] <= x + 160
-    assert int(y) <= bounds[1] < bounds[3] <= y + 30
+    image = next(element for element in root.findall(".//svg:image", namespace)
+                 if element.attrib["id"].endswith("-wordmark"))
+    width, height = float(image.attrib["width"]), float(image.attrib["height"])
+    assert width == 260
+    assert x <= bounds[0] < bounds[2] <= x + width
+    assert int(y) <= bounds[1] < bounds[3] <= y + height
+    assert bounds[2] > x + width * 0.93, "The registered mark must survive raster export"
 
 
 @pytest.mark.parametrize("quality", [True, 0, 96, 1.5, "90"])

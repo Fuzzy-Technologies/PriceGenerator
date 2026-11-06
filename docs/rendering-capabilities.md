@@ -81,19 +81,19 @@ raster dependencies. `RenderPNG`/`RenderJPEG` return bytes, and
 `SavePNG`/`SaveJPEG` write explicit paths. JPEG uses an opaque themed RGB
 background and integer quality from 1 through 95. PDF is not a supported format.
 
-Both supplied corporate images are embedded once per SVG. One definition is referenced exactly once for the translucent wordmark at the lower left inside the price panel, at 28% opacity. The volume panel has no watermark and there is no repeated strip. A tint filter uses the theme text color without replacing the supplied silhouette. The main emblem is clipped to its original circular design. No font, image, or script needs a network request. Glyphs retain a minimum 0.75-pixel width when intervals become subpixel, while their true timestamp positions remain unchanged; this is a display-density policy, not time compression.
+Both supplied corporate images are embedded once per SVG. One definition is referenced exactly once for the translucent wordmark at the lower left inside the price panel, at 90% opacity. The volume panel has no watermark and there is no repeated strip. A tint filter uses the theme text color without replacing the supplied silhouette. The main emblem is clipped to its original circular design. No font, image, or script needs a network request. Glyphs retain a minimum 0.75-pixel width when intervals become subpixel, while their true timestamp positions remain unchanged; this is a display-density policy, not time compression.
 
 ## Asset provenance
 
-The user supplied both source images during the 2026-10-15 UTC session. Original files are not regenerated. The emblem's source filename says `2048`, but its actual dimensions are 1254×1254.
+The registered wordmark comes from the [official site SVG](https://fuzzy-technologies.com/static/images/FuzzyTechnologies-Logo-registered.svg). The PNG preserves the source dimensions and was rasterized with resvg-py 0.5.0 and saved as optimized RGBA with Pillow 12.0.0. The emblem comes from the original user-supplied image. Its source filename says `2048`, but its actual dimensions are 1254×1254.
 
 | Asset                                                                          | Actual dimensions | Bytes     | SHA-256                                                            |
 | ------------------------------------------------------------------------------ | ----------------- | --------: | ------------------------------------------------------------------ |
-| `FuzzyTechnologies-Logo-transp.png` (unchanged runtime wordmark)               | 1000×180          | 3,708     | `d359c5ec7a949f6133508aab59dac97dfea77872ed43b6c6df3c4a10def46103` |
+| `FuzzyTechnologies-Logo-registered.png` (runtime wordmark)                     | 1000×180          | 6,046     | `fe72d0e7ced729b78299400777e333c545bdbc6d90aa24f6f8365bc931a10984` |
 | `rendering-assets/source/FTech-corporate-mark-circular-dark-2048.png` (source) | 1254×1254         | 2,255,851 | `6175ff9bd7649f7a1e8e8766149b3b09e1553f2e4b7a83506c61c92329b4a08f` |
 | `ftech-emblem-192.png` (runtime derivative)                                    | 192×192           | 54,223    | `b0f03918847db13a6b7d3cdcd53b739362478f370a2f795a93b2996ab7720a28` |
 
-The derivative was produced using Pillow 12.3.0, `image.resize((192, 192), Image.Resampling.LANCZOS).save(path, format="PNG", optimize=True)`. No crop, recolor, synthetic detail, or design change was made. SVG/HTML load the packaged assets without Pillow. Pillow is also used at runtime by the optional JPEG export. Runtime package data consists of the two files under `pricegenerator/rendering/assets/branding/`; the large original stays in documentation sources.
+The emblem derivative was produced using Pillow 12.3.0, `image.resize((192, 192), Image.Resampling.LANCZOS).save(path, format="PNG", optimize=True)`. No crop, recolor, synthetic detail, or design change was made. SVG/HTML load the packaged assets without Pillow. Pillow is also used at runtime by the optional JPEG export. Runtime package data consists of the two files under `pricegenerator/rendering/assets/branding/`; the large original stays in documentation sources.
 
 ## Historical candidate bundle measurements
 
@@ -162,7 +162,7 @@ compatibility switch.
 SVG, native Python PNG/JPEG, full HTML and Markdown retain the supplied report.
 The interactive **Export PNG** action contains the current chart viewport,
 visible overlays, header emblem and exactly one lower-left price-panel
-wordmark, excluding the separate HTML report and controls. Both paths keep
+wordmark. The slider and other interactive controls stay in HTML. Both paths keep
 volume free of watermarks. This is an explicit export-scope distinction.
 
 Interactive snapshots above 5,000 rows initially display the latest 1,000 while

@@ -37,11 +37,11 @@
             clipPath: {type: "circle", shape: {cx: 43, cy: 38, r: 23}},
             style: {image: branding.emblem, x: 20, y: 15, width: 46, height: 46}}];
         const available = layout.width - layout.left - layout.right;
-        const watermarkWidth = Math.min(160, available - 16);
+        const watermarkWidth = Math.min(260, available - 16);
         graphics.push({id: "watermark-price", type: "image", silent: true, z: 6,
             style: {image: branding.watermark || branding.wordmark, x: layout.left + 8,
                 y: layout.top + layout.priceHeight - watermarkWidth * 0.18 - 8,
-                width: watermarkWidth, height: watermarkWidth * 0.18, opacity: 0.28}});
+                width: watermarkWidth, height: watermarkWidth * 0.18, opacity: 0.9}});
         return graphics;
     }
 
@@ -267,7 +267,7 @@
         }
         function ExportPNG() {
             return chart.getDataURL({type: "png", pixelRatio: 2, backgroundColor: theme.background,
-                excludeComponents: ["toolbox"]});
+                excludeComponents: ["toolbox", "dataZoom", "legend", "tooltip", "axisPointer"]});
         }
         function Resize() {
             if (disposed) return;
