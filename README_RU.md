@@ -5,7 +5,7 @@
 [Руководство](docs/site/content/ru/scenario-guide.md) ·
 [English](docs/site/content/en/scenario-guide.md) ·
 [简体中文](docs/site/content/zh-CN/scenario-guide.md) ·
-[Обзор 2.1 с примерами](docs/site/content/ru/release-2-1.md)
+[Что нового в 2.1](docs/site/content/ru/release-2-1.md)
 
 Воспроизводимые синтетические OHLCV-сценарии для тестирования торговых систем
 и количественных исследований. API v2 разделяет генерацию, проверку данных,
@@ -15,15 +15,15 @@
 ## Установка
 
 Поддерживается CPython 3.10–3.13. На PyPI доступен исторический выпуск
-1.4.93. [Тестовый выпуск 2.0.0](https://github.com/Fuzzy-Technologies/PriceGenerator/releases/tag/v2.0.0)
-доступен на GitHub. Для примеров API v2 ниже установите пакет из исходников:
+1.4.93. Версии 2.x доступны на GitHub. Чтобы выполнить примеры ниже,
+установите пакет из архива [предварительного выпуска 2.1](docs/site/content/ru/release-2-1.md):
 
 ```bash
 python -m pip install .
 python -m pip install '.[export]'  # Для экспорта PNG/JPEG.
 ```
 
-Первый публичный выпуск современной ветки на PyPI запланирован как 2.1.0.
+Первый выпуск ветки 2.x на PyPI запланирован на версию 2.2.0.
 Проверка и публикация описаны в [инструкции по выпуску](docs/releasing.md).
 
 ## Генерация и CSV
@@ -87,7 +87,7 @@ pricegenerator analyze prices.csv --output statistics.json
 pricegenerator chart prices.csv --output chart.html --no-view --analysis
 ```
 
-В версии разработки 2.1 доступны [генерация и точное воспроизведение
+В версии 2.1 доступны [генерация и точное воспроизведение
 ансамблей](docs/monte-carlo.md) через CLI и Python, а также опциональная
 [нечёткая диагностика режимов](docs/fuzzy-diagnostics.md) на Python 3.13.
 
@@ -117,4 +117,4 @@ python -m pytest -q tests
 
 [Репозиторий](https://github.com/Fuzzy-Technologies/PriceGenerator) ·
 [Задачи](https://github.com/Fuzzy-Technologies/PriceGenerator/issues) ·
-[Лицензия Apache-2.0](https://github.com/Fuzzy-Technologies/PriceGenerator/blob/v2.0.0/LICENSE) · [English](https://github.com/Fuzzy-Technologies/PriceGenerator/blob/v2.0.0/README.md)
+[Лицензия Apache-2.0](https://github.com/Fuzzy-Technologies/PriceGenerator/blob/v2.0.0/LICENSE) · [English](README.md)

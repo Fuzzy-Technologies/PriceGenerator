@@ -4,7 +4,7 @@
 
 [English](../en/quick-start.md) · [Русский](../ru/quick-start.md)
 
-[科学与使用指南](scenario-guide.md) · [2.1 图文预览](release-2-1.md)
+[科学与使用指南](scenario-guide.md) · [2.1 版本说明](release-2-1.md)
 
 使用固定随机种子生成行情序列，根据场景清单复现数据，并在不启动浏览器的情况下
 生成图表。该序列可用于软件测试和受控实验。时间戳为合成数据，价格变化取决于

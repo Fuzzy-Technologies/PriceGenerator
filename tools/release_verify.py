@@ -47,6 +47,9 @@ def CheckRef(tag, version, publish=False):
     if publish and version == "2.0.0":
         raise ReleaseError("The 2.0.0 test baseline cannot be published to PyPI")
 
+    if publish and version == "2.1.0":
+        raise ReleaseError("The 2.1.0 GitHub pre-release cannot be published to PyPI")
+
     if publish and (".dev" in version or "+" in version):
         raise ReleaseError("Development and local versions cannot be published by this workflow")
 

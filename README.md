@@ -5,7 +5,7 @@
 [English guide](docs/site/content/en/scenario-guide.md) ·
 [Русский](docs/site/content/ru/scenario-guide.md) ·
 [简体中文](docs/site/content/zh-CN/scenario-guide.md) ·
-[2.1 illustrated preview](docs/site/content/en/release-2-1.md)
+[What's new in 2.1](docs/site/content/en/release-2-1.md)
 
 Reproducible synthetic OHLCV scenarios for trading-system tests and quantitative
 research. The v2 API separates generation, validation, diagnostics, CSV, replay
@@ -15,15 +15,16 @@ establish that a strategy is profitable.
 ## Install
 
 CPython 3.10–3.13 is supported. PyPI currently provides the historical 1.4.93
-release. The [2.0.0 test release](https://github.com/Fuzzy-Technologies/PriceGenerator/releases/tag/v2.0.0)
-is available on GitHub. Install a source checkout to try the v2 APIs below:
+release. The [2.1 GitHub pre-release](docs/site/content/en/release-2-1.md)
+and the [2.0.0 test release](https://github.com/Fuzzy-Technologies/PriceGenerator/releases/tag/v2.0.0)
+provide the v2 APIs below. Install from the 2.1 source archive or checkout:
 
 ```bash
 python -m pip install .
 python -m pip install '.[export]'  # Optional PNG/JPEG.
 ```
 
-The first modern PyPI release is planned for 2.1.0. See the
+The first modern PyPI release is planned for 2.2.0. See the
 [release runbook](docs/releasing.md) for verification and publishing.
 
 ## Generate and save
@@ -85,7 +86,7 @@ pricegenerator analyze prices.csv --output statistics.json
 pricegenerator chart prices.csv --output chart.html --no-view --analysis
 ```
 
-The 2.1 development version also provides [ensemble generation and exact
+Version 2.1 also provides [ensemble generation and exact
 replay](docs/monte-carlo.md) through the CLI and Python, and optional
 [fuzzy regime diagnostics](docs/fuzzy-diagnostics.md) on Python 3.13.
 
@@ -114,4 +115,4 @@ Large-data adapters are `GenerateChunks` and `WriteCSVChunks`.
 
 [Repository](https://github.com/Fuzzy-Technologies/PriceGenerator) ·
 [Issues](https://github.com/Fuzzy-Technologies/PriceGenerator/issues) ·
-[Apache-2.0 license](https://github.com/Fuzzy-Technologies/PriceGenerator/blob/v2.0.0/LICENSE) · [Русский](https://github.com/Fuzzy-Technologies/PriceGenerator/blob/v2.0.0/README_RU.md)
+[Apache-2.0 license](https://github.com/Fuzzy-Technologies/PriceGenerator/blob/v2.0.0/LICENSE) · [Русский](README_RU.md)

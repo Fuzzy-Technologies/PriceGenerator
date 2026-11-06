@@ -4,7 +4,7 @@
 
 [Русский](../ru/quick-start.md) · [简体中文](../zh-CN/quick-start.md)
 
-[Scientific guide](scenario-guide.md) · [2.1 illustrated preview](release-2-1.md)
+[Scientific guide](scenario-guide.md) · [What's new in 2.1](release-2-1.md)
 
 Generate a seeded series, replay it from a manifest, and render it without
 opening a browser. Use this fixture for software tests and controlled

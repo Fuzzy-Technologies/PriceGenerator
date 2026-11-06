@@ -4,7 +4,7 @@
 [Documentation](https://github.com/Fuzzy-Technologies/PriceGenerator/blob/develop/README.md) ·
 [Release procedure](https://github.com/Fuzzy-Technologies/PriceGenerator/blob/develop/docs/releasing.md)
 
-## 2.1.0 (unreleased)
+## 2.1.0 (GitHub pre-release)
 
 - Generate and replay bounded Monte Carlo ensembles with stable path seeds,
   worker-independent results, drawdown distributions, and quantile charts.
@@ -15,7 +15,7 @@
 - Add localized quickstarts and scientific guides, generated API coverage,
   source-link checks, model oracles and a chronological BTC/USD holdout.
 
-See the [illustrated preview](docs/site/content/en/release-2-1.md) and
+See the [pre-release summary](docs/site/content/en/release-2-1.md) and
 [1.4.93 migration guide](docs/site/content/en/migrate-to-2-1.md).
 
 ## 2.0.0
