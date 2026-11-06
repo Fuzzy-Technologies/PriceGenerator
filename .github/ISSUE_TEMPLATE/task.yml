@@ -1,0 +1,29 @@
+name: Task
+description: Define a reviewable implementation or architecture decision
+type: Task
+labels: [Task]
+body:
+  - type: textarea
+    id: deliverable
+    attributes:
+      label: Deliverable
+      description: Describe the change, relevant parent Feature and ADR references.
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance criteria
+      description: Specify how reviewers can verify the result.
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Validation evidence
+      description: Name the expected tests, benchmarks or reproducible artifacts.
+    validations:
+      required: true
+  - type: markdown
+    attributes:
+      value: Maintainers set the native milestone, Priority, Effort, assignee and parent Feature where applicable.

@@ -1,10 +1,19 @@
 # Release verification and PyPI publication
 
+The [2.0.0 GitHub pre-release](https://github.com/Fuzzy-Technologies/PriceGenerator/releases/tag/v2.0.0)
+records the October verification baseline. Its exact tag remains available for
+historical reproduction. For the GitHub-only 2.1.0 pre-release, verify the
+exact tagged commit with the quality and Canvas gates and test clean
+installations from both distributions in the release ZIP. The first modern
+PyPI release is planned for 2.2.0 under [Task #109](https://github.com/Fuzzy-Technologies/PriceGenerator/issues/109).
+Verify its exact tag on the final master commit. The release workflow rejects
+PyPI publication of both GitHub pre-releases.
+
+
 Release code lives in `.github/workflows/release.yml`. It runs **only by manual
 dispatch on `master`**. A push, branch name, tag push, PR, or ordinary CI run
 never uploads a package. The removed Travis workflow is no longer a release
-path. `pricegenerator/_version.py` remains the sole version source. This release
-candidate sets it to `2.0.0`; that source change does not itself publish files.
+path. `pricegenerator/_version.py` remains the sole version source.
 Future releases need separately reviewed version changes. Unreleased development
 versions use a `.devN` suffix and can be verified but cannot publish.
 
@@ -14,12 +23,12 @@ A project owner signs in to [pricegenerator publishing settings](https://pypi.or
 Add a **GitHub Actions** Trusted Publisher to this existing project with these
 exact fields:
 
-| PyPI field | Value |
-| --- | --- |
-| Owner | `Fuzzy-Technologies` |
-| Repository name | `PriceGenerator` |
-| Workflow filename | `release.yml` |
-| Environment name | `pypi` |
+| PyPI field        | Value                |
+| ----------------- | -------------------- |
+| Owner             | `Fuzzy-Technologies` |
+| Repository name   | `PriceGenerator`     |
+| Workflow filename | `release.yml`        |
+| Environment name  | `pypi`               |
 
 The workflow field takes the filename alone, not `.github/workflows/release.yml`.
 Use the existing project, rather than registering a pending publisher for a new

@@ -33,9 +33,8 @@ runtime and modern test contract.
 Run tests relevant to each change during development. For example:
 
 ```bash
-python -m pytest -q tests/test_generation_v2.py tests/test_scenario_v2.py tests/test_cli_v2.py
-python -m pytest -q tests/test_packaging.py tests/test_release_contract.py
-python -m ruff check --select E4,E7,E9,F,D --ignore D202,D203,D213 pricegenerator tools/release_verify.py tools/release_install.py
+python tools/validate.py tests/test_generation_v2.py tests/test_scenario_v2.py tests/test_cli_v2.py
+python tools/validate.py tests/test_packaging.py tests/test_release_contract.py
 ```
 
 The repository's naming/docstring/vertical-spacing rules apply to maintained
@@ -45,7 +44,7 @@ unrelated files or replace real dependency evidence with stubs.
 Before integration, run the complete gate:
 
 ```bash
-python -m pytest -q tests
+python tools/validate.py --reports ci-reports
 python -m build
 python -m twine check --strict dist/*
 python tools/release_verify.py --artifacts dist
@@ -58,11 +57,39 @@ from outside the checkout, checks core dependency absence, then checks actual
 PNG/JPEG exports. Preserve commands/results and artifact hashes in the Task/PR.
 Local results do not establish that hosted CI passed.
 
-The PR quality workflow checks all supported Python versions, the full suite,
-maintained-module lint, isolated artifacts and metadata. It also exercises
-Task-lifecycle failure paths. Require the relevant hosted quality checks and
+The shared source gate compiles and lints the maintained Python tree, exercises
+Task-lifecycle failure paths, and runs the full suite with branch measurement.
+It also checks source alignment for tables in all tracked Markdown files.
+Run `python tools/markdown_tables.py` to check alignment on its own, or
+`python tools/markdown_tables.py --write` to apply the same formatter locally.
+
+The shared gate also checks that each localized source route has English,
+Russian and Simplified Chinese pages, that each page links to the other
+translations and that relative Markdown link and image targets exist in the
+checkout. Run `python -m tools.documentation_links` on its own. External URLs
+and heading fragments are outside this source check.
+
+The source gate enforces coverage floors of 95% for the lifecycle parser and
+90% for the package, calculated from statements and branches. The PR workflow runs it on
+Linux for every supported Python and adds an isolated wheel/sdist smoke on
+Windows with Python 3.13. Require the relevant hosted quality checks and
 chart runtime check in branch protection/rulesets; committing a workflow does
 not configure those repository settings.
+
+## Build the public API reference
+
+From the checkout root, install the documentation extra and run the builder:
+
+```bash
+python -m pip install -c requirements/modern.txt '.[docs]'
+python PDocBuilder.py
+```
+
+Open `build/docs-api/pricegenerator.html`. The page is generated from the
+checkout's `pricegenerator.__all__`, signatures and docstrings. The build
+fails if the page lacks an entry for any declared export. Module-qualified
+research APIs remain covered by their own guides. Generated HTML stays under
+the ignored `build/` directory, leaving documentation sources in `docs/`.
 
 ## Chart runtime gate
 

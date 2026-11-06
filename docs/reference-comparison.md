@@ -1,4 +1,38 @@
-# Compare a declared market reference with an unfitted scenario
+# Compare reference and synthetic OHLCV
+
+## Compare two CSV files from the installed package
+
+Use `compare` when you already have the reference bars and a synthetic series.
+Supply their common candle interval explicitly, in whole seconds:
+
+```bash
+pricegenerator compare reference.csv synthetic.csv --timeframe-seconds 3600 --tolerances tolerances.json --output comparison.json
+```
+
+Both files must follow the [canonical CSV contract](data-contract.md) with
+explicit timezone offsets. Each series needs at least two candles and exactly
+one interval between adjacent candles. Choose contiguous windows, including
+when working with market-session data. Use the same volume units and a
+comparable sampling and adjustment policy for both series. The two windows
+are analyzed independently and can have different timestamps and row counts.
+
+The optional `tolerances.json` must be an object of finite, nonnegative
+numbers keyed by comparison metric. For example, declare an absolute
+log-return volatility tolerance before opening the evaluation window:
+
+```json
+{"log_return_std": 0.005}
+```
+
+The JSON report includes `schema_version`, `metric_version`, the declared
+interval, both canonical data fingerprints, row counts, separate analyses
+and the result for each specified tolerance. An undefined statistic or an
+omitted tolerance leaves that metric's `within_tolerance` at `null`. A valid
+report exits with status zero even if a metric exceeds its tolerance. Invalid
+input exits with status two before writing a report. Omit `--output` to print
+the same report to standard output.
+
+## Compare a historical window with one generated scenario
 
 `python -m tools.compare_market` evaluates a caller-selected historical-data
 window against one independently generated `regime_v2` scenario. It uses the
@@ -83,6 +117,38 @@ volume/absolute-return correlations are about0.353/0.137. Numerical closeness
 of one statistic does not validate the remaining distributions or dynamics.
 No tolerances were supplied: every decision is `not assessed`. The evidence
 is an auditable descriptive comparison, not calibration or a realism claim.
+
+## Independent holdout protocol
+
+1. Record the question, instrument, venue, sampling cadence, time zone, price
+   adjustments, volume units, missing-bar policy, source version and permitted
+   use. Record the source hash and exact UTC windows and row counts. Publish
+   raw data only when redistribution is permitted.
+2. Split observations chronologically. Use the earlier window for fitting
+   parameters, choosing metrics and setting numerical acceptance thresholds.
+   Reserve the later window for evaluation. For rolling metrics, use only
+   inputs available at the observation time and keep each scored window inside
+   the holdout. Declare how much history each metric needs before scoring.
+3. Before opening the holdout, record the effective config, model and library
+   versions, seed list, simulated horizon, metrics, acceptance rule and
+   uncertainty method. Match the comparison cadence and effective horizon, or
+   disclose the discrepancy. For a multi-seed claim, report the distribution
+   across the declared runs and retain every run, including failures and
+   undefined metrics. Account for dependence between overlapping observations
+   when quantifying uncertainty.
+4. Record which tests passed, failed or could not be assessed, with actual
+   sample sizes, limits and report or manifest hashes. Treat changes made
+   after viewing the evaluation as new hypotheses and reserve a fresh holdout.
+
+For the [fuzzy diagnostic](fuzzy-diagnostics.md), fit the reference volatility
+and activity levels on the earlier window and freeze the feature definitions,
+lookback, profile and backend version. To claim that the score detects a
+regime, declare an independent target and baseline before evaluating. Otherwise
+report score and clipping distributions as descriptive results.
+
+The AFLT report above has limited source provenance and no acceptance
+threshold. The [Bitstamp chronological holdout](evidence/reference-bitstamp-holdout.md)
+documents a separate evaluation with explicit training and holdout windows.
 
 Focused validation:
 

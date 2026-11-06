@@ -32,13 +32,13 @@ and python-dateutil 2.9.0.post0; the declared package version was
 every case. Workers had a 300-second timeout. Reports were written outside
 the measured worktree and copied into this evidence commit afterward.
 
-| Rows | Full elapsed | Chunked elapsed | Full traced peak | Chunked traced peak |
-| ---: | ---: | ---: | ---: | ---: |
-| 100 | 0.028 s | 0.032 s | 94,383 B | 117,661 B |
-| 1,000 | 0.113 s | 0.127 s | 405,641 B | 502,504 B |
-| 10,000 | 1.045 s | 1.016 s | 2,993,661 B | 4,332,121 B |
-| 100,000 | 10.522 s | 10.364 s | 29,809,469 B | 4,990,026 B |
-| 1,000,000 | 103.897 s | 105.178 s | 298,457,213 B | 4,990,439 B |
+| Rows      | Full elapsed | Chunked elapsed | Full traced peak | Chunked traced peak |
+| --------: | -----------: | --------------: | ---------------: | ------------------: |
+| 100       | 0.028 s      | 0.032 s         | 94,383 B         | 117,661 B           |
+| 1,000     | 0.113 s      | 0.127 s         | 405,641 B        | 502,504 B           |
+| 10,000    | 1.045 s      | 1.016 s         | 2,993,661 B      | 4,332,121 B         |
+| 100,000   | 10.522 s     | 10.364 s        | 29,809,469 B     | 4,990,026 B         |
+| 1,000,000 | 103.897 s    | 105.178 s       | 298,457,213 B    | 4,990,439 B         |
 
 At one million rows, full generation used 298,457,213 B of peak traced memory
 and chunk traversal used 4,990,439 B. Worker lifetime peak RSS was 922,312,704 B

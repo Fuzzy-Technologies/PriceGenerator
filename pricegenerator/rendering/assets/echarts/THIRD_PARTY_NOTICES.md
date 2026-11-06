@@ -6,11 +6,11 @@ runtime is derived from official npm release sources, pinned by the lockfile
 in `tools/chart_runtime/`. `build.json` records upstream package integrity,
 builder versions, the resulting SHA-256, and compressed/uncompressed byte sizes.
 
-| Shipped component | Version | License | Retained license |
-| --- | --- | --- | --- |
-| Apache ECharts | 6.1.0 | Apache-2.0 | `LICENSE-APACHE-2.0.txt`, `NOTICE.txt` |
-| ZRender | 6.1.0 | BSD-3-Clause | `LICENSE-ZRENDER-BSD-3.txt` |
-| tslib | 2.3.0 | 0BSD | `LICENSE-TSLIB-0BSD.txt` |
+| Shipped component | Version | License      | Retained license                       |
+| ----------------- | ------- | ------------ | -------------------------------------- |
+| Apache ECharts    | 6.1.0   | Apache-2.0   | `LICENSE-APACHE-2.0.txt`, `NOTICE.txt` |
+| ZRender           | 6.1.0   | BSD-3-Clause | `LICENSE-ZRENDER-BSD-3.txt`            |
+| tslib             | 2.3.0   | 0BSD         | `LICENSE-TSLIB-0BSD.txt`               |
 
 ZRender and tslib are permissive transitive dependencies of ECharts. ECharts
 itself meets the MIT/Apache backend requirement; the dependency inventory is

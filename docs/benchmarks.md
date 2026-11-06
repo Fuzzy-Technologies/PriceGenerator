@@ -56,14 +56,14 @@ explicitly documented in [v2 performance evidence](performance-v2.md).
 Current reports use `schema_version: 2` and benchmark recipe
 `regime-v2-generation-and-fingerprint-v1`.
 
-| Field | Meaning |
-| --- | --- |
-| `source` | Package version, Git revision and source inventories |
-| `environment` | Python, platform, CPU count and dependency versions |
-| `measurement` | Timing/allocation/RSS scopes, hash recipe and timeout |
-| `cases` | Ordered successful and failed observations, including repetitions |
-| `status` | Aggregate `ok` or `error` |
-| `output_error` | Present when the requested report cannot be written |
+| Field          | Meaning                                                           |
+| -------------- | ----------------------------------------------------------------- |
+| `source`       | Package version, Git revision and source inventories              |
+| `environment`  | Python, platform, CPU count and dependency versions               |
+| `measurement`  | Timing/allocation/RSS scopes, hash recipe and timeout             |
+| `cases`        | Ordered successful and failed observations, including repetitions |
+| `status`       | Aggregate `ok` or `error`                                         |
+| `output_error` | Present when the requested report cannot be written               |
 
 Each case records its configuration, model, RNG, seed, mode, chunk size where
 applicable, requested/generated row counts, output hash, elapsed seconds,

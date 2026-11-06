@@ -1,37 +1,34 @@
-# -*- coding: utf-8 -*-
-# Author: Timur Gilmullin
+"""Build the stable PriceGenerator API reference from the current checkout."""
 
-"""
-A coroutine that generates the API documentation for the PriceGenerator module using pdoc-engine: https://pdoc.dev/docs/pdoc.html
-
-To build new documentation:
-1. Remove the `./docs` directory from the repository root.
-2. Go to the root of the repository.
-3. Just run: `python PDocBuilder.py`.
-"""
-
-
-import os
-import sys
-import pdoc
 from pathlib import Path
 
+from pdoc import doc, render
 
-curdir = os.path.curdir
+import pricegenerator
 
-sys.path.extend([
-    curdir,
-    os.path.abspath(os.path.join(curdir, "pricegenerator")),
-])
 
-pdoc.render.configure(
-    docformat="restructuredtext",
-    favicon="https://github.com/Tim55667757/PriceGenerator/blob/develop/media/logo-pricegenerator-256x256px.png?raw=true",
-    footer_text="⚙ Good luck for you in trade automation! And profit!",
-    logo="https://github.com/Tim55667757/PriceGenerator/blob/develop/media/logo-pricegenerator-420x610px.png?raw=true",
-    show_source=False,
-)
-pdoc.pdoc(
-    Path("pricegenerator").resolve(),
-    output_directory=Path("docs").resolve(),
-)
+OUTPUT = Path(__file__).resolve().parent / "build" / "docs-api" / "pricegenerator.html"
+
+
+def Main() -> None:
+    """Render and verify the root public API before writing generated HTML."""
+
+    # pdoc looks in the module dictionary before trying to import a submodule.
+    # Resolve the declared lazy exports so their signatures and docstrings appear.
+    for name in pricegenerator.__all__:
+        getattr(pricegenerator, name)
+
+    module = doc.Module.from_name("pricegenerator")
+    render.configure(docformat="google", show_source=False)
+    html = render.html_module(module, {module.modulename: module})
+    missing = [name for name in pricegenerator.__all__ if f'id="{name}"' not in html]
+
+    if missing:
+        raise RuntimeError(f"API reference omitted public exports: {', '.join(missing)}")
+
+    OUTPUT.parent.mkdir(parents=True, exist_ok=True)
+    OUTPUT.write_bytes(html.encode("utf-8"))
+
+
+if __name__ == "__main__":
+    Main()

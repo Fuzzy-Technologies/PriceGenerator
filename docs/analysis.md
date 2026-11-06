@@ -23,25 +23,25 @@ liquidity, execution, spreads or order-book mechanics (ADR-0005).
 
 ## Estimators and domains
 
-| Capability | Explicit convention |
-| --- | --- |
-| Simple close returns | `close[t]/close[t-1]-1`; previous zero and overflow become aligned nulls. Signed nonzero prices are allowed by this algebraic definition. |
-| Log close returns | `log(close[t])-log(close[t-1])`; both adjacent closes must be strictly positive. |
-| Marginal distributions | Simple/log returns; signed/absolute body; upper/lower wick; range; body/wick fractions of range; volume. Zero-range candle fractions are excluded as undefined. |
-| Mean and variance | Arithmetic mean; sample variance and standard deviation (`ddof=1`). Fewer than two observations makes variance undefined. |
-| Skewness | Adjusted Fisher-Pearson standardized third moment, `sqrt(n*(n-1))/(n-2) * m3/m2**1.5`; requires n>=3 and nonzero variance. |
-| Kurtosis | Adjusted Fisher excess kurtosis: `(n-1)/((n-2)*(n-3))*((n+1)*(m4/m2**2-3)+6)`; requires n>=4 and nonzero variance. Normal reference excess is zero. |
-| Quantiles | NumPy `method="linear"` at 1%, 5%, 25%, 50%, 75%, 80%, 95%, 99%. No rounding of analysis values. |
-| Tail means | Inclusive empirical observations <=5% and >=95% quantiles; not an interpolated expected-shortfall estimator. |
-| Outliers | Fraction strictly outside `Q1-1.5*IQR, Q3+1.5*IQR`; and fraction strictly beyond three population standard deviations from the mean. These are descriptions, not normal-distribution probability claims. |
-| ACF | Observation lags 1..k; global-mean centered numerator divided by the entire centered sum of squares. Returns, absolute returns and squared returns are reported separately. |
-| Domain exclusions | Each marginal records valid and excluded counts. ACF rejects a return sequence containing domain gaps rather than connecting nonadjacent observations. First-candle return warmup is excluded before ACF. |
-| Volatility dependence | Absolute/squared simple-return ACF; no claim that a positive value proves a market process. |
-| Drawdown | Strictly positive close paths only; `1-close/running_max(close)`, positive loss fraction. Maximum and longest consecutive underwater bar count include unrecovered terminal drawdowns. |
-| Cross-variable activity | Pearson correlation of volume[t] with abs(simple return[t]), and volume with high-low range, on valid pairs. Constants/fewer than two pairs are undefined. |
-| Observed path | UTC horizon, elapsed seconds, endpoint close/change/return, close range, strict up/down/doji counts, longest directional runs, total volume. Doji breaks both directional runs. |
-| Time gaps | `cadence_regular` describes equality of observed timestamp differences; no session/calendar inference or resampling. ACF lags measure rows, not fixed wall-clock time. |
-| Numerical limits | Moments are scaled before powers. Unrepresentable results are null estimates with reasons. Overflowed candle-derived observations increase exclusion counts. |
+| Capability              | Explicit convention                                                                                                                                                                                       |
+| ----------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Simple close returns    | `close[t]/close[t-1]-1`; previous zero and overflow become aligned nulls. Signed nonzero prices are allowed by this algebraic definition.                                                                 |
+| Log close returns       | `log(close[t])-log(close[t-1])`; both adjacent closes must be strictly positive.                                                                                                                          |
+| Marginal distributions  | Simple/log returns; signed/absolute body; upper/lower wick; range; body/wick fractions of range; volume. Zero-range candle fractions are excluded as undefined.                                           |
+| Mean and variance       | Arithmetic mean; sample variance and standard deviation (`ddof=1`). Fewer than two observations makes variance undefined.                                                                                 |
+| Skewness                | Adjusted Fisher-Pearson standardized third moment, `sqrt(n*(n-1))/(n-2) * m3/m2**1.5`; requires n>=3 and nonzero variance.                                                                                |
+| Kurtosis                | Adjusted Fisher excess kurtosis: `(n-1)/((n-2)*(n-3))*((n+1)*(m4/m2**2-3)+6)`; requires n>=4 and nonzero variance. Normal reference excess is zero.                                                       |
+| Quantiles               | NumPy `method="linear"` at 1%, 5%, 25%, 50%, 75%, 80%, 95%, 99%. No rounding of analysis values.                                                                                                          |
+| Tail means              | Inclusive empirical observations <=5% and >=95% quantiles; not an interpolated expected-shortfall estimator.                                                                                              |
+| Outliers                | Fraction strictly outside `Q1-1.5*IQR, Q3+1.5*IQR`; and fraction strictly beyond three population standard deviations from the mean. These are descriptions, not normal-distribution probability claims.  |
+| ACF                     | Observation lags 1..k; global-mean centered numerator divided by the entire centered sum of squares. Returns, absolute returns and squared returns are reported separately.                               |
+| Domain exclusions       | Each marginal records valid and excluded counts. ACF rejects a return sequence containing domain gaps rather than connecting nonadjacent observations. First-candle return warmup is excluded before ACF. |
+| Volatility dependence   | Absolute/squared simple-return ACF; no claim that a positive value proves a market process.                                                                                                               |
+| Drawdown                | Strictly positive close paths only; `1-close/running_max(close)`, positive loss fraction. Maximum and longest consecutive underwater bar count include unrecovered terminal drawdowns.                    |
+| Cross-variable activity | Pearson correlation of volume[t] with abs(simple return[t]), and volume with high-low range, on valid pairs. Constants/fewer than two pairs are undefined.                                                |
+| Observed path           | UTC horizon, elapsed seconds, endpoint close/change/return, close range, strict up/down/doji counts, longest directional runs, total volume. Doji breaks both directional runs.                           |
+| Time gaps               | `cadence_regular` describes equality of observed timestamp differences; no session/calendar inference or resampling. ACF lags measure rows, not fixed wall-clock time.                                    |
+| Numerical limits        | Moments are scaled before powers. Unrepresentable results are null estimates with reasons. Overflowed candle-derived observations increase exclusion counts.                                              |
 
 Historical report precision was a mutable generator setting. Modern analysis
 keeps floating-point results unrounded and presentation owns price precision.

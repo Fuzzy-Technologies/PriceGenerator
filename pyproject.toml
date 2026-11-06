@@ -41,6 +41,7 @@ pricegenerator = "pricegenerator.cli:Main"
 
 [project.optional-dependencies]
 export = ["resvg-py==0.5.0", "Pillow==12.0.0"]
+fuzzy = ["fuzzyroutines==2.1.0"]
 notebook = ["ipython>=8.30,<9", "ipykernel>=6.29,<7"]
 test = ["pytest>=8.3,<9", "tomli>=2.2,<3; python_version < '3.11'"]
 docs = ["pdoc>=15,<16"]
@@ -49,6 +50,7 @@ dev = [
     "pytest>=8.3,<9",
     "tomli>=2.2,<3; python_version < '3.11'",
     "build>=1.2,<2",
+    "markdown-it-py>=4.2,<5",
     "twine>=6,<7",
     "ruff>=0.9,<1",
     "pytest-cov>=6,<7",
@@ -67,3 +69,11 @@ version = {attr = "pricegenerator._version.__version__"}
 [tool.setuptools.package-data]
 pricegenerator = ["assets/**/*"]
 "pricegenerator.rendering" = ["assets/**/*"]
+
+[tool.ruff]
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E4", "E7", "E9", "F", "D"]
+# F-Tech permits a logical blank line after a docstring and uses one summary convention.
+ignore = ["D202", "D203", "D213"]

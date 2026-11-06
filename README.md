@@ -1,5 +1,12 @@
 # PriceGenerator
 
+![PriceGenerator by Fuzzy Technologies. Synthetic market data generator.](https://raw.githubusercontent.com/Fuzzy-Technologies/PriceGenerator/develop/docs/assets/pricegenerator-product-card.webp)
+
+[English guide](docs/site/content/en/scenario-guide.md) ·
+[Русский](docs/site/content/ru/scenario-guide.md) ·
+[简体中文](docs/site/content/zh-CN/scenario-guide.md) ·
+[What's new in 2.1](docs/site/content/en/release-2-1.md)
+
 Reproducible synthetic OHLCV scenarios for trading-system tests and quantitative
 research. The v2 API separates generation, validation, diagnostics, CSV, replay
 and charts. It produces synthetic test data; it does not forecast markets or
@@ -7,18 +14,18 @@ establish that a strategy is profitable.
 
 ## Install
 
-CPython 3.10–3.13 is the supported runtime window. Once version 2.0.0 has
-been published on PyPI, install that exact release with:
+CPython 3.10–3.13 is supported. PyPI currently provides the historical 1.4.93
+release. The [2.1 GitHub pre-release](docs/site/content/en/release-2-1.md)
+and the [2.0.0 test release](https://github.com/Fuzzy-Technologies/PriceGenerator/releases/tag/v2.0.0)
+provide the v2 APIs below. Install from the 2.1 source archive or checkout:
 
 ```bash
-python -m pip install 'pricegenerator==2.0.0'
-python -m pip install 'pricegenerator[export]==2.0.0'  # Optional PNG/JPEG.
+python -m pip install .
+python -m pip install '.[export]'  # Optional PNG/JPEG.
 ```
 
-For a source checkout, use `python -m pip install .` or
-`python -m pip install '.[export]'`. Release preparation does not itself upload
-files; check [release instructions](https://github.com/Fuzzy-Technologies/PriceGenerator/blob/v2.0.0/docs/releasing.md) and the actual PyPI project
-before assuming publication is complete. Documentation links target the v2.0.0 tag.
+The first modern PyPI release is planned for 2.2.0. See the
+[release runbook](docs/releasing.md) for verification and publishing.
 
 ## Generate and save
 
@@ -79,12 +86,23 @@ pricegenerator analyze prices.csv --output statistics.json
 pricegenerator chart prices.csv --output chart.html --no-view --analysis
 ```
 
+Version 2.1 also provides [ensemble generation and exact
+replay](docs/monte-carlo.md) through the CLI and Python, and optional
+[fuzzy regime diagnostics](docs/fuzzy-diagnostics.md) on Python 3.13.
+
 `python -m pricegenerator` exposes the same commands. A JSON `--config` supplies
 all generation parameters; explicit common CLI flags override those fields.
 Unknown fields, nonfinite values, ambiguous times and aliased input/output paths
 fail early. The old mutable class, rendering methods and old CLI flags are
 removed; [migration](https://github.com/Fuzzy-Technologies/PriceGenerator/blob/v2.0.0/docs/chart-migration.md) and [ADR-0010](https://github.com/Fuzzy-Technologies/PriceGenerator/blob/v2.0.0/docs/adr/0010-modern-only-public-api.md)
 record the deliberate break. Historical evidence remains [archived](https://github.com/Fuzzy-Technologies/PriceGenerator/blob/v2.0.0/docs/baseline/README.md).
+
+## Run a complete experiment
+
+In 2.2, [compare two OHLCV CSVs](docs/reference-comparison.md) at an explicit
+bar interval, or use the [experiment bundle](docs/examples/experiment-bundle.md)
+to generate two seeded fixtures. The example verifies single-path and ensemble
+replay and records a comparison, an offline quantile chart and checksums.
 
 ## Develop and extend
 
@@ -104,4 +122,4 @@ Large-data adapters are `GenerateChunks` and `WriteCSVChunks`.
 
 [Repository](https://github.com/Fuzzy-Technologies/PriceGenerator) ·
 [Issues](https://github.com/Fuzzy-Technologies/PriceGenerator/issues) ·
-[Apache-2.0 license](https://github.com/Fuzzy-Technologies/PriceGenerator/blob/v2.0.0/LICENSE) · [Русский](https://github.com/Fuzzy-Technologies/PriceGenerator/blob/v2.0.0/README_RU.md)
+[Apache-2.0 license](https://github.com/Fuzzy-Technologies/PriceGenerator/blob/v2.0.0/LICENSE) · [Русский](README_RU.md)
