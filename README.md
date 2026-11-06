@@ -99,9 +99,10 @@ record the deliberate break. Historical evidence remains [archived](https://gith
 
 ## Run a complete experiment
 
-The [experiment bundle](docs/examples/experiment-bundle.md) creates two
-seeded OHLCV fixtures, verifies single-path and ensemble replay, and records a
-comparison report, an offline quantile chart, and checksums.
+In 2.2, [compare two OHLCV CSVs](docs/reference-comparison.md) at an explicit
+bar interval, or use the [experiment bundle](docs/examples/experiment-bundle.md)
+to generate two seeded fixtures. The example verifies single-path and ensemble
+replay and records a comparison, an offline quantile chart and checksums.
 
 ## Develop and extend
 
