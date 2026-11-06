@@ -1,4 +1,4 @@
-"""Adapt explicit generation, validation, analysis, replay and chart operations."""
+"""Adapt explicit generation, replay, validation, analysis, comparison and charts."""
 
 import argparse
 import json
@@ -113,6 +113,12 @@ def _Parser() -> argparse.ArgumentParser:
     analyze.add_argument("input", type=Path)
     analyze.add_argument("--output", type=Path)
     analyze.add_argument("--acf-lags", type=int, default=10)
+    compare = commands.add_parser("compare", help="Compare two canonical OHLCV series at a shared interval.")
+    compare.add_argument("reference", type=Path)
+    compare.add_argument("synthetic", type=Path)
+    compare.add_argument("--timeframe-seconds", type=int, required=True, help="Shared candle interval in whole seconds.")
+    compare.add_argument("--tolerances", type=Path, help="JSON object of predeclared absolute tolerances by metric.")
+    compare.add_argument("--output", type=Path, help="Write the JSON report here instead of stdout.")
     chart = commands.add_parser("chart", help="Render canonical CSV with the optional chart adapter.")
     chart.add_argument("input", type=Path)
     chart.add_argument("--output", type=Path)
@@ -183,6 +189,30 @@ def _Execute(arguments: argparse.Namespace) -> None:
 
         _DistinctPaths([arguments.input], [arguments.output])
         _WriteJSON(Analyze(ReadCSV(arguments.input), acf_lags=arguments.acf_lags).ToDict(), arguments.output)
+
+    elif arguments.command == "compare":
+        from pricegenerator.evaluation import Compare
+
+        _DistinctPaths([arguments.reference, arguments.synthetic, arguments.tolerances], [arguments.output])
+        tolerances = {} if arguments.tolerances is None else _ReadJSON(arguments.tolerances)
+
+        if not isinstance(tolerances, dict):
+            raise ValueError("tolerances JSON must be an object")
+
+        interval = arguments.timeframe_seconds
+        reference = ReadCSV(arguments.reference, timeframe_seconds=interval, allow_gaps=False)
+        synthetic = ReadCSV(arguments.synthetic, timeframe_seconds=interval, allow_gaps=False)
+
+        if len(reference) < 2 or len(synthetic) < 2:
+            raise ValueError("each series needs at least two candles to verify its interval")
+
+        try:
+            report = Compare(reference, synthetic, tolerances=tolerances)
+
+        except OverflowError as error:
+            raise ValueError("comparison values exceed the supported numeric range") from error
+
+        _WriteJSON({"schema_version": 1, "timeframe_seconds": interval, **report.ToDict()}, arguments.output)
 
     elif arguments.command == "chart":
         import pandas as pd

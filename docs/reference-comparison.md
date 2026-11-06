@@ -1,4 +1,38 @@
-# Compare a declared market reference with an unfitted scenario
+# Compare reference and synthetic OHLCV
+
+## Compare two CSV files from the installed package
+
+Use `compare` when you already have the reference bars and a synthetic series.
+Supply their common candle interval explicitly, in whole seconds:
+
+```bash
+pricegenerator compare reference.csv synthetic.csv --timeframe-seconds 3600 --tolerances tolerances.json --output comparison.json
+```
+
+Both files must follow the [canonical CSV contract](data-contract.md) with
+explicit timezone offsets. Each series needs at least two candles and exactly
+one interval between adjacent candles. Choose contiguous windows, including
+when working with market-session data. Use the same volume units and a
+comparable sampling and adjustment policy for both series. The two windows
+are analyzed independently and can have different timestamps and row counts.
+
+The optional `tolerances.json` must be an object of finite, nonnegative
+numbers keyed by comparison metric. For example, declare an absolute
+log-return volatility tolerance before opening the evaluation window:
+
+```json
+{"log_return_std": 0.005}
+```
+
+The JSON report includes `schema_version`, `metric_version`, the declared
+interval, both canonical data fingerprints, row counts, separate analyses
+and the result for each specified tolerance. An undefined statistic or an
+omitted tolerance leaves that metric's `within_tolerance` at `null`. A valid
+report exits with status zero even if a metric exceeds its tolerance. Invalid
+input exits with status two before writing a report. Omit `--output` to print
+the same report to standard output.
+
+## Compare a historical window with one generated scenario
 
 `python -m tools.compare_market` evaluates a caller-selected historical-data
 window against one independently generated `regime_v2` scenario. It uses the
@@ -112,8 +146,9 @@ lookback, profile and backend version. To claim that the score detects a
 regime, declare an independent target and baseline before evaluating. Otherwise
 report score and clipping distributions as descriptive results.
 
-The AFLT report above does not provide independently verified provenance or an
-acceptance threshold. The protocol has no independent holdout result yet.
+The AFLT report above has limited source provenance and no acceptance
+threshold. The [Bitstamp chronological holdout](evidence/reference-bitstamp-holdout.md)
+documents a separate evaluation with explicit training and holdout windows.
 
 Focused validation:
 
