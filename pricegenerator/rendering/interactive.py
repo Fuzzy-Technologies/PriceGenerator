@@ -99,7 +99,6 @@ button[aria-pressed="true"] {{border-color:{theme["secondary"]};box-shadow:inset
 .hint,footer {{color:{theme["muted"]};font-size:.82rem;line-height:1.6}}
 section {{border-left:2px solid {theme["accent"]};padding:4px 12px;margin:16px 0;background:{theme["panel"]}}}
 section ul {{padding-left:16px;line-height:1.65;overflow-wrap:anywhere}}
-pre {{white-space:pre-wrap;overflow-wrap:anywhere;font-size:.75rem}}
 @media(max-width:600px) {{body {{padding:8px}} button {{padding:7px 9px;font-size:.85rem}}}}
 @media(prefers-reduced-motion:reduce) {{* {{animation:none!important;transition:none!important}}}}
 </style>
@@ -119,10 +118,9 @@ pre {{white-space:pre-wrap;overflow-wrap:anywhere;font-size:.75rem}}
 <p id="status" class="hint" role="status" aria-live="polite">Loading local chart assets…</p>
 {summary_html}
 <noscript>JavaScript is required for the interactive chart. Use the static SVG renderer for a script-free chart.</noscript>
-<footer>PriceGenerator · Fuzzy Technologies · Offline chart
-<details><summary>Open-source licenses and notices</summary><pre>{escape(notices)}</pre></details>
-</footer>
+<footer>PriceGenerator · Fuzzy Technologies · Offline chart</footer>
 </main>
+<template id="third-party-notices">{escape(notices)}</template>
 <script id="chart-spec" type="application/json">{spec.ToJSON()}</script>
 <script id="chart-theme" type="application/json">{_JSON(theme)}</script>
 <script id="chart-branding" type="application/json">{_JSON(BrandingData())}</script>

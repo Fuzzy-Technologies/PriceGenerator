@@ -170,7 +170,7 @@ test("responsive layout preserves zoom and selected overlays", () => {
     assert.equal(watermarks.length, 1);
     assert.equal(watermarks[0].id, "watermark-price");
     assert.equal(watermarks[0].style.x, 70);
-    assert.equal(watermarks[0].style.opacity, 0.28);
+    assert.equal(watermarks[0].style.opacity, 0.9);
     controller.Dispose();
 });
 

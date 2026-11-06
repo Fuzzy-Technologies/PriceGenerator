@@ -36,20 +36,20 @@ outputs, optional dependencies and explicit analysis, see the
 
 ## Interaction and data semantics
 
-| Capability        | Behavior                                                                                                                                                                                                           |
-| ----------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| OHLC and volume   | Two synchronized panels; rising bodies are hollow, falling bodies filled. Candle order is explicitly encoded as open, close, low, high for ECharts.                                                                |
-| Time axis         | UTC elapsed time, including gaps. Both panels share the same domain and zoom range. No implicit session compression.                                                                                               |
-| Hover             | Linked crosshair and plain-text Canvas tooltip with original OHLCV and visible aligned overlays.                                                                                                                   |
-| Navigation        | Wheel zoom, drag pan, overview slider, box zoom, previous-zoom toolbox icon, Reset view, Full range.                                                                                                               |
-| Overlays          | Aligned line or point series, explicit `None` gaps, color/width/dash settings, independent initial visibility.                                                                                                     |
-| Groups            | Named group buttons toggle related overlays; legend entries toggle individual series without label collisions.                                                                                                     |
-| Bands             | Upper/middle/lower aligned lines have separate gaps and visibility. A filled-band primitive is not part of schema 1.                                                                                               |
-| Markers           | Text anchored above, below, or centered at the candle's high–low midpoint. Arbitrary user strings remain text; long labels are truncated visually and preserved in the hover text.                                 |
-| Statistics        | `ChartSpec.summary` appears as an HTML text block. This renderer does not calculate indicators or statistics.                                                                                                      |
-| Image export      | PNG at 2× pixel density, containing the current viewport, selected series, official header emblem, and the single lower-left price-panel wordmark. The separate HTML summary/control block is not part of the PNG. |
-| Responsive layout | ResizeObserver updates panels and graphics while preserving zoom and legend state; window resize is the fallback.                                                                                                  |
-| Motion            | No continuous animation or price transitions. Reduced-motion CSS is explicit.                                                                                                                                      |
+| Capability        | Behavior                                                                                                                                                                                                                              |
+| ----------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| OHLC and volume   | Two synchronized panels; rising bodies are hollow, falling bodies filled. Candle order is explicitly encoded as open, close, low, high for ECharts.                                                                                   |
+| Time axis         | UTC elapsed time, including gaps. Both panels share the same domain and zoom range. No implicit session compression.                                                                                                                  |
+| Hover             | Linked crosshair and plain-text Canvas tooltip with original OHLCV and visible aligned overlays.                                                                                                                                      |
+| Navigation        | Wheel zoom, drag pan, overview slider, box zoom, previous-zoom toolbox icon, Reset view, Full range.                                                                                                                                  |
+| Overlays          | Aligned line or point series, explicit `None` gaps, color/width/dash settings, independent initial visibility.                                                                                                                        |
+| Groups            | Named group buttons toggle related overlays; legend entries toggle individual series without label collisions.                                                                                                                        |
+| Bands             | Upper/middle/lower aligned lines have separate gaps and visibility. A filled-band primitive is not part of schema 1.                                                                                                                  |
+| Markers           | Text anchored above, below, or centered at the candle's high–low midpoint. Arbitrary user strings remain text; long labels are truncated visually and preserved in the hover text.                                                    |
+| Statistics        | `ChartSpec.summary` appears as an HTML text block. This renderer does not calculate indicators or statistics.                                                                                                                         |
+| Image export      | PNG at 2× pixel density, containing the current viewport, selected series, official header emblem, and the single lower-left price-panel wordmark. The navigation slider, toolbox, legend controls and HTML summary stay on the page. |
+| Responsive layout | ResizeObserver updates panels and graphics while preserving zoom and legend state; window resize is the fallback.                                                                                                                     |
+| Motion            | No continuous animation or price transitions. Reduced-motion CSS is explicit.                                                                                                                                                         |
 
 Charts with at most 5,000 candles initially show their complete range. Larger
 snapshots initially show the latest 1,000 candles. All original rows remain in
@@ -82,10 +82,10 @@ not a rejection of the shared `ChartSpec` by the static renderer.
 Both dark and light corporate palettes come from the shared `theme.py`.
 The default uses restrained cyan, violet, and magenta accents. The official
 circular emblem appears in the header. Exactly one translucent wordmark sits
-inside the lower-left price panel at 28% opacity. The volume panel has no
+inside the lower-left price panel, up to 260 px wide at 90% opacity. The volume panel has no
 watermark, and there is no separate header wordmark or repeated branding strip.
-Its silhouette comes from the official source image, tinted using the theme
-text color. PNG export uses the same Canvas graphics, so the single wordmark
+The official wordmark includes the ® mark and uses the theme text color
+for contrast. PNG export uses the same Canvas graphics, so the single wordmark
 keeps its placement after zoom or resize.
 
 The document embeds its runtime, source data, and image data URIs exactly
