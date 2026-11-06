@@ -107,7 +107,7 @@ def CheckArtifacts(directory, version):
 
         python_specs = {item.strip() for item in (package_metadata["Requires-Python"] or "").split(",")}
 
-        if python_specs != {">=3.10", "<3.14"}:
+        if python_specs != {">=3.10", "<3.16"}:
             raise ReleaseError("Artifact Python support differs from the verified matrix")
 
         requirements = " ".join(package_metadata.get_all("Requires-Dist", [])).lower()

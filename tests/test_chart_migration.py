@@ -8,7 +8,6 @@ from types import SimpleNamespace
 import numpy as np
 import pandas as pd
 import pytest
-from pytz import AmbiguousTimeError, NonExistentTimeError
 
 from pricegenerator.rendering import ChartCandle, ChartSpec
 from pricegenerator.rendering import adapters
@@ -116,15 +115,24 @@ def test_SubmillisecondAndMissingTimesAreRejected(timestamp: str) -> None:
         adapters.FromDataFrame(frame)
 
 
-@pytest.mark.parametrize("timestamp,error", [("2026-03-29T02:30:00", NonExistentTimeError), ("2026-10-25T02:30:00", AmbiguousTimeError)])
-def test_DstAmbiguityIsNeverGuessed(timestamp: str, error) -> None:
+@pytest.mark.parametrize("timestamp,error_name", [
+    ("2026-03-29T02:30:00", "NonExistentTimeError"),
+    ("2026-10-25T02:30:00", "AmbiguousTimeError"),
+])
+def test_DstAmbiguityIsNeverGuessed(timestamp: str, error_name: str) -> None:
     """Reject nonexistent and repeated civil times instead of shifting them."""
 
     frame = MakeFrame(1)
     frame["datetime"] = [timestamp]
 
-    with pytest.raises(error, match="2026-"):
+    with pytest.raises(Exception, match="2026-") as error:
         adapters.FromDataFrame(frame, assume_timezone="Europe/Berlin")
+
+    # pandas 2 uses pytz for timezone names. pandas 3 uses zoneinfo and raises ValueError.
+    if pd.__version__.startswith("2."):
+        assert type(error.value).__name__ == error_name
+    else:
+        assert type(error.value) is ValueError
 
 
 def test_CustomMarkersAndLinesUseExactTimestampsAndGaps() -> None:

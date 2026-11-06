@@ -7,7 +7,7 @@ name = "pricegenerator"
 dynamic = ["version"]
 description = "Configurable synthetic OHLCV candlesticks for reproducible research and software testing."
 readme = "README.md"
-requires-python = ">=3.10,<3.14"
+requires-python = ">=3.10,<3.16"
 license = "Apache-2.0"
 license-files = ["LICENSE"]
 authors = [{name = "Timur Gilmullin", email = "tim55667757@gmail.com"}]
@@ -23,10 +23,16 @@ classifiers = [
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+    "Programming Language :: Python :: 3.15",
 ]
 dependencies = [
-    "numpy>=2.0,<2.3",
-    "pandas>=2.2,<2.3",
+    "numpy>=2.0,<2.3; python_version < '3.14'",
+    "numpy>=2.3.5,<2.4; python_version == '3.14'",
+    "numpy>=2.5.4,<2.6; python_version >= '3.15'",
+    "pandas>=2.2,<2.3; python_version < '3.14'",
+    "pandas>=2.3.3,<2.4; python_version == '3.14'",
+    "pandas>=3.0.6,<3.1; python_version >= '3.15'",
     "python-dateutil>=2.9,<3",
 ]
 
@@ -40,7 +46,11 @@ Issues = "https://github.com/Fuzzy-Technologies/PriceGenerator/issues"
 pricegenerator = "pricegenerator.cli:Main"
 
 [project.optional-dependencies]
-export = ["resvg-py==0.5.0", "Pillow==12.0.0"]
+export = [
+    "resvg-py==0.5.0",
+    "Pillow==12.0.0; python_version < '3.15'",
+    "Pillow==13.0.0; python_version >= '3.15'",
+]
 fuzzy = ["fuzzyroutines==2.1.0"]
 notebook = ["ipython>=8.30,<9", "ipykernel>=6.29,<7"]
 test = ["pytest>=8.3,<9", "tomli>=2.2,<3; python_version < '3.11'"]

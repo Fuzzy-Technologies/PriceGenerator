@@ -77,9 +77,9 @@ def test_PythonMetadataMatchesMatrix():
     """Require explicit metadata for the Python versions checked by CI."""
 
     project = ReadProjectMetadata()["project"]
-    assert project["requires-python"] == ">=3.10,<3.14", "Runtime window changed without matrix evidence"
+    assert project["requires-python"] == ">=3.10,<3.16", "Runtime window changed without matrix evidence"
 
-    for minor in range(10, 14):
+    for minor in range(10, 16):
         assert f"Programming Language :: Python :: 3.{minor}" in project["classifiers"], "Supported classifier missing"
 
 

@@ -11,7 +11,7 @@
 ## 从 1.4.93 迁移
 
 如需复现 1.x 实验，请保留旧环境、输入文件和输出结果。为新版软件包单独创建
-CPython 3.10–3.13 环境。使用 `GenerationConfig` 和 `Generate(config)`
+CPython 3.10–3.15 环境。使用 `GenerationConfig` 和 `Generate(config)`
 替换旧的可变生成器对象。将旧的 CLI 参数改为 `generate` 子命令。
 运行 `validate` 或 `chart` 前，请将原文件转换为采用 UTC 时间的标准
 OHLCV 格式，表头为 `datetime,open,high,low,close,volume`。

@@ -14,7 +14,7 @@ establish that a strategy is profitable.
 
 ## Install
 
-CPython 3.10–3.13 is supported. PyPI currently provides the historical 1.4.93
+CPython 3.10–3.15 is supported. PyPI currently provides the historical 1.4.93
 release. The [2.1 GitHub pre-release](docs/site/content/en/release-2-1.md)
 and the [2.0.0 test release](https://github.com/Fuzzy-Technologies/PriceGenerator/releases/tag/v2.0.0)
 provide the v2 APIs below. Install from the 2.1 source archive or checkout:
@@ -88,7 +88,7 @@ pricegenerator chart prices.csv --output chart.html --no-view --analysis
 
 Version 2.1 also provides [ensemble generation and exact
 replay](docs/monte-carlo.md) through the CLI and Python, and optional
-[fuzzy regime diagnostics](docs/fuzzy-diagnostics.md) on Python 3.13.
+[fuzzy regime diagnostics](docs/fuzzy-diagnostics.md) on Python 3.13–3.15.
 
 `python -m pricegenerator` exposes the same commands. A JSON `--config` supplies
 all generation parameters; explicit common CLI flags override those fields.

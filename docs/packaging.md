@@ -8,7 +8,7 @@ source ref being built. Publication is a separate reviewed operation.
 Development versions use an explicit `.devN` suffix and are excluded from
 publication by the release workflow.
 
-The supported runtime is CPython **3.10–3.13** (`>=3.10,<3.14`). CI checks modern
+The supported runtime is CPython **3.10–3.15** (`>=3.10,<3.16`). CI checks modern
 APIs from clean installed wheel and sdist environments on each version. An
 additional Python version needs installation and behavioral evidence before
 metadata can promise support.
@@ -16,7 +16,7 @@ metadata can promise support.
 | Installation               | Purpose                                                             | Direct dependencies                  |
 | -------------------------- | ------------------------------------------------------------------- | ------------------------------------ |
 | `pricegenerator`           | Generation, replay, CSV, analysis, indicators, SVG and offline HTML | NumPy, pandas, python-dateutil       |
-| `pricegenerator[export]`   | Optional PNG/JPEG export                                            | resvg-py 0.5.0, Pillow 12.0.0        |
+| `pricegenerator[export]`   | Optional PNG/JPEG export                                            | resvg-py 0.5.0, Pillow               |
 | `pricegenerator[notebook]` | Notebook host tooling                                               | IPython, ipykernel                   |
 | `pricegenerator[test]`     | Tests and metadata parsing                                          | pytest, tomli on Python 3.10         |
 | `pricegenerator[docs]`     | API documentation                                                   | pdoc                                 |
