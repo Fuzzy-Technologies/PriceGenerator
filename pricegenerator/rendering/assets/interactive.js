@@ -256,11 +256,12 @@
             }
         });
         function Selected() {
-            return chart.getOption().legend[0].selected;
+            return {...chart.getModel().getComponent("legend", 0).option.selected};
         }
         const zoomHistory = [];
         function ZoomRange() {
-            const {startValue, endValue} = chart.getOption().dataZoom[0];
+            // Reading the live range avoids cloning all candle and overlay data on a drag.
+            const {startValue, endValue} = chart.getModel().getComponent("dataZoom", 0).option;
             return {startValue, endValue};
         }
         let zoom = ZoomRange();
@@ -300,7 +301,7 @@
             members.forEach((name) => chart.dispatchAction({type: hide ? "legendUnSelect" : "legendSelect", name}));
         }
         function SetTheme(nextTheme) {
-            const selected = {...Selected()};
+            const selected = Selected();
             SetBoxZoom(false);
             theme = nextTheme;
             branding = {...branding, watermark: TintWatermark(branding.wordmark, theme, environment)};
