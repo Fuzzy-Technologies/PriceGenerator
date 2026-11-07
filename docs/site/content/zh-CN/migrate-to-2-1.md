@@ -36,7 +36,7 @@ CLI 使用 `--no-view`，Python 使用 `view=False`。导出 PNG 或 JPEG
 python -I -m pricegenerator generate --seed 42 --horizon 240 --start 2025-01-06T00:00:00Z --timeframe-seconds 60 --output prices.csv --manifest scenario.json
 python -I -m pricegenerator validate prices.csv --timeframe-seconds 60 --no-gaps
 python -I -m pricegenerator replay scenario.json --output replay.csv
-python -I -m pricegenerator chart prices.csv --output chart.html --no-view
+python -I -m pricegenerator chart prices.csv --output chart.html --analysis --no-view
 python -I -m pricegenerator chart prices.csv --output chart.svg --no-view
 ```
 
@@ -44,3 +44,5 @@ python -I -m pricegenerator chart prices.csv --output chart.svg --no-view
 `prices.csv` 与 `replay.csv` 逐字节一致。
 [CLI 动画示例](../../../examples/cli-demo.md) 使用的是另一组 2.0.0 样例数据。
 配套说明记录了命令、导出参数和复现步骤。
+
+在 HTML 命令中加上 `--analysis` 即可显示指标按钮。用浏览器打开文件并试试 **Bollinger bands**。Python 对应的参数为 `analysis=True`。
