@@ -82,8 +82,9 @@ not a rejection of the shared `ChartSpec` by the static renderer.
 Both dark and light corporate palettes come from the shared `theme.py`.
 The default uses restrained cyan, violet, and magenta accents. The official
 circular emblem appears in the header. Exactly one translucent wordmark sits
-inside the lower-left price panel, up to 260 px wide at 90% opacity. The volume panel has no
-watermark, and there is no separate header wordmark or repeated branding strip.
+inside the lower-left price panel, up to 210 px wide at 90% opacity. The volume
+panel has no watermark, and there is no separate header wordmark or repeated
+branding strip.
 The official wordmark includes the ® mark and uses the theme text color
 for contrast. PNG export uses the same Canvas graphics, so the single wordmark
 keeps its placement after zoom or resize.
