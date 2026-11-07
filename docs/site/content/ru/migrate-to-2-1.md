@@ -45,7 +45,7 @@
 python -I -m pricegenerator generate --seed 42 --horizon 240 --start 2025-01-06T00:00:00Z --timeframe-seconds 60 --output prices.csv --manifest scenario.json
 python -I -m pricegenerator validate prices.csv --timeframe-seconds 60 --no-gaps
 python -I -m pricegenerator replay scenario.json --output replay.csv
-python -I -m pricegenerator chart prices.csv --output chart.html --no-view
+python -I -m pricegenerator chart prices.csv --output chart.html --analysis --no-view
 python -I -m pricegenerator chart prices.csv --output chart.svg --no-view
 ```
 
@@ -54,3 +54,5 @@ python -I -m pricegenerator chart prices.csv --output chart.svg --no-view
 строки показан отдельный прогон на 2.0.0, для которого приведены команды
 и параметры экспорта.
 [Запись прогона 2.0](../../../examples/cli-demo.md)
+
+Флаг `--analysis` добавляет кнопки индикаторов в HTML. Откройте файл в браузере и включите **Bollinger bands**. В Python тот же режим включает `analysis=True`.

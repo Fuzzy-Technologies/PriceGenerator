@@ -10,13 +10,13 @@
 生成图表。该序列可用于软件测试和受控实验。时间戳为合成数据，价格变化取决于
 所配置的模型参数。
 
-## 从经过验证的源码标签安装
+## 从源码安装 2.2
 
-使用 CPython 3.10–3.13 和独立环境。本示例使用 GitHub 测试标签 `v2.0.0`，
-对应提交 `83b1b75a99be06947a93314d6c2509a257ed6b3e`。
+使用 CPython 3.10–3.15 和独立环境。以下命令使用 `master` 分支上的
+2.2 源码。请保留 Git 输出的提交号。
 
 ```sh
-git clone --branch v2.0.0 --depth 1 https://github.com/Fuzzy-Technologies/PriceGenerator.git pg-demo
+git clone --branch master --depth 1 https://github.com/Fuzzy-Technologies/PriceGenerator.git pg-demo
 cd pg-demo
 git rev-parse HEAD
 python -m venv .venv
@@ -24,7 +24,7 @@ python -m venv .venv
 
 在 POSIX Shell 中执行 `. .venv/bin/activate`，或在 Windows PowerShell 中
 执行 `.\.venv\Scripts\Activate.ps1`。在源码目录中按约束安装依赖和软件包。
-版本检查应输出 `2.0.0`。
+版本检查应输出 `2.2.0`。
 
 ```sh
 python -m pip install -c requirements/modern.txt .
@@ -40,7 +40,7 @@ cd pg-example
 python -I -m pricegenerator generate --seed 42 --horizon 240 --start 2025-01-06T00:00:00Z --timeframe-seconds 60 --output prices.csv --manifest scenario.json
 python -I -m pricegenerator validate prices.csv --timeframe-seconds 60 --no-gaps
 python -I -m pricegenerator replay scenario.json --output replay.csv
-python -I -m pricegenerator chart prices.csv --output chart.html --no-view
+python -I -m pricegenerator chart prices.csv --output chart.html --analysis --no-view
 python -I -m pricegenerator chart prices.csv --output chart.svg --no-view
 ```
 
@@ -48,6 +48,17 @@ python -I -m pricegenerator chart prices.csv --output chart.svg --no-view
 `scenario.json` 中的 `fingerprint` 一致。复现时会核对记录的配置、软件包版本、
 运行环境和数据指纹。生成和复现的 CSV 内容相同。打开本地 `chart.html` 可以
 缩放并查看数据，`chart.svg` 则是静态矢量图。
+
+**如何显示指标按钮？** 用同一份 CSV 重新生成 HTML，并加上 `--analysis`。
+在 Python 中可以调用 `Chart(prices, "chart.html", analysis=True)`。
+用浏览器打开文件后，点击 **Bollinger bands** 查看均线周围的波动范围，
+点击 **SMA 50 / 200** 比较两条均线，或点击 **Midpoint** 标出每根 K 线
+最高价与最低价的中点。还可以切换 HMA、VWMA、PSAR、Alligator 和 Zig-Zag。
+展开 **Individual series** 可以单独开关一条曲线。SMA 200 至少需要 200 根 K 线。
+
+用滚轮或 **Box zoom** 放大选定区间。**Light theme** 切换至浅色主题，
+**Export PNG** 保存当前视图。图表下方显示简要概览，展开
+**Detailed statistics** 可查看完整报告。
 
 ## 用 Python 生成相同的序列
 
@@ -74,6 +85,7 @@ if Fingerprint(Replay(manifest)) != Fingerprint(prices):
 
 WriteCSV(prices, "python-prices.csv")
 Chart(prices, "python-chart.svg", view=False)
+Chart(prices, "python-analysis.html", analysis=True, view=False)
 print(manifest["fingerprint"])
 ```
 

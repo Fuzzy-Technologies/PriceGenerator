@@ -37,7 +37,7 @@ then run the commands in a fresh output directory.
 python -I -m pricegenerator generate --seed 42 --horizon 240 --start 2025-01-06T00:00:00Z --timeframe-seconds 60 --output prices.csv --manifest scenario.json
 python -I -m pricegenerator validate prices.csv --timeframe-seconds 60 --no-gaps
 python -I -m pricegenerator replay scenario.json --output replay.csv
-python -I -m pricegenerator chart prices.csv --output chart.html --no-view
+python -I -m pricegenerator chart prices.csv --output chart.html --analysis --no-view
 python -I -m pricegenerator chart prices.csv --output chart.svg --no-view
 ```
 
@@ -45,3 +45,5 @@ Validation should report 240 valid rows. Under the recorded environment,
 `prices.csv` and `replay.csv` match byte for byte. The
 [animated CLI example](../../../examples/cli-demo.md) uses a separate 2.0.0
 fixture. Its transcript records the command, export and reproduction steps.
+
+Add `--analysis` to the HTML command to see indicator buttons. Open the file in a browser and try **Bollinger bands**. In Python, pass `analysis=True`.

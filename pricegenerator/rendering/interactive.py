@@ -61,6 +61,30 @@ def _CheckPriceScale(spec: ChartSpec) -> None:
         raise ValueError("Interactive charts cannot preserve this mixed numeric range; rescale prices/overlays or remove extreme outlier series")
 
 
+def _Overview(spec: ChartSpec) -> str:
+    """Present a few chart-wide figures independently of the technical report."""
+
+    first, last = spec.candles[0].close, spec.candles[-1].close
+    percent = (last / first - 1) * 100 if first > 0 else math.nan
+    change = last - first
+
+    if math.isfinite(percent):
+        change_text = f"{percent:+.2f}%" if abs(percent) < 1e6 else f"{percent:+.3g}%"
+
+    else:
+        change_text = f"{change:+.6g}" if math.isfinite(change) else "—"
+
+    return f'''<section class="overview" aria-label="Chart overview">
+<dl class="metrics">
+<div><dt>Candles</dt><dd>{len(spec.candles):,}</dd></div>
+<div><dt>First close</dt><dd>{first:.6g}</dd></div>
+<div><dt>Last close</dt><dd>{last:.6g}</dd></div>
+<div title="Change from the first close to the last close. Percentages use a positive starting price.">
+<dt>Close change</dt><dd>{change_text}</dd></div>
+</dl>
+</section>'''
+
+
 def RenderInteractive(spec: ChartSpec) -> str:
     """Return complete offline HTML without opening a browser or writing files."""
 
@@ -69,60 +93,98 @@ def RenderInteractive(spec: ChartSpec) -> str:
 
     _CheckPriceScale(spec)
     runtime, adapter, notices = _RuntimeAssets()
-    theme = dict(THEMES[spec.theme])
+    themes = {name: dict(colors) for name, colors in THEMES.items()}
+    palette_rules = "\n".join(
+        f':root[data-theme="{name}"] {{color-scheme:{name};'
+        + "".join(f"--{key}:{value};" for key, value in colors.items()) + "}"
+        for name, colors in themes.items()
+    )
     title = escape(spec.title)
     summary = "".join(f"<li>{escape(line)}</li>" for line in spec.summary)
     controls_hidden = "" if spec.show_controls else " hidden"
-    summary_html = f'<section aria-label="Chart summary"><ul>{summary}</ul></section>' if summary else ""
+    indicators_hidden = "" if any(series.group is not None for series in spec.series) else " hidden"
+    theme_label = "Light theme" if spec.theme == "dark" else "Dark theme"
+    report = ""
+
+    if summary:
+        report = f'''{_Overview(spec)}
+<details class="report" aria-label="Detailed statistics">
+<summary>Detailed statistics</summary>
+<p class="hint">Advanced diagnostics for the full series.</p>
+<ul>{summary}</ul>
+</details>'''
 
     return f'''<!doctype html>
-<html lang="en">
+<html lang="en" data-theme="{spec.theme}">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="color-scheme" content="{spec.theme}">
 <title>{title}</title>
 <style>
-:root {{color-scheme:{spec.theme};font-family:system-ui,sans-serif;background:{theme["background"]};color:{theme["text"]}}}
+:root {{font-family:system-ui,sans-serif;background:var(--background);color:var(--text)}}
+{palette_rules}
 * {{box-sizing:border-box}}
 body {{margin:0;padding:20px}}
 main {{max-width:{spec.width}px;margin:0 auto}}
-h1 {{font-size:1.2rem}}
 .sr-only {{position:absolute;width:1px;height:1px;margin:-1px;overflow:hidden;clip:rect(0,0,0,0)}}
-#chart {{width:100%;height:{spec.height}px;min-width:320px;border:1px solid {theme["grid"]};border-radius:16px;overflow:hidden}}
-.controls {{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:12px 0}}
-.controls[hidden] {{display:none}}
-.groups {{display:contents}}
-button {{border:1px solid {theme["grid"]};border-radius:8px;padding:8px 12px;background:{theme["panel"]};color:{theme["text"]};cursor:pointer;font:inherit}}
-button:hover,button:focus-visible {{border-color:{theme["accent"]};outline:2px solid {theme["accent"]}55;outline-offset:2px}}
-button[aria-pressed="true"] {{border-color:{theme["secondary"]};box-shadow:inset 0 -2px {theme["secondary"]}}}
-.hint,footer {{color:{theme["muted"]};font-size:.82rem;line-height:1.6}}
-section {{border-left:2px solid {theme["accent"]};padding:4px 12px;margin:16px 0;background:{theme["panel"]}}}
-section ul {{padding-left:16px;line-height:1.65;overflow-wrap:anywhere}}
-@media(max-width:600px) {{body {{padding:8px}} button {{padding:7px 9px;font-size:.85rem}}}}
+#chart {{width:100%;height:{spec.height}px;border:1px solid var(--grid);border-radius:12px;overflow:hidden}}
+.controls {{margin-bottom:12px}}
+.control-row {{display:flex;flex-wrap:wrap;align-items:center;gap:6px}}
+.indicator-controls {{margin-top:10px}}
+.indicator-label {{margin:0 0 6px;color:var(--muted);font-size:.82rem;line-height:1.4}}
+.indicator-label strong {{color:var(--text);margin-right:6px}}
+button {{max-width:100%;overflow-wrap:anywhere;border:1px solid var(--grid);border-radius:7px;padding:6px 10px;
+  background:var(--panel);color:var(--text);cursor:pointer;font:inherit;font-size:.86rem;line-height:1.35}}
+button:hover {{border-color:var(--accent)}}
+button:focus-visible,summary:focus-visible {{outline:2px solid var(--accent);outline-offset:2px}}
+button[aria-pressed="true"] {{border-color:var(--secondary);box-shadow:inset 0 -2px var(--secondary)}}
+.hint,footer {{margin:8px 0;color:var(--muted);font-size:.82rem;line-height:1.5}}
+summary {{width:fit-content;max-width:100%;cursor:pointer;font-size:.86rem;font-weight:600}}
+.series-list {{margin-top:8px;color:var(--muted)}}
+.series-list .control-row {{margin-top:8px}}
+.overview,.report {{margin:10px 0;padding:10px 12px;border:1px solid var(--grid);
+  border-radius:8px;background:var(--panel)}}
+.metrics {{display:flex;flex-wrap:wrap;gap:10px 30px;margin:0}}
+.metrics dt {{font-size:.8rem;color:var(--muted)}}
+.metrics dd {{margin:2px 0 0;font-size:.97rem;font-weight:600;font-variant-numeric:tabular-nums}}
+.report ul {{margin:6px 0 0;padding-left:20px;line-height:1.55;font-size:.87rem;overflow-wrap:anywhere}}
+@media(max-width:600px) {{body {{padding:8px}} .metrics {{gap:8px 16px}}}}
 @media(prefers-reduced-motion:reduce) {{* {{animation:none!important;transition:none!important}}}}
 </style>
 </head>
 <body>
 <main>
 <h1 class="sr-only">{title}</h1>
-<div id="chart" role="img" aria-label="OHLC and volume chart. Interactive controls follow."></div>
 <div id="controls" class="controls"{controls_hidden}>
-<button type="button" data-action="pan">Pan</button>
-<button type="button" data-action="box" aria-pressed="false">Box zoom</button>
-<button type="button" data-action="reset">Reset view</button>
-<button type="button" data-action="full">Full range</button>
-<button type="button" data-action="export">Export PNG</button>
-<span data-groups class="groups"></span>
+<div class="control-row" role="group" aria-label="Chart navigation and display">
+<button type="button" data-action="pan" title="Drag the chart to move along the time axis.">Pan</button>
+<button type="button" data-action="box" title="Drag a rectangle to zoom in on a time range." aria-pressed="false">Box zoom</button>
+<button type="button" data-action="previous" title="Return to the previous time range.">Previous zoom</button>
+<button type="button" data-action="reset" title="Restore the starting range and indicator selection.">Reset view</button>
+<button type="button" data-action="full" title="Show all candles in this series.">Full range</button>
+<button type="button" data-action="export" title="Save the current price and volume view as an image.">Export PNG</button>
+<button type="button" data-action="theme" title="Switch the chart and controls between dark and light.">{theme_label}</button>
 </div>
+<div class="indicator-controls" data-indicators{indicators_hidden}>
+<p class="indicator-label"><strong>Indicators</strong> Choose a group to show or hide its overlays.</p>
+<div class="control-row" data-groups role="group" aria-label="Indicator groups"></div>
+</div>
+<details class="series-list">
+<summary>Individual series</summary>
+<div class="control-row" data-series role="group" aria-label="Individual series"></div>
+</details>
+</div>
+<div id="chart" role="img" aria-label="Candlestick price and volume chart"></div>
 <p id="status" class="hint" role="status" aria-live="polite">Loading local chart assets…</p>
-{summary_html}
+{report}
 <noscript>JavaScript is required for the interactive chart. Use the static SVG renderer for a script-free chart.</noscript>
 <footer>PriceGenerator · Fuzzy Technologies · Offline chart</footer>
 </main>
 <template id="third-party-notices">{escape(notices)}</template>
 <script id="chart-spec" type="application/json">{spec.ToJSON()}</script>
-<script id="chart-theme" type="application/json">{_JSON(theme)}</script>
+<script id="chart-theme" type="application/json">{_JSON(themes[spec.theme])}</script>
+<script id="chart-themes" type="application/json">{_JSON(themes)}</script>
 <script id="chart-branding" type="application/json">{_JSON(BrandingData())}</script>
 <script>{runtime}</script>
 <script>{adapter}</script>
@@ -131,7 +193,7 @@ section ul {{padding-left:16px;line-height:1.65;overflow-wrap:anywhere}}
 const ReadJSON = (id) => JSON.parse(document.getElementById(id).textContent);
 PriceGeneratorView.Mount(document.getElementById("chart"), ReadJSON("chart-spec"),
     ReadJSON("chart-theme"), ReadJSON("chart-branding"), document.getElementById("controls"),
-    document.getElementById("status"), PriceGeneratorCharts, window).catch((error) => {{
+    document.getElementById("status"), PriceGeneratorCharts, window, ReadJSON("chart-themes")).catch((error) => {{
         document.getElementById("status").textContent = "Chart could not start: " + error.message;
     }});
 </script>
