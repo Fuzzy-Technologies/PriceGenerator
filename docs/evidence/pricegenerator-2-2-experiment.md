@@ -8,7 +8,24 @@ two-worker ensemble report. The final close quantiles were 75.01, 101.27 and
 150.46. The quantiles of maximum drawdown across paths were 11.36%, 22.99% and
 39.24%.
 
-## Verified candidate and outputs
+## Whole-count example
+
+The current [release chart](../assets/pricegenerator-2-2-experiment-quantiles.svg)
+was rendered from a freshly generated bundle using CPython 3.14.6, NumPy 2.3.5
+and pandas 2.3.3. The bundle verification passed. Both CSV replays matched
+byte for byte and single-worker replay reproduced the two-worker ensemble.
+The scenario CSV has SHA-256
+`ac9f95833b6d2d9818a04d6036fa3f64df73c179615cd893ba5c5a9ad456df47`.
+
+## Earlier continuous-volume candidate
+
+The release run and checksums below describe the earlier `regime_v2` candidate.
+The current worked example and illustrations use `regime_v3`, which emits
+whole synthetic volume counts. The price paths and close quantiles are
+identical between these models at the same inputs. Volume values and bundle
+checksums differ.
+
+### Verified candidate and outputs
 
 The [Git tag](https://github.com/Fuzzy-Technologies/PriceGenerator/tree/v2.2.0)
 resolves to `31c4df2b1229cdda554224d3fe6f930c94a9f99e`.
@@ -32,6 +49,6 @@ values.
 0f17b9d8168413dddf735fb2040b8d9a5b5836f767d22ff8227c4d68ece40915  SHA256SUMS
 ```
 
-The [release-note chart](../assets/pricegenerator-2-2-experiment-quantiles.svg)
-was rendered from the same verified ensemble manifest. See the
+The [archived chart](https://github.com/Fuzzy-Technologies/PriceGenerator/blob/2b1f8b7881e9be38b0722e2998afd57d5e1779c6/docs/assets/pricegenerator-2-2-experiment-quantiles.svg)
+was rendered from the earlier verified ensemble manifest. See the
 [release procedure](../releasing.md) for publication status.

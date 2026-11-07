@@ -114,8 +114,9 @@ PriceGenerator 写入 UTF-8 逗号分隔文件，表头为
 
 通过 `CustomRatesReplace` 将数据导入 MT5 自定义品种时，适配器需要开盘时间
 对齐至 M1 的分钟 K 线。可按上例直接生成 M1。MQL5 的 `datetime` 使用从
-1970 年起算的整秒。转换前应检查范围及对齐。请明确如何把浮点 `volume` 映射
-到整数 `tick_volume` 和 `real_volume`，以及如何设置以点为单位的点差。
+1970 年起算的整秒。转换前应检查范围及对齐。如果测试将合成整数 `volume` 作为报价更新次数的
+替代值，可将其映射到 `tick_volume`。`real_volume` 和以点为单位的点差
+需要独立来源。将带小数的资产成交量映射到整数栏位前，应先明确计量单位。
 记录按品种小数位数进行价格舍入的规则，转换后检查 OHLC 关系。使用单独的自定义
 品种，并限定历史替换区间。
 [CustomRatesReplace](https://www.mql5.com/en/docs/customsymbols/customratesreplace) · [MqlRates](https://www.mql5.com/en/docs/constants/structures/mqlrates) · [MQL5 datetime](https://www.mql5.com/en/docs/basis/types/integer/datetime)

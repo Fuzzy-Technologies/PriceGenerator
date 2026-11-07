@@ -40,12 +40,13 @@ restored = ReadCSV("prices.csv")
 ```
 
 `GenerationConfig` is immutable. Defaults include a fixed UTC start and the
-versioned `regime_v2` model; seed zero is valid. Generation owns a private RNG
-and leaves process-global random state alone. See [model semantics](https://github.com/Fuzzy-Technologies/PriceGenerator/blob/v2.0.0/docs/model-regime-v2.md)
-for drift, regimes, independent shocks/wicks, volume, reflection and bounds.
+versioned `regime_v3` model with whole synthetic volume counts. Seed zero is valid. Generation owns a private RNG
+and leaves process-global random state alone. See [model semantics and the 1.4.93 comparison](docs/model-regime-v2.md).
+Use `model="regime_v2"` for prior continuous-volume scenarios.
 
 Canonical data has exactly `datetime, open, high, low, close, volume`: UTC
-nanosecond timestamps and finite float64 values. Imported naive timestamps need
+nanosecond timestamps and finite float64 values. Fractional imported
+trade quantities retain their original values. Imported naive timestamps need
 an explicit timezone. `ValidateOHLCV` returns detached canonical data and can
 check cadence/gaps. Structural validity is separate from empirical market fit.
 

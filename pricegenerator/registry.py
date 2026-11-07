@@ -2,6 +2,8 @@
 
 from dataclasses import asdict, dataclass
 
+from pricegenerator.config import CONTINUOUS_MODEL_ID, COUNT_MODEL_ID
+
 
 @dataclass(frozen=True)
 class ModelInfo:
@@ -29,10 +31,13 @@ class ModelInfo:
 
 
 _VALIDATION = ("OHLCV invariants", "seed replay", "declared marginal metrics", "temporal dependence", "independent holdout")
+_REGIME_PARAMETERS = ("seed", "horizon", "start", "timeframe_seconds", "model", "initial_price", "price_floor", "price_ceiling", "drift", "volatility", "regime_persistence", "regime_scale", "shock_probability", "shock_scale", "wick_scale", "wick_outlier_probability", "wick_outlier_scale", "volume_base", "volume_sigma", "volume_return_coupling", "volume_persistence", "volume_ceiling")
 _MODELS = (
-    ModelInfo("regime_v2", 2, "python.random.Random/MT19937", "experimental",
-              ("seed", "horizon", "start", "timeframe_seconds", "model", "initial_price", "price_floor", "price_ceiling", "drift", "volatility", "regime_persistence", "regime_scale", "shock_probability", "shock_scale", "wick_scale", "wick_outlier_probability", "wick_outlier_scale", "volume_base", "volume_sigma", "volume_return_coupling", "volume_persistence", "volume_ceiling"),
+    ModelInfo(COUNT_MODEL_ID, 3, "python.random.Random/MT19937", "experimental", _REGIME_PARAMETERS,
               ("deterministic software fixtures", "regime and shock sensitivity experiments"),
+              ("synthetic volume count", "no market microstructure or forecasts"), _VALIDATION),
+    ModelInfo(CONTINUOUS_MODEL_ID, 2, "python.random.Random/MT19937", "experimental", _REGIME_PARAMETERS,
+              ("replay of previous continuous-volume scenarios", "moment calibration"),
               ("not a forecast", "no market microstructure", "moment calibration does not identify latent regimes"), _VALIDATION),
     ModelInfo("bootstrap_v1", 1, "numpy.PCG64", "experimental",
               ("count", "seed", "block_length", "initial_price", "start", "timeframe_seconds"),

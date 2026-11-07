@@ -6,7 +6,7 @@ commit, and exact matching full/chunked output across 100 through 1,000,000
 rows. Earlier observations below remain archival records with their provenance
 limits; use the final report when checking the release implementation.
 
-The maintained benchmark runs actual `regime_v2` package code. Historical 1.x
+The maintained benchmark runs the current default `regime_v3` package code. Archived v2 results retain their original model and source. Historical 1.x
 measurements remain archival evidence; the removed runtime is not executed by
 the current command. These diagnostics impose no wall-clock CI threshold.
 
