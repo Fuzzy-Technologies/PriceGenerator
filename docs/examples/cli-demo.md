@@ -44,12 +44,11 @@ The screenshot uses 240 hourly candles with the same seed. In the 120-candle
 recording above, SMA 50 can draw while SMA 200 has too few observations.
 
 ```sh
-pricegenerator generate --seed 42 --horizon 240 --timeframe-seconds 3600 --output example-240.csv
-pricegenerator chart example-240.csv --analysis --output example-240.html --width 1120 --height 510 --no-view
+pricegenerator generate --seed 42 --horizon 240 --start 2025-01-06T00:00:00Z --timeframe-seconds 3600 --output example-240.csv
+pricegenerator chart example-240.csv --analysis --title "Synthetic hourly candles · seed 42" --output example-240.html --width 1120 --height 510 --no-view
 ```
 
-For the screenshot, turn off **Close limits and trends** and turn on
-**Bollinger bands** and **SMA 50 / 200**.
+For the screenshot, turn on **Bollinger bands** and **SMA 50 / 200**.
 
 ![Offline candlestick chart with volume, Bollinger Bands and 50- and 200-bar moving averages enabled](../assets/pricegenerator-chart-analysis.webp)
 

@@ -27,10 +27,14 @@ def test_DefaultsAreExplicitAndImmutable():
         config.seed = 1
 
 
-def test_SeedZeroReplayAndNoninterference():
+@pytest.mark.parametrize("model,expected", [
+    ("regime_v2", "58133dd747d104337a3c7be6f58df9bf5526ba214a427347a06b2efaad222eb6"),
+    ("regime_v3", "026aa4e6b67366e53e66c93fcc608d0fb2a67936527a641cddfab568ad70b478"),
+])
+def test_SeedZeroReplayAndNoninterference(model, expected):
     """Private seeds replay exactly across unrelated generation and host RNG draws."""
 
-    config = GenerationConfig(seed=0, horizon=30)
+    config = GenerationConfig(seed=0, horizon=30, model=model)
     state = random.getstate()
     first = Generate(config)
     Generate(replace(config, seed=1))
@@ -38,7 +42,7 @@ def test_SeedZeroReplayAndNoninterference():
     random.Random(99).random()
     pd.testing.assert_frame_equal(first, Generate(config))
     assert not first.equals(Generate(replace(config, seed=1))), "Distinct seeds generated identical scenarios"
-    assert Fingerprint(first) == "58133dd747d104337a3c7be6f58df9bf5526ba214a427347a06b2efaad222eb6", "Versioned regime_v2 seeded output changed"
+    assert Fingerprint(first) == expected, f"Versioned {model} seeded output changed"
 
 
 def test_GenerationCanonicalStructureAndContinuity():
@@ -56,7 +60,28 @@ def test_GenerationCanonicalStructureAndContinuity():
     assert data.open.iloc[0] == config.initial_price, "First open differs from explicit price"
     assert np.isfinite(data.iloc[:, 1:]).all().all(), "Generation produced nonfinite values"
     assert data.iloc[:, 1:5].ge(config.price_floor).all().all(), "Positive price domain failed"
-    assert data.volume.gt(0).all() and data.volume.le(config.volume_ceiling).all(), "Volume domain failed"
+    assert data.volume.ge(1).all() and data.volume.le(config.volume_ceiling).all(), "Volume count domain failed"
+    assert data.volume.mod(1).eq(0).all(), "Default generation emitted a fractional count"
+
+
+def test_WholeVolumePreservesTheReportedPricePath():
+    """Check the reported seed and confirm that count conversion consumes no random draws."""
+
+    config = GenerationConfig(seed=42, horizon=120)
+    counted = Generate(config)
+    continuous = Generate(replace(config, model="regime_v2"))
+    pd.testing.assert_frame_equal(counted.drop(columns="volume"), continuous.drop(columns="volume"), check_exact=True)
+    assert continuous.volume.iloc[53] == pytest.approx(1286.2482371783417)
+    assert counted.volume.iloc[53] == 1286
+
+
+@pytest.mark.parametrize("base,ceiling,drift,expected", [(1, 1, 0, 1), (2.25, 3, 0, 2), (3, 3, 1, 3)])
+def test_CountRoundingAndBounds(base, ceiling, drift, expected):
+    """Check the minimum, nearest rounding and configured cap."""
+
+    data = Generate(GenerationConfig(horizon=20, volume_base=base, volume_ceiling=ceiling,
+                                     volume_sigma=0, volume_return_coupling=0, drift=drift))
+    assert data.volume.eq(expected).all()
 
 
 @pytest.mark.parametrize("changes", [
@@ -70,7 +95,8 @@ def test_GenerationCanonicalStructureAndContinuity():
     {"price_floor": 1e12}, {"price_floor": 1e90, "price_ceiling": math.nextafter(1e90, math.inf), "initial_price": 1e90}, {"price_ceiling": 1e101}, {"initial_price": 1e14},
     {"drift": -3}, {"regime_scale": 0}, {"regime_persistence": -0.1},
     {"shock_probability": 1.1}, {"wick_outlier_probability": -1}, {"volume_persistence": 2},
-    {"volume_base": 0}, {"volume_ceiling": 1},
+    {"volume_base": 0}, {"volume_base": .25}, {"volume_ceiling": 1},
+    {"volume_ceiling": 1000.5}, {"volume_ceiling": 2**53},
 ])
 def test_InvalidConfigurationFailsEarly(changes):
     """Reject inputs before partial output, coercion, overflow or model selection."""
@@ -95,15 +121,16 @@ def test_InvalidDeserializationAndWrongAPIType():
         Generate({"seed": 0})
 
 
-def test_ExtremeSupportedParametersRemainFiniteAndBounded():
+@pytest.mark.parametrize("model,ceiling", [("regime_v2", 1e100), ("regime_v3", 2**53 - 1)])
+def test_ExtremeSupportedParametersRemainFiniteAndBounded(model, ceiling):
     """Reflection and wick boundaries survive extreme supported shocks and volumes."""
 
     config = GenerationConfig(
-        horizon=2000, price_floor=1e-100, price_ceiling=1e100, initial_price=1e100,
+        model=model, horizon=2000, price_floor=1e-100, price_ceiling=1e100, initial_price=1e100,
         drift=2, volatility=2, regime_scale=100, regime_persistence=0,
         shock_probability=1, shock_scale=100, wick_scale=100,
         wick_outlier_probability=1, wick_outlier_scale=100,
-        volume_base=1e100, volume_ceiling=1e100, volume_sigma=2,
+        volume_base=ceiling, volume_ceiling=ceiling, volume_sigma=2,
         volume_return_coupling=10, volume_persistence=1,
     )
     data = Generate(config)

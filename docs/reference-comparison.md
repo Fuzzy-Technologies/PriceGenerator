@@ -35,7 +35,7 @@ the same report to standard output.
 ## Compare a historical window with one generated scenario
 
 `python -m tools.compare_market` evaluates a caller-selected historical-data
-window against one independently generated `regime_v2` scenario. It uses the
+window against one independently generated scenario using the declared model. It uses the
 modern canonical reader, `Generate`, `Compare` and scenario manifest APIs.
 No historical runtime, indicator backend, fitting, seed search, market-calendar
 inference, gap filling, price adjustment or volume normalization is performed.

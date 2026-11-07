@@ -1,6 +1,6 @@
 # Reproducible generation benchmarks
 
-`tools/benchmark.py` measures the actual modern `regime_v2` implementation with
+`tools/benchmark.py` measures the current default `regime_v3` implementation with
 its installed dependencies. It supports complete DataFrames and bounded-memory
 chunk traversal. Chart rendering and indicators are outside this measurement.
 There is no speed or memory threshold in the PR gate.

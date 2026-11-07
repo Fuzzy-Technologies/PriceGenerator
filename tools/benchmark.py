@@ -129,7 +129,7 @@ def EmptyCase(row_count, seed, mode="full", chunk_size=10_000):
     """Create a stable measurement record including explicit requested inputs."""
 
     return {
-        "status": "error", "model": "regime_v2",
+        "status": "error", "model": "regime_v3",
         "rng": "python.random.Random/MT19937", "seed": seed,
         "mode": mode, "chunk_size": chunk_size if mode == "chunked" else None,
         "configuration": None, "requested_rows": row_count,

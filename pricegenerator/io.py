@@ -54,19 +54,22 @@ def ReadCSV(source, *, assume_timezone=None, timeframe_seconds=None, allow_gaps=
     )
 
 
-def WriteCSV(frame, destination, *, assume_timezone=None, timeframe_seconds=None, allow_gaps=True):
-    """Write UTC nanosecond timestamps and exactly round-trippable float64 values."""
+def WriteCSV(frame, destination, *, assume_timezone=None, timeframe_seconds=None, allow_gaps=True, volume_as_count=False):
+    """Write exact OHLCV values, with optional integer spelling for whole volumes."""
 
     canonical = ValidateOHLCV(
         frame, assume_timezone=assume_timezone,
         timeframe_seconds=timeframe_seconds, allow_gaps=allow_gaps,
     )
 
+    if volume_as_count and canonical.volume.mod(1).ne(0).any():
+        raise OHLCVError("count volume output requires whole volume values")
+
     with _TextStream(destination, "w") as stream:
-        _WriteCanonicalCSV(canonical, stream)
+        _WriteCanonicalCSV(canonical, stream, volume_as_count=volume_as_count)
 
 
-def _WriteCanonicalCSV(canonical, stream, *, header=True):
+def _WriteCanonicalCSV(canonical, stream, *, header=True, volume_as_count=False):
     """Serialize already validated rows to an open stream with an optional header."""
 
     writer = csv.writer(stream, lineterminator="\n")
@@ -77,4 +80,5 @@ def _WriteCanonicalCSV(canonical, stream, *, header=True):
     for row in canonical.itertuples(index=False, name=None):
         # The canonical UTC nanosecond dtype makes NumPy emit all nine digits.
         instant = str(row[0].asm8) + "Z"
-        writer.writerow((instant, *row[1:]))
+        volume = int(row[-1]) if volume_as_count else row[-1]
+        writer.writerow((instant, *row[1:-1], volume))

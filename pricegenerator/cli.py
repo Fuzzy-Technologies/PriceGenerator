@@ -5,7 +5,7 @@ import json
 from pathlib import Path
 from typing import Any
 
-from pricegenerator.config import GenerationConfig
+from pricegenerator.config import COUNT_MODEL_ID, GenerationConfig
 
 
 def _JSONPairs(pairs: list[tuple[str, Any]]) -> dict[str, Any]:
@@ -162,7 +162,7 @@ def _Execute(arguments: argparse.Namespace) -> None:
         _DistinctPaths([arguments.config], [arguments.output, arguments.manifest])
         config = _ReadConfiguration(arguments)
         data = Generate(config)
-        WriteCSV(data, arguments.output)
+        WriteCSV(data, arguments.output, volume_as_count=config.model == COUNT_MODEL_ID)
 
         if arguments.manifest is not None:
             _WriteJSON(CreateManifest(config, data), arguments.manifest)
@@ -176,7 +176,8 @@ def _Execute(arguments: argparse.Namespace) -> None:
         if not isinstance(manifest, dict):
             raise ValueError("manifest JSON must be an object")
 
-        WriteCSV(Replay(manifest, strict_environment=not arguments.allow_environment_change), arguments.output)
+        data = Replay(manifest, strict_environment=not arguments.allow_environment_change)
+        WriteCSV(data, arguments.output, volume_as_count=manifest["model"] == COUNT_MODEL_ID)
 
     elif arguments.command == "validate":
         from pricegenerator.scenario import Fingerprint

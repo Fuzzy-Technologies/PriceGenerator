@@ -1,4 +1,4 @@
-# Regime v2 model and reproducibility
+# Regime models and reproducibility
 
 `Generate(GenerationConfig(...))` returns a new canonical OHLCV DataFrame. The
 configuration is frozen, JSON serializable through `ToDict`/`FromDict`, and has
@@ -35,8 +35,8 @@ shocks. Before boundary clipping, the chance of either tail receiving the
 multiplier is `1-(1-p)^2`, and the chance of both is `p^2`. Wick prices stop at the
 configured price bounds. There is no fixed candle-body-size parameter.
 
-Volume is a positive continuous activity measure, not integer trade count.
-Its noise follows an AR(1) log state starting at zero, with persistence
+The volume calculation starts with a continuous activity level. Its noise
+follows an AR(1) log state starting at zero, with persistence
 `volume_persistence` and innovation standard deviation
 `volume_sigma*sqrt(1-persistence^2)`. Log volume adds `log(volume_base)` and
 `volume_return_coupling` times the absolute realized log return divided by the
@@ -45,16 +45,29 @@ volume is bounded below at -700 for numerical safety and above by
 `log(volume_ceiling)`; the final volume is also capped explicitly. With
 persistence one the initially zero volume-noise state stays zero.
 
+The default `regime_v3` rounds that bounded level to the nearest integer
+(ties to even) and limits the result to `[1, volume_ceiling]`. The base is a
+scale of at least 1 and can be fractional. The ceiling must be a whole
+number up to `2**53 - 1`, so each count is exact in the canonical binary64
+column. The CLI writes the count as an integer in generated and replayed
+CSV files. It is a synthetic activity count with no observed ticks, trade
+events or instrument units behind it. Imported asset quantities can be
+fractional and retain their source units and values.
+
+Explicit `model="regime_v2"` retains the prior continuous output. The two
+models use the same random draws and produce identical timestamps and OHLC
+for the same configuration within their shared domain.
+
 Configurations reject nonfinite inputs, naive timestamps, unknown model names,
 timestamps finer than microseconds, invalid domains, horizons outside 1–1,000,000, and timestamps outside
-1678–2262 UTC. Prices and volume bases/bounds lie in the positive binary64-safe
-range 1e-100–1e100. Volatility and volume sigma are limited to 0–2, regime scale to
+1678–2262 UTC. Prices and continuous-model volume bases/bounds lie in the positive
+binary64-safe range 1e-100–1e100. Volatility and volume sigma are limited to 0–2, regime scale to
 1–100, shock/wick scales to 0–100, coupling to 0–10, and drift to -2–2. These are
 numerical admission limits, not empirical market estimates.
 
 ## Exact replay contract
 
-Model ID `regime_v2` fixes draw order: regime uniform, Gaussian return, shock
+Both model IDs fix the draw order: regime uniform, Gaussian return, shock
 uniform, Gaussian shock, upper-tail uniform and Gaussian wick, lower-tail uniform
 and Gaussian wick, then Gaussian volume innovation. Inactive events still consume
 their prescribed draws. Changed stochastic formulas or random consumption require
@@ -79,6 +92,24 @@ recorded environment remains immutable; only the execution environment may diffe
 This is verification of portability, not a claim
 that all Python/libm/platform combinations produce bit-identical floating values.
 
+## How this differs from 1.4.93
+
+In [the 1.4.93 source](https://github.com/Fuzzy-Technologies/PriceGenerator/blob/v1.4.93/pricegenerator/PriceGenerator.py),
+`upCandlesProb` selects the body direction. The close is sampled uniformly
+within its side's allowed body size and close bounds. Each wick is sampled
+uniformly up to half the body or the configured outlier distance. The code
+rounds prices to the configured decimal precision. Volume is an integer
+draw from a range based on the previous volume and capped by `maxVolume`.
+A configured up/down/flat segment can change direction probabilities and
+rewrite its final close to enforce the requested outcome.
+
+The regime models use log returns with drift, two volatility states and
+occasional shocks. Opens still equal the previous close. Prices respect
+bounds and the final close is left to the model. Volatility state describes
+the size of price moves rather than an up/down trend. Display precision is
+independent of an instrument's tick size. The generator has no exchange
+session calendar, bid/ask spread, order book or intrabar tick sequence.
+
 ## Evidence and limitations
 
 The [scripted numerical oracles](../tests/test_regime_v2_oracles.py) check three
@@ -89,7 +120,7 @@ The second reflects a price proposal twice and checks that volume uses the
 realized return while both wicks clip at the configured bounds. Both tests
 check draw order and consumption, including inactive events.
 
-`tests/test_generation_v2.py` fixes a seed-zero output fingerprint; checks schema,
+`tests/test_generation_v2.py` fixes a seed-zero output fingerprint for each model; checks schema,
 continuity, extreme positive bounds, flat/drift-only dynamics and noninterference;
 records 100,000 actual private-engine event traces and checks all four Bernoulli
 rates with predeclared six-standard-deviation binomial bounds; and tests

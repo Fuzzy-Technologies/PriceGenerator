@@ -303,3 +303,22 @@ test("accessible buttons wire real actions and group names stay plain text", () 
     controller.Dispose();
     assert.ok(buttons.every((button) => button.listeners.size === 0));
 });
+
+
+test("tooltips format count and fractional volume without full-series guide clutter", () => {
+    const spec = Spec();
+    spec.candles[0].volume = 1286;
+    spec.candles[1].volume = 1286.2482371783417;
+    spec.series.push({...spec.series[0], key: "close-max", label: "Maximum close",
+        group: "Close limits and trends", values: [105, 105, 105]});
+    const options = adapter.BuildOptions(spec, theme, branding, 1280, 760);
+    const tooltip = (index) => options.tooltip.formatter([{axisValue: Date.parse(spec.candles[index].datetime),
+        seriesName: "__pg_overlay_close-max"}]);
+    assert.match(tooltip(0), /2026-01-01 00:00:00 UTC/);
+    assert.match(tooltip(0), /Volume 1,286/);
+    assert.match(tooltip(1), /Volume 1286\.2482$/);
+    assert.doesNotMatch(tooltip(0), /Maximum close/);
+    assert.equal(options.yAxis[1].minInterval, 0);
+    spec.candles[1].volume = 1;
+    assert.equal(adapter.BuildOptions(spec, theme, branding, 1280, 760).yAxis[1].minInterval, 1);
+});

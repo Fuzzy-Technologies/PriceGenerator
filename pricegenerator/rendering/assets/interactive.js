@@ -6,7 +6,7 @@
     const VOLUME = "__pg_volume";
     const MARKERS = "__pg_markers";
     const GROUP_HINTS = new Map([
-        ["Close limits and trends", "Highest and lowest close, plus the trend between the first and last close."],
+        ["Close limits and trends", "Highest, lowest and first-to-last close guides. They use the entire series."],
         ["Midpoint", "Mark the price halfway between each candle’s high and low."],
         ["SMA 5 / 20", "Simple averages of the last 5 and 20 closing prices."],
         ["SMA 50 / 200", "Simple averages of the last 50 and 200 closing prices. SMA 200 needs 200 candles."],
@@ -15,7 +15,7 @@
         ["Bollinger bands", "Three lines that show a moving average and how widely prices vary around it."],
         ["PSAR", "Points above or below price that follow the current trend."],
         ["Alligator (SMMA median price)", "Three shifted, smoothed averages of the high–low midpoint."],
-        ["Zig-Zag", "Connect confirmed swings that meet the price-change threshold."],
+        ["Zig-Zag", "Connect swings confirmed by later candles. Historical pivots are marked retrospectively."],
     ]);
 
     function SeriesName(series) {
@@ -28,10 +28,17 @@
             number.toExponential(Math.min(precision, 6)) : number.toFixed(precision);
     }
 
+    const COUNT_FORMAT = new Intl.NumberFormat("en-US");
+
+    function VolumeText(value) {
+        if (Number.isSafeInteger(value)) return COUNT_FORMAT.format(value);
+        return String(Number(value.toPrecision(8)));
+    }
+
     function ScaledText(number, scale, precision, volume = false) {
         const product = number * scale;
         if (!Number.isFinite(product)) return NumberText(number, precision) + " × " + scale.toExponential(2);
-        return volume ? String(product) : NumberText(product, precision);
+        return volume ? VolumeText(product) : NumberText(product, precision);
     }
 
     function Layout(width, height) {
@@ -97,11 +104,12 @@
             if (index === undefined) return "";
             const candle = spec.candles[index];
             const format = (number) => NumberText(Number(number), spec.price_precision);
-            const lines = [candle.datetime, "O " + format(candle.open) + "    H " + format(candle.high),
-                "L " + format(candle.low) + "    C " + format(candle.close), "Volume " + candle.volume];
+            const timestamp = candle.datetime.replace("T", " ").replace(/(?:\.000)?Z$/, " UTC");
+            const lines = [timestamp, "O " + format(candle.open) + "    H " + format(candle.high),
+                "L " + format(candle.low) + "    C " + format(candle.close), "Volume " + VolumeText(candle.volume)];
             const visible = new Set(entries.map((entry) => entry.seriesName));
             spec.series.forEach((series) => {
-                if (visible.has(SeriesName(series)) && series.values[index] !== null) {
+                if (series.group !== "Close limits and trends" && visible.has(SeriesName(series)) && series.values[index] !== null) {
                     lines.push(labels[SeriesName(series)] + ": " + format(series.values[index]));
                 }
             });
@@ -119,6 +127,7 @@
         let magnitude = 0;
         let minimumMagnitude = Infinity;
         let volumeMagnitude = 0;
+        let wholeVolumes = true;
         spec.candles.forEach((candle, index) => {
             if (index) interval = Math.min(interval, timestamps[index] - timestamps[index - 1]);
             magnitude = Math.max(magnitude, Math.abs(candle.low), Math.abs(candle.high));
@@ -126,6 +135,7 @@
                 if (value !== 0) minimumMagnitude = Math.min(minimumMagnitude, Math.abs(value));
             });
             volumeMagnitude = Math.max(volumeMagnitude, candle.volume);
+            wholeVolumes = wholeVolumes && Number.isSafeInteger(candle.volume);
         });
         spec.series.forEach((overlay) => overlay.values.forEach((value) => {
             if (value !== null) {
@@ -217,7 +227,7 @@
                 axisLabel: {color: theme.muted, formatter: (value) => ScaledText(value, priceScale, spec.price_precision)},
                 splitLine: {lineStyle: {color: theme.grid}}, axisPointer: {label: {
                     formatter: (parameters) => ScaledText(parameters.value, priceScale, spec.price_precision)}}},
-            {type: "value", gridIndex: 1, min: 0, splitNumber: 2,
+            {type: "value", gridIndex: 1, min: 0, minInterval: wholeVolumes ? 1 : 0, splitNumber: 2,
                 axisLabel: {color: theme.muted, formatter: (value) => ScaledText(value, volumeScale, 2, true)}, splitLine: {lineStyle: {color: theme.grid}},
                 axisPointer: {label: {formatter: (parameters) => ScaledText(parameters.value, volumeScale, 2, true)}},
                 name: "Volume", nameLocation: "middle", nameGap: 48,

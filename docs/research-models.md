@@ -35,7 +35,7 @@ from pricegenerator.scenario import CreateManifest
 
 training, holdout = ChronologicalSplit(reference, holdout_fraction=.25)
 profile = ExtractProfile(training)
-config = profile.ToConfig(GenerationConfig(seed=12, horizon=200))
+config = profile.ToConfig(GenerationConfig(model=profile.model, seed=12, horizon=200))
 data = Generate(config)
 manifest = CreateManifest(config, data, metadata=profile.ManifestMetadata())
 report = Calibrate(training, holdout, tolerances={"log_return_mean": .005})
@@ -54,8 +54,9 @@ exclude price gaps between bars. The fitted submodel fixes regime scale to one,
 shock/outlier probabilities to zero and volume noise, coupling and persistence
 to zero. Wick scale, price/volume bounds and other unestimated base inputs stay
 explicit assumptions. Bounds can change generated moments; calibration does
-not compensate for their effect. Zero mean volume cannot fit the generator's
-strictly positive volume base and is rejected.
+not compensate for their effect. The default fit uses continuous `regime_v2` so a fractional asset volume can
+be represented. Use a `regime_v3` base for a count fit. Count conversion can
+round the fitted mean at generation. Zero mean volume is rejected.
 
 This is an observable-moment fit under neutral restrictions, **not** an estimate
 of regime transitions, shock probabilities, wick tails or volume dynamics.
@@ -115,7 +116,7 @@ stress_manifest = CreateScriptedManifest(config, stress)
 
 Both functions return the same canonical OHLCV DataFrame shape as `Generate`.
 They have independent immutable configurations and serializable replay
-manifests. They never change the default `regime_v2` generation model.
+manifests. They are separate from the default `regime_v3` count model.
 
 The seeded empirical model samples source price gap, candle body, upper/lower
 relative wick geometry and volume **jointly**. Blocks preserve their source

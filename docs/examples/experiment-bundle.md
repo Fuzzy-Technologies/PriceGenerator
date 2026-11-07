@@ -27,6 +27,7 @@ checksum list. Use the original checksum list to verify a transferred copy.
 
 - `scenario.csv` contains 120 hourly candles from seed 42. `reference.csv`
   contains another synthetic series, with seed 43 and lower base volatility.
+  The default model writes whole synthetic volume counts in both files.
   The two `*-manifest.json` files record their configuration and environment.
   Creation replays each saved manifest and compares the canonical CSV bytes.
 - `ensemble.json` summarizes 32 paths generated from the scenario

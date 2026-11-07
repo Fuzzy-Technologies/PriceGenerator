@@ -245,7 +245,7 @@ def test_ExtendedReplayRejectsIncompleteAndNonJsonManifests() -> None:
 def test_ModelRegistryIsExplicitAndImmutable() -> None:
     """Do not admit archived runtimes or imply universal market suitability."""
 
-    assert [model.model for model in ListModels()] == ["regime_v2", "bootstrap_v1", "scripted_v1"], "Only declared modern models may be selectable"
+    assert [model.model for model in ListModels()] == ["regime_v3", "regime_v2", "bootstrap_v1", "scripted_v1"], "Only declared modern models may be selectable"
     assert all(model.status == "experimental" and model.limitations for model in ListModels()), "Insufficient evidence must remain experimental"
     assert all(json.loads(json.dumps(model.ToDict()))["model"] == model.model for model in ListModels()), "Registry entries must be independently serializable"
 
