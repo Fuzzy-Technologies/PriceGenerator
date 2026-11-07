@@ -62,6 +62,20 @@ second writes offline HTML with indicators and diagnostics. Open it
 locally to inspect the chart. The [analysis guide](../../../analysis.md)
 defines the metrics and when they are unavailable.
 
+**Want indicator buttons?** Rebuild the HTML from the same CSV with
+`--analysis` (or use `Chart(prices, "chart.html", analysis=True)` in Python).
+Open the HTML in your browser. Click **Bollinger bands** to see the price
+envelope, **SMA 50 / 200** to compare moving averages, or **Midpoint** to mark
+the middle of each candle's high–low range. Other groups include HMA, VWMA,
+PSAR, Alligator and Zig-Zag. Expand **Individual series** to toggle one line
+at a time. SMA 200 needs at least 200 candles.
+
+Use the wheel or **Box zoom** to focus on an interval. Switch to **Light theme**
+if you prefer, or download the current view with **Export PNG**. The brief
+overview sits below the chart. Expand **Detailed statistics** for the full report.
+
+![Offline candlestick chart with volume, Bollinger Bands and 50- and 200-bar moving averages enabled](../../../assets/pricegenerator-chart-analysis.webp)
+
 Record the source tag or commit, exact configuration and seed, manifest,
 command, dependency versions and SHA-256 of each exported file. The
 canonical candle fingerprint in the manifest identifies the data. Export

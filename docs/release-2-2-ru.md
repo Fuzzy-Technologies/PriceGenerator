@@ -1,6 +1,6 @@
 # PriceGenerator 2.2.0
 
-[English](release-2-2.md)
+[English](release-2-2.md) · [简体中文](release-2-2-zh-CN.md)
 
 PriceGenerator строит синтетические свечи для тестирования торговых систем.
 В 2.2 можно сравнить сгенерированный ряд с рыночной историей и увидеть,
@@ -35,13 +35,27 @@ PriceGenerator строит синтетические свечи для тес�
 
 ## Попробовать
 
-Из окружения с установленным PriceGenerator 2.2 сгенерируй 120 часовых
+Из окружения с установленным PriceGenerator 2.2 сгенерируй 240 часовых
 свечей и открой получившийся HTML в браузере. График работает офлайн.
 
 ```sh
-pricegenerator generate --seed 42 --horizon 120 --timeframe-seconds 3600 --output candles.csv
-pricegenerator chart candles.csv --output candles.html --no-view
+pricegenerator generate --seed 42 --horizon 240 --timeframe-seconds 3600 --output candles.csv
+pricegenerator chart candles.csv --output candles.html --analysis --no-view
 ```
+
+**Где кнопки индикаторов?** Пересоздайте HTML из того же CSV с флагом
+`--analysis` или вызовите `Chart(prices, "chart.html", analysis=True)` в Python.
+Откройте HTML в браузере. **Bollinger bands** показывают диапазон вокруг
+скользящей средней, **SMA 50 / 200** — две средние, а **Midpoint** — середины
+диапазонов свечей. Также доступны HMA, VWMA, PSAR, Alligator и Zig-Zag.
+В разделе **Individual series** можно переключать отдельные линии.
+Для SMA 200 нужно не менее 200 свечей.
+
+Приблизьте участок колёсиком или рамкой (**Box zoom**). Кнопка **Light theme**
+включает светлую тему, а **Export PNG** сохраняет выбранный вид. Под графиком
+есть краткая сводка. Полный отчёт раскрывается по кнопке **Detailed statistics**.
+
+![Офлайн-график свечей и объёмов с включёнными полосами Боллинджера и средними за 50 и 200 свечей](assets/pricegenerator-chart-analysis.webp)
 
 [Полный пример эксперимента](examples/experiment-bundle.md) ·
 [Сравнение двух CSV](reference-comparison.md) ·

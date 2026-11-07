@@ -39,5 +39,16 @@ checksum list. Use the original checksum list to verify a transferred copy.
   synthetic fixtures, including their OHLCV fingerprints. Read the
   differences as descriptive statistics for these two simulated series.
 
+To inspect indicators for the single generated series, create a separate HTML
+file beside the bundle and open it in a browser.
+
+```sh
+pricegenerator chart pg-experiment/scenario.csv --analysis --output analysis.html --no-view
+```
+
+Use **Bollinger bands**, **Midpoint** or **SMA 5 / 20** below the toolbar.
+The bundle has 120 candles, so SMA 200 has too few observations.
+[See the indicator controls and a screenshot](cli-demo.md#open-the-same-candles-with-indicator-buttons).
+
 Archive the directory with its checksum list. To regenerate the numerical
 results, use the library and dependency versions recorded in the manifests.

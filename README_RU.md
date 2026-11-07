@@ -5,7 +5,7 @@
 [Руководство](docs/site/content/ru/scenario-guide.md) ·
 [English](docs/site/content/en/scenario-guide.md) ·
 [简体中文](docs/site/content/zh-CN/scenario-guide.md) ·
-[Что нового в 2.1](docs/site/content/ru/release-2-1.md)
+[Что нового в 2.2](docs/release-2-2-ru.md)
 
 PriceGenerator строит синтетические ряды свечей OHLCV для тестирования
 торговых систем и количественных экспериментов. Можно задать параметры
@@ -21,7 +21,7 @@ PriceGenerator строит синтетические ряды свечей OHL
 [Релизы GitHub](https://github.com/Fuzzy-Technologies/PriceGenerator/releases) ·
 [Порядок выпуска](docs/releasing.md)
 
-Из каталога с исходным кодом установите базовый пакет. Для экспорта графиков
+Для примеров ниже установите базовый пакет из исходников 2.2 в ветке `master`. Для экспорта графиков
 в PNG и JPEG используйте вариант с `[export]`.
 
 ```bash
@@ -68,7 +68,7 @@ with open("scenario.json", "w", encoding="utf-8") as stream:
 replayed = Replay(manifest)
 statistics = Analyze(prices).ToDict()
 indicators = Indicators(prices).ToDict()
-chart_path = Chart(prices, "chart.html", view=False)
+chart_path = Chart(prices, "chart.html", analysis=True, view=False)
 ```
 
 Сохраните манифест вместе с CSV. В нём указаны параметры, модель, ГПСЧ, версия
@@ -99,6 +99,20 @@ pricegenerator validate prices.csv --timeframe-seconds 3600 --no-gaps
 pricegenerator analyze prices.csv --output statistics.json
 pricegenerator chart prices.csv --output chart.html --no-view --analysis
 ```
+
+**Где кнопки индикаторов?** Пересоздайте HTML из того же CSV с флагом
+`--analysis` или вызовите `Chart(prices, "chart.html", analysis=True)` в Python.
+Откройте HTML в браузере. **Bollinger bands** показывают диапазон вокруг
+скользящей средней, **SMA 50 / 200** — две средние, а **Midpoint** — середины
+диапазонов свечей. Также доступны HMA, VWMA, PSAR, Alligator и Zig-Zag.
+В разделе **Individual series** можно переключать отдельные линии.
+Для SMA 200 нужно не менее 200 свечей.
+
+Приблизьте участок колёсиком или рамкой (**Box zoom**). Кнопка **Light theme**
+включает светлую тему, а **Export PNG** сохраняет выбранный вид. Под графиком
+есть краткая сводка. Полный отчёт раскрывается по кнопке **Detailed statistics**.
+
+![Офлайн-график свечей и объёмов с включёнными полосами Боллинджера и средними за 50 и 200 свечей](https://raw.githubusercontent.com/Fuzzy-Technologies/PriceGenerator/master/docs/assets/pricegenerator-chart-analysis.webp)
 
 Команды также доступны через `python -m pricegenerator`. Передайте настройки
 генерации в JSON через `--config`. Значения, явно указанные в командной

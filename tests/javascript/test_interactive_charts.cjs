@@ -273,8 +273,9 @@ test("accessible buttons wire real actions and group names stay plain text", () 
     const controller = adapter.CreateController(chart, spec, theme, branding, {}, environment);
     const buttons = ["pan", "box", "reset", "full", "export"].map(Element);
     const groups = Element();
-    const controls = {querySelectorAll: () => buttons,
-        querySelector: (selector) => selector === "[data-groups]" ? groups : buttons[1]};
+    const series = Element();
+    const selectors = {"[data-groups]": groups, "[data-series]": series, '[data-action="box"]': buttons[1]};
+    const controls = {querySelectorAll: () => buttons, querySelector: (selector) => selectors[selector]};
     const created = [];
     environment.document = {createElement: (name) => {const element = Element();
         element.tagName = name; created.push(element); return element;}};
@@ -287,6 +288,10 @@ test("accessible buttons wire real actions and group names stay plain text", () 
     assert.equal(buttons[1].attributes["aria-pressed"], "false");
     assert.equal(groups.children[0].textContent, spec.series[0].group);
     assert.equal(groups.children[0].children.length, 0);
+    assert.match(groups.children[0].title, /Toggle/);
+    assert.equal(series.children[0].textContent, "Candles");
+    series.children[0].click();
+    assert.equal(controller.Selected().__pg_price, false);
     groups.children[0].click();
     assert.equal(controller.Selected().__pg_overlay_sma, true);
     buttons[2].click();

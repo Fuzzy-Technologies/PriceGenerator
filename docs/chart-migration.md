@@ -50,6 +50,8 @@ The format can be explicit (`format="jpeg"`), but it must agree with the output
 suffix. Missing export dependencies report how to install the extra. File output
 and rendering failures propagate; a failed save never triggers browser viewing.
 
+Use `--analysis` in the CLI or `analysis=True` in Python to add indicator buttons and an expandable report. The chart opens with a brief overview. Use Individual series for one curve at a time.
+
 Analysis is opt-in. `analysis=True` adds modern statistical summaries and indicator
 overlays from canonical data without modifying the source frame. A prepared
 `ChartSpec` already owns its presentation data and cannot request automatic

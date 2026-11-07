@@ -5,7 +5,7 @@
 [English guide](docs/site/content/en/scenario-guide.md) ·
 [Русский](docs/site/content/ru/scenario-guide.md) ·
 [简体中文](docs/site/content/zh-CN/scenario-guide.md) ·
-[What's new in 2.1](docs/site/content/en/release-2-1.md)
+[What's new in 2.2](docs/release-2-2.md)
 
 Reproducible synthetic OHLCV scenarios for trading-system tests and quantitative
 research. The v2 API separates generation, validation, diagnostics, CSV, replay
@@ -17,7 +17,8 @@ establish that a strategy is profitable.
 CPython 3.10–3.15 is supported. PyPI currently provides the historical 1.4.93
 release. The [2.1 GitHub pre-release](docs/site/content/en/release-2-1.md)
 and the [2.0.0 test release](https://github.com/Fuzzy-Technologies/PriceGenerator/releases/tag/v2.0.0)
-provide the v2 APIs below. Install from the 2.1 source archive or checkout:
+provide earlier v2 builds. To follow the examples below, install the 2.2
+source from `master`.
 
 ```bash
 python -m pip install .
@@ -60,7 +61,7 @@ with open("scenario.json", "w", encoding="utf-8") as stream:
 replayed = Replay(manifest)
 statistics = Analyze(prices).ToDict()
 indicators = Indicators(prices).ToDict()
-chart_path = Chart(prices, "chart.html", view=False)
+chart_path = Chart(prices, "chart.html", analysis=True, view=False)
 ```
 
 A manifest records full configuration, model/RNG/library identity, environment
@@ -85,6 +86,20 @@ pricegenerator validate prices.csv --timeframe-seconds 3600 --no-gaps
 pricegenerator analyze prices.csv --output statistics.json
 pricegenerator chart prices.csv --output chart.html --no-view --analysis
 ```
+
+**Want indicator buttons?** Rebuild the HTML from the same CSV with
+`--analysis` (or use `Chart(prices, "chart.html", analysis=True)` in Python).
+Open the HTML in your browser. Click **Bollinger bands** to see the price
+envelope, **SMA 50 / 200** to compare moving averages, or **Midpoint** to mark
+the middle of each candle's high–low range. Other groups include HMA, VWMA,
+PSAR, Alligator and Zig-Zag. Expand **Individual series** to toggle one line
+at a time. SMA 200 needs at least 200 candles.
+
+Use the wheel or **Box zoom** to focus on an interval. Switch to **Light theme**
+if you prefer, or download the current view with **Export PNG**. The brief
+overview sits below the chart. Expand **Detailed statistics** for the full report.
+
+![Offline candlestick chart with volume, Bollinger Bands and 50- and 200-bar moving averages enabled](https://raw.githubusercontent.com/Fuzzy-Technologies/PriceGenerator/master/docs/assets/pricegenerator-chart-analysis.webp)
 
 Version 2.1 also provides [ensemble generation and exact
 replay](docs/monte-carlo.md) through the CLI and Python, and optional

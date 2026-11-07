@@ -22,11 +22,14 @@ function Controls(environment) {
     const originalCreate = environment.document.createElement;
     environment.document.createElement = (name) => name === "canvas" ? originalCreate(name) : Element(name);
     const groups = Element("span");
+    const series = Element("span");
     const buttons = ["pan", "box", "reset", "full", "export"].map((action) => {
         const element = Element("button"); element.dataset.action = action; return element;
     });
     return {querySelectorAll() {return buttons;}, querySelector(selector) {
-        return selector === "[data-groups]" ? groups : buttons.find((button) => button.dataset.action === "box");
+        if (selector === "[data-groups]") return groups;
+        if (selector === "[data-series]") return series;
+        return buttons.find((button) => button.dataset.action === "box");
     }};
 }
 

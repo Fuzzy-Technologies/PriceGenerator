@@ -83,13 +83,19 @@ def test_OfflineDocumentEmbedsRuntimeBrandingAndLicenses() -> None:
     restored = ChartSpec.FromDict(json.loads(parsed.scripts["chart-spec"]))
     branding = json.loads(parsed.scripts["chart-branding"])
     assert restored == spec, "HTML must retain the exact validated market-data snapshot"
-    assert len(parsed.scripts) == 6, "Only the three data blocks and three trusted scripts may appear"
+    assert len(parsed.scripts) == 7, "Only four inert data blocks and three trusted scripts may appear"
     assert all(source.startswith("data:image/png;base64,") for source in branding.values())
     assert set(branding) == {"wordmark", "emblem"}
     assert not any(attrs.get("src") or attrs.get("href") for _, attrs in parsed.tags), "No external resource references are allowed"
     page, notices = document.split('<template id="third-party-notices">', 1)
     notices = notices.split("</template>", 1)[0]
-    assert not any(tag in {"details", "summary", "pre"} for tag, _ in parsed.tags)
+    assert not any(tag in {"details", "summary", "pre"} for tag, _ in ParseDocument(notices).tags)
+    disclosures = [attrs for tag, attrs in parsed.tags if tag == "details"]
+    assert len(disclosures) == 2 and all("open" not in attrs for attrs in disclosures)
+    assert '<section class="overview" aria-label="Chart overview">' in page
+    assert '<summary>Detailed statistics</summary>' in page
+    assert set(json.loads(parsed.scripts["chart-themes"])) == {"dark", "light"}
+    assert 'data-action="theme"' in page
     assert "Apache License" not in page and "BSD 3-Clause License" not in page
     assert "Apache License" in notices and "BSD 3-Clause License" in notices
     assert "Microsoft Corporation" in notices and "Apache Software Foundation" in notices
@@ -108,7 +114,7 @@ def test_UntrustedStringsCannotCreateMarkupOrScript(hostile: str) -> None:
     spec = SampleSpec(title=hostile, summary=(hostile,), markers=(ChartMarker(0, hostile),),
         series=(ChartSeries("safe", hostile, (1, 2, 3), group=hostile),))
     parsed = ParseDocument(RenderInteractive(spec))
-    assert len(parsed.scripts) == 6, "A user string must not create an extra script tag"
+    assert len(parsed.scripts) == 7, "A user string must not create an extra script tag"
     assert not any(tag == "img" for tag, _ in parsed.tags), "A user string must not create an image request"
     assert ChartSpec.FromDict(json.loads(parsed.scripts["chart-spec"])) == spec
     assert "</script" not in parsed.scripts["chart-spec"].lower()

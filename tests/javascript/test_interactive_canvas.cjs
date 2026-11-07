@@ -105,13 +105,14 @@ test("long text exports and edge annotations stay within the price panel", async
         const labels = controller.chart.getZr().storage.getDisplayList().filter((item) =>
             item.type === "tspan" && item.style.fill === theme.warning);
         assert.ok(labels.length >= 3, "Every annotation must render a visible label");
+        const {top, height} = controller.chart.getOption().grid[0];
         for (const label of labels) {
             const rectangle = label.getBoundingRect().clone();
             const transform = label.getComputedTransform();
             if (transform) rectangle.applyTransform(transform);
             assert.ok(rectangle.x >= 65 && rectangle.x + rectangle.width <= 449,
                 "Annotation text must not clip at either price-panel edge");
-            assert.ok(rectangle.y >= 115 && rectangle.y + rectangle.height <= 217,
+            assert.ok(rectangle.y >= top && rectangle.y + rectangle.height <= top + height,
                 "Annotation text must remain inside the price panel vertically");
         }
     } finally {
@@ -136,14 +137,49 @@ test("PNG keeps the zoomed candles and volume without the interactive slider", a
         const exported = await harness.DecodePNG(controller.ExportPNG());
         const after = await harness.DecodePNG(snapshot());
         const slider = {x: 82, y: 572, width: 850, height: 21};
-        const price = {x: 82, y: 112, width: 850, height: 280};
-        const volume = {x: 82, y: 421, width: 850, height: 72};
+        const [price, volume] = chart.getOption().grid.map(({left, right, top, height}) =>
+            ({x: left, y: top, width: spec.width - left - right, height}));
         assert.ok(Differences(before, exported, slider) > 1000, "Export must omit the rendered slider");
         assert.equal(Differences(before, after, slider), 0, "The live slider must remain visible");
         assert.equal(Differences(before, exported, price), 0, "Export must preserve zoomed price pixels");
         assert.equal(Differences(before, exported, volume), 0, "Export must preserve zoomed volume pixels");
         assert.equal(chart.getOption().dataZoom[0].startValue, zoom.startValue);
         assert.equal(chart.getOption().dataZoom[0].endValue, zoom.endValue);
+    } finally {
+        controller.Dispose();
+    }
+});
+
+test("theme switching keeps the zoom and selected indicators and redraws export colors", async () => {
+    const harness = CreateHarness();
+    const spec = Spec(30);
+    spec.series = [{key: "midpoint-points", label: "High/low midpoint points", group: "Midpoint",
+        kind: "points", visible: false, color: null, values: spec.candles.map((candle) => (candle.high + candle.low) / 2),
+        width: 1.8, dashed: false}];
+    const canvas = harness.Canvas(spec.width, spec.height);
+    const controller = await adapter.Mount(canvas, spec, theme, branding,
+        null, {textContent: ""}, harness.runtime, harness.environment);
+    try {
+        const initial = controller.chart.getOption().dataZoom[0];
+        controller.chart.dispatchAction({type: "dataZoom", start: 25, end: 75});
+        const zoom = controller.chart.getOption().dataZoom[0];
+        controller.ToggleGroup("Midpoint");
+        const light = {...theme, background: "#f5f7fc", panel: "#ffffff", text: "#182338"};
+        controller.SetTheme(light);
+        const options = controller.chart.getOption();
+        assert.equal(options.backgroundColor, light.background);
+        assert.equal(options.series[2].itemStyle.color, light.text);
+        assert.equal(options.series[2].symbolSize, 6);
+        assert.equal(options.dataZoom[0].startValue, zoom.startValue);
+        assert.equal(options.dataZoom[0].endValue, zoom.endValue);
+        assert.equal(controller.Selected()["__pg_overlay_midpoint-points"], true);
+        const exported = await harness.DecodePNG(controller.ExportPNG());
+        assert.deepEqual(Array.from(exported.pixels.slice(0, 4)), [245, 247, 252, 255]);
+        assert.equal(controller.PreviousZoom(), true);
+        assert.equal(controller.chart.getOption().dataZoom[0].startValue, initial.startValue);
+        controller.Reset();
+        assert.equal(controller.Selected()["__pg_overlay_midpoint-points"], false);
+        assert.equal(controller.chart.getOption().backgroundColor, light.background);
     } finally {
         controller.Dispose();
     }
