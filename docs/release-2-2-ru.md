@@ -18,6 +18,8 @@ PriceGenerator строит синтетические свечи для тес�
 - **Русские руководства.** Переписали быстрый старт и инструкции о том,
   как работать со свечами, повторять прогоны и обмениваться данными с MetaTrader 5.
 
+Синтетический объём теперь целый. Дробное количество актива при импорте сохраняется.
+
 ## Как читать график
 
 Мы 32 раза запустили один сценарий с одинаковыми настройками. Случайные
@@ -39,7 +41,7 @@ PriceGenerator строит синтетические свечи для тес�
 свечей и открой получившийся HTML в браузере. График работает офлайн.
 
 ```sh
-pricegenerator generate --seed 42 --horizon 240 --timeframe-seconds 3600 --output candles.csv
+pricegenerator generate --seed 42 --horizon 240 --start 2025-01-06T00:00:00Z --timeframe-seconds 3600 --output candles.csv
 pricegenerator chart candles.csv --output candles.html --analysis --no-view
 ```
 

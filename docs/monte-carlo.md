@@ -1,7 +1,8 @@
 # Seeded Monte Carlo ensembles
 
 The CLI and the module-qualified Python API in `pricegenerator.monte_carlo`
-run bounded ensembles with the same `regime_v2` engine used by `Generate`.
+run bounded ensembles with the same selected regime model as `Generate`.
+The default `regime_v3` uses whole synthetic volume counts.
 
 ```bash
 pricegenerator monte-carlo --seed 42 --horizon 240 --paths 256 --workers 2 --output ensemble.json --manifest experiment.json --chart quantiles.html

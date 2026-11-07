@@ -15,7 +15,7 @@ from pricegenerator.rendering.api import Chart, PrepareChart
 def ExamplePrices(length: int = 96) -> pd.DataFrame:
     """Generate seeded data, then explicitly add a session gap and zero activity."""
 
-    prices = Generate(GenerationConfig(seed=20261016, horizon=length,
+    prices = Generate(GenerationConfig(model="regime_v2", seed=20261016, horizon=length,
         start=datetime(2026, 10, 12, 8, tzinfo=timezone.utc), timeframe_seconds=1800,
         volatility=0.004, regime_scale=2, shock_probability=0.02))
     prices.loc[prices.index >= 48, "datetime"] += pd.Timedelta(days=2)

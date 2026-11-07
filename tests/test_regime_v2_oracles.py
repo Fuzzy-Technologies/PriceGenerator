@@ -49,6 +49,7 @@ def test_RegimeSwitchShockAndIndependentWicksMatchHandComputedRows():
     """Pin stress and calm candles with distinct shocks, wicks and AR(1) noise."""
 
     config = GenerationConfig(
+        model="regime_v2",
         horizon=2, initial_price=1, drift=0.125, volatility=0.125,
         regime_persistence=0.6, regime_scale=2,
         shock_probability=0.25, shock_scale=2,
@@ -87,6 +88,7 @@ def test_ReflectedCloseFeedsActivityAndWicksClipToBounds():
     """Check a return reflected twice and volume based on the realized move."""
 
     config = GenerationConfig(
+        model="regime_v2",
         horizon=1, initial_price=exp(1 / 4), price_floor=1, price_ceiling=exp(1 / 2),
         volatility=0.125, regime_persistence=1, shock_probability=0,
         wick_scale=1, wick_outlier_probability=0,

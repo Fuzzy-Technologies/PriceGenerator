@@ -30,7 +30,7 @@ def test_ProfileRoundTripAndDeclaredRestrictions() -> None:
     assert loaded == profile and loaded.Reference() == profile.Reference(), "Profile roundtrip must preserve all source and estimator identity"
     assert profile.drift == pytest.approx(.001), "Profile drift must fit training candle-body log returns"
     assert profile.volume_base == 100, "Holdout volume must not contaminate training profile"
-    config = profile.ToConfig(GenerationConfig(seed=9, wick_scale=.7))
+    config = profile.ToConfig(GenerationConfig(model=profile.model, seed=9, wick_scale=.7))
     assert config.shock_probability == 0 and config.regime_scale == 1 and config.volume_sigma == 0, "Fitted submodel restrictions must be explicit"
     assert config.seed == 9 and config.wick_scale == .7, "Unfitted base inputs must remain explicit assumptions"
     assert "wick_scale" in profile.ManifestMetadata()["unidentified_parameters"], "Unfitted wick parameters must not masquerade as estimates"
@@ -197,3 +197,13 @@ def test_BootstrapIntervalRejectsInvalidAssumptions(values, updates: dict) -> No
 
     with pytest.raises(ValueError):
         BootstrapMeanInterval(values, **settings)
+
+
+def test_CountCalibrationUsesTheDeclaredModel():
+    """Fit the whole-count model when requested and preserve its manifest identity."""
+
+    train, holdout = ChronologicalSplit(_ShiftedFixture())
+    report = Calibrate(train, holdout, base=GenerationConfig())
+    manifest = json.loads(report.holdout_manifest_json)
+    assert report.profile.model_version == 3 and report.profile.model == manifest["model"] == "regime_v3"
+    assert Replay(manifest).volume.mod(1).eq(0).all()

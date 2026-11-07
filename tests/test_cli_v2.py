@@ -19,6 +19,9 @@ def test_GenerateReplayAndValidateRealCSV(tmp_path, capsys):
     source, replay, manifest = (tmp_path / name for name in ("prices.csv", "replayed.csv", "scenario.json"))
     assert Main(["generate", "--seed", "0", "--horizon", "7", "--output", str(source), "--manifest", str(manifest)]) == 0, "Generation command failed"
     assert Main(["replay", str(manifest), "--output", str(replay)]) == 0, "Replay command failed"
+    assert source.read_bytes() == replay.read_bytes(), "CLI replay changed whole-count CSV bytes"
+    assert all(row.rsplit(",", 1)[1].isdigit() for row in source.read_text().splitlines()[1:])
+    assert json.loads(manifest.read_text())["model"] == "regime_v3"
     pd.testing.assert_frame_equal(ReadCSV(source), ReadCSV(replay))
     pd.testing.assert_frame_equal(ReadCSV(source), Generate(GenerationConfig(seed=0, horizon=7)))
     assert json.loads(manifest.read_text())["seed"] == 0, "CLI discarded seed zero"
@@ -246,7 +249,7 @@ def test_EnsembleCLIExportsReportManifestAndRealPathChart(tmp_path):
 
     actual_path = Generate(GenerationConfig(seed=DerivePathSeed(42, 0), horizon=16))
     svg = chart.read_text(encoding="utf-8")
-    assert "Monte Carlo | regime_v2 | 7 paths" in svg, "The chart must identify the model and sample size"
+    assert "Monte Carlo | regime_v3 | 7 paths" in svg, "The chart must identify the model and sample size"
     assert "Candles and volume: ensemble path 0" in svg, "The chart must disclose the candle source"
     assert "pointwise synthetic range" in svg, "The chart must describe the quantile range"
     assert f"C={actual_path.close.iloc[0]} " in svg, "Displayed candles must come from an actual derived path"
@@ -278,3 +281,15 @@ def test_EnsembleCLIProtectsManifestAndConfiguration(tmp_path):
         Main(["replay-ensemble", str(manifest), "--output", str(output)])
 
     assert error.value.code == 2 and not output.exists(), "Tampered replay wrote a result"
+
+
+def test_CLIContinuesToReplayContinuousScenarios(tmp_path):
+    """Keep the previous model's volume values and CSV replay intact."""
+
+    config, source, manifest, replay = (tmp_path / name for name in
+                                        ("config.json", "source.csv", "scenario.json", "replay.csv"))
+    config.write_text(json.dumps({"model": "regime_v2", "seed": 42, "horizon": 6}))
+    assert Main(["generate", "--config", str(config), "--output", str(source), "--manifest", str(manifest)]) == 0
+    assert Main(["replay", str(manifest), "--output", str(replay)]) == 0
+    assert source.read_bytes() == replay.read_bytes()
+    assert ReadCSV(source).volume.mod(1).ne(0).any(), "Historical activity was rounded"

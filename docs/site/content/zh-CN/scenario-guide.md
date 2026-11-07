@@ -24,7 +24,7 @@
 
 ## 构建可控的合成场景
 
-`regime_v2` 从低波动状态开始。生成每根 K 线之前，模型以
+默认的 `regime_v3` 模型从低波动状态开始。生成每根 K 线之前，模型以
 `1 - regime_persistence` 的概率在低波动和高波动状态之间切换。
 低波动状态下，收益率高斯分量的标准差 $\sigma$ 为 `volatility`，高波动状态下
 为 `volatility * regime_scale`。参数按单根 K 线定义，改变时间间隔时
@@ -39,8 +39,12 @@ $B$ 以 `shock_probability` 的概率激活冲击。从第二根 K 线起，
 模型会进行反射。因此，实现的对数收益率可能与 $r$ 不同。
 
 上下影线在对数价格空间从实体向外延伸。两侧的异常延长事件相互独立，
-影线受价格边界截断。成交量是连续的市场活跃度指标，其对数噪声具有
-自相关，并可与实际对数收益率的绝对值耦合。[模型规范](../../../model-regime-v2.md)
+影线受价格边界截断。
+
+默认模型输出整数形式的合成活跃度计数。底层水平带有自相关噪声，也可随
+实际对数收益率的绝对值变化。旧版 `regime_v2` 保留连续数值以供复现。
+导入 CSV 时保留可带小数的资产成交数量。合成计数并非真实报价更新、
+交易笔数或资产成交量。 [模型规范](../../../model-regime-v2.md)
 列出完整公式、随机抽样顺序和边界规则。[数值测试](../../../../tests/test_regime_v2_oracles.py)
 包含用手工推导值校验的场景。
 
@@ -62,7 +66,7 @@ python -I -m pricegenerator chart prices.csv --output analysis.html --analysis -
 用浏览器打开文件后，点击 **Bollinger bands** 查看均线周围的波动范围，
 点击 **SMA 50 / 200** 比较两条均线，或点击 **Midpoint** 标出每根 K 线
 最高价与最低价的中点。还可以切换 HMA、VWMA、PSAR、Alligator 和 Zig-Zag。
-展开 **Individual series** 可以单独开关一条曲线。SMA 200 至少需要 200 根 K 线。
+展开 **Individual series** 可以单独开关一条曲线。SMA 200 至少需要 200 根 K 线。全序列收盘价参考线与 Zig-Zag 使用后续 K 线，适合回看已经生成的序列。
 
 用滚轮或 **Box zoom** 放大选定区间。**Light theme** 切换至浅色主题，
 **Export PNG** 保存当前视图。图表下方显示简要概览，展开

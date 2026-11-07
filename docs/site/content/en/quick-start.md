@@ -125,9 +125,10 @@ Keep session gaps and validate them against the known interval.
 An adapter that loads a custom MT5 symbol through `CustomRatesReplace` needs
 minute bars aligned to M1 opening times. Generate M1 directly, as above.
 MQL5 `datetime` uses whole seconds since 1970. Check the range and alignment
-before mapping timestamps. Declare how the adapter converts the single
-floating-point `volume` column into integer `tick_volume` and `real_volume`
-fields and supplies a spread in points. Document price rounding for the
+before mapping timestamps. Map the whole synthetic `volume` to `tick_volume` only if the test uses
+it as a stand-in for tick count. Obtain `real_volume` and spread in points
+separately. Imported asset quantities can be fractional, so define the source
+unit before mapping them to an integer MT5 field. Document price rounding for the
 symbol's digits and check candle geometry after conversion. Use a dedicated
 custom symbol and a bounded replacement interval.
 [CustomRatesReplace](https://www.mql5.com/en/docs/customsymbols/customratesreplace) · [MqlRates](https://www.mql5.com/en/docs/constants/structures/mqlrates) · [MQL5 datetime](https://www.mql5.com/en/docs/basis/types/integer/datetime)

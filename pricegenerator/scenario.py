@@ -12,7 +12,7 @@ import pandas as pd
 from pricegenerator._version import __version__
 from pricegenerator.config import GenerationConfig
 from pricegenerator.generation import Generate
-from pricegenerator.models import MODEL_ID, RNG_ID
+from pricegenerator.models import RNG_ID
 
 
 MANIFEST_VERSION = 1
@@ -81,7 +81,7 @@ def CreateManifest(config: GenerationConfig, data: pd.DataFrame | None = None, *
     provenance = json.loads(json.dumps(dict(metadata or {}), allow_nan=False))
     manifest = {
         "manifest_version": MANIFEST_VERSION,
-        "model": MODEL_ID,
+        "model": config.model,
         "rng": RNG_ID,
         "library_version": __version__,
         "seed": config.seed,
@@ -111,7 +111,7 @@ def Replay(manifest: Mapping[str, Any], *, strict_environment: bool = True) -> p
     if type(manifest["manifest_version"]) is not int or type(manifest["seed"]) is not int:
         raise ValueError("manifest version and seed must be integers")
 
-    for name, expected in (("manifest_version", MANIFEST_VERSION), ("model", MODEL_ID), ("rng", RNG_ID), ("library_version", __version__)):
+    for name, expected in (("manifest_version", MANIFEST_VERSION), ("rng", RNG_ID), ("library_version", __version__)):
         if manifest[name] != expected:
             raise ValueError(f"manifest {name} is incompatible with this runtime")
 
@@ -135,6 +135,9 @@ def Replay(manifest: Mapping[str, Any], *, strict_environment: bool = True) -> p
         raise ValueError("manifest must contain the complete generation configuration")
 
     config = GenerationConfig.FromDict(configuration)
+
+    if manifest["model"] != config.model:
+        raise ValueError("manifest model does not match its configuration")
 
     if manifest["seed"] != config.seed:
         raise ValueError("manifest seed does not match its configuration")

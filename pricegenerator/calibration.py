@@ -10,7 +10,7 @@ from typing import Mapping
 import numpy as np
 import pandas as pd
 
-from pricegenerator.config import GenerationConfig
+from pricegenerator.config import CONTINUOUS_MODEL_ID, COUNT_MODEL_ID, MAX_VOLUME_COUNT, REGIME_MODEL_VERSIONS, GenerationConfig
 from pricegenerator.evaluation import Compare, ComparisonReport
 from pricegenerator.generation import Generate
 from pricegenerator.market_data import ValidateOHLCV
@@ -64,7 +64,7 @@ class Profile:
     def __post_init__(self) -> None:
         """Reject unsupported, ambiguous or nonfinite serialized profiles."""
 
-        if type(self.schema_version) is not int or type(self.model_version) is not int or self.schema_version != 1 or self.model != "regime_v2" or self.model_version != 2:
+        if type(self.schema_version) is not int or type(self.model_version) is not int or self.schema_version != 1 or not isinstance(self.model, str) or self.model_version != REGIME_MODEL_VERSIONS.get(self.model):
             raise ValueError("Unsupported profile schema or model version")
 
         if isinstance(self.source_rows, bool) or not isinstance(self.source_rows, int) or self.source_rows < 3:
@@ -86,7 +86,10 @@ class Profile:
             raise ValueError("Profile timeframe/volume must be positive and volatility nonnegative")
 
         if not -2 <= self.drift <= 2 or self.volatility > 2 or not 1e-100 <= self.volume_base <= 1e100:
-            raise ValueError("Profile moments exceed the supported regime_v2 parameter domain")
+            raise ValueError("Profile moments exceed the supported regime parameter domain")
+
+        if self.model == COUNT_MODEL_ID and not 1 <= self.volume_base <= MAX_VOLUME_COUNT:
+            raise ValueError("regime_v3 profiles require mean volume between 1 and 2**53 - 1")
 
         if not isinstance(self.source_fingerprint, str) or not re.fullmatch(r"[0-9a-f]{64}", self.source_fingerprint):
             raise ValueError("Profile source_fingerprint must be a SHA-256 digest")
@@ -145,7 +148,7 @@ class Profile:
         No fitted value estimates latent-state transition or tail parameters.
         """
 
-        config = base if base is not None else GenerationConfig()
+        config = base if base is not None else GenerationConfig(model=self.model)
 
         if not isinstance(config, GenerationConfig):
             raise TypeError("Profile.ToConfig requires a GenerationConfig base")
@@ -164,19 +167,19 @@ class Profile:
                 "fixed_restrictions": dict(_FIXED), "unidentified_parameters": list(_UNIDENTIFIED)}
 
 
-def ExtractProfile(frame: pd.DataFrame, *, model: str = "regime_v2") -> Profile:
+def ExtractProfile(frame: pd.DataFrame, *, model: str = CONTINUOUS_MODEL_ID) -> Profile:
     """Extract only modeled observable moments from a regular training window."""
 
     source = ValidateOHLCV(frame)
 
-    if model != "regime_v2":
-        raise ValueError("Moment profiles support only regime_v2")
+    if not isinstance(model, str) or model not in REGIME_MODEL_VERSIONS:
+        raise ValueError("Moment profiles support only regime_v2 and regime_v3")
 
     if len(source) < 3:
         raise ValueError("Profile extraction requires at least three rows")
 
     if (source[["open", "high", "low", "close"]].to_numpy() <= 0).any():
-        raise ValueError("regime_v2 profiles require strictly positive source prices")
+        raise ValueError("Regime profiles require strictly positive source prices")
 
     timeframe_ns = _RegularTimeframeNanoseconds(source)
     timeframe_seconds = timeframe_ns / 1e9
@@ -186,7 +189,7 @@ def ExtractProfile(frame: pd.DataFrame, *, model: str = "regime_v2") -> Profile:
 
     returns = np.log(source["close"].to_numpy()) - np.log(source["open"].to_numpy())
 
-    return Profile(1, model, 2, source["datetime"].iloc[0].isoformat(), source["datetime"].iloc[-1].isoformat(),
+    return Profile(1, model, REGIME_MODEL_VERSIONS[model], source["datetime"].iloc[0].isoformat(), source["datetime"].iloc[-1].isoformat(),
                    timeframe_seconds, len(source), Fingerprint(source), float(returns.mean()),
                    float(returns.std(ddof=0)), float(source["volume"].mean()))
 
@@ -246,7 +249,10 @@ def Calibrate(training: pd.DataFrame, holdout: pd.DataFrame, *, base: Generation
     if train["datetime"].iloc[-1] >= test["datetime"].iloc[0]:
         raise ValueError("Training must strictly precede holdout without timestamp overlap")
 
-    profile = ExtractProfile(train)
+    if base is not None and not isinstance(base, GenerationConfig):
+        raise TypeError("Calibrate requires a GenerationConfig base")
+
+    profile = ExtractProfile(train, model=base.model if base is not None else CONTINUOUS_MODEL_ID)
     holdout_timeframe_ns = _RegularTimeframeNanoseconds(test)
     training_timeframe_ns = _RegularTimeframeNanoseconds(train)
 

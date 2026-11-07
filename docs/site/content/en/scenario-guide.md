@@ -24,7 +24,7 @@ support a real-tick strategy test.
 
 ## Model a controlled scenario
 
-The `regime_v2` engine starts calm. Before each candle it switches between
+The default `regime_v3` model starts in its low-volatility state. Before each candle it switches between
 calm and stressed states with probability `1 - regime_persistence`.
 The Gaussian return component has standard deviation $\sigma$ of `volatility` in the calm state
 and `volatility * regime_scale` in the stressed state. Parameters apply
@@ -41,9 +41,13 @@ The proposed log close is reflected at the configured bounds when needed,
 so the realized return can differ from $r$.
 
 Wick lengths extend from the body in log-price space, with independent
-outlier events on each side and clipping at the price bounds. Volume is a
-continuous activity measure with autocorrelated log noise and configurable
-coupling to the magnitude of the realized return. See the [model specification](../../../model-regime-v2.md)
+outlier events on each side and clipping at the price bounds.
+
+The default model emits whole synthetic activity counts. The noise has memory
+and the level can grow with the absolute realized return. Historical
+`regime_v2` configurations retain continuous volume. Fractional traded asset
+quantities in imported CSVs retain their values. A synthetic count does not
+measure actual ticks, trades, or traded assets. See the [model specification](../../../model-regime-v2.md)
 for draw order, exact formulas and boundary rules, and the
 [scripted numerical tests](../../../../tests/test_regime_v2_oracles.py)
 for hand-derived cases.
@@ -68,7 +72,9 @@ Open the HTML in your browser. Click **Bollinger bands** to see the price
 envelope, **SMA 50 / 200** to compare moving averages, or **Midpoint** to mark
 the middle of each candle's high–low range. Other groups include HMA, VWMA,
 PSAR, Alligator and Zig-Zag. Expand **Individual series** to toggle one line
-at a time. SMA 200 needs at least 200 candles.
+at a time. SMA 200 needs at least 200 candles. The close guides and Zig-Zag
+use later candles to describe past movements. Use them to inspect a finished
+series.
 
 Use the wheel or **Box zoom** to focus on an interval. Switch to **Light theme**
 if you prefer, or download the current view with **Export PNG**. The brief

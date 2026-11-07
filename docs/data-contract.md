@@ -57,6 +57,11 @@ Paths use UTF-8. Caller-owned text streams are supported and remain open.
 Filesystem I/O errors propagate as `OSError` subclasses; malformed CSV,
 decoding failures and invalid data raise `OHLCVError`.
 
+The default generator emits whole synthetic counts and its CLI writes them
+as integer text. The shared DataFrame column remains binary64. Imported volume
+may represent a traded asset quantity, a trade count or a tick count. Preserve
+the source unit when comparing series or mapping them to other formats.
+
 CSV requires the exact header `datetime,open,high,low,close,volume`, in that
 order, followed by exactly six fields per record. Headerless 1.x files and
 alternative delimiters are unsupported. Numeric fields use decimal notation

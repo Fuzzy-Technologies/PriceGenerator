@@ -232,9 +232,9 @@ def MarketOverlays(frame, *, split_counts=(), zigzag_deviation: float = 0.05) ->
     closing = tuple(float(value) for value in prices.close)
     midpoint = tuple(float(high / 2 + low / 2) for high, low in zip(prices.high, prices.low))
     result = [
-        ChartSeries("close-max", "Maximum close", (max(closing),) * length, group="Close limits and trends"),
-        ChartSeries("close-min", "Minimum close", (min(closing),) * length, group="Close limits and trends"),
-        ChartSeries("trend", "Full-horizon endpoint trend", _Interpolate(candles, [0] if length == 1 else [0, length - 1], [closing[0]] if length == 1 else [closing[0], closing[-1]]), group="Close limits and trends", dashed=True),
+        ChartSeries("close-max", "Maximum close (full series)", (max(closing),) * length, visible=False, group="Close limits and trends"),
+        ChartSeries("close-min", "Minimum close (full series)", (min(closing),) * length, visible=False, group="Close limits and trends"),
+        ChartSeries("trend", "Full-horizon endpoint trend", _Interpolate(candles, [0] if length == 1 else [0, length - 1], [closing[0]] if length == 1 else [closing[0], closing[-1]]), group="Close limits and trends", visible=False, dashed=True),
         ChartSeries("midpoint-line", "High/low midpoint", midpoint, visible=False, group="Midpoint"),
         ChartSeries("midpoint-points", "High/low midpoint points", midpoint, kind="points", visible=False, group="Midpoint"),
     ]
