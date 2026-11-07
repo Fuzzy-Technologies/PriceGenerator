@@ -85,7 +85,7 @@ def test_OnePriceWordmarkChangesOnlyItsNativeRasterRegion(monkeypatch) -> None:
     image = next(element for element in root.findall(".//svg:image", namespace)
                  if element.attrib["id"].endswith("-wordmark"))
     width, height = float(image.attrib["width"]), float(image.attrib["height"])
-    assert width == 260
+    assert width == 210
     assert x <= bounds[0] < bounds[2] <= x + width
     assert int(y) <= bounds[1] < bounds[3] <= y + height
     assert bounds[2] > x + width * 0.93, "The registered mark must survive raster export"

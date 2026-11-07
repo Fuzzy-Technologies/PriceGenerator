@@ -55,7 +55,7 @@ test("Mount followed immediately by PNG export contains decoded emblem and one p
         assert.equal(regions.filter((region) => region.name.startsWith("watermark-")).length, 1);
         assert.equal(regions[1].name, "watermark-price");
         assert.equal(regions[1].x, 90);
-        assert.equal(regions[1].width, 260);
+        assert.equal(regions[1].width, 210);
         for (const region of regions) assert.ok(Differences(exported, plain, region) > 20,
             region.name + " must survive PNG export as actual non-background pixels");
     } finally {

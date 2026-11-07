@@ -82,7 +82,7 @@ def RenderSVG(spec: ChartSpec) -> str:
     position_y, ticks = _Scale(spec, price_top, price_bottom)
     label_width = max(len(_PriceLabel(tick, spec.price_precision)) for tick in ticks) * 7
     left, right = float(max(92, label_width + 20)), float(spec.width - 28)
-    wordmark_width = min(260.0, right - left - 16)
+    wordmark_width = min(210.0, right - left - 16)
     wordmark_height = wordmark_width * 0.18
     count = len(spec.candles)
     instants = [datetime.fromisoformat(candle.datetime.replace("Z", "+00:00")) for candle in spec.candles]
