@@ -93,11 +93,13 @@ def RenderSVG(spec: ChartSpec) -> str:
     positions_x = [left + (right - left) * (timestamp - timestamps[0] + interval / 2) / time_span for timestamp in timestamps]
     body_width = max(0.75, min(16.0, (right - left) * interval / time_span * 0.65))
     palette = [theme[key] for key in ("accent", "secondary", "warning", "up", "down")]
+    midpoint_colors = {"midpoint-line": theme["muted"], "midpoint-points": theme["text"]}
+    series_colors = tuple(series.color or midpoint_colors.get(series.key, palette[index % len(palette)])
+                          for index, series in enumerate(spec.series))
     legend_entries = []
 
-    for index, series in enumerate(spec.series):
+    for series, color in zip(spec.series, series_colors):
         if series.visible:
-            color = series.color or palette[index % len(palette)]
             legend_entries.extend((line, color, series.kind, series.dashed) for line in _WrappedLines((series.label,), max(20, (spec.width - 100) // 8)))
 
     report_lines = _WrappedLines(spec.summary, max(20, (spec.width - 60) // 8))
@@ -145,11 +147,10 @@ def RenderSVG(spec: ChartSpec) -> str:
 
     pieces.append(f'<g clip-path="url(#{prefix}-plot)">')
 
-    for series_index, series in enumerate(spec.series):
+    for series, color in zip(spec.series, series_colors):
         if not series.visible:
             continue
 
-        color = series.color or palette[series_index % len(palette)]
         pieces.append(f'<g data-series="{series.key}" fill="none" stroke="{color}" stroke-width="{series.width}"' + (' stroke-dasharray="5 4"' if series.dashed else '') + '>')
         commands = []
         connected = False

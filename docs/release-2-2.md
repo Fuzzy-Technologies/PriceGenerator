@@ -1,6 +1,6 @@
 # PriceGenerator 2.2.0
 
-[Русский](release-2-2-ru.md)
+[Русский](release-2-2-ru.md) · [简体中文](release-2-2-zh-CN.md)
 
 PriceGenerator makes synthetic market candles for testing trading systems.
 In 2.2 you can put a historical series beside a generated one and see
@@ -37,13 +37,27 @@ under the same scenario settings.
 
 ## Try it
 
-With PriceGenerator 2.2 installed, generate 120 hourly candles and open
+With PriceGenerator 2.2 installed, generate 240 hourly candles and open
 the resulting HTML chart in your browser. The chart works offline.
 
 ```sh
-pricegenerator generate --seed 42 --horizon 120 --timeframe-seconds 3600 --output candles.csv
-pricegenerator chart candles.csv --output candles.html --no-view
+pricegenerator generate --seed 42 --horizon 240 --timeframe-seconds 3600 --output candles.csv
+pricegenerator chart candles.csv --output candles.html --analysis --no-view
 ```
+
+**Want indicator buttons?** Rebuild the HTML from the same CSV with
+`--analysis` (or use `Chart(prices, "chart.html", analysis=True)` in Python).
+Open the HTML in your browser. Click **Bollinger bands** to see the price
+envelope, **SMA 50 / 200** to compare moving averages, or **Midpoint** to mark
+the middle of each candle's high–low range. Other groups include HMA, VWMA,
+PSAR, Alligator and Zig-Zag. Expand **Individual series** to toggle one line
+at a time. SMA 200 needs at least 200 candles.
+
+Use the wheel or **Box zoom** to focus on an interval. Switch to **Light theme**
+if you prefer, or download the current view with **Export PNG**. The brief
+overview sits below the chart. Expand **Detailed statistics** for the full report.
+
+![Offline candlestick chart with volume, Bollinger Bands and 50- and 200-bar moving averages enabled](assets/pricegenerator-chart-analysis.webp)
 
 [Run the full experiment](examples/experiment-bundle.md) ·
 [Compare two CSV files](reference-comparison.md) ·

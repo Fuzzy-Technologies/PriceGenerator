@@ -57,6 +57,19 @@ python -I -m pricegenerator chart prices.csv --output analysis.html --analysis -
 指标和诊断信息的离线 HTML 图表，可在本地打开查看。
 [分析指南](../../../analysis.md)定义了指标和无法计算的情形。
 
+**如何显示指标按钮？** 用同一份 CSV 重新生成 HTML，并加上 `--analysis`。
+在 Python 中可以调用 `Chart(prices, "chart.html", analysis=True)`。
+用浏览器打开文件后，点击 **Bollinger bands** 查看均线周围的波动范围，
+点击 **SMA 50 / 200** 比较两条均线，或点击 **Midpoint** 标出每根 K 线
+最高价与最低价的中点。还可以切换 HMA、VWMA、PSAR、Alligator 和 Zig-Zag。
+展开 **Individual series** 可以单独开关一条曲线。SMA 200 至少需要 200 根 K 线。
+
+用滚轮或 **Box zoom** 放大选定区间。**Light theme** 切换至浅色主题，
+**Export PNG** 保存当前视图。图表下方显示简要概览，展开
+**Detailed statistics** 可查看完整报告。
+
+![离线 K 线和成交量图，已开启布林带及 50 和 200 周期均线](../../../assets/pricegenerator-chart-analysis.webp)
+
 记录源码标签或提交、完整配置和种子、清单文件、命令、依赖版本，
 以及各导出文件的 SHA-256。清单中的 K 线指纹标识标准化数据；
 导出哈希标识文件字节，可能随渲染环境而变。

@@ -20,6 +20,39 @@ pricegenerator replay scenario.json \
 cmp prices.csv replay.csv
 ```
 
+## Open the same candles with indicator buttons
+
+With the 2.2 checkout installed, run this command on `prices.csv` and open `analysis.html`.
+
+```sh
+pricegenerator chart prices.csv --analysis --output analysis.html --no-view
+```
+
+**Want indicator buttons?** Rebuild the HTML from the same CSV with
+`--analysis` (or use `Chart(prices, "chart.html", analysis=True)` in Python).
+Open the HTML in your browser. Click **Bollinger bands** to see the price
+envelope, **SMA 50 / 200** to compare moving averages, or **Midpoint** to mark
+the middle of each candle's high–low range. Other groups include HMA, VWMA,
+PSAR, Alligator and Zig-Zag. Expand **Individual series** to toggle one line
+at a time. SMA 200 needs at least 200 candles.
+
+Use the wheel or **Box zoom** to focus on an interval. Switch to **Light theme**
+if you prefer, or download the current view with **Export PNG**. The brief
+overview sits below the chart. Expand **Detailed statistics** for the full report.
+
+The screenshot uses 240 hourly candles with the same seed. In the 120-candle
+recording above, SMA 50 can draw while SMA 200 has too few observations.
+
+```sh
+pricegenerator generate --seed 42 --horizon 240 --timeframe-seconds 3600 --output example-240.csv
+pricegenerator chart example-240.csv --analysis --output example-240.html --width 1120 --height 510 --no-view
+```
+
+For the screenshot, turn off **Close limits and trends** and turn on
+**Bollinger bands** and **SMA 50 / 200**.
+
+![Offline candlestick chart with volume, Bollinger Bands and 50- and 200-bar moving averages enabled](../assets/pricegenerator-chart-analysis.webp)
+
 ## Regenerate the recording
 
 Run the recorder with an isolated installation of the [v2.0.0 source tag](https://github.com/Fuzzy-Technologies/PriceGenerator/tree/v2.0.0), the tag's modern dependency constraints and Linux DejaVu Sans fonts in `/usr/share/fonts/truetype/dejavu`. It runs the installed CLI in a temporary directory and stops if replay changes the CSV bytes.

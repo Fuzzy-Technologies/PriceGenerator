@@ -11,14 +11,13 @@
 индикаторов или отчётности. Временную сетку задаёт конфигурация, а цены
 и объём рассчитывает модель.
 
-## Установить версию из примера
+## Установить 2.2 из исходников
 
-Для контрольного прогона возьмите CPython 3.10–3.13 и тестовый тег
-`v2.0.0`. Команда `git rev-parse HEAD` должна вывести
-`83b1b75a99be06947a93314d6c2509a257ed6b3e`.
+Используйте CPython 3.10–3.15 и отдельное окружение. Возьмите исходники
+2.2 из ветки `master` и сохраните коммит, который покажет Git.
 
 ```sh
-git clone --branch v2.0.0 --depth 1 https://github.com/Fuzzy-Technologies/PriceGenerator.git pg-demo
+git clone --branch master --depth 1 https://github.com/Fuzzy-Technologies/PriceGenerator.git pg-demo
 cd pg-demo
 git rev-parse HEAD
 python -m venv .venv
@@ -27,7 +26,7 @@ python -m venv .venv
 Активируйте окружение командой `. .venv/bin/activate` в POSIX-совместимой
 оболочке или `.\.venv\Scripts\Activate.ps1` в Windows PowerShell. Установите
 пакет из каталога репозитория с версиями зависимостей из
-`requirements/modern.txt`. Проверка версии должна вывести `2.0.0`.
+`requirements/modern.txt`. Проверка версии должна вывести `2.2.0`.
 
 ```sh
 python -m pip install -c requirements/modern.txt .
@@ -43,7 +42,7 @@ cd pg-example
 python -I -m pricegenerator generate --seed 42 --horizon 240 --start 2025-01-06T00:00:00Z --timeframe-seconds 60 --output prices.csv --manifest scenario.json
 python -I -m pricegenerator validate prices.csv --timeframe-seconds 60 --no-gaps
 python -I -m pricegenerator replay scenario.json --output replay.csv
-python -I -m pricegenerator chart prices.csv --output chart.html --no-view
+python -I -m pricegenerator chart prices.csv --output chart.html --analysis --no-view
 python -I -m pricegenerator chart prices.csv --output chart.svg --no-view
 ```
 
@@ -53,6 +52,18 @@ python -I -m pricegenerator chart prices.csv --output chart.svg --no-view
 должны совпасть побайтно. Откройте `chart.html` в браузере, чтобы менять
 масштаб и смотреть значения свечей. `chart.svg` — статический векторный
 график.
+
+**Где кнопки индикаторов?** Пересоздайте HTML из того же CSV с флагом
+`--analysis` или вызовите `Chart(prices, "chart.html", analysis=True)` в Python.
+Откройте HTML в браузере. **Bollinger bands** показывают диапазон вокруг
+скользящей средней, **SMA 50 / 200** — две средние, а **Midpoint** — середины
+диапазонов свечей. Также доступны HMA, VWMA, PSAR, Alligator и Zig-Zag.
+В разделе **Individual series** можно переключать отдельные линии.
+Для SMA 200 нужно не менее 200 свечей.
+
+Приблизьте участок колёсиком или рамкой (**Box zoom**). Кнопка **Light theme**
+включает светлую тему, а **Export PNG** сохраняет выбранный вид. Под графиком
+есть краткая сводка. Полный отчёт раскрывается по кнопке **Detailed statistics**.
 
 ## Повторить пример из Python
 
@@ -80,6 +91,7 @@ if Fingerprint(Replay(manifest)) != Fingerprint(prices):
 
 WriteCSV(prices, "python-prices.csv")
 Chart(prices, "python-chart.svg", view=False)
+Chart(prices, "python-analysis.html", analysis=True, view=False)
 print(manifest["fingerprint"])
 ```
 

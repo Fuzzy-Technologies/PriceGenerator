@@ -5,6 +5,18 @@
     const PRICE = "__pg_price";
     const VOLUME = "__pg_volume";
     const MARKERS = "__pg_markers";
+    const GROUP_HINTS = new Map([
+        ["Close limits and trends", "Highest and lowest close, plus the trend between the first and last close."],
+        ["Midpoint", "Mark the price halfway between each candle’s high and low."],
+        ["SMA 5 / 20", "Simple averages of the last 5 and 20 closing prices."],
+        ["SMA 50 / 200", "Simple averages of the last 50 and 200 closing prices. SMA 200 needs 200 candles."],
+        ["HMA 5 / 20", "Hull moving averages, weighted to respond faster to price changes."],
+        ["VWMA 5 / 20", "Moving averages that give higher-volume candles more weight."],
+        ["Bollinger bands", "Three lines that show a moving average and how widely prices vary around it."],
+        ["PSAR", "Points above or below price that follow the current trend."],
+        ["Alligator (SMMA median price)", "Three shifted, smoothed averages of the high–low midpoint."],
+        ["Zig-Zag", "Connect confirmed swings that meet the price-change threshold."],
+    ]);
 
     function SeriesName(series) {
         return "__pg_overlay_" + series.key;
@@ -25,7 +37,7 @@
     function Layout(width, height) {
         const left = width < 640 ? 62 : 82;
         const right = 28;
-        const top = 112;
+        const top = 80;
         const usable = Math.max(116, height - top - 100);
         const priceHeight = Math.floor(usable * 0.73);
         return {left, right, top, priceHeight, volumeTop: top + priceHeight + 25,
@@ -56,7 +68,6 @@
             {left: layout.left, right: layout.right, top: layout.volumeTop,
                 height: layout.volumeHeight, backgroundColor: theme.panel, show: true, borderWidth: 0, outerBoundsMode: "none"}],
             graphic: BrandingGraphics(branding, layout),
-            legend: {left: layout.left, right: layout.right + 70},
             dataZoom: [{id: "time-slider", left: layout.left, right: layout.right}],
             series: spec.markers.length ? [{id: MARKERS, labelLayout: MarkerLayout(layout)}] : [],
         };
@@ -153,15 +164,18 @@
             barMaxWidth: 20}];
         spec.series.forEach((overlay, index) => {
             const name = SeriesName(overlay);
-            const color = overlay.color || [theme.accent, theme.secondary, theme.warning, theme.up, theme.down][index % 5];
+            const midpoint = overlay.key === "midpoint-points";
+            const palette = [theme.accent, theme.secondary, theme.warning, theme.up, theme.down];
+            const color = overlay.color || (midpoint ? theme.text : overlay.key === "midpoint-line" ?
+                theme.muted : palette[index % palette.length]);
             labels[name] = overlay.label;
             selected[name] = overlay.visible;
             series.push({id: name, name, type: overlay.kind === "points" ? "scatter" : "line", progressive: 0,
                 xAxisIndex: 0, yAxisIndex: 0, encode: {x: 0, y: 1},
                 data: overlay.values.map((value, candleIndex) => [timestamps[candleIndex], value === null ? null : value / priceScale]), connectNulls: false,
-                showSymbol: false, symbolSize: Math.max(3, overlay.width * 2),
+                showSymbol: false, symbolSize: Math.max(midpoint ? 6 : 3, overlay.width * 2),
                 lineStyle: {color, width: overlay.width, type: overlay.dashed ? "dashed" : "solid"},
-                itemStyle: {color}, emphasis: {disabled: true}, z: 4});
+                itemStyle: {color}, emphasis: {disabled: true}, z: midpoint ? 5 : 4});
         });
         if (spec.markers.length) {
             selected[MARKERS] = true;
@@ -193,15 +207,10 @@
             animation: false, useUTC: true, backgroundColor: theme.background,
             textStyle: {fontFamily: "system-ui, sans-serif", color: theme.text},
             title: responsive.title,
-            legend: {show: spec.show_controls, type: "scroll", top: 72, left: layout.left,
-                right: layout.right + 70, textStyle: {color: theme.muted}, selected,
-                data: series.map((item) => item.name), formatter: (name) => labels[name],
-                pageTextStyle: {color: theme.muted}, pageIconColor: theme.accent,
-                pageIconInactiveColor: theme.grid},
-            toolbox: {show: spec.show_controls, right: layout.right, top: 70,
-                iconStyle: {borderColor: theme.muted}, emphasis: {iconStyle: {borderColor: theme.accent}},
-                feature: {dataZoom: {yAxisIndex: false, xAxisIndex: [0, 1],
-                    title: {zoom: "Box zoom", back: "Previous zoom"}}}},
+            legend: {show: false, selected, data: series.map((item) => item.name)},
+            // The toolbox owns the native brush controller. Its controls are HTML buttons.
+            toolbox: {show: spec.show_controls, left: -1000, top: 0, showTitle: false,
+                feature: {dataZoom: {yAxisIndex: false, xAxisIndex: [0, 1]}}},
             grid: responsive.grid,
             xAxis: [axis(0), axis(1)],
             yAxis: [{type: "value", gridIndex: 0, scale: true,
@@ -237,7 +246,10 @@
         let observer = null;
         const listeners = [];
         const groups = new Map();
+        const seriesLabels = new Map([[PRICE, "Candles"], [VOLUME, "Volume"]]);
+        if (spec.markers.length) seriesLabels.set(MARKERS, "Markers");
         spec.series.forEach((series) => {
+            seriesLabels.set(SeriesName(series), series.label);
             if (series.group !== null) {
                 if (!groups.has(series.group)) groups.set(series.group, []);
                 groups.get(series.group).push(SeriesName(series));
@@ -246,8 +258,30 @@
         function Selected() {
             return chart.getOption().legend[0].selected;
         }
+        const zoomHistory = [];
+        function ZoomRange() {
+            const {startValue, endValue} = chart.getOption().dataZoom[0];
+            return {startValue, endValue};
+        }
+        let zoom = ZoomRange();
+        chart.on("datazoom", () => {
+            const next = ZoomRange();
+            if (next.startValue === zoom.startValue && next.endValue === zoom.endValue) return;
+            if (zoomHistory.length === 32) zoomHistory.shift();
+            zoomHistory.push(zoom);
+            zoom = next;
+        });
+        function PreviousZoom() {
+            const previous = zoomHistory.pop();
+            if (!previous) return false;
+            chart.dispatchAction({type: "dataZoom", ...previous}, {silent: true});
+            zoom = ZoomRange();
+            return true;
+        }
         function Reset() {
             chart.dispatchAction({type: "restore"});
+            zoom = ZoomRange();
+            zoomHistory.length = 0;
             boxZoom = false;
             chart.dispatchAction({type: "takeGlobalCursor", key: "dataZoomSelect", dataZoomSelectActive: false});
         }
@@ -264,6 +298,21 @@
             const selected = Selected();
             const hide = members.every((name) => selected[name] !== false);
             members.forEach((name) => chart.dispatchAction({type: hide ? "legendUnSelect" : "legendSelect", name}));
+        }
+        function SetTheme(nextTheme) {
+            const selected = {...Selected()};
+            SetBoxZoom(false);
+            theme = nextTheme;
+            branding = {...branding, watermark: TintWatermark(branding.wordmark, theme, environment)};
+            chart.setOption(BuildOptions(spec, theme, branding, chart.getWidth(), chart.getHeight()), {notMerge: true});
+            chart.dispatchAction({type: "dataZoom", ...zoom}, {silent: true});
+            zoom = ZoomRange();
+            const initial = Selected();
+            Object.entries(selected).forEach(([name, visible]) => {
+                if (initial[name] !== visible) {
+                    chart.dispatchAction({type: visible ? "legendSelect" : "legendUnSelect", name}, {silent: true});
+                }
+            });
         }
         function ExportPNG() {
             return chart.getDataURL({type: "png", pixelRatio: 2, backgroundColor: theme.background,
@@ -298,8 +347,8 @@
             Listen(environment, "resize", Resize);
         }
         Listen(environment, "pagehide", Dispose);
-        return {Reset, SetBoxZoom, FullRange, ToggleGroup, ExportPNG, Resize, Dispose, Listen, groups, Selected,
-            chart, get boxZoom() {return boxZoom;}};
+        return {Reset, SetBoxZoom, FullRange, PreviousZoom, ToggleGroup, SetTheme, ExportPNG, Resize,
+            Dispose, Listen, groups, seriesLabels, Selected, chart, get boxZoom() {return boxZoom;}};
     }
 
     function LoadBranding(branding, environment) {
@@ -324,55 +373,79 @@
         return canvas;
     }
 
-    function AttachControls(controller, controls, status, environment) {
+    function AttachControls(controller, controls, status, environment, themes, initialTheme) {
         const buttons = controls.querySelectorAll("button[data-action]");
+        const box = controls.querySelector('[data-action="box"]');
+        let themeName = initialTheme;
         const actions = {
             pan: () => controller.SetBoxZoom(false),
             box: () => controller.SetBoxZoom(!controller.boxZoom),
+            previous: () => controller.PreviousZoom() ? "Previous zoom restored." : "No previous zoom yet.",
             reset: () => controller.Reset(),
             full: () => controller.FullRange(),
+            theme: (button) => {
+                const next = themeName === "dark" ? "light" : "dark";
+                controller.SetTheme(themes[next]);
+                themeName = next;
+                environment.document.documentElement.dataset.theme = next;
+                button.textContent = next === "dark" ? "Light theme" : "Dark theme";
+                return next === "dark" ? "Dark theme on." : "Light theme on.";
+            },
             export: () => {
                 const link = environment.document.createElement("a");
                 link.download = "pricegenerator-chart.png";
                 link.href = controller.ExportPNG();
                 link.click();
+                return "PNG exported.";
             },
         };
         buttons.forEach((button) => controller.Listen(button, "click", () => {
             try {
-                actions[button.dataset.action]();
-                status.textContent = button.dataset.action === "export" ? "PNG exported." :
-                    controller.boxZoom ? "Drag a rectangle to zoom both panels." : "Drag to pan; use the wheel to zoom.";
-                const box = controls.querySelector('[data-action="box"]');
+                const message = actions[button.dataset.action](button);
+                status.textContent = message || (controller.boxZoom ?
+                    "Drag a rectangle to zoom both panels." : "Drag to pan; use the wheel to zoom.");
                 box.setAttribute("aria-pressed", String(controller.boxZoom));
             } catch (error) {
                 status.textContent = "Chart action failed: " + error.message;
             }
         }));
-        const groups = controls.querySelector("[data-groups]");
         const groupButtons = new Map();
-        controller.groups.forEach((members, name) => {
+        const seriesButtons = new Map();
+        function ToggleButton(container, label, hint, action) {
             const button = environment.document.createElement("button");
             button.type = "button";
-            button.textContent = name;
-            groupButtons.set(name, button);
-            controller.Listen(button, "click", () => {controller.ToggleGroup(name); UpdateGroups();});
-            groups.appendChild(button);
-        });
-        function UpdateGroups() {
-            const selected = controller.Selected();
-            controller.groups.forEach((members, name) => groupButtons.get(name).setAttribute("aria-pressed",
-                String(members.every((member) => selected[member] !== false))));
+            button.textContent = label;
+            button.title = hint;
+            controller.Listen(button, "click", () => {action(); UpdateButtons();});
+            container.appendChild(button);
+            return button;
         }
-        controller.chart.on("legendselectchanged", UpdateGroups);
-        controller.chart.on("restore", UpdateGroups);
-        controller.chart.on("globalcursortaken", () => {
-            controls.querySelector('[data-action="box"]').setAttribute("aria-pressed", String(controller.boxZoom));
+        const groups = controls.querySelector("[data-groups]");
+        const series = controls.querySelector("[data-series]");
+        controller.groups.forEach((members, name) => {
+            groupButtons.set(name, ToggleButton(groups, name,
+                GROUP_HINTS.get(name) || "Toggle this group of chart overlays.", () => controller.ToggleGroup(name)));
         });
-        UpdateGroups();
+        controller.seriesLabels.forEach((label, name) => {
+            seriesButtons.set(name, ToggleButton(series, label, "Show or hide " + label + ".",
+                () => controller.chart.dispatchAction({type: "legendToggleSelect", name})));
+        });
+        function UpdateButtons() {
+            const selected = controller.Selected();
+            controller.groups.forEach((members, name) => {
+                const visible = members.filter((member) => selected[member] !== false).length;
+                groupButtons.get(name).setAttribute("aria-pressed",
+                    visible === members.length ? "true" : visible === 0 ? "false" : "mixed");
+            });
+            seriesButtons.forEach((button, name) => button.setAttribute("aria-pressed", String(selected[name] !== false)));
+        }
+        controller.chart.on("legendselectchanged", UpdateButtons);
+        controller.chart.on("restore", UpdateButtons);
+        controller.chart.on("globalcursortaken", () => box.setAttribute("aria-pressed", String(controller.boxZoom)));
+        UpdateButtons();
     }
 
-    async function Mount(container, spec, theme, branding, controls, status, runtime, environment) {
+    async function Mount(container, spec, theme, branding, controls, status, runtime, environment, themes) {
         const images = await LoadBranding(branding, environment);
         images.watermark = TintWatermark(images.wordmark, theme, environment);
         const chart = runtime.init(container, null, {renderer: "canvas"});
@@ -380,7 +453,7 @@
         try {
             chart.setOption(BuildOptions(spec, theme, images, chart.getWidth(), chart.getHeight()));
             controller = CreateController(chart, spec, theme, images, container, environment);
-            if (spec.show_controls) AttachControls(controller, controls, status, environment);
+            if (spec.show_controls) AttachControls(controller, controls, status, environment, themes, spec.theme);
             status.textContent = "Ready. Drag to pan; use the wheel to zoom. All timestamps are UTC.";
             return controller;
         } catch (error) {
