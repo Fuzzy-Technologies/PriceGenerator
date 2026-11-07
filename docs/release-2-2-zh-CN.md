@@ -13,12 +13,14 @@ PriceGenerator 为交易系统测试生成可复现的合成 K 线。2.2 可以�
 
 ![一条模拟价格轨迹及 32 次模拟的分位数](assets/pricegenerator-2-2-experiment-quantiles.svg)
 
+默认生成整数形式的合成活跃度计数。导入的资产成交量保留原有精度。
+
 ## 试用交互图表
 
 安装 PriceGenerator 2.2 后，生成 240 根小时 K 线，然后用浏览器打开本地 HTML。
 
 ```sh
-pricegenerator generate --seed 42 --horizon 240 --timeframe-seconds 3600 --output candles.csv
+pricegenerator generate --seed 42 --horizon 240 --start 2025-01-06T00:00:00Z --timeframe-seconds 3600 --output candles.csv
 pricegenerator chart candles.csv --output candles.html --analysis --no-view
 ```
 

@@ -116,3 +116,17 @@ def test_InvalidFrameDoesNotTruncateExistingDestination(tmp_path):
         WriteCSV(pd.DataFrame(), path)
 
     assert path.read_text() == "keep"
+
+
+def test_CountExportDoesNotRoundFractionalImports(tmp_path):
+    """Keep fractional traded quantities and reject a lossy count-format request."""
+
+    frame = ReadCSV(StringIO(HEADER + ROW.removesuffix("0\n") + "0.125\n"))
+    path = tmp_path / "input.csv"
+    WriteCSV(frame, path)
+    original = path.read_bytes()
+
+    with pytest.raises(OHLCVError, match="whole volume"):
+        WriteCSV(frame, path, volume_as_count=True)
+
+    assert path.read_bytes() == original and ReadCSV(path).volume.iloc[0] == .125

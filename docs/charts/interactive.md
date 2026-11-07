@@ -40,7 +40,7 @@ outputs, optional dependencies and explicit analysis, see the
 | ----------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | OHLC and volume   | Two synchronized panels; rising bodies are hollow, falling bodies filled. Candle order is explicitly encoded as open, close, low, high for ECharts.                                                                                    |
 | Time axis         | UTC elapsed time, including gaps. Both panels share the same domain and zoom range. No implicit session compression.                                                                                                                   |
-| Hover             | Linked crosshair and plain-text Canvas tooltip with original OHLCV and visible aligned overlays.                                                                                                                                       |
+| Hover             | Linked crosshair and a compact UTC tooltip for OHLCV and visible indicators. Whole volumes show as counts.                                                                                                                             |
 | Navigation        | Wheel zoom, drag pan, overview slider, Box zoom, Previous zoom, Reset view and Full range buttons.                                                                                                                                     |
 | Overlays          | Aligned line or point series, explicit `None` gaps, color/width/dash settings, independent initial visibility.                                                                                                                         |
 | Groups            | Buttons toggle indicator groups. Individual series expands to separate switches. Buttons include hints.                                                                                                                                |
@@ -50,6 +50,9 @@ outputs, optional dependencies and explicit analysis, see the
 | Image export      | PNG at 2× pixel density, containing the current viewport, selected series, official header emblem, and the single lower-left price-panel wordmark. The navigation slider, indicator controls and detailed statistics stay on the page. |
 | Responsive layout | ResizeObserver updates panels and graphics while preserving zoom and indicator selection; window resize is the fallback.                                                                                                               |
 | Motion            | No continuous animation or price transitions. Reduced-motion CSS is explicit.                                                                                                                                                          |
+
+The full-series close guides are off by default. They and confirmed Zig-Zag
+pivots use later observations and are intended for retrospective inspection.
 
 Charts with at most 5,000 candles initially show their complete range. Larger
 snapshots initially show the latest 1,000 candles. All original rows remain in

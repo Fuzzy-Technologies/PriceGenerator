@@ -1,13 +1,12 @@
-"""Implement the fixed random-consumption contract of the regime_v2 model."""
+"""Implement the fixed random-consumption contract of the regime models."""
 
 import math
 from random import Random
 from typing import Iterator
 
-from pricegenerator.config import GenerationConfig
+from pricegenerator.config import COUNT_MODEL_ID, GenerationConfig
 
 
-MODEL_ID = "regime_v2"
 RNG_ID = "python.random.Random/MT19937"
 
 
@@ -41,6 +40,7 @@ def GenerateRows(config: GenerationConfig, rng: Random) -> Iterator[tuple[float,
     log_volume_noise = 0.0
     volume_innovation = config.volume_sigma * math.sqrt(1 - config.volume_persistence ** 2)
     log_volume_base, log_volume_ceiling = math.log(config.volume_base), math.log(config.volume_ceiling)
+    count_ceiling = int(config.volume_ceiling) if config.model == COUNT_MODEL_ID else None
 
     for _ in range(config.horizon):
         if rng.random() >= config.regime_persistence:
@@ -65,6 +65,9 @@ def GenerateRows(config: GenerationConfig, rng: Random) -> Iterator[tuple[float,
         high = max(open_price, close_price) if upper_wick == 0 else min(config.price_ceiling, max(open_price, close_price, math.exp(min(upper, max(log_open, log_close) + upper_wick))))
         low = min(open_price, close_price) if lower_wick == 0 else max(config.price_floor, min(open_price, close_price, math.exp(max(lower, min(log_open, log_close) - lower_wick))))
         volume = min(config.volume_ceiling, math.exp(max(-700.0, min(log_volume_ceiling, volume_log))))
+        if count_ceiling is not None:
+            volume = max(1, min(count_ceiling, round(volume)))
+
         previous_close = close_price
 
         yield open_price, high, low, close_price, volume

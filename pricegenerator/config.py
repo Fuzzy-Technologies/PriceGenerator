@@ -7,6 +7,12 @@ import re
 from typing import Any, Mapping
 
 
+CONTINUOUS_MODEL_ID = "regime_v2"
+COUNT_MODEL_ID = "regime_v3"
+REGIME_MODEL_VERSIONS = {CONTINUOUS_MODEL_ID: 2, COUNT_MODEL_ID: 3}
+MAX_VOLUME_COUNT = 2 ** 53 - 1
+
+
 @dataclass(frozen=True)
 class GenerationConfig:
     """Configure continuous positive prices and persistent stochastic activity.
@@ -18,15 +24,15 @@ class GenerationConfig:
     volatility, beginning in the calm state. Price boundaries reflect log prices;
     wicks stop at the boundaries. Each upper/lower wick independently receives
     the outlier multiplier with wick_outlier_probability, separate from shocks.
-    Volume is continuous and positive, with a
-    persistent log-noise state and activity coupling, capped at volume_ceiling.
+    Volume has a persistent log-noise state and activity coupling. The default
+    model emits whole counts. The v2 model retains its continuous output.
     """
 
     seed: int = 0
     horizon: int = 150
     start: datetime = datetime(2000, 1, 1, tzinfo=timezone.utc)
     timeframe_seconds: int = 3600
-    model: str = "regime_v2"
+    model: str = COUNT_MODEL_ID
     initial_price: float = 100.0
     price_floor: float = 0.000001
     price_ceiling: float = 1_000_000_000_000.0
@@ -58,8 +64,8 @@ class GenerationConfig:
         if not 1 <= self.timeframe_seconds <= 9_223_372_036:
             raise ValueError("timeframe_seconds must be positive and fit signed nanoseconds")
 
-        if self.model != "regime_v2":
-            raise ValueError("model must be 'regime_v2'; historical models are archived only")
+        if not isinstance(self.model, str) or self.model not in REGIME_MODEL_VERSIONS:
+            raise ValueError("model must be 'regime_v3' or 'regime_v2'")
 
         if not isinstance(self.start, datetime) or self.start.tzinfo is None or self.start.utcoffset() is None:
             raise ValueError("start must be a timezone-aware datetime")
@@ -117,6 +123,10 @@ class GenerationConfig:
 
         if not 1e-100 <= self.volume_base <= self.volume_ceiling <= 1e100:
             raise ValueError("volume must satisfy 1e-100 <= base <= ceiling <= 1e100")
+
+        if self.model == COUNT_MODEL_ID and not (1 <= self.volume_base <= self.volume_ceiling <= MAX_VOLUME_COUNT
+                                                 and self.volume_ceiling.is_integer()):
+            raise ValueError("regime_v3 volume requires base >= 1 and a whole ceiling <= 2**53 - 1")
 
     def ToDict(self) -> dict[str, Any]:
         """Return all deterministic inputs as JSON-compatible values."""

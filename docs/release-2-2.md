@@ -20,6 +20,8 @@ can reproduce the same candles, charts and comparison.
   work with candles, reproduce a run and exchange data with MetaTrader 5
   using familiar market-data terms.
 
+Synthetic volume is now a whole-number activity count. Imported asset quantities keep their precision.
+
 ## How to read the chart
 
 We ran the same scenario settings 32 times, with different random price
@@ -41,7 +43,7 @@ With PriceGenerator 2.2 installed, generate 240 hourly candles and open
 the resulting HTML chart in your browser. The chart works offline.
 
 ```sh
-pricegenerator generate --seed 42 --horizon 240 --timeframe-seconds 3600 --output candles.csv
+pricegenerator generate --seed 42 --horizon 240 --start 2025-01-06T00:00:00Z --timeframe-seconds 3600 --output candles.csv
 pricegenerator chart candles.csv --output candles.html --analysis --no-view
 ```
 

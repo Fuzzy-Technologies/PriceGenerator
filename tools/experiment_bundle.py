@@ -12,6 +12,7 @@ from typing import Any
 import pandas as pd
 
 from pricegenerator import CreateManifest, Generate, GenerationConfig, Replay, WriteCSV
+from pricegenerator.config import COUNT_MODEL_ID
 from pricegenerator.evaluation import Compare
 from pricegenerator.monte_carlo import ChartEnsemble, CreateEnsembleManifest, ReplayEnsemble, RunEnsemble
 
@@ -41,7 +42,8 @@ def _WriteFixture(directory: Path, stem: str, config: GenerationConfig) -> pd.Da
     candles = Generate(config)
     csv_path = directory / f"{stem}.csv"
     manifest_path = directory / f"{stem}-manifest.json"
-    csv_options = {"timeframe_seconds": config.timeframe_seconds, "allow_gaps": False}
+    csv_options = {"timeframe_seconds": config.timeframe_seconds, "allow_gaps": False,
+                   "volume_as_count": config.model == COUNT_MODEL_ID}
     WriteCSV(candles, csv_path, **csv_options)
     manifest_path.write_bytes(_JSONBytes(CreateManifest(config, candles, metadata={"origin": "synthetic", "fixture": stem})))
 

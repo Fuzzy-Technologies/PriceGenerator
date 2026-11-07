@@ -91,7 +91,7 @@ def FreezeTraining(training: pd.DataFrame) -> tuple[GenerationConfig, dict, tupl
     if volatility <= 0 or activity <= 0:
         raise ValueError("Training volatility and activity references must be positive")
 
-    config = profile.ToConfig(GenerationConfig(
+    config = profile.ToConfig(GenerationConfig(model=profile.model,
         start=SPLIT.to_pydatetime(),
         horizon=int((END - SPLIT) / pd.Timedelta(hours=1)),
         initial_price=float(training["close"].iloc[-1]),

@@ -6,6 +6,7 @@
 
 ## 2.2.0 (unreleased)
 
+- Generate whole-number synthetic volume by default. The previous continuous model remains selectable for replay.
 - Download price and volume as a clean PNG. Charts show a clearer Fuzzy Technologies® logo.
 - Run on CPython 3.14 and 3.15, including the optional fuzzy diagnostics and raster exports.
 - Compare two canonical OHLCV CSVs with the installed `pricegenerator compare`
