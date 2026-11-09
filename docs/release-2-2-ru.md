@@ -37,10 +37,11 @@ PriceGenerator строит синтетические свечи для тес�
 
 ## Попробовать
 
-Из окружения с установленным PriceGenerator 2.2 сгенерируй 240 часовых
-свечей и открой получившийся HTML в браузере. График работает офлайн.
+Из окружения с установленным PriceGenerator 2.2 сгенерируйте 240 часовых
+свечей и откройте получившийся HTML в браузере. График работает офлайн.
 
 ```sh
+python -m pip install pricegenerator==2.2.0
 pricegenerator generate --seed 42 --horizon 240 --start 2025-01-06T00:00:00Z --timeframe-seconds 3600 --output candles.csv
 pricegenerator chart candles.csv --output candles.html --analysis --no-view
 ```

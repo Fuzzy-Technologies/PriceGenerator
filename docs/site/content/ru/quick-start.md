@@ -11,25 +11,20 @@
 индикаторов или отчётности. Временную сетку задаёт конфигурация, а цены
 и объём рассчитывает модель.
 
-## Установить 2.2 из исходников
+## Установка PriceGenerator 2.2
 
-Используйте CPython 3.10–3.15 и отдельное окружение. Возьмите исходники
-2.2 из ветки `master` и сохраните коммит, который покажет Git.
+Используйте CPython 3.10–3.15 и отдельное окружение.
 
 ```sh
-git clone --branch master --depth 1 https://github.com/Fuzzy-Technologies/PriceGenerator.git pg-demo
-cd pg-demo
-git rev-parse HEAD
 python -m venv .venv
 ```
 
 Активируйте окружение командой `. .venv/bin/activate` в POSIX-совместимой
-оболочке или `.\.venv\Scripts\Activate.ps1` в Windows PowerShell. Установите
-пакет из каталога репозитория с версиями зависимостей из
-`requirements/modern.txt`. Проверка версии должна вывести `2.2.0`.
+оболочке или `.\.venv\Scripts\Activate.ps1` в Windows PowerShell. Проверка
+версии должна вывести `2.2.0`.
 
 ```sh
-python -m pip install -c requirements/modern.txt .
+python -m pip install pricegenerator==2.2.0
 python -m pip check
 python -I -c "from importlib.metadata import version; print(version('pricegenerator'))"
 mkdir pg-example

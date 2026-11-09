@@ -14,19 +14,16 @@ establish that a strategy is profitable.
 
 ## Install
 
-CPython 3.10–3.15 is supported. PyPI currently provides the historical 1.4.93
-release. The [2.1 GitHub pre-release](docs/site/content/en/release-2-1.md)
-and the [2.0.0 test release](https://github.com/Fuzzy-Technologies/PriceGenerator/releases/tag/v2.0.0)
-provide earlier v2 builds. To follow the examples below, install the 2.2
-source from `master`.
+PriceGenerator 2.2 supports CPython 3.10–3.15.
 
 ```bash
-python -m pip install .
-python -m pip install '.[export]'  # Optional PNG/JPEG.
+python -m pip install pricegenerator==2.2.0
+python -m pip install 'pricegenerator[export]==2.2.0'  # Optional PNG/JPEG.
 ```
 
-The first modern PyPI release is planned for 2.2.0. See the
-[release runbook](docs/releasing.md) for verification and publishing.
+To work from a source checkout, run `python -m pip install .`.
+See [what's new in 2.2](docs/release-2-2.md) or
+[find earlier builds on GitHub](https://github.com/Fuzzy-Technologies/PriceGenerator/releases).
 
 ## Generate and save
 

@@ -4,7 +4,7 @@
 [Документация](https://github.com/Fuzzy-Technologies/PriceGenerator/blob/develop/README_RU.md) ·
 [Порядок выпуска](https://github.com/Fuzzy-Technologies/PriceGenerator/blob/develop/docs/releasing.md)
 
-## 2.2.0 (готовится)
+## 2.2.0
 
 - Генерировать целый синтетический объём по умолчанию. Прежняя модель с непрерывным объёмом доступна для воспроизведения.
 - PNG из интерактивного графика сохраняется без бегунка. Логотип Fuzzy Technologies® на графиках стал заметнее.

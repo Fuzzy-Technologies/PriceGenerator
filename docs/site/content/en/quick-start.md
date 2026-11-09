@@ -11,25 +11,20 @@ opening a browser. Use this fixture for software tests and controlled
 experiments. Its timestamps are synthetic, and its prices reflect the
 configured model assumptions.
 
-## Install the 2.2 source
+## Install PriceGenerator 2.2
 
-Use CPython 3.10–3.15 and a fresh environment. The commands below use
-the 2.2 source on `master`. Keep the commit printed by Git with your results.
+Use CPython 3.10–3.15 and a fresh environment.
 
 ```sh
-git clone --branch master --depth 1 https://github.com/Fuzzy-Technologies/PriceGenerator.git pg-demo
-cd pg-demo
-git rev-parse HEAD
 python -m venv .venv
 ```
 
 Activate the environment with `. .venv/bin/activate` on POSIX or
-`.\.venv\Scripts\Activate.ps1` in Windows PowerShell. From the checkout, install
-the package with its runtime constraints. The version check should print
-`2.2.0`.
+`.\.venv\Scripts\Activate.ps1` in Windows PowerShell. The version check
+should print `2.2.0`.
 
 ```sh
-python -m pip install -c requirements/modern.txt .
+python -m pip install pricegenerator==2.2.0
 python -m pip check
 python -I -c "from importlib.metadata import version; print(version('pricegenerator'))"
 mkdir pg-example
