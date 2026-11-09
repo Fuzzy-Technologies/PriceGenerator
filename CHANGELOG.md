@@ -4,7 +4,7 @@
 [Documentation](https://github.com/Fuzzy-Technologies/PriceGenerator/blob/develop/README.md) ·
 [Release procedure](https://github.com/Fuzzy-Technologies/PriceGenerator/blob/develop/docs/releasing.md)
 
-## 2.2.0 (unreleased)
+## 2.2.0
 
 - Generate whole-number synthetic volume by default. The previous continuous model remains selectable for replay.
 - Download price and volume as a clean PNG. Charts show a clearer Fuzzy Technologies® logo.

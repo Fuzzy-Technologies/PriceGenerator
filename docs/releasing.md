@@ -5,7 +5,7 @@ records the October verification baseline. Its exact tag remains available for
 historical reproduction. For the GitHub-only 2.1.0 pre-release, verify the
 exact tagged commit with the quality and Canvas gates and test clean
 installations from both distributions in the release ZIP. The first modern
-PyPI release is planned for 2.2.0 under [Task #109](https://github.com/Fuzzy-Technologies/PriceGenerator/issues/109).
+PyPI release is tracked as 2.2.0 under [Task #109](https://github.com/Fuzzy-Technologies/PriceGenerator/issues/109).
 Verify its exact tag on the final master commit. The release workflow rejects
 PyPI publication of both GitHub pre-releases.
 
