@@ -10,24 +10,19 @@
 生成图表。该序列可用于软件测试和受控实验。时间戳为合成数据，价格变化取决于
 所配置的模型参数。
 
-## 从源码安装 2.2
+## 安装 PriceGenerator 2.2
 
-使用 CPython 3.10–3.15 和独立环境。以下命令使用 `master` 分支上的
-2.2 源码。请保留 Git 输出的提交号。
+请使用 CPython 3.10–3.15 和独立的虚拟环境。
 
 ```sh
-git clone --branch master --depth 1 https://github.com/Fuzzy-Technologies/PriceGenerator.git pg-demo
-cd pg-demo
-git rev-parse HEAD
 python -m venv .venv
 ```
 
 在 POSIX Shell 中执行 `. .venv/bin/activate`，或在 Windows PowerShell 中
-执行 `.\.venv\Scripts\Activate.ps1`。在源码目录中按约束安装依赖和软件包。
-版本检查应输出 `2.2.0`。
+执行 `.\.venv\Scripts\Activate.ps1`。版本检查应输出 `2.2.0`。
 
 ```sh
-python -m pip install -c requirements/modern.txt .
+python -m pip install pricegenerator==2.2.0
 python -m pip check
 python -I -c "from importlib.metadata import version; print(version('pricegenerator'))"
 mkdir pg-example

@@ -20,6 +20,7 @@ PriceGenerator 为交易系统测试生成可复现的合成 K 线。2.2 可以�
 安装 PriceGenerator 2.2 后，生成 240 根小时 K 线，然后用浏览器打开本地 HTML。
 
 ```sh
+python -m pip install pricegenerator==2.2.0
 pricegenerator generate --seed 42 --horizon 240 --start 2025-01-06T00:00:00Z --timeframe-seconds 3600 --output candles.csv
 pricegenerator chart candles.csv --output candles.html --analysis --no-view
 ```
