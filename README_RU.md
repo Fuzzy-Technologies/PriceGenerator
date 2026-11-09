@@ -15,19 +15,17 @@ PriceGenerator строит синтетические ряды свечей OHL
 
 ## Установка
 
-Для ветки 2.x нужен CPython 3.10–3.15. На PyPI пока доступна версия 1.4.93.
-Версии 2.0.0 и 2.1.0 распространяются как предрелизы на GitHub. Первый
-выпуск ветки 2.x на PyPI запланирован на 2.2.0.
-[Релизы GitHub](https://github.com/Fuzzy-Technologies/PriceGenerator/releases) ·
-[Порядок выпуска](docs/releasing.md)
-
-Для примеров ниже установите базовый пакет из исходников 2.2 в ветке `master`. Для экспорта графиков
-в PNG и JPEG используйте вариант с `[export]`.
+PriceGenerator 2.2 поддерживает CPython 3.10–3.15.
 
 ```bash
-python -m pip install .
-python -m pip install '.[export]'
+python -m pip install pricegenerator==2.2.0
+python -m pip install 'pricegenerator[export]==2.2.0'  # Для экспорта в PNG и JPEG.
 ```
+
+Чтобы установить пакет из локальной копии репозитория, выполните
+`python -m pip install .`.
+[Что нового в 2.2](docs/release-2-2-ru.md) ·
+[Предыдущие выпуски](https://github.com/Fuzzy-Technologies/PriceGenerator/releases)
 
 ## Сгенерировать свечи и записать CSV
 

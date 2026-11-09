@@ -43,6 +43,7 @@ With PriceGenerator 2.2 installed, generate 240 hourly candles and open
 the resulting HTML chart in your browser. The chart works offline.
 
 ```sh
+python -m pip install pricegenerator==2.2.0
 pricegenerator generate --seed 42 --horizon 240 --start 2025-01-06T00:00:00Z --timeframe-seconds 3600 --output candles.csv
 pricegenerator chart candles.csv --output candles.html --analysis --no-view
 ```
