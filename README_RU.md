@@ -1,5 +1,7 @@
 # PriceGenerator
 
+![PriceGenerator от Fuzzy Technologies. Генератор синтетических рыночных данных.](https://fuzzy-technologies.com/PriceGenerator/docs/assets/pricegenerator-product-card.webp)
+
 [English](https://fuzzy-technologies.com/PriceGenerator/) · [Русский](https://fuzzy-technologies.com/PriceGenerator/ru/) · [简体中文](https://fuzzy-technologies.com/PriceGenerator/zh-CN/) · [Быстрый старт](https://fuzzy-technologies.com/PriceGenerator/ru/quick-start/)
 
 
@@ -35,8 +37,6 @@ python -m pip install 'pricegenerator[export]==2.2.1'  # Для экспорта
 `python -m pip install .`.
 [Что нового в 2.2.1](https://fuzzy-technologies.com/PriceGenerator/ru/release-2-2/) ·
 [Предыдущие выпуски](https://github.com/Fuzzy-Technologies/PriceGenerator/releases)
-
-![PriceGenerator от Fuzzy Technologies. Генератор синтетических рыночных данных.](https://fuzzy-technologies.com/PriceGenerator/docs/assets/pricegenerator-product-card.webp)
 
 ## Сгенерировать свечи и записать CSV
 
