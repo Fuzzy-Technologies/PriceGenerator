@@ -38,7 +38,7 @@ redirect_from:
 python -m pricegenerator monte-carlo --seed 42 --paths 32 --horizon 120 --start 2025-01-06T00:00:00Z --timeframe-seconds 3600 --chart range.html --output range.json
 ```
 
-Откройте `range.html`. В руководстве по экспериментам показано, [как получить все 32 ряда по отдельности](https://fuzzy-technologies.com/PriceGenerator/ru/experiments/#monte-carlo) для своего тестера.
+Откройте `range.html`. В руководстве по экспериментам показано, [как получить все 32 ряда по отдельности](https://fuzzy-technologies.com/PriceGenerator/ru/experiments/#paths) для своего тестера.
 
 ## Какие данные можно загрузить
 {: id="какие-данные-принимает-пакет" }

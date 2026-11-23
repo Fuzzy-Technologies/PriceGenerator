@@ -39,7 +39,7 @@ redirect_from:
 python -m pricegenerator monte-carlo --seed 42 --paths 32 --horizon 120 --start 2025-01-06T00:00:00Z --timeframe-seconds 3600 --chart range.html --output range.json
 ```
 
-用浏览器打开 `range.html` 即可查看结果。要用这些行情检验策略，可[按编号取出每一条价格路径](https://fuzzy-technologies.com/PriceGenerator/zh-CN/experiments/#monte-carlo)，分别运行自己的回测程序。
+用浏览器打开 `range.html` 即可查看结果。要用这些行情检验策略，可[按编号取出每一条价格路径](https://fuzzy-technologies.com/PriceGenerator/zh-CN/experiments/#paths)，分别运行自己的回测程序。
 
 ## 导入行情需要哪些字段？
 {: id="理解-k-线数据" }

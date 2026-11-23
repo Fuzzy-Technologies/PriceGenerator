@@ -11,6 +11,7 @@ layout: default
 <section><h2>{{ ui.try }}</h2>
   <div class="project-grid cases">{% for task in ui.cases %}
     <article class="project-card"><h3>{{ task.title }}</h3><p>{{ task.text }}</p><a href="{{ ui.prefix | append: task.path | relative_url }}">{{ task.link }} →</a></article>{% endfor %}</div>
+  <p><a href="{{ ui.prefix | append: 'experiments/' | relative_url }}#performance">{{ ui.performance }}</a></p>
 </section>
 <section><h2>{{ ui.first_chart }}</h2><p>{{ ui.command_text }}</p>
   <div class="code-block"><div class="code-toolbar"><span>{{ ui.terminal }}</span><button class="copy-button" type="button" data-copy="first-chart-command" hidden>{{ ui.copy }}</button></div>
