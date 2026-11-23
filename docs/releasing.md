@@ -72,7 +72,7 @@ project or past releases is unnecessary.
    choose **Run workflow**, select `master`, enter the existing exact version
    tag, and leave **publish** unchecked.
 4. Inspect the successful run's `release-distributions` artifact, `SHA256SUMS`,
-   build/metadata logs, and all four Python verification jobs. Each job installs
+   build/metadata logs, and the verification job for each supported Python version. Each job installs
    the wheel and the sdist into separate temporary environments outside the
    checkout. It exercises modern generation, canonical CSV, manifest replay,
    CLI, SVG, offline HTML, asset hashes/notices, and actual PNG/JPEG rendering.
