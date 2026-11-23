@@ -1,16 +1,23 @@
+---
+layout: default
+lang: zh-CN
+route: quick-start
+title: "复现合成 OHLCV 场景"
+permalink: /zh-CN/quick-start/
+redirect_from:
+  - /docs/site/content/zh-CN/quick-start.html
+---
 # 复现合成 OHLCV 场景
 
-![Fuzzy Technologies 的 PriceGenerator 合成市场数据生成器。](../../../assets/pricegenerator-product-card.webp)
-
-[English](../en/quick-start.md) · [Русский](../ru/quick-start.md)
-
-[科学与使用指南](scenario-guide.md) · [2.1 版本说明](release-2-1.md)
+[科学与使用指南](https://fuzzy-technologies.com/PriceGenerator/zh-CN/scenario-guide/) · [2.2.1 版本说明](https://fuzzy-technologies.com/PriceGenerator/zh-CN/release-2-2/)
 
 使用固定随机种子生成行情序列，根据场景清单复现数据，并在不启动浏览器的情况下
 生成图表。该序列可用于软件测试和受控实验。时间戳为合成数据，价格变化取决于
 所配置的模型参数。
 
-## 安装 PriceGenerator 2.2
+## 安装 PriceGenerator 2.2.1
+
+[PyPI 上的 PriceGenerator 2.2.1](https://pypi.org/project/pricegenerator/2.2.1/)
 
 请使用 CPython 3.10–3.15 和独立的虚拟环境。
 
@@ -19,10 +26,10 @@ python -m venv .venv
 ```
 
 在 POSIX Shell 中执行 `. .venv/bin/activate`，或在 Windows PowerShell 中
-执行 `.\.venv\Scripts\Activate.ps1`。版本检查应输出 `2.2.0`。
+执行 `.\.venv\Scripts\Activate.ps1`。版本检查应输出 `2.2.1`。
 
 ```sh
-python -m pip install pricegenerator==2.2.0
+python -m pip install pricegenerator==2.2.1
 python -m pip check
 python -I -c "from importlib.metadata import version; print(version('pricegenerator'))"
 mkdir pg-example
@@ -78,7 +85,7 @@ manifest = CreateManifest(config, prices)
 if Fingerprint(Replay(manifest)) != Fingerprint(prices):
     raise RuntimeError("Replay changed the canonical OHLCV fingerprint")
 
-WriteCSV(prices, "python-prices.csv")
+WriteCSV(prices, "python-prices.csv", volume_as_count=True)
 Chart(prices, "python-chart.svg", view=False)
 Chart(prices, "python-analysis.html", analysis=True, view=False)
 print(manifest["fingerprint"])
@@ -97,7 +104,7 @@ print(manifest["fingerprint"])
 显式加入交易时段间隔和零成交量 K 线。在该标签的仓库根目录运行
 `python -m tools.chart_examples --output-dir pg-figures --html`，重新生成 SVG、
 HTML 和来源说明。
-[绘图脚本](https://github.com/Fuzzy-Technologies/PriceGenerator/blob/v2.0.0/tools/chart_examples.py) · [行情图说明](https://github.com/Fuzzy-Technologies/PriceGenerator/blob/v2.0.0/docs/examples/modern-market.md)
+[绘图脚本](https://github.com/Fuzzy-Technologies/PriceGenerator/blob/v2.2.1/tools/chart_examples.py) · [行情图说明](https://fuzzy-technologies.com/PriceGenerator/zh-CN/reference/#charts)
 
 ## 与 MetaTrader 5 交换 K 线
 
@@ -105,7 +112,7 @@ PriceGenerator 写入 UTF-8 逗号分隔文件，表头为
 `datetime,open,high,low,close,volume`，时间戳采用 ISO 8601 UTC，有限数值使用
 小数点。从经纪商导入数据时，请先显式转换格式，并为无时区信息的时间戳指定
 源时区。保留交易时段间隔，并按已知周期验证。
-[规范 OHLCV 与 CSV 约定](https://github.com/Fuzzy-Technologies/PriceGenerator/blob/v2.0.0/docs/data-contract.md)
+[规范 OHLCV 与 CSV 约定](https://fuzzy-technologies.com/PriceGenerator/zh-CN/reference/#csv)
 
 通过 `CustomRatesReplace` 将数据导入 MT5 自定义品种时，适配器需要开盘时间
 对齐至 M1 的分钟 K 线。可按上例直接生成 M1。MQL5 的 `datetime` 使用从
@@ -114,8 +121,10 @@ PriceGenerator 写入 UTF-8 逗号分隔文件，表头为
 需要独立来源。将带小数的资产成交量映射到整数栏位前，应先明确计量单位。
 记录按品种小数位数进行价格舍入的规则，转换后检查 OHLC 关系。使用单独的自定义
 品种，并限定历史替换区间。
-[CustomRatesReplace](https://www.mql5.com/en/docs/customsymbols/customratesreplace) · [MqlRates](https://www.mql5.com/en/docs/constants/structures/mqlrates) · [MQL5 datetime](https://www.mql5.com/en/docs/basis/types/integer/datetime)
+[CustomRatesReplace](https://www.mql5.com/zh/docs/customsymbols/customratesreplace) · [MqlRates](https://www.mql5.com/zh/docs/constants/structures/mqlrates) · [MQL5 datetime](https://www.mql5.com/zh/docs/basis/types/integer/datetime)
 
 本示例验证 Python 端的 CSV。终端导入、K 线往返校验和策略测试器设置需要
 单独做集成验证。真实逐笔模式需要独立的逐笔历史数据。
-[MQL5 自定义品种历史指南](https://www.mql5.com/en/book/advanced/custom_symbols/custom_symbols_rates)
+[MQL5 自定义品种历史指南](https://www.mql5.com/zh/book/advanced/custom_symbols/custom_symbols_rates)
+
+[English](../en/quick-start.md) · [Русский](../ru/quick-start.md)

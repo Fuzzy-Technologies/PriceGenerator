@@ -1,8 +1,13 @@
 # PriceGenerator — Release notes
 
 [Русский](https://github.com/Fuzzy-Technologies/PriceGenerator/blob/develop/CHANGELOG_RU.md) ·
-[Documentation](https://github.com/Fuzzy-Technologies/PriceGenerator/blob/develop/README.md) ·
+[Documentation](https://fuzzy-technologies.com/PriceGenerator/) ·
 [Release procedure](https://github.com/Fuzzy-Technologies/PriceGenerator/blob/develop/docs/releasing.md)
+
+## 2.2.1
+
+- Open the project website, quick start, candle model, examples and release guide in English, Russian or Simplified Chinese. Published guide links preserve the chosen language.
+- Try four practical tasks with runnable commands and see which properties of hourly Bitstamp BTC/USD a fitted scenario reproduced. The package description links directly to the rendered site.
 
 ## 2.2.0
 

@@ -1,0 +1,18 @@
+.brand {color:var(--cyan);font-size:clamp(1.5rem,4vw,2rem);font-weight:700}
+.site-nav [aria-current="page"] {color:var(--green);text-decoration:underline;text-underline-offset:.3em}
+.theme-button {border:1px solid var(--border);border-radius:5px;background:transparent;color:var(--muted);font:inherit;cursor:pointer;padding:.1rem .5rem;margin-inline-start:auto}
+.product-image {margin-top:1.2rem}
+.cases {grid-template-columns:repeat(2,minmax(0,1fr))}
+.guide {border-top:1px solid var(--border-soft);padding-top:1.4rem;overflow-wrap:break-word}
+.guide h1 {margin-bottom:1rem}
+.guide img {max-width:100%;height:auto}
+.guide pre {background:#0b1117;border:1px solid var(--border-soft);border-radius:7px;overflow-x:auto;white-space:pre}
+.guide :not(pre)>code {overflow-wrap:anywhere}
+.guide table {display:block;max-width:100%;overflow-x:auto;border-collapse:collapse;font-size:.88rem}
+.guide :is(td,th) {padding:.4rem .65rem;border:1px solid var(--border-soft);text-align:start}
+.guide blockquote {margin-inline:0;padding-inline:1rem;border-inline-start:2px solid var(--pink)}
+.guide a:hover,.site-footer a:hover {text-decoration:underline}
+:root[data-theme="light"] {color-scheme:light;--bg:#f4f8fa;--text:#25364c;--text-strong:#102738;--muted:#455e71;--cyan:#00667d;--pink:#921c74;--pink-hot:#721253;--green:#006647;--border:#b5cfd7;--border-soft:#cddee4}
+:root[data-theme="light"] body {background:linear-gradient(135deg,#fcfeff,#eef5f8)}
+:root[data-theme="light"] :is(.project-card,.button-neon,.copy-button,.project-links a,.code-block,.code-toolbar,.guide pre) {background:#fff;box-shadow:none}
+@media(max-width:700px){.cases{grid-template-columns:1fr}}

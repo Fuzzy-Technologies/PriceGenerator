@@ -58,3 +58,56 @@ def test_ReportsMissingTranslationNavigationAndInvalidTargets(tmp_path: Path) ->
         "docs/site/content/en/guide.md: missing language link to ru",
         "docs/site/content/zh-CN/guide.md: missing translation",
     ], "The gate must report each failing page and destination"
+
+
+def test_PublicGuidesKeepTheReadersLanguage():
+    """Keep PyPI and localized guide navigation on the rendered, matching edition."""
+
+    from urllib.parse import urlsplit
+
+    from markdown_it import MarkdownIt
+
+    root = Path(__file__).resolve().parents[1]
+    content = root / "docs" / "site" / "content"
+    sources = [*content.glob("*/*.md"), *(root / "docs").glob("release-2-2*.md")]
+    pages = {root / "README.md": ("en", "/"), root / "README_RU.md": ("ru", "/ru/")}
+    routes = {"/", "/ru/", "/zh-CN/"}
+    language_names = {"English", "Русский", "简体中文"}
+
+    for source in sources:
+        front = source.read_text(encoding="utf-8").split("---", 2)[1]
+        fields = dict(line.split(": ", 1) for line in front.splitlines() if ": " in line)
+        lang = fields["lang"]
+        route = f"/{lang}/{fields['route']}/"
+        assert fields["permalink"] == route and route not in routes, source
+        pages[source] = (lang, route)
+        routes.add(route)
+
+    parser = MarkdownIt("commonmark").enable("table")
+
+    for page, (lang, route) in pages.items():
+        for block in parser.parse(page.read_text(encoding="utf-8")):
+            tokens = block.children or []
+
+            for index, token in enumerate(tokens):
+                if token.type != "link_open":
+                    continue
+
+                url = urlsplit(token.attrGet("href"))
+                assert not (url.hostname in ("github.com", "raw.githubusercontent.com") and url.path.endswith(".md")), page
+
+                if url.hostname != "fuzzy-technologies.com" or not url.path.startswith("/PriceGenerator/"):
+                    continue
+
+                path = url.path.removeprefix("/PriceGenerator")
+
+                if path.startswith(("/docs/assets/", "/docs/evidence/", "/media/")):
+                    assert (root / path.lstrip("/")).is_file(), (page, path)
+                    continue
+
+                assert path in routes, (page, path)
+                destination_lang = path.strip("/").split("/")[0] or "en"
+
+                if destination_lang != lang:
+                    assert tokens[index + 1].content in language_names, (page, path)
+                    assert path.split("/")[2:] == route.split("/")[2:] or path in ("/", "/ru/", "/zh-CN/"), (page, path)

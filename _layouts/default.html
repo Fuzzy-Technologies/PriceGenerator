@@ -1,0 +1,50 @@
+<!doctype html>
+{% assign lang = page.lang | default: 'en' %}
+{% assign ui = site.data.product[lang] %}
+{% assign home = ui.home | relative_url %}
+<html lang="{{ lang }}">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#07090d">
+  <meta name="description" content="{{ page.description | default: ui.intro | escape }}">
+  <title>{% unless page.route == 'home' %}{{ page.title | default: site.title | escape }} · {% endunless %}PriceGenerator · Fuzzy Technologies</title>
+  <link rel="canonical" href="{{ page.url | replace: 'index.html', '' | absolute_url }}">
+  {% if page.route %}{% for item in site.data.product %}{% assign l = item[0] %}{% assign other = item[1] %}
+  <link rel="alternate" hreflang="{{ l }}" href="{% if page.route == 'home' %}{{ other.home | absolute_url }}{% else %}{{ other.prefix | append: page.route | append: '/' | absolute_url }}{% endif %}">{% endfor %}{% endif %}
+  <link rel="icon" href="{{ '/media/logo-pricegenerator-32x32px.png' | relative_url }}">
+  <link rel="stylesheet" href="{{ '/assets/site/fonts.css' | relative_url }}">
+  <link rel="stylesheet" href="{{ '/assets/site/landing.css' | relative_url }}">
+  <link rel="stylesheet" href="{{ '/assets/site/guides.css' | relative_url }}">
+  <script defer src="{{ '/assets/site/controls.js' | relative_url }}"></script>
+</head>
+<body>
+<a class="skip-link" href="#content">{{ ui.skip }}</a>
+<main>
+<header class="site-header">
+  <a class="brand" href="{{ home }}">PriceGenerator</a>
+  <a class="company-link" href="{{ ui.company_url }}">Fuzzy Technologies® ↗</a>
+</header>
+<nav class="site-nav" aria-label="{{ ui.nav }}">
+  <a href="{{ home }}"{% if page.route == 'home' %} aria-current="page"{% endif %}>{{ ui.product }}</a>
+  <a href="{{ ui.prefix | append: 'quick-start/' | relative_url }}"{% if page.route == 'quick-start' %} aria-current="page"{% endif %}>{{ ui.start }}</a>
+  <a href="{{ ui.prefix | append: 'scenario-guide/' | relative_url }}"{% if page.route == 'scenario-guide' %} aria-current="page"{% endif %}>{{ ui.model }}</a>
+  <a href="{{ ui.prefix | append: 'experiments/' | relative_url }}"{% if page.route == 'experiments' %} aria-current="page"{% endif %}>{{ ui.experiments }}</a>
+  <a href="{{ ui.prefix | append: 'release-2-2/' | relative_url }}"{% if page.route == 'release-2-2' %} aria-current="page"{% endif %}>{{ ui.release }}</a>
+</nav>
+<nav class="site-nav language-nav" aria-label="{{ ui.languages }}">
+{% for item in site.data.product %}{% assign l = item[0] %}{% assign other = item[1] %}
+  <a lang="{{ l }}" hreflang="{{ l }}" data-locale="{{ l }}" {% if l == lang %}aria-current="page"{% endif %} href="{% if page.route == 'home' or page.route == nil %}{{ other.home | relative_url }}{% else %}{{ other.prefix | append: page.route | append: '/' | relative_url }}{% endif %}">{{ other.name }}</a>
+{% endfor %}
+  <button type="button" class="theme-button" data-light="{{ ui.light }}" data-dark="{{ ui.dark }}" hidden>{{ ui.light }}</button>
+</nav>
+{% if page.route == 'home' %}<div id="content">{{ content }}</div>{% else %}<article id="content" class="guide">{{ content }}</article>{% endif %}
+<footer class="site-footer">
+  <a href="{{ home }}">PriceGenerator</a>
+  <a href="{{ ui.prefix | append: 'reference/' | relative_url }}">{{ ui.reference }}</a>
+  <a href="https://pypi.org/project/pricegenerator/2.2.1/">PyPI 2.2.1</a>
+  <a href="https://github.com/Fuzzy-Technologies/PriceGenerator">GitHub</a>
+  <a href="{{ ui.company_url }}">Fuzzy Technologies®</a>
+</footer>
+</main>
+</body></html>

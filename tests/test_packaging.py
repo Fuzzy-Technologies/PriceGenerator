@@ -68,9 +68,12 @@ def test_CoreMetadataExcludesObsoleteDependencies():
         assert name not in serialized, f"Obsolete dependency returned: {name}"
 
     assert project["scripts"] == {"pricegenerator": "pricegenerator.cli:Main"}, "CLI must use the modern entry point"
-    assert all("Fuzzy-Technologies/PriceGenerator" in url for url in project["urls"].values()), (
-        "Active metadata still points to the historical personal repository"
-    )
+    product_site = "https://fuzzy-technologies.com/PriceGenerator/"
+    repository = "https://github.com/Fuzzy-Technologies/PriceGenerator"
+    assert project["urls"] == {
+        "Homepage": product_site, "Documentation": product_site,
+        "Repository": repository, "Issues": repository + "/issues",
+    }, "PyPI should open the rendered product site and current project repository"
 
 
 def test_PythonMetadataMatchesMatrix():
