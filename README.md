@@ -1,5 +1,7 @@
 # PriceGenerator
 
+![PriceGenerator by Fuzzy Technologies. Synthetic market data generator.](https://fuzzy-technologies.com/PriceGenerator/docs/assets/pricegenerator-product-card.webp)
+
 [English](https://fuzzy-technologies.com/PriceGenerator/) · [Русский](https://fuzzy-technologies.com/PriceGenerator/ru/) · [简体中文](https://fuzzy-technologies.com/PriceGenerator/zh-CN/) · [Quick start](https://fuzzy-technologies.com/PriceGenerator/en/quick-start/)
 
 
@@ -33,8 +35,6 @@ python -m pip install 'pricegenerator[export]==2.2.1'  # Optional PNG/JPEG.
 To work from a source checkout, run `python -m pip install .`.
 See [what's new in 2.2.1](https://fuzzy-technologies.com/PriceGenerator/en/release-2-2/) or
 [find earlier builds on GitHub](https://github.com/Fuzzy-Technologies/PriceGenerator/releases).
-
-![PriceGenerator by Fuzzy Technologies. Synthetic market data generator.](https://fuzzy-technologies.com/PriceGenerator/docs/assets/pricegenerator-product-card.webp)
 
 ## Generate and save
 
