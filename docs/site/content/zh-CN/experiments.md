@@ -20,20 +20,46 @@ python -m pricegenerator monte-carlo --seed 42 --paths 32 --horizon 120 --start 
 python -m pricegenerator replay-ensemble ensemble-manifest.json --output replayed.json
 ```
 
-用浏览器打开 **`quantiles.html`**。K 线和量柱来自第一条路径。三条曲线用到**全部 32 条路径**：在对每根小时 K 线，将该时段的 32 个收盘价排序，取第 5 百分位数、中位数和第 95 百分位数。在最后一小时（第 120 小时），中位数为 **101.27**，中间约九成结果落在 **75.01 至 150.46** 之间。每个小时都单独排序，取第 16 个和第 17 个价格的平均值作为中位数。把这些中位数连在一起，得到的是一条统计曲线。单条路径也可能越过区间边界。
+用浏览器打开 **`quantiles.html`**。K 线和量柱来自第一条路径。计算三条曲线时，每个小时都取**全部 32 条路径**的收盘价，将这些价格排序，取第 5 百分位数、中位数和第 95 百分位数。在最后一小时（第 120 小时），中位数为 **101.27**，中间约九成结果落在 **75.01 至 150.46** 之间。每个小时都单独排序，取第 16 个和第 17 个价格的平均值作为中位数。把这些中位数连在一起，得到的是一条统计曲线。单条路径也可能越过区间边界。
 
-`ensemble.json` 包含每条路径按收盘价计算的最大**价格回撤**。要得出**策略回撤**，还得知道持仓、成交价和交易成本。可用下面的代码取出每一组完整的 K 线数据，再交给自己的回测程序。`index` 是从 0 到 31 的路径编号，`candles` 是这段行情。示例打印每条路径最后的收盘价。
+`ensemble.json` 记录了每条路径按收盘价计算的最大**价格回撤**。要计算**策略回撤**，请将各组 K 线分别送入自己的回测程序，并考虑持仓、成交价和交易成本。
+
+### 其余 31 条路径在哪里？
+{: #paths }
+
+32 组行情都会完整生成。默认图上的 K 线和量柱来自**编号 00 的路径**，三条分位数曲线则用到了全部路径的收盘价。JSON 报告保留分位数、各条路径的最大价格回撤和复现行情所需的参数。每条路径的 CSV 需要单独导出。
+
+下图中，每条线都是某一次模拟在 120 个小时内的收盘价走势。青色的 00 号路径就是默认图用 K 线显示的那组行情。所有路径的起始价都是 100。
+
+![32 条模拟路径的小时收盘价，青色为 00 号路径。](https://fuzzy-technologies.com/PriceGenerator/docs/assets/monte-carlo-32-paths.svg)
+
+**[下载全部 32 份 CSV（ZIP）](https://fuzzy-technologies.com/PriceGenerator/docs/assets/monte-carlo-32-paths.zip)**。文件按 `path-00.csv` 到 `path-31.csv` 编号，每份有 120 根小时 K 线，包含开盘价、最高价、最低价、收盘价和成交量。
+
+要导出自己的模拟结果，请在上一条命令生成 `ensemble.json` 的目录里运行下列 Python 代码。它读取本次实验的参数，根据路径编号还原各自的随机种子，并将 CSV 写入 `paths` 目录。路径编号从 0 开始。
 
 ```python
+import json
 from dataclasses import replace
-from datetime import datetime, timezone
-from pricegenerator import Generate, GenerationConfig
+from pathlib import Path
+
+from pricegenerator import Generate, GenerationConfig, WriteCSV
 from pricegenerator.monte_carlo import DerivePathSeed
 
-config = GenerationConfig(seed=42, horizon=120, start=datetime(2025, 1, 6, tzinfo=timezone.utc))
-for index in range(32):
-    candles = Generate(replace(config, seed=DerivePathSeed(config.seed, index)))
-    print(index, round(candles["close"].iloc[-1], 2))
+report = json.loads(Path("ensemble.json").read_text(encoding="utf-8"))
+config = GenerationConfig.FromDict(report["configuration"])
+output = Path("paths")
+output.mkdir(exist_ok=True)
+
+for index in range(report["path_count"]):
+    seed = DerivePathSeed(config.seed, index)
+    candles = Generate(replace(config, seed=seed))
+    WriteCSV(candles, output / f"path-{index:02d}.csv", volume_as_count=config.model == "regime_v3")
+```
+
+例如，要逐根查看 17 号路径的 K 线和成交量，可运行以下命令。
+
+```sh
+python -m pricegenerator chart paths/path-17.csv --analysis --output path-17.html --view
 ```
 
 ## 模拟行情与历史行情差多少？
@@ -71,5 +97,19 @@ python -I tools/experiment_bundle.py verify pg-experiment
 第一条命令生成两份模拟小时行情、各自的运行清单、对比报告、32 条路径的分位数图，以及文件校验值。第二条命令核对目录内容。将整个目录交给同事，就可以复查这次实验。
 
 打开 `pg-experiment/quantiles.html` 查看价格分布。要查看技术指标，运行 `python -m pricegenerator chart pg-experiment/scenario.csv --analysis --output analysis.html --view`。本例只有 120 根 K 线。要画出 200 周期均线，请使用[快速入门](https://fuzzy-technologies.com/PriceGenerator/zh-CN/quick-start/)中的 240 根 K 线。
+
+## 生成 100 万根 K 线需要多久？
+{: #performance }
+
+在搭载 AMD EPYC 9V74 的 Linux 服务器上，单个 Python 进程生成 **100 万根 1 分钟 K 线用时 3.72 秒**，约合**每秒 26.9 万根**。从开始生成到写完本地 CSV 共用 **8.59 秒**，文件大小为 109.5 MB。每根 K 线都有时间、四个价格和整数形式的模拟成交量。
+
+| 1 分钟 K 线数量 | 在内存中生成 | 写入 CSV | 从开始生成到写完文件 |
+| --------------: | -----------: | -------: | -------------------: |
+| 10 万根         | 0.33 秒      | 0.45 秒  | 0.77 秒              |
+| 100 万根        | 3.72 秒      | 4.87 秒  | 8.59 秒              |
+
+两种数据量各测五次，每次启动一个新的 Python 进程，每列分别取中位数。测试使用 PyPI 发行版 2.2.1、CPython 3.14.10、pandas 2.3.3、NumPy 2.3.5，随机种子为 42。计时覆盖 `Generate` 和 `WriteCSV`，包括这两个接口的数据校验和本地缓冲写入。模块导入和预热在计时前完成，文件校验值在写入后计算，本次未绘图。实际速度取决于处理器和存储设备。
+
+单条行情最多可生成 **100 万根 K 线**。一次蒙特卡洛模拟支持 2 至 10,000 条路径，**所有路径合计最多 100 万根 K 线**。例如，选择 32 条路径时，每条最多 31,250 根。要在自己的机器上复测，下载脚本，在已安装 2.2.1 的环境中运行 `python -I measure_generation.py 1000000`。[测试脚本](https://fuzzy-technologies.com/PriceGenerator/docs/evidence/measure_generation.py) · [各次用时及 CSV 校验值（JSON）](https://fuzzy-technologies.com/PriceGenerator/docs/evidence/generation-speed-2.2.1.json)
 
 [English](../en/experiments.md) · [Русский](../ru/experiments.md)

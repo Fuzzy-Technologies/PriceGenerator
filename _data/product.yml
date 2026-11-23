@@ -21,6 +21,7 @@ en:
   try: What would you like to test?
   command_text: Create 240 hourly candles and open a chart with indicator controls. Try Bollinger bands or SMA 50 / 200.
   terminal: Terminal
+  performance: How fast can I generate one million candles?
   copy: Copy
   copied: Commands copied.
   chart_alt: Candles and volume with Bollinger bands and 50- and 200-bar moving averages.
@@ -52,6 +53,7 @@ ru:
   try: Для каких задач подойдёт PriceGenerator
   command_text: Установите пакет, сгенерируйте 240 часовых свечей и откройте график в браузере. Флаг --analysis добавляет индикаторы. Например, можно наложить полосы Боллинджера или сравнить скользящие средние за 50 и 200 часов.
   terminal: Командная строка
+  performance: Сколько времени занимает генерация миллиона свечей?
   copy: Скопировать команды
   copied: Команды скопированы.
   chart_alt: Часовые свечи с полосами Боллинджера и двумя скользящими средними. Столбцы под графиком показывают объём.
@@ -83,6 +85,7 @@ zh-CN:
   try: 可以用来做什么？
   command_text: 运行下面三条命令，安装软件包，生成 240 根 1 小时 K 线，并在浏览器中打开图表。加上 --analysis 即可查看布林带，也可以叠加 50 小时和 200 小时均线。
   terminal: 命令行
+  performance: 生成 100 万根 K 线需要多久？
   copy: 复制命令
   copied: 命令已复制。
   chart_alt: 小时 K 线图上叠加了布林带和两条均线，下方的柱状图显示各小时的模拟成交量。
