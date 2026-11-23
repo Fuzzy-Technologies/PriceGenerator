@@ -23,7 +23,7 @@ PriceGenerator 可以生成 K 线行情和成交量，用来测试交易软件�
 
 ![第一条模拟路径的 K 线与成交量，叠加按 32 条路径的小时收盘价计算的三条分位数曲线。](https://fuzzy-technologies.com/PriceGenerator/docs/assets/pricegenerator-2-2-experiment-quantiles.svg)
 
-以最后一小时为例，紫线为 **101.27**，是该小时 32 个收盘价的中位数。蓝线 **75.01** 和黄线 **150.46** 分别是第 5 和第 95 百分位数。其他小时各自重新计算，曲线间距反映的是这一时刻模拟价格的分散程度。[如何取出每条路径的行情数据](https://fuzzy-technologies.com/PriceGenerator/zh-CN/experiments/#monte-carlo)
+以最后一小时为例，紫线为 **101.27**，是该小时 32 个收盘价的中位数。蓝线 **75.01** 和黄线 **150.46** 分别是第 5 和第 95 百分位数。其他小时各自重新计算，曲线间距反映的是这一时刻模拟价格的分散程度。[如何取出每条路径的行情数据](https://fuzzy-technologies.com/PriceGenerator/zh-CN/experiments/#paths)
 
 ## 画一张自己的 K 线图
 {: id="试用交互图表" }

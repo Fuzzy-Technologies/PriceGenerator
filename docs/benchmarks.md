@@ -5,6 +5,8 @@ its installed dependencies. It supports complete DataFrames and bounded-memory
 chunk traversal. Chart rendering and indicators are outside this measurement.
 There is no speed or memory threshold in the PR gate.
 
+For the installed 2.2.1 release, see [generation and local CSV timings for 100,000 and 1,000,000 candles](https://fuzzy-technologies.com/PriceGenerator/en/experiments/#performance). These measurements time the public API without memory tracing or fingerprinting.
+
 Run from the checkout using its supported modern dependency environment:
 
 ```bash

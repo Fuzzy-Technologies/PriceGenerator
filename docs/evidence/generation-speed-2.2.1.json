@@ -1,0 +1,133 @@
+{
+  "package": "pricegenerator",
+  "version": "2.2.1",
+  "pypi_wheel_sha256": "fc6fa7bbd542c641d715cfc44ed6b987a5086e9aeb62380703dbabf3bdb09bfc",
+  "recipe": "measure_generation.py",
+  "recipe_sha256": "354dc958c9c3f2a50904de84689432b0273f7b82b2ffdf0fbb6671a3d6cbfee9",
+  "environment": {
+    "platform": "Linux x86_64",
+    "cpu": "AMD EPYC 9V74",
+    "processes_per_run": 1,
+    "python": "3.14.10",
+    "numpy": "2.3.5",
+    "pandas": "2.3.3"
+  },
+  "description": "Elapsed wall time from perf_counter in five fresh Python processes per size. Each run warmed imports and the public API on 16 rows, then generated a full OHLCV DataFrame and wrote a buffered CSV on a local filesystem using integer volume. Generation includes canonical validation. CSV time includes writer validation and closing the file. Imports, warm-up, checksums, charts and manifest creation are outside the timed interval. Each reported median is calculated independently.",
+  "common_configuration": {
+    "seed": 42,
+    "start": "2000-01-01T00:00:00+00:00",
+    "timeframe_seconds": 60,
+    "model": "regime_v3",
+    "initial_price": 100.0,
+    "price_floor": 1e-06,
+    "price_ceiling": 1000000000000.0,
+    "drift": 0.0,
+    "volatility": 0.01,
+    "regime_persistence": 0.95,
+    "regime_scale": 3.0,
+    "shock_probability": 0.01,
+    "shock_scale": 5.0,
+    "wick_scale": 0.5,
+    "wick_outlier_probability": 0.01,
+    "wick_outlier_scale": 5.0,
+    "volume_base": 1000.0,
+    "volume_sigma": 0.25,
+    "volume_return_coupling": 1.0,
+    "volume_persistence": 0.5,
+    "volume_ceiling": 1000000000000.0
+  },
+  "results": [
+    {
+      "candles": 100000,
+      "csv_bytes": 11016673,
+      "csv_sha256": "d106a21c47b4514673237478a01fd247216f3404fb82abeeb816e8f2d5ffd155",
+      "median": {
+        "generate_seconds": 0.329682899,
+        "write_csv_seconds": 0.45114124,
+        "generate_and_write_seconds": 0.765170973
+      }
+    },
+    {
+      "candles": 1000000,
+      "csv_bytes": 109525699,
+      "csv_sha256": "df1a91b4497ce98237e25f7eca1ef5dc233f79fcc84c0cd4ecd4ca84a6b5477a",
+      "median": {
+        "generate_seconds": 3.719316797,
+        "write_csv_seconds": 4.874727756,
+        "generate_and_write_seconds": 8.594044553
+      }
+    }
+  ],
+  "observations_in_run_order": [
+    {
+      "repeat": 1,
+      "candles": 100000,
+      "generate_seconds": 0.4059551,
+      "write_csv_seconds": 0.476064556,
+      "generate_and_write_seconds": 0.882019656
+    },
+    {
+      "repeat": 1,
+      "candles": 1000000,
+      "generate_seconds": 3.877865434,
+      "write_csv_seconds": 4.645542867,
+      "generate_and_write_seconds": 8.523408301
+    },
+    {
+      "repeat": 2,
+      "candles": 1000000,
+      "generate_seconds": 3.719316797,
+      "write_csv_seconds": 4.874727756,
+      "generate_and_write_seconds": 8.594044553
+    },
+    {
+      "repeat": 2,
+      "candles": 100000,
+      "generate_seconds": 0.309034182,
+      "write_csv_seconds": 0.456136791,
+      "generate_and_write_seconds": 0.765170973
+    },
+    {
+      "repeat": 3,
+      "candles": 100000,
+      "generate_seconds": 0.307992891,
+      "write_csv_seconds": 0.428999551,
+      "generate_and_write_seconds": 0.736992442
+    },
+    {
+      "repeat": 3,
+      "candles": 1000000,
+      "generate_seconds": 3.662864746,
+      "write_csv_seconds": 5.018730193,
+      "generate_and_write_seconds": 8.681594939
+    },
+    {
+      "repeat": 4,
+      "candles": 1000000,
+      "generate_seconds": 3.665755341,
+      "write_csv_seconds": 4.840458884,
+      "generate_and_write_seconds": 8.506214225
+    },
+    {
+      "repeat": 4,
+      "candles": 100000,
+      "generate_seconds": 0.329682899,
+      "write_csv_seconds": 0.434757581,
+      "generate_and_write_seconds": 0.76444048
+    },
+    {
+      "repeat": 5,
+      "candles": 100000,
+      "generate_seconds": 0.35580043,
+      "write_csv_seconds": 0.45114124,
+      "generate_and_write_seconds": 0.80694167
+    },
+    {
+      "repeat": 5,
+      "candles": 1000000,
+      "generate_seconds": 3.855788204,
+      "write_csv_seconds": 5.242992626,
+      "generate_and_write_seconds": 9.09878083
+    }
+  ]
+}

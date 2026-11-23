@@ -46,6 +46,12 @@ or fingerprints. Startup overhead may dominate small jobs.
 Each path has the same start time, timeframe and horizon. Rebuilding one path
 requires the original configuration and zero-based path index.
 
+The published [32-path example](https://fuzzy-technologies.com/PriceGenerator/en/experiments/#paths) includes every member as OHLCV CSV and a figure of the 32 individual closing-price paths. To rebuild both assets, run the ensemble and CSV-export examples on that page, then run the following command from the checkout using Matplotlib 3.10.8. The inputs are the exported CSV files in `paths/`.
+
+```sh
+python docs/evidence/build_path_example.py paths docs/assets
+```
+
 ## Seed derivation and run metadata
 
 `pricegenerator-monte-carlo-path-seed-v1` hashes an ASCII payload made of the
