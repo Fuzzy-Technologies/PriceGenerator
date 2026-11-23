@@ -1,42 +1,28 @@
 # PriceGenerator
 
-![PriceGenerator от Fuzzy Technologies. Генератор синтетических рыночных данных.](https://fuzzy-technologies.com/PriceGenerator/docs/assets/pricegenerator-product-card.webp)
+![Алиса на обложке PriceGenerator, генератора котировок Fuzzy Technologies.](https://fuzzy-technologies.com/PriceGenerator/docs/assets/pricegenerator-product-card.webp)
 
 [English](https://fuzzy-technologies.com/PriceGenerator/) · [Русский](https://fuzzy-technologies.com/PriceGenerator/ru/) · [简体中文](https://fuzzy-technologies.com/PriceGenerator/zh-CN/) · [Быстрый старт](https://fuzzy-technologies.com/PriceGenerator/ru/quick-start/)
 
-
-PriceGenerator строит синтетические ряды свечей OHLCV для тестирования
-торговых систем и количественных экспериментов. Можно задать параметры
-рынка, сохранить свечи в CSV, повторить прогон и посмотреть результат
-на графике. Для оценки прогнозов и доходности стратегии нужна отдельная
-проверка на рыночных данных.
-
-На [русском сайте проекта](https://fuzzy-technologies.com/PriceGenerator/ru/) есть быстрый старт, описание модели и эксперименты с историческими данными.
+PriceGenerator генерирует котировки для тестирования торговых программ. Задайте начальную цену, интервал свечи и волатильность, чтобы получить свечи и объём в CSV. Один и тот же ряд можно использовать после каждой правки программы, а несколько разных рядов — загрузить в свой тестер и сравнить результаты стратегии.
 
 ## Что можно попробовать
 
-- **Проверить импорт котировок.** Сгенерируйте 240 свечей с фиксированным `seed` и сохраните манифест. После изменения кода повторите прогон и сравните файлы.
-- **Проверить индикатор на графике.** Откройте офлайн-график с `--analysis` и включите полосы Боллинджера или SMA 50 / 200 на одних и тех же свечах.
-- **Испытать торговое правило.** Прогоните свою стратегию на нескольких ценовых траекториях в собственном тестере. Сам генератор покажет разброс цен закрытия и просадки смоделированной цены.
-- **Сопоставить сценарий с рынком.** Возьмите часовую историю BTC/USD без пропусков, подберите параметры на раннем периоде и сравните волатильность и объём на следующем. В [примере Bitstamp](https://fuzzy-technologies.com/PriceGenerator/ru/experiments/#bitstamp) видно, какие свойства удалось воспроизвести. Базовый сценарий начинается со 100 и не привязан к инструменту.
-
-На часовых BTC/USD с Bitstamp все 16 прогонов уложились в заданные допуски по волатильности доходностей и среднему объёму на следующем месяце. У подогнанной модели объём оставался постоянным. На бирже он менялся вместе с величиной ценового движения.
+- **Проверить импорт котировок.** Подготовьте CSV из 240 свечей. Загрузите его до и после изменения импортёра, затем сравните даты, цены и объёмы. [Получить тестовый файл](https://fuzzy-technologies.com/PriceGenerator/ru/quick-start/)
+- **Проверить индикатор.** На графике с `--analysis` включите две скользящие средние и посмотрите, на каких свечах появляются их первые значения. [Открыть график с индикаторами](https://fuzzy-technologies.com/PriceGenerator/ru/reference/#charts)
+- **Проверить стратегию при разном движении цены.** Смоделируйте 32 ряда при одинаковых настройках. Для каждого запустите свой тестер с теми же правилами входа и выхода. [Пример Монте-Карло](https://fuzzy-technologies.com/PriceGenerator/ru/experiments/#monte-carlo)
+- **Сравнить модель с рынком.** В примере BTC/USD модель настроили по сентябрьским торгам на Bitstamp и проверили на октябрьских. Все 16 прогонов уложились в допуски по волатильности и среднему часовому объёму. Но на бирже объём менялся от часа к часу, а в модели оставался постоянным. [Результаты эксперимента](https://fuzzy-technologies.com/PriceGenerator/ru/experiments/#bitstamp)
 
 ## Установка
 
-[PriceGenerator 2.2.1 на PyPI](https://pypi.org/project/pricegenerator/2.2.1/)
-
-PriceGenerator 2.2.1 поддерживает CPython 3.10–3.15.
+Для [PriceGenerator 2.2.1](https://pypi.org/project/pricegenerator/2.2.1/) подойдёт CPython 3.10–3.15. Базовой установки достаточно для CSV, интерактивного HTML и SVG. Вторая команда понадобится для прямого экспорта в PNG и JPEG.
 
 ```bash
 python -m pip install pricegenerator==2.2.1
 python -m pip install 'pricegenerator[export]==2.2.1'  # Для экспорта в PNG и JPEG.
 ```
 
-Чтобы установить пакет из локальной копии репозитория, выполните
-`python -m pip install .`.
-[Что нового в 2.2.1](https://fuzzy-technologies.com/PriceGenerator/ru/release-2-2/) ·
-[Предыдущие выпуски](https://github.com/Fuzzy-Technologies/PriceGenerator/releases)
+Если вы скачали исходники, из корня репозитория выполните `python -m pip install .`. [Что нового в 2.2.1](https://fuzzy-technologies.com/PriceGenerator/ru/release-2-2/) · [Предыдущие выпуски](https://github.com/Fuzzy-Technologies/PriceGenerator/releases)
 
 ## Сгенерировать свечи и записать CSV
 
@@ -49,23 +35,11 @@ WriteCSV(prices, "prices.csv", volume_as_count=True)
 restored = ReadCSV("prices.csv")
 ```
 
-Объект `GenerationConfig` после создания изменить нельзя. По умолчанию
-используются фиксированное время начала в UTC и модель `regime_v3` с
-целочисленным синтетическим счётчиком объёма. Для прежних сценариев с
-непрерывным объёмом укажите `model="regime_v2"`.
-Параметр `seed` задаёт начальное значение генератора псевдослучайных чисел.
-Ноль допустим. У каждого прогона свой ГПСЧ, изолированный от глобального
-генератора процесса. В спецификации описаны дрейф, смена режимов,
-скачки, тени свечей, объём и поведение цены у границ.
-[Как работает модель и чем она отличается от 1.4.93](https://fuzzy-technologies.com/PriceGenerator/ru/scenario-guide/)
+Время начала ряда по умолчанию фиксировано и задано в UTC. Начальное значение генератора случайных чисел задаёт `seed`. Ноль — обычное допустимое значение. При тех же настройках в том же окружении вы получите те же свечи. У каждого вызова свой генератор случайных чисел. Чтобы поменять параметры, создайте новую конфигурацию.
 
-Таблица OHLCV содержит шесть столбцов в порядке
-`datetime, open, high, low, close, volume`. Метки времени приведены к UTC
-и хранятся с наносекундной точностью. Цены и объём — конечные значения
-типа `float64`. Если в исходных метках отсутствует смещение, укажите часовой
-пояс явно. `ValidateOHLCV` возвращает отдельную таблицу в установленном
-формате и позволяет проверить шаг между барами и пропуски.
-[Формат OHLCV и CSV](https://fuzzy-technologies.com/PriceGenerator/ru/reference/#csv)
+Стандартная модель `regime_v3` записывает объём целым числом в условных единицах активности. Для повторения старых сценариев с дробным объёмом доступна `model="regime_v2"`. [Как строится следующая свеча и чем отличается алгоритм 1.4.93](https://fuzzy-technologies.com/PriceGenerator/ru/scenario-guide/)
+
+Таблица OHLCV содержит шесть столбцов: `datetime,open,high,low,close,volume`. Время открытия хранится в UTC с наносекундной точностью. Цены и объём имеют тип `float64`. Если источник записал время без смещения, укажите исходный часовой пояс. Функция `ValidateOHLCV` возвращает проверенную копию таблицы. С её помощью можно также проверить интервал между свечами и пропуски. [Формат CSV](https://fuzzy-technologies.com/PriceGenerator/ru/reference/#csv)
 
 ## Повторить прогон и посмотреть результат
 
@@ -82,24 +56,11 @@ indicators = Indicators(prices).ToDict()
 chart_path = Chart(prices, "chart.html", analysis=True, view=False)
 ```
 
-Сохраните манифест вместе с CSV. В нём указаны параметры, модель, ГПСЧ, версия
-пакета и окружение, а также два контрольных хеша — сценария и самих свечей.
-По умолчанию `Replay` проверяет совпадение окружения. Параметр
-`strict_environment=False` позволяет повторить прогон в другом окружении
-при условии точного совпадения обоих хешей. Версия PriceGenerator должна
-совпадать с версией в манифесте. `Analyze` и `Indicators`
-рассчитывают показатели отдельно от исходной таблицы и указывают причину,
-если расчёт неприменим.
-[Руководство по анализу](https://fuzzy-technologies.com/PriceGenerator/ru/reference/#analysis)
+Сохраните вместе с CSV файл `scenario.json`. Это манифест — запись настроек модели, версии пакета, генератора случайных чисел и окружения. В нём также есть контрольные суммы сценария и самих свечей. По умолчанию `Replay` проверяет совпадение окружения. Чтобы проверить воспроизводимость в другом окружении, передайте `strict_environment=False`. Версия пакета и обе контрольные суммы по-прежнему должны совпадать.
 
-Вызов `Chart(prices)` открывает интерактивный HTML-график, который работает
-и без интернета. В пакетном скрипте задайте `view=False`. Формат файла
-определяется расширением. SVG доступен в базовой установке, для PNG и JPEG
-нужен `[export]`. С `analysis=True` на график добавляются индикаторы и сводка.
-`DisplayChart(prices)` выводит график прямо в блокноте Jupyter, для которого
-при необходимости можно установить `.[notebook]`. Один полупрозрачный
-водяной знак расположен на ценовой панели.
-[Форматы и настройки графиков](https://fuzzy-technologies.com/PriceGenerator/ru/reference/#charts)
+`Analyze` рассчитывает статистику, `Indicators` — технические индикаторы. Исходная таблица сохраняется. Если показатель не определён, в отчёте будет указана причина. [Статистика ряда и просадка цены](https://fuzzy-technologies.com/PriceGenerator/ru/reference/#analysis)
+
+`Chart(prices)` открывает интерактивный график в браузере. Его можно просматривать без интернета. С параметром `view=False` файл сохранится без открытия браузера. Расширение файла определяет формат, а `analysis=True` добавляет индикаторы и статистику. В Jupyter используйте `DisplayChart(prices)`. При необходимости установите дополнение `notebook`. [Управление графиком](https://fuzzy-technologies.com/PriceGenerator/ru/reference/#charts)
 
 ## Те же операции из командной строки
 
@@ -111,47 +72,21 @@ pricegenerator analyze prices.csv --output statistics.json
 pricegenerator chart prices.csv --output chart.html --no-view --analysis
 ```
 
-**Где кнопки индикаторов?** Пересоздайте HTML из того же CSV с флагом
-`--analysis` или вызовите `Chart(prices, "chart.html", analysis=True)` в Python.
-Откройте HTML в браузере. **Bollinger bands** показывают диапазон вокруг
-скользящей средней, **SMA 50 / 200** — две средние, а **Midpoint** — середины
-диапазонов свечей. Также доступны HMA, VWMA, PSAR, Alligator и Zig-Zag.
-В разделе **Individual series** можно переключать отдельные линии.
-Для SMA 200 нужно не менее 200 свечей.
+**Как включить индикаторы.** Укажите `--analysis` при создании HTML или `analysis=True` при вызове `Chart` из Python. Откройте `chart.html` и выберите в разделе **Indicators** полосы Боллинджера (**Bollinger bands**) или скользящие средние (**SMA 50 / 200**). Для средней за 200 периодов потребуется не менее 200 свечей. **Midpoint** отмечает середину между максимумом и минимумом каждой свечи. В списке есть также HMA, VWMA, PSAR, Alligator и Zig-Zag. Отдельную линию можно отключить в **Individual series**.
 
-Приблизьте участок колёсиком или рамкой (**Box zoom**). Кнопка **Light theme**
-включает светлую тему, а **Export PNG** сохраняет выбранный вид. Под графиком
-есть краткая сводка. Полный отчёт раскрывается по кнопке **Detailed statistics**.
+Колёсико меняет масштаб. **Box zoom** увеличивает выделенный участок, **Light theme** включает светлую тему, **Export PNG** сохраняет видимые свечи и объёмы с выбранными индикаторами. В разделе **Detailed statistics** находится подробная статистика.
 
-![Офлайн-график свечей и объёмов с включёнными полосами Боллинджера и средними за 50 и 200 свечей](https://fuzzy-technologies.com/PriceGenerator/docs/assets/pricegenerator-chart-analysis.webp)
+![Часовые свечи с полосами Боллинджера и средними за 50 и 200 часов. Под графиком видны объёмы.](https://fuzzy-technologies.com/PriceGenerator/docs/assets/pricegenerator-chart-analysis.webp)
 
-Команды также доступны через `python -m pricegenerator`. Передайте настройки
-генерации в JSON через `--config`. Значения, явно указанные в командной
-строке, имеют приоритет над соответствующими полями файла. CLI сообщает
-об ошибке при неизвестных параметрах, `NaN` и бесконечностях, неоднозначных
-метках времени и совпадении путей входных и выходных файлов.
+Если команда `pricegenerator` недоступна по имени, используйте `python -m pricegenerator`. Параметры генерации можно сохранить в JSON и передать через `--config`. Значения, явно заданные в командной строке, заменяют соответствующие значения в файле. CLI проверяет названия параметров, числовые значения, однозначность времени и пути к файлам.
 
-В 2.1 появились команды и Python API для генерации и повторного расчёта
-ансамблей Монте-Карло. В CPython 3.13–3.15 можно отдельно подключить нечёткую
-оценку рыночного режима.
-[Монте-Карло](https://fuzzy-technologies.com/PriceGenerator/ru/experiments/#monte-carlo) ·
-[Нечёткая диагностика](https://fuzzy-technologies.com/PriceGenerator/ru/reference/#research)
+В версии 2.1 появились команды для многократного моделирования по методу Монте-Карло и повторения отдельных траекторий. На CPython 3.13–3.15 дополнительно доступна нечёткая оценка состояния рынка. [Эксперименты](https://fuzzy-technologies.com/PriceGenerator/ru/experiments/#monte-carlo) · [Нечёткая диагностика](https://fuzzy-technologies.com/PriceGenerator/ru/reference/#research)
 
-В ветке 2.x изменились класс генератора, методы построения графиков
-и параметры командной строки. Для переноса кода с 1.x используйте таблицу
-соответствий. Исторические данные для сверки собраны в архиве.
-[Переход на 2.1](https://fuzzy-technologies.com/PriceGenerator/ru/migration/) ·
-[Изменения API графиков](https://fuzzy-technologies.com/PriceGenerator/ru/reference/#charts) ·
-[ADR-0010](https://fuzzy-technologies.com/PriceGenerator/ru/migration/) ·
-[Архив 1.x](https://fuzzy-technologies.com/PriceGenerator/ru/migration/)
+В ветке 2.x изменились класс генератора, команды запуска и вызовы для построения графиков. [Как перенести скрипты с 1.4.93](https://fuzzy-technologies.com/PriceGenerator/ru/migration/)
 
 ## Сравнить два ряда свечей
 
-Команда `pricegenerator compare` проверяет шаг баров и сопоставляет
-показатели двух рядов OHLCV. В отчёте указаны хеши рядов и результаты
-проверки по заданным допускам. В полном примере можно сгенерировать
-оба ряда, повторить прогон и сохранить график с квантилями Монте-Карло.
-[Сравнение рядов](https://fuzzy-technologies.com/PriceGenerator/ru/experiments/#compare) · [Пример эксперимента](https://fuzzy-technologies.com/PriceGenerator/ru/experiments/#bundle)
+`pricegenerator compare` сравнивает два ряда OHLCV с одинаковым интервалом свечи. В отчёте приводятся показатели обоих рядов, их контрольные суммы и результаты проверки по заданным допускам. В готовом примере можно сгенерировать оба ряда, повторить эксперимент и построить график с разбросом цен по 32 траекториям. [Сравнить CSV](https://fuzzy-technologies.com/PriceGenerator/ru/experiments/#compare) · [Повторить весь эксперимент](https://fuzzy-technologies.com/PriceGenerator/ru/experiments/#bundle)
 
 ## Разработка и расширения
 
@@ -160,19 +95,8 @@ python -m pip install -r requirements.txt
 python -m pytest -q tests
 ```
 
-Перед изменениями изучите правила проекта, команды проверки, требования
-к пакету и архитектурные решения.
-В рабочей копии начните с `AGENTS.md`.
-[Команды разработчика](https://fuzzy-technologies.com/PriceGenerator/ru/reference/#development) ·
-[Сборка пакета](https://fuzzy-technologies.com/PriceGenerator/ru/reference/#packaging) ·
-[Проверка модели](https://fuzzy-technologies.com/PriceGenerator/ru/reference/#validation)
+Инструкции для разработчиков собраны в `AGENTS.md` в корне репозитория. [Сборка справочника API](https://fuzzy-technologies.com/PriceGenerator/ru/reference/#development) · [Сборка пакета](https://fuzzy-technologies.com/PriceGenerator/ru/reference/#packaging) · [Проверка модели](https://fuzzy-technologies.com/PriceGenerator/ru/reference/#validation)
 
-Экспериментальные функции калибровки и моделирования доступны через модули
-`pricegenerator.calibration`, `pricegenerator.evaluation`,
-`pricegenerator.extended_models` и `pricegenerator.registry`. Для каждого
-рынка пригодность модели проверяют отдельно. Большие ряды удобно
-генерировать и записывать частями через `GenerateChunks` и `WriteCSVChunks`.
+В Python доступны экспериментальные модули `pricegenerator.calibration`, `pricegenerator.evaluation`, `pricegenerator.extended_models` и `pricegenerator.registry` для оценки параметров, сравнения с историей и работы с другими моделями. Большие ряды можно генерировать и записывать по частям с помощью `GenerateChunks` и `WriteCSVChunks`.
 
-[Репозиторий](https://github.com/Fuzzy-Technologies/PriceGenerator) ·
-[Задачи](https://github.com/Fuzzy-Technologies/PriceGenerator/issues) ·
-[Лицензия Apache-2.0](https://github.com/Fuzzy-Technologies/PriceGenerator/blob/v2.2.1/LICENSE) · [English](https://fuzzy-technologies.com/PriceGenerator/)
+[Репозиторий](https://github.com/Fuzzy-Technologies/PriceGenerator) · [Задачи](https://github.com/Fuzzy-Technologies/PriceGenerator/issues) · [Лицензия Apache-2.0](https://github.com/Fuzzy-Technologies/PriceGenerator/blob/v2.2.1/LICENSE)

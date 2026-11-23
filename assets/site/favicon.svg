@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" role="img" aria-label="PriceGenerator">
+  <rect width="16" height="16" rx="3" fill="#0d0d0d"/>
+  <g fill="#66d9ef">
+    <path d="M3 6h1v8H3z M2 8h3v4H2z"/>
+    <path d="M13 2h1v8h-1z M12 4h3v4h-3z"/>
+  </g>
+  <path fill="#ff79c6" d="M8 4h1v8H8z M7 5h3v4H7z"/>
+</svg>
