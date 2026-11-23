@@ -55,17 +55,17 @@ python -m pricegenerator monte-carlo --seed 42 --paths 32 --horizon 120 --start 
 
 默认的 `regime_v3` 模型从低波动状态开始。生成每根 K 线之前，模型以
 `1 - regime_persistence` 的概率在低波动和高波动状态之间切换。
-低波动状态下，收益率高斯分量的标准差 $\sigma$ 为 `volatility`，高波动状态下
+低波动状态下，收益率高斯分量的标准差 σ 为 `volatility`，高波动状态下
 为 `volatility * regime_scale`。参数按单根 K 线定义，改变时间间隔时
 应为新的采样频率选择参数。
 
 模型提出的对数收益率为
-$r = \mu + \sigma Z + \sigma_0 s B Z_{\mathrm{shock}}$。
-其中 $\mu$ 是 `drift`，$\sigma_0$ 是基础波动率 `volatility`，
-$s$ 是 `shock_scale`。两个正态随机量相互独立，独立的伯努利随机量
-$B$ 以 `shock_probability` 的概率激活冲击。从第二根 K 线起，
+<i>r</i> = μ + σ · <i>Z</i> + σ₀ · <i>s</i> · <i>B</i> · <i>Z</i><sub>shock</sub>。
+其中 μ 是 `drift`，σ₀ 是基础波动率 `volatility`，
+<i>s</i> 是 `shock_scale`。两个正态随机量相互独立，独立的伯努利随机量
+<i>B</i> 以 `shock_probability` 的概率激活冲击。从第二根 K 线起，
 开盘价等于上一根的收盘价。如果拟定的对数收盘价超出配置边界，
-模型会进行反射。因此，实现的对数收益率可能与 $r$ 不同。
+模型会进行反射。因此，实现的对数收益率可能与 <i>r</i> 不同。
 
 上下影线在对数价格空间从实体向外延伸。两侧的异常延长事件相互独立，
 影线受价格边界截断。

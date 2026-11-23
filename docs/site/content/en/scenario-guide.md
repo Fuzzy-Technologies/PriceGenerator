@@ -55,19 +55,19 @@ support a real-tick strategy test.
 
 The default `regime_v3` model starts in its low-volatility state. Before each candle it switches between
 calm and stressed states with probability `1 - regime_persistence`.
-The Gaussian return component has standard deviation $\sigma$ of `volatility` in the calm state
+The Gaussian return component has standard deviation σ of `volatility` in the calm state
 and `volatility * regime_scale` in the stressed state. Parameters apply
 per candle, so changing the interval requires choosing parameters for that
 cadence.
 
 The proposed log return is
-$r = \mu + \sigma Z + \sigma_0 s B Z_{\mathrm{shock}}$.
-Here $\mu$ is `drift`, $\sigma_0$ is the base `volatility`, and $s$ is
+<i>r</i> = μ + σ · <i>Z</i> + σ₀ · <i>s</i> · <i>B</i> · <i>Z</i><sub>shock</sub>.
+Here μ is `drift`, σ₀ is the base `volatility`, and <i>s</i> is
 `shock_scale`. The normal draws are independent and the independent
-Bernoulli variable $B$ activates the shock with probability
+Bernoulli variable <i>B</i> activates the shock with probability
 `shock_probability`. The open is the previous close after the first bar.
 The proposed log close is reflected at the configured bounds when needed,
-so the realized return can differ from $r$.
+so the realized return can differ from <i>r</i>.
 
 Wick lengths extend from the body in log-price space, with independent
 outlier events on each side and clipping at the price bounds.
