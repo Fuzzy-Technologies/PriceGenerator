@@ -12,7 +12,8 @@
   <link rel="canonical" href="{{ page.url | replace: 'index.html', '' | absolute_url }}">
   {% if page.route %}{% for item in site.data.product %}{% assign l = item[0] %}{% assign other = item[1] %}
   <link rel="alternate" hreflang="{{ l }}" href="{% if page.route == 'home' %}{{ other.home | absolute_url }}{% else %}{{ other.prefix | append: page.route | append: '/' | absolute_url }}{% endif %}">{% endfor %}{% endif %}
-  <link rel="icon" href="{{ '/media/logo-pricegenerator-32x32px.png' | relative_url }}">
+  <link rel="icon" type="image/x-icon" sizes="16x16 32x32 48x48 64x64" href="{{ '/assets/site/favicon.ico' | relative_url }}">
+  <link rel="icon" type="image/svg+xml" sizes="any" href="{{ '/assets/site/favicon.svg' | relative_url }}">
   <link rel="stylesheet" href="{{ '/assets/site/fonts.css' | relative_url }}">
   <link rel="stylesheet" href="{{ '/assets/site/landing.css' | relative_url }}">
   <link rel="stylesheet" href="{{ '/assets/site/guides.css' | relative_url }}">
