@@ -21,6 +21,8 @@ The [English product site](https://fuzzy-technologies.com/PriceGenerator/) has t
 
 On hourly Bitstamp BTC/USD, all 16 fitted runs met the stated tolerances for return volatility and mean volume on the following month. Fitted volume stayed constant, while observed volume varied with the size of price movements.
 
+**Generation speed.** On an AMD EPYC 9V74 running Linux, one Python process generated one million minute candles in **3.72 s**, or **8.59 s including a local CSV write**. These are medians of five runs of PyPI 2.2.1. [Benchmark and reproduction steps](https://fuzzy-technologies.com/PriceGenerator/en/experiments/#performance) · [See and download all 32 example paths](https://fuzzy-technologies.com/PriceGenerator/en/experiments/#paths)
+
 ## Install
 
 [PriceGenerator 2.2.1 on PyPI](https://pypi.org/project/pricegenerator/2.2.1/)

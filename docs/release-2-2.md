@@ -48,6 +48,8 @@ roughly **75.01 to 150.46** for that hour. At another hour, different runs
 can set those marks. The spread helps you see how far outcomes can vary
 under the same scenario settings.
 
+[See the 32 individual paths and download their OHLCV files](https://fuzzy-technologies.com/PriceGenerator/en/experiments/#paths).
+
 ## Try it
 
 With PriceGenerator 2.2.1 installed, generate 240 hourly candles and open
