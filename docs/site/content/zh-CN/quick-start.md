@@ -2,31 +2,25 @@
 layout: default
 lang: zh-CN
 route: quick-start
-title: "复现合成 OHLCV 场景"
+title: "生成第一份行情数据，画出 K 线图"
 permalink: /zh-CN/quick-start/
 redirect_from:
   - /docs/site/content/zh-CN/quick-start.html
 ---
-# 复现合成 OHLCV 场景
+# 生成第一份行情数据，画出 K 线图
+{: id="复现合成-ohlcv-场景" }
 
-[科学与使用指南](https://fuzzy-technologies.com/PriceGenerator/zh-CN/scenario-guide/) · [2.2.1 版本说明](https://fuzzy-technologies.com/PriceGenerator/zh-CN/release-2-2/)
-
-使用固定随机种子生成行情序列，根据场景清单复现数据，并在不启动浏览器的情况下
-生成图表。该序列可用于软件测试和受控实验。时间戳为合成数据，价格变化取决于
-所配置的模型参数。
+下面用四个小时的分钟行情走一遍完整流程。先生成 240 根 K 线，保存为 CSV，再打开图表看看两条均线各从哪一分钟开始出现。最后还可以用同一组设置重新生成数据，核对两份文件是否完全一致。[K 线生成原理](https://fuzzy-technologies.com/PriceGenerator/zh-CN/scenario-guide/) · [2.2.1 版本说明](https://fuzzy-technologies.com/PriceGenerator/zh-CN/release-2-2/)
 
 ## 安装 PriceGenerator 2.2.1
 
-[PyPI 上的 PriceGenerator 2.2.1](https://pypi.org/project/pricegenerator/2.2.1/)
-
-请使用 CPython 3.10–3.15 和独立的虚拟环境。
+[PyPI 上的 2.2.1](https://pypi.org/project/pricegenerator/2.2.1/) 支持 CPython 3.10–3.15。用已安装的 Python 创建虚拟环境。
 
 ```sh
 python -m venv .venv
 ```
 
-在 POSIX Shell 中执行 `. .venv/bin/activate`，或在 Windows PowerShell 中
-执行 `.\.venv\Scripts\Activate.ps1`。版本检查应输出 `2.2.1`。
+Windows PowerShell 用户运行 `.\.venv\Scripts\Activate.ps1` 激活环境。Linux 或 macOS 用户运行 `. .venv/bin/activate`。接着安装软件包。下面的版本检查应显示 `2.2.1`。
 
 ```sh
 python -m pip install pricegenerator==2.2.1
@@ -36,7 +30,8 @@ mkdir pg-example
 cd pg-example
 ```
 
-## 生成、验证和绘图
+## 生成 CSV 并查看图表
+{: id="生成验证和绘图" }
 
 ```sh
 python -I -m pricegenerator generate --seed 42 --horizon 240 --start 2025-01-06T00:00:00Z --timeframe-seconds 60 --output prices.csv --manifest scenario.json
@@ -46,25 +41,16 @@ python -I -m pricegenerator chart prices.csv --output chart.html --analysis --no
 python -I -m pricegenerator chart prices.csv --output chart.svg --no-view
 ```
 
-验证结果会报告行数为 240、`"valid": true` 和规范 OHLCV 数据指纹。该指纹与
-`scenario.json` 中的 `fingerprint` 一致。复现时会核对记录的配置、软件包版本、
-运行环境和数据指纹。生成和复现的 CSV 内容相同。打开本地 `chart.html` 可以
-缩放并查看数据，`chart.svg` 则是静态矢量图。
+`prices.csv` 保存行情，`scenario.json` 记录生成参数、软件版本和运行环境，后文称为「运行清单」。执行 `validate` 后，应看到 240 行和 `"valid": true`。`fingerprint` 是这组 K 线数据的校验值，与清单中的同名字段一致。`replay` 会根据清单重新生成行情并核对结果。在同一环境中，两份 CSV 的内容逐字节相同。
 
-**如何显示指标按钮？** 用同一份 CSV 重新生成 HTML，并加上 `--analysis`。
-在 Python 中可以调用 `Chart(prices, "chart.html", analysis=True)`。
-用浏览器打开文件后，点击 **Bollinger bands** 查看均线周围的波动范围，
-点击 **SMA 50 / 200** 比较两条均线，或点击 **Midpoint** 标出每根 K 线
-最高价与最低价的中点。还可以切换 HMA、VWMA、PSAR、Alligator 和 Zig-Zag。
-展开 **Individual series** 可以单独开关一条曲线。SMA 200 至少需要 200 根 K 线。
+用浏览器打开 **`chart.html`**。上方是价格，下方的柱状图显示每分钟的模拟成交量。滚动鼠标滚轮可以缩放。选择 **Box zoom** 后，拖出一个矩形即可放大该区域。**Export PNG** 保存当前可见的 K 线、成交量和已开启的指标。需要在报告中插图时，也可以使用 `chart.svg`。
 
-用滚轮或 **Box zoom** 放大选定区间。**Light theme** 切换至浅色主题，
-**Export PNG** 保存当前视图。图表下方显示简要概览，展开
-**Detailed statistics** 可查看完整报告。
+**怎样显示均线？** 生成 HTML 时加上 `--analysis`，如上例所示。Python 中使用 `Chart(prices, "chart.html", analysis=True)`。打开图表，在 **Indicators** 中选择 **SMA 50 / 200**。50 周期均线从第 50 根 K 线开始有值，200 周期均线要到第 200 根才出现。选择 **Bollinger bands** 可查看布林带，**Midpoint** 会标出每根 K 线最高价和最低价的中点。图中还可查看 HMA、VWMA、PSAR、Alligator 和 Zig-Zag。展开 **Individual series** 可单独显示或隐藏一条线。点击 **Light theme** 可切换到浅色主题，**Detailed statistics** 中有完整的统计结果。
 
-## 用 Python 生成相同的序列
+## 用 Python 生成同一份数据
+{: id="用-python-生成相同的序列" }
 
-在示例目录中将以下代码保存为 `scenario.py`，运行 `python -I scenario.py`。
+在示例目录里将以下代码保存为 `scenario.py`，然后运行 `python -I scenario.py`。
 
 ```python
 """Reproduce a seeded minute-bar fixture using the installed package."""
@@ -91,40 +77,23 @@ Chart(prices, "python-analysis.html", analysis=True, view=False)
 print(manifest["fingerprint"])
 ```
 
-在相同环境下，输出的数据指纹与 CLI 示例一致。随机种子确定随机数流，
-完整配置还规定模型、开始时间、周期及其他参数。请保存场景清单以便复现。
+程序打印的校验值应与命令行示例一致。随机种子（`seed`）决定所用的随机数序列。要复现整份行情，还需要相同的模型、起始时间、K 线周期和其他参数。这些信息都保存在清单中。
 
-## 记录图表来源
+## 怎样复现文档里的图？
+{: id="记录图表来源" }
 
-请随图表保留源码标签或提交、生成清单、绘图命令及参数。将导出文件的 SHA-256
-与 OHLCV 数据指纹分别记录。渲染器版本和字体可能影响位图结果。对于多路径
-图表，还需记录各条路径的种子或种子派生规则、路径数量及汇总方法。
+请随图保留运行清单、软件版本、绘图命令及参数。清单中的 OHLCV 校验值用来核对行情本身。如果还要逐字节核对图片，可另外记录图片文件的 SHA-256。字体和绘图软件版本都可能影响 PNG 或 JPEG 的内容。对于蒙特卡洛图，还需记录路径数、各路径的种子或种子生成规则，以及所用的分位数。
 
-仓库中的行情和指标插图使用另一组测试数据。脚本先用固定种子生成序列，然后
-显式加入交易时段间隔和零成交量 K 线。在该标签的仓库根目录运行
-`python -m tools.chart_examples --output-dir pg-figures --html`，重新生成 SVG、
-HTML 和来源说明。
-[绘图脚本](https://github.com/Fuzzy-Technologies/PriceGenerator/blob/v2.2.1/tools/chart_examples.py) · [行情图说明](https://fuzzy-technologies.com/PriceGenerator/zh-CN/reference/#charts)
+[指标示意图](https://fuzzy-technologies.com/PriceGenerator/zh-CN/reference/#charts)使用的是另一组数据。[绘图脚本](https://github.com/Fuzzy-Technologies/PriceGenerator/blob/v2.2.1/tools/chart_examples.py)在模拟行情中加入了休市时段和成交量为零的 K 线。从 `v2.2.1` 源码根目录运行 `python -m tools.chart_examples --output-dir pg-figures --html`，即可生成相应的 SVG、HTML 和参数说明。
 
 ## 与 MetaTrader 5 交换 K 线
 
-PriceGenerator 写入 UTF-8 逗号分隔文件，表头为
-`datetime,open,high,low,close,volume`，时间戳采用 ISO 8601 UTC，有限数值使用
-小数点。从经纪商导入数据时，请先显式转换格式，并为无时区信息的时间戳指定
-源时区。保留交易时段间隔，并按已知周期验证。
-[规范 OHLCV 与 CSV 约定](https://fuzzy-technologies.com/PriceGenerator/zh-CN/reference/#csv)
+CSV 使用 UTF-8 编码，表头为 `datetime,open,high,low,close,volume`。时间按 ISO 8601 记录，使用 UTC。字段以逗号分隔，小数点用英文句点。若券商导出的时间未注明时区，导入前请指定原始时区。保留休市造成的间隔。[CSV 格式说明](https://fuzzy-technologies.com/PriceGenerator/zh-CN/reference/#csv)
 
-通过 `CustomRatesReplace` 将数据导入 MT5 自定义品种时，适配器需要开盘时间
-对齐至 M1 的分钟 K 线。可按上例直接生成 M1。MQL5 的 `datetime` 使用从
-1970 年起算的整秒。转换前应检查范围及对齐。如果测试将合成整数 `volume` 作为报价更新次数的
-替代值，可将其映射到 `tick_volume`。`real_volume` 和以点为单位的点差
-需要独立来源。将带小数的资产成交量映射到整数栏位前，应先明确计量单位。
-记录按品种小数位数进行价格舍入的规则，转换后检查 OHLC 关系。使用单独的自定义
-品种，并限定历史替换区间。
-[CustomRatesReplace](https://www.mql5.com/zh/docs/customsymbols/customratesreplace) · [MqlRates](https://www.mql5.com/zh/docs/constants/structures/mqlrates) · [MQL5 datetime](https://www.mql5.com/zh/docs/basis/types/integer/datetime)
+使用 `CustomRatesReplace` 导入时，请在 MT5 中新建自定义品种，并限定要替换的历史区间。按本例直接生成 1 分钟 K 线（M1），每根的开盘时间都应落在整分钟。MQL5 的 `datetime` 以自 1970 年起经过的秒数表示时间，转换前请检查日期范围和分钟对齐情况。
 
-本示例验证 Python 端的 CSV。终端导入、K 线往返校验和策略测试器设置需要
-单独做集成验证。真实逐笔模式需要独立的逐笔历史数据。
-[MQL5 自定义品种历史指南](https://www.mql5.com/zh/book/advanced/custom_symbols/custom_symbols_rates)
+将价格舍入到该品种规定的小数位数后，再检查开盘价和收盘价是否都落在最低价与最高价之间。点差以点为单位另行指定。如果测试只需要一个代表报价活跃程度的数，可将模拟的整数成交量填入 `tick_volume`。`real_volume` 应取自实际成交记录。将带小数的资产数量写入整数字段前，先确定计量单位。[MqlRates 结构](https://www.mql5.com/zh/docs/constants/structures/mqlrates) · [datetime 类型](https://www.mql5.com/zh/docs/basis/types/integer/datetime)
+
+导入后从终端导出几根 K 线，核对时间、价格和成交量。要使用基于真实报价的逐笔回测模式，还需要相应的历史逐笔数据。[CustomRatesReplace](https://www.mql5.com/zh/docs/customsymbols/customratesreplace) · [自定义品种的历史行情](https://www.mql5.com/zh/book/advanced/custom_symbols/custom_symbols_rates)
 
 [English](../en/quick-start.md) · [Русский](../ru/quick-start.md)
