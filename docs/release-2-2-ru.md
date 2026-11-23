@@ -1,6 +1,17 @@
-# PriceGenerator 2.2.0
+---
+layout: default
+lang: ru
+route: release-2-2
+title: "PriceGenerator 2.2.1"
+permalink: /ru/release-2-2/
+redirect_from:
+  - /docs/release-2-2-ru.html
+---
+# PriceGenerator 2.2.1
 
-[English](release-2-2.md) · [简体中文](release-2-2-zh-CN.md)
+[Пакет 2.2.1 на PyPI](https://pypi.org/project/pricegenerator/2.2.1/)
+
+В 2.2.1 появился фирменный сайт на трёх языках, а ссылки из описания пакета ведут прямо в руководства. Примеры ниже используют модель свечей серии 2.2.
 
 PriceGenerator строит синтетические свечи для тестирования торговых систем.
 В 2.2 можно сравнить сгенерированный ряд с рыночной историей и увидеть,
@@ -26,7 +37,7 @@ PriceGenerator строит синтетические свечи для тес�
 движения цен в каждом прогоне были свои. Свечи и объём показывают один
 прогон, а три линии собирают результаты всех 32 прогонов по часам.
 
-![Один прогон со свечами и объёмом и три линии по 32 прогонам](assets/pricegenerator-2-2-experiment-quantiles.svg)
+![Один прогон со свечами и объёмом и три линии по 32 прогонам](https://fuzzy-technologies.com/PriceGenerator/docs/assets/pricegenerator-2-2-experiment-quantiles.svg)
 
 Возьмём последний час. У нас есть 32 цены закрытия. Сортируем их от
 меньшей к большей. Фиолетовая линия показывает середину ряда — **101,27**.
@@ -37,11 +48,11 @@ PriceGenerator строит синтетические свечи для тес�
 
 ## Попробовать
 
-Из окружения с установленным PriceGenerator 2.2 сгенерируйте 240 часовых
+Из окружения с установленным PriceGenerator 2.2.1 сгенерируйте 240 часовых
 свечей и откройте получившийся HTML в браузере. График работает офлайн.
 
 ```sh
-python -m pip install pricegenerator==2.2.0
+python -m pip install pricegenerator==2.2.1
 pricegenerator generate --seed 42 --horizon 240 --start 2025-01-06T00:00:00Z --timeframe-seconds 3600 --output candles.csv
 pricegenerator chart candles.csv --output candles.html --analysis --no-view
 ```
@@ -58,9 +69,11 @@ pricegenerator chart candles.csv --output candles.html --analysis --no-view
 включает светлую тему, а **Export PNG** сохраняет выбранный вид. Под графиком
 есть краткая сводка. Полный отчёт раскрывается по кнопке **Detailed statistics**.
 
-![Офлайн-график свечей и объёмов с включёнными полосами Боллинджера и средними за 50 и 200 свечей](assets/pricegenerator-chart-analysis.webp)
+![Офлайн-график свечей и объёмов с включёнными полосами Боллинджера и средними за 50 и 200 свечей](https://fuzzy-technologies.com/PriceGenerator/docs/assets/pricegenerator-chart-analysis.webp)
 
-[Полный пример эксперимента](examples/experiment-bundle.md) ·
-[Сравнение двух CSV](reference-comparison.md) ·
-[Переход с 1.4.93](site/content/ru/migrate-to-2-1.md) ·
-[Технические результаты проверки](evidence/pricegenerator-2-2-experiment.md)
+[Полный пример эксперимента](https://fuzzy-technologies.com/PriceGenerator/ru/experiments/#bundle) ·
+[Сравнение двух CSV](https://fuzzy-technologies.com/PriceGenerator/ru/experiments/#compare) ·
+[Переход с 1.4.93](https://fuzzy-technologies.com/PriceGenerator/ru/migration/) ·
+[Технические результаты проверки](https://fuzzy-technologies.com/PriceGenerator/ru/experiments/#bundle)
+
+[English](https://fuzzy-technologies.com/PriceGenerator/en/release-2-2/) · [简体中文](https://fuzzy-technologies.com/PriceGenerator/zh-CN/release-2-2/)

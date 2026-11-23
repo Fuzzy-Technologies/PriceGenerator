@@ -1,6 +1,13 @@
+---
+layout: default
+lang: zh-CN
+route: migration
+title: "迁移到 PriceGenerator 2.1"
+permalink: /zh-CN/migration/
+redirect_from:
+  - /docs/site/content/zh-CN/migrate-to-2-1.html
+---
 # 迁移到 PriceGenerator 2.1
-
-[English](../en/migrate-to-2-1.md) · [Русский](../ru/migrate-to-2-1.md)
 
 | 版本     | 用途                                                                                |
 | -------- | ----------------------------------------------------------------------------------- |
@@ -16,7 +23,7 @@ CPython 3.10–3.15 环境。使用 `GenerationConfig` 和 `Generate(config)`
 运行 `validate` 或 `chart` 前，请将原文件转换为采用 UTC 时间的标准
 OHLCV 格式，表头为 `datetime,open,high,low,close,volume`。
 旧种子属于旧模型。请为 v2 样例保存新的清单。
-[数据约定](../../../data-contract.md) · [API 与图表迁移](../../../chart-migration.md)
+[数据约定](https://fuzzy-technologies.com/PriceGenerator/zh-CN/reference/#csv) · [API 与图表迁移](https://fuzzy-technologies.com/PriceGenerator/zh-CN/reference/#charts)
 
 ## 从 v2.0.0 测试版迁移
 
@@ -25,11 +32,11 @@ OHLCV 格式，表头为 `datetime,open,high,low,close,volume`。
 核心安装支持独立的 SVG 文件和可离线使用的交互式 HTML。自动化运行时，
 CLI 使用 `--no-view`，Python 使用 `view=False`。导出 PNG 或 JPEG
 需要安装与软件包版本匹配的 `export` 扩展。
-[模型假设与局限](../../../model-regime-v2.md)
+[模型假设与局限](https://fuzzy-technologies.com/PriceGenerator/zh-CN/scenario-guide/)
 
 ## 验证固定种子的样例
 
-从 [GitHub 预发布页面](release-2-1.md) 下载并安装 2.1，
+从 [GitHub 预发布页面](https://fuzzy-technologies.com/PriceGenerator/zh-CN/release-2-1/) 下载并安装 2.1，
 然后在新的输出目录中运行以下命令。
 
 ```sh
@@ -42,7 +49,9 @@ python -I -m pricegenerator chart prices.csv --output chart.svg --no-view
 
 验证应确认全部 240 行数据有效。在清单记录的环境中，
 `prices.csv` 与 `replay.csv` 逐字节一致。
-[CLI 动画示例](../../../examples/cli-demo.md) 使用的是另一组 2.0.0 样例数据。
+[CLI 动画示例](https://fuzzy-technologies.com/PriceGenerator/zh-CN/quick-start/) 使用的是另一组 2.0.0 样例数据。
 配套说明记录了命令、导出参数和复现步骤。
 
 在 HTML 命令中加上 `--analysis` 即可显示指标按钮。用浏览器打开文件并试试 **Bollinger bands**。Python 对应的参数为 `analysis=True`。
+
+[English](../en/migrate-to-2-1.md) · [Русский](../ru/migrate-to-2-1.md)

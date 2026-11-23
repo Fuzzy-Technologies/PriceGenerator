@@ -1,6 +1,13 @@
+---
+layout: default
+lang: ru
+route: release-2-1
+title: "PriceGenerator 2.1. Предварительный выпуск"
+permalink: /ru/release-2-1/
+redirect_from:
+  - /docs/site/content/ru/release-2-1.html
+---
 # PriceGenerator 2.1. Предварительный выпуск
-
-[English](../en/release-2-1.md) · [简体中文](../zh-CN/release-2-1.md)
 
 - Моделирование Монте-Карло с воспроизведением траекторий, сводкой по просадкам и графиками квантилей.
 - Дополнительная диагностика рыночных режимов по Мамдани с выводом сработавших правил FuzzyRoutines.
@@ -8,4 +15,6 @@
 - Примеры на трёх языках, численные проверки модели и проверка на отдельном отрезке истории BTC/USD.
 
 [Предварительный выпуск на GitHub и ZIP](https://github.com/Fuzzy-Technologies/PriceGenerator/releases/tag/v2.1.0) ·
-[Переход на 2.1](migrate-to-2-1.md)
+[Переход на 2.1](https://fuzzy-technologies.com/PriceGenerator/ru/migration/)
+
+[English](../en/release-2-1.md) · [简体中文](../zh-CN/release-2-1.md)

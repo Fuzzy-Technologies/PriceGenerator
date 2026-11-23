@@ -1,6 +1,13 @@
+---
+layout: default
+lang: en
+route: migration
+title: "Migrate to PriceGenerator 2.1"
+permalink: /en/migration/
+redirect_from:
+  - /docs/site/content/en/migrate-to-2-1.html
+---
 # Migrate to PriceGenerator 2.1
-
-[Русский](../ru/migrate-to-2-1.md) · [简体中文](../zh-CN/migrate-to-2-1.md)
 
 | Version  | Role                                                                                  |
 | -------- | ------------------------------------------------------------------------------------- |
@@ -17,7 +24,7 @@ package. Replace the mutable generator with `GenerationConfig` and
 Convert existing files to canonical UTC OHLCV with the header
 `datetime,open,high,low,close,volume` before calling `validate` or `chart`.
 An old seed belongs to the old model. Capture a new manifest for the v2 fixture.
-[Data contract](../../../data-contract.md) · [API and chart migration](../../../chart-migration.md)
+[Data contract](https://fuzzy-technologies.com/PriceGenerator/en/reference/#csv) · [API and chart migration](https://fuzzy-technologies.com/PriceGenerator/en/reference/#charts)
 
 ## Moving a v2.0.0 test project
 
@@ -26,11 +33,11 @@ When evaluating 2.1, regenerate a fixture from the same configuration in a
 clean installation and compare the OHLCV fingerprints. Check renderer outputs
 separately. Core exports standalone SVG and offline interactive HTML.
 Use `--no-view` for CLI automation or `view=False` from Python. PNG and JPEG
-require the matching `export` extra. [Model assumptions and limits](../../../model-regime-v2.md)
+require the matching `export` extra. [Model assumptions and limits](https://fuzzy-technologies.com/PriceGenerator/en/scenario-guide/)
 
 ## Check a seeded fixture
 
-Install the 2.1 archive from the [GitHub pre-release](release-2-1.md),
+Install the 2.1 archive from the [GitHub pre-release](https://fuzzy-technologies.com/PriceGenerator/en/release-2-1/),
 then run the commands in a fresh output directory.
 
 ```sh
@@ -43,7 +50,9 @@ python -I -m pricegenerator chart prices.csv --output chart.svg --no-view
 
 Validation should report 240 valid rows. Under the recorded environment,
 `prices.csv` and `replay.csv` match byte for byte. The
-[animated CLI example](../../../examples/cli-demo.md) uses a separate 2.0.0
+[animated CLI example](https://fuzzy-technologies.com/PriceGenerator/en/quick-start/) uses a separate 2.0.0
 fixture. Its transcript records the command, export and reproduction steps.
 
 Add `--analysis` to the HTML command to see indicator buttons. Open the file in a browser and try **Bollinger bands**. In Python, pass `analysis=True`.
+
+[Русский](../ru/migrate-to-2-1.md) · [简体中文](../zh-CN/migrate-to-2-1.md)
