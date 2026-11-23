@@ -1,29 +1,40 @@
 # PriceGenerator
 
-![PriceGenerator by Fuzzy Technologies. Synthetic market data generator.](https://raw.githubusercontent.com/Fuzzy-Technologies/PriceGenerator/develop/docs/assets/pricegenerator-product-card.webp)
+[English](https://fuzzy-technologies.com/PriceGenerator/) · [Русский](https://fuzzy-technologies.com/PriceGenerator/ru/) · [简体中文](https://fuzzy-technologies.com/PriceGenerator/zh-CN/) · [Quick start](https://fuzzy-technologies.com/PriceGenerator/en/quick-start/)
 
-[English guide](docs/site/content/en/scenario-guide.md) ·
-[Русский](docs/site/content/ru/scenario-guide.md) ·
-[简体中文](docs/site/content/zh-CN/scenario-guide.md) ·
-[What's new in 2.2](docs/release-2-2.md)
 
 Reproducible synthetic OHLCV scenarios for trading-system tests and quantitative
 research. The v2 API separates generation, validation, diagnostics, CSV, replay
 and charts. It produces synthetic test data; it does not forecast markets or
 establish that a strategy is profitable.
 
+The [English product site](https://fuzzy-technologies.com/PriceGenerator/) has the quick start, model guide and market examples.
+
+## What can I try?
+
+- **Test a CSV importer.** Generate 240 candles with a fixed seed, save the manifest and replay the same file after a code change.
+- **Check a chart or indicator.** Open the offline chart with `--analysis` and turn Bollinger bands or SMA 50 / 200 on and off on the same candles.
+- **Stress-test a trading rule.** Run the same setup with many seeds and feed each price path into your own backtester. The ensemble report already gives the range of closing prices and drawdowns of the simulated price.
+- **Compare with a real market.** Take a regular window of hourly BTC/USD, set parameters on an earlier window, then compare volatility and volume on later data. The [Bitstamp example](https://fuzzy-technologies.com/PriceGenerator/en/experiments/#bitstamp) shows which statistics matched. The default scenario starts at 100 and has no instrument attached.
+
+On hourly Bitstamp BTC/USD, all 16 fitted runs met the stated tolerances for return volatility and mean volume on the following month. Fitted volume stayed constant, while observed volume varied with the size of price movements.
+
 ## Install
 
-PriceGenerator 2.2 supports CPython 3.10–3.15.
+[PriceGenerator 2.2.1 on PyPI](https://pypi.org/project/pricegenerator/2.2.1/)
+
+PriceGenerator 2.2.1 supports CPython 3.10–3.15.
 
 ```bash
-python -m pip install pricegenerator==2.2.0
-python -m pip install 'pricegenerator[export]==2.2.0'  # Optional PNG/JPEG.
+python -m pip install pricegenerator==2.2.1
+python -m pip install 'pricegenerator[export]==2.2.1'  # Optional PNG/JPEG.
 ```
 
 To work from a source checkout, run `python -m pip install .`.
-See [what's new in 2.2](docs/release-2-2.md) or
+See [what's new in 2.2.1](https://fuzzy-technologies.com/PriceGenerator/en/release-2-2/) or
 [find earlier builds on GitHub](https://github.com/Fuzzy-Technologies/PriceGenerator/releases).
+
+![PriceGenerator by Fuzzy Technologies. Synthetic market data generator.](https://fuzzy-technologies.com/PriceGenerator/docs/assets/pricegenerator-product-card.webp)
 
 ## Generate and save
 
@@ -32,13 +43,13 @@ from pricegenerator import Generate, GenerationConfig, ReadCSV, WriteCSV
 
 config = GenerationConfig(seed=0, horizon=240, volatility=0.01)
 prices = Generate(config)
-WriteCSV(prices, "prices.csv")
+WriteCSV(prices, "prices.csv", volume_as_count=True)
 restored = ReadCSV("prices.csv")
 ```
 
 `GenerationConfig` is immutable. Defaults include a fixed UTC start and the
 versioned `regime_v3` model with whole synthetic volume counts. Seed zero is valid. Generation owns a private RNG
-and leaves process-global random state alone. See [model semantics and the 1.4.93 comparison](docs/model-regime-v2.md).
+and leaves process-global random state alone. See [model semantics and the 1.4.93 comparison](https://fuzzy-technologies.com/PriceGenerator/en/scenario-guide/).
 Use `model="regime_v2"` for prior continuous-volume scenarios.
 
 Canonical data has exactly `datetime, open, high, low, close, volume`: UTC
@@ -73,7 +84,7 @@ Use `view=False` in batch jobs. SVG needs an explicit `.svg` destination; PNG an
 JPEG additionally need `[export]`. `analysis=True` explicitly attaches financial
 overlays and diagnostics. `DisplayChart(prices)` embeds HTML in a notebook;
 install `.[notebook]` if the host lacks notebook tooling. Charts contain one
-translucent corporate wordmark in the price panel. See [chart guide](https://github.com/Fuzzy-Technologies/PriceGenerator/blob/v2.0.0/docs/chart-migration.md).
+translucent corporate wordmark in the price panel. See [chart guide](https://fuzzy-technologies.com/PriceGenerator/en/reference/#charts).
 
 ## Command line
 
@@ -97,23 +108,22 @@ Use the wheel or **Box zoom** to focus on an interval. Switch to **Light theme**
 if you prefer, or download the current view with **Export PNG**. The brief
 overview sits below the chart. Expand **Detailed statistics** for the full report.
 
-![Offline candlestick chart with volume, Bollinger Bands and 50- and 200-bar moving averages enabled](https://raw.githubusercontent.com/Fuzzy-Technologies/PriceGenerator/master/docs/assets/pricegenerator-chart-analysis.webp)
+![Offline candlestick chart with volume, Bollinger Bands and 50- and 200-bar moving averages enabled](https://fuzzy-technologies.com/PriceGenerator/docs/assets/pricegenerator-chart-analysis.webp)
 
-Version 2.1 also provides [ensemble generation and exact
-replay](docs/monte-carlo.md) through the CLI and Python, and optional
-[fuzzy regime diagnostics](docs/fuzzy-diagnostics.md) on Python 3.13–3.15.
+Version 2.1 also provides [ensemble generation and exact replay](https://fuzzy-technologies.com/PriceGenerator/en/experiments/#monte-carlo) through the CLI and Python, and optional
+[fuzzy regime diagnostics](https://fuzzy-technologies.com/PriceGenerator/en/reference/#research) on Python 3.13–3.15.
 
 `python -m pricegenerator` exposes the same commands. A JSON `--config` supplies
 all generation parameters; explicit common CLI flags override those fields.
 Unknown fields, nonfinite values, ambiguous times and aliased input/output paths
 fail early. The old mutable class, rendering methods and old CLI flags are
-removed; [migration](https://github.com/Fuzzy-Technologies/PriceGenerator/blob/v2.0.0/docs/chart-migration.md) and [ADR-0010](https://github.com/Fuzzy-Technologies/PriceGenerator/blob/v2.0.0/docs/adr/0010-modern-only-public-api.md)
-record the deliberate break. Historical evidence remains [archived](https://github.com/Fuzzy-Technologies/PriceGenerator/blob/v2.0.0/docs/baseline/README.md).
+removed; [migration](https://fuzzy-technologies.com/PriceGenerator/en/reference/#charts) and [ADR-0010](https://fuzzy-technologies.com/PriceGenerator/en/migration/)
+record the deliberate break. Historical evidence remains [archived](https://fuzzy-technologies.com/PriceGenerator/en/migration/).
 
 ## Run a complete experiment
 
-In 2.2, [compare two OHLCV CSVs](docs/reference-comparison.md) at an explicit
-bar interval, or use the [experiment bundle](docs/examples/experiment-bundle.md)
+In 2.2, [compare two OHLCV CSVs](https://fuzzy-technologies.com/PriceGenerator/en/experiments/#compare) at an explicit
+bar interval, or use the [experiment bundle](https://fuzzy-technologies.com/PriceGenerator/en/experiments/#bundle)
 to generate two seeded fixtures. The example verifies single-path and ensemble
 replay and records a comparison, an offline quantile chart and checksums.
 
@@ -124,9 +134,8 @@ python -m pip install -r requirements.txt
 python -m pytest -q tests
 ```
 
-Start with [development commands](https://github.com/Fuzzy-Technologies/PriceGenerator/blob/v2.0.0/docs/development.md), [packaging](https://github.com/Fuzzy-Technologies/PriceGenerator/blob/v2.0.0/docs/packaging.md)
-and the [ADRs](https://github.com/Fuzzy-Technologies/PriceGenerator/blob/v2.0.0/docs/adr/README.md). **AI contributors: read [AGENTS.md](https://github.com/Fuzzy-Technologies/PriceGenerator/blob/v2.0.0/AGENTS.md)
-before changing code**, then follow the linked protocol and style contract.
+Start with [development commands](https://fuzzy-technologies.com/PriceGenerator/en/reference/#development), [packaging](https://fuzzy-technologies.com/PriceGenerator/en/reference/#packaging)
+and the [model validation guide](https://fuzzy-technologies.com/PriceGenerator/en/reference/#validation). Read `AGENTS.md` in your checkout before changing code, then follow the project protocol and style contract.
 Research helpers remain experimental and module-qualified under
 `pricegenerator.calibration`, `pricegenerator.evaluation`,
 `pricegenerator.extended_models` and `pricegenerator.registry`; they are outside
@@ -135,4 +144,4 @@ Large-data adapters are `GenerateChunks` and `WriteCSVChunks`.
 
 [Repository](https://github.com/Fuzzy-Technologies/PriceGenerator) ·
 [Issues](https://github.com/Fuzzy-Technologies/PriceGenerator/issues) ·
-[Apache-2.0 license](https://github.com/Fuzzy-Technologies/PriceGenerator/blob/v2.0.0/LICENSE) · [Русский](README_RU.md)
+[Apache-2.0 license](https://github.com/Fuzzy-Technologies/PriceGenerator/blob/v2.2.1/LICENSE) · [Русский](https://fuzzy-technologies.com/PriceGenerator/ru/)

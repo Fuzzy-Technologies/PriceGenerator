@@ -1,17 +1,24 @@
+---
+layout: default
+lang: ru
+route: quick-start
+title: "Первый прогон PriceGenerator"
+permalink: /ru/quick-start/
+redirect_from:
+  - /docs/site/content/ru/quick-start.html
+---
 # Первый прогон PriceGenerator
 
-![PriceGenerator от Fuzzy Technologies. Генератор синтетических рыночных данных.](../../../assets/pricegenerator-product-card.webp)
-
-[English](../en/quick-start.md) · [简体中文](../zh-CN/quick-start.md)
-
-[Модель и границы применимости](scenario-guide.md) · [Обзор 2.1](release-2-1.md)
+[Модель и границы применимости](https://fuzzy-technologies.com/PriceGenerator/ru/scenario-guide/) · [Что нового в 2.2.1](https://fuzzy-technologies.com/PriceGenerator/ru/release-2-2/)
 
 Сгенерируем 240 минутных баров, повторим прогон по манифесту и сохраним
 два графика. Такой ряд можно использовать в тестах импортёра, расчёта
 индикаторов или отчётности. Временную сетку задаёт конфигурация, а цены
 и объём рассчитывает модель.
 
-## Установка PriceGenerator 2.2
+## Установка PriceGenerator 2.2.1
+
+[PriceGenerator 2.2.1 на PyPI](https://pypi.org/project/pricegenerator/2.2.1/)
 
 Используйте CPython 3.10–3.15 и отдельное окружение.
 
@@ -21,10 +28,10 @@ python -m venv .venv
 
 Активируйте окружение командой `. .venv/bin/activate` в POSIX-совместимой
 оболочке или `.\.venv\Scripts\Activate.ps1` в Windows PowerShell. Проверка
-версии должна вывести `2.2.0`.
+версии должна вывести `2.2.1`.
 
 ```sh
-python -m pip install pricegenerator==2.2.0
+python -m pip install pricegenerator==2.2.1
 python -m pip check
 python -I -c "from importlib.metadata import version; print(version('pricegenerator'))"
 mkdir pg-example
@@ -84,7 +91,7 @@ manifest = CreateManifest(config, prices)
 if Fingerprint(Replay(manifest)) != Fingerprint(prices):
     raise RuntimeError("Replay changed the canonical OHLCV fingerprint")
 
-WriteCSV(prices, "python-prices.csv")
+WriteCSV(prices, "python-prices.csv", volume_as_count=True)
 Chart(prices, "python-chart.svg", view=False)
 Chart(prices, "python-analysis.html", analysis=True, view=False)
 print(manifest["fingerprint"])
@@ -107,10 +114,10 @@ print(manifest["fingerprint"])
 В примерах цены и индикаторов из репозитория используется другой ряд.
 Скрипт генерирует свечи с фиксированным `seed`, затем специально добавляет
 разрыв торговой сессии и бары с нулевым объёмом. Чтобы собрать SVG, HTML
-и описание прогона, выполните из корня репозитория на теге `v2.0.0`
+и описание прогона, выполните из корня репозитория на теге `v2.2.1`
 `python -m tools.chart_examples --output-dir pg-figures --html`.
-[Скрипт](https://github.com/Fuzzy-Technologies/PriceGenerator/blob/v2.0.0/tools/chart_examples.py) ·
-[Параметры примера](https://github.com/Fuzzy-Technologies/PriceGenerator/blob/v2.0.0/docs/examples/modern-market.md)
+[Скрипт](https://github.com/Fuzzy-Technologies/PriceGenerator/blob/v2.2.1/tools/chart_examples.py) ·
+[Параметры примера](https://fuzzy-technologies.com/PriceGenerator/ru/reference/#charts)
 
 ## Обмен барами с MetaTrader 5
 
@@ -120,7 +127,7 @@ PriceGenerator пишет CSV в UTF-8 с заголовком
 Перед импортом истории брокера приведите её к этому формату. Если
 в исходных метках нет смещения, укажите часовой пояс. Сохраняйте разрывы
 между торговыми сессиями и проверяйте пропуски с учётом интервала ряда.
-[Формат OHLCV и CSV](https://github.com/Fuzzy-Technologies/PriceGenerator/blob/v2.0.0/docs/data-contract.md)
+[Формат OHLCV и CSV](https://fuzzy-technologies.com/PriceGenerator/ru/reference/#csv)
 
 Для загрузки в пользовательский символ через `CustomRatesReplace` нужны
 минутные бары с метками открытия, кратными минуте. Генерируйте M1 напрямую,
@@ -133,11 +140,13 @@ PriceGenerator пишет CSV в UTF-8 с заголовком
 в пунктах. Округлите цены до разрядности символа и ещё раз проверьте
 соотношение `open`, `high`, `low` и `close`. Используйте отдельный
 пользовательский символ и ограничьте период замены баров.
-[CustomRatesReplace](https://www.mql5.com/en/docs/customsymbols/customratesreplace) ·
-[MqlRates](https://www.mql5.com/en/docs/constants/structures/mqlrates) ·
-[Тип datetime](https://www.mql5.com/en/docs/basis/types/integer/datetime)
+[CustomRatesReplace](https://www.mql5.com/ru/docs/customsymbols/customratesreplace) ·
+[MqlRates](https://www.mql5.com/ru/docs/constants/structures/mqlrates) ·
+[Тип datetime](https://www.mql5.com/ru/docs/basis/types/integer/datetime)
 
 Пример проверяет CSV в Python. Импорт в терминал, сверку после обратной
 выгрузки и настройки тестера проверяйте отдельно. Для теста в режиме
 реальных тиков загрузите отдельную тиковую историю.
-[История пользовательских символов в MQL5](https://www.mql5.com/en/book/advanced/custom_symbols/custom_symbols_rates)
+[История пользовательских символов в MQL5](https://www.mql5.com/ru/book/advanced/custom_symbols/custom_symbols_rates)
+
+[English](../en/quick-start.md) · [简体中文](../zh-CN/quick-start.md)

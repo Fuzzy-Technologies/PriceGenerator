@@ -37,8 +37,8 @@ dependencies = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/Fuzzy-Technologies/PriceGenerator"
-Documentation = "https://github.com/Fuzzy-Technologies/PriceGenerator/blob/develop/README.md"
+Homepage = "https://fuzzy-technologies.com/PriceGenerator/"
+Documentation = "https://fuzzy-technologies.com/PriceGenerator/"
 Repository = "https://github.com/Fuzzy-Technologies/PriceGenerator"
 Issues = "https://github.com/Fuzzy-Technologies/PriceGenerator/issues"
 

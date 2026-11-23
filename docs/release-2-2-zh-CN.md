@@ -1,6 +1,17 @@
-# PriceGenerator 2.2.0
+---
+layout: default
+lang: zh-CN
+route: release-2-2
+title: "PriceGenerator 2.2.1"
+permalink: /zh-CN/release-2-2/
+redirect_from:
+  - /docs/release-2-2-zh-CN.html
+---
+# PriceGenerator 2.2.1
 
-[English](release-2-2.md) · [Русский](release-2-2-ru.md)
+[PyPI 上的 2.2.1 发行版](https://pypi.org/project/pricegenerator/2.2.1/)
+
+2.2.1 提供统一风格的中、英、俄三语网站，并修复软件包描述中的文档链接。以下示例使用 2.2 系列的 K 线模型。
 
 PriceGenerator 为交易系统测试生成可复现的合成 K 线。2.2 可以比较两份同周期
 的 OHLCV 数据，查看波动率、回撤和成交量等指标的差异。你也可以把配置、数据、
@@ -11,16 +22,18 @@ PriceGenerator 为交易系统测试生成可复现的合成 K 线。2.2 可以�
 - **查看不同模拟结果。** 蜡烛和成交量来自一次模拟，三条分位数曲线汇总同一时刻
   32 次模拟的收盘价。
 
-![一条模拟价格轨迹及 32 次模拟的分位数](assets/pricegenerator-2-2-experiment-quantiles.svg)
+![一条模拟价格轨迹及 32 次模拟的分位数](https://fuzzy-technologies.com/PriceGenerator/docs/assets/pricegenerator-2-2-experiment-quantiles.svg)
+
+在最后一个小时，将 32 个收盘价排列后，中位数为 **101.27**，第 5 和第 95 百分位数分别为 **75.01** 和 **150.46**。每个小时独立计算，一条路径可以穿过边界。
 
 默认生成整数形式的合成活跃度计数。导入的资产成交量保留原有精度。
 
 ## 试用交互图表
 
-安装 PriceGenerator 2.2 后，生成 240 根小时 K 线，然后用浏览器打开本地 HTML。
+安装 PriceGenerator 2.2.1 后，生成 240 根小时 K 线，然后用浏览器打开本地 HTML。
 
 ```sh
-python -m pip install pricegenerator==2.2.0
+python -m pip install pricegenerator==2.2.1
 pricegenerator generate --seed 42 --horizon 240 --start 2025-01-06T00:00:00Z --timeframe-seconds 3600 --output candles.csv
 pricegenerator chart candles.csv --output candles.html --analysis --no-view
 ```
@@ -36,6 +49,8 @@ pricegenerator chart candles.csv --output candles.html --analysis --no-view
 **Export PNG** 保存当前视图。图表下方显示简要概览，展开
 **Detailed statistics** 可查看完整报告。
 
-![离线 K 线和成交量图，已开启布林带及 50 和 200 周期均线](assets/pricegenerator-chart-analysis.webp)
+![离线 K 线和成交量图，已开启布林带及 50 和 200 周期均线](https://fuzzy-technologies.com/PriceGenerator/docs/assets/pricegenerator-chart-analysis.webp)
 
-[快速入门](site/content/zh-CN/quick-start.md) · [完整实验](examples/experiment-bundle.md)
+[快速入门](https://fuzzy-technologies.com/PriceGenerator/zh-CN/quick-start/) · [完整实验](https://fuzzy-technologies.com/PriceGenerator/zh-CN/experiments/#bundle)
+
+[English](https://fuzzy-technologies.com/PriceGenerator/en/release-2-2/) · [Русский](https://fuzzy-technologies.com/PriceGenerator/ru/release-2-2/)
