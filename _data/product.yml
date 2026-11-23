@@ -1,0 +1,93 @@
+en:
+  name: English
+  home: /
+  prefix: /en/
+  company_url: https://fuzzy-technologies.com/
+  skip: Skip to content
+  nav: Product navigation
+  product: Overview
+  start: Quick start
+  model: Price and volume
+  experiments: Experiments
+  release: Release 2.2.1
+  languages: Language
+  reference: Reference
+  light: Light theme
+  dark: Dark theme
+  headline: Synthetic prices for testing trading software
+  intro: Generate a candle series you can replay, inspect it on an offline chart or run the same assumptions across many different price histories.
+  first_chart: Generate your first chart
+  compare_paths: Explore 32 price paths
+  try: What would you like to test?
+  command_text: Create 240 hourly candles and open a chart with indicator controls. Try Bollinger bands or SMA 50 / 200.
+  terminal: Terminal
+  copy: Copy
+  copied: Commands copied.
+  chart_alt: Candles and volume with Bollinger bands and 50- and 200-bar moving averages.
+  cases:
+    - {"title": "Test a CSV importer", "text": "Keep a fixed input file and replay it after changing your parser.", "path": "quick-start/", "link": "Generate and replay"}
+    - {"title": "Inspect an indicator", "text": "Toggle overlays on the same candles and check their alignment.", "path": "reference/#charts", "link": "Open chart controls"}
+    - {"title": "Stress-test a trading rule", "text": "Feed several simulated price paths into your own backtester and compare how the rule behaves.", "path": "experiments/#monte-carlo", "link": "Run Monte Carlo"}
+    - {"title": "Compare with a market", "text": "See which properties of hourly Bitstamp BTC/USD a fitted scenario reproduced on an unseen month.", "path": "experiments/#bitstamp", "link": "Read the market comparison"}
+ru:
+  name: Русский
+  home: /ru/
+  prefix: /ru/
+  company_url: https://fuzzy-technologies.com/ru/
+  skip: К содержанию
+  nav: Разделы проекта
+  product: О проекте
+  start: Быстрый старт
+  model: Цены и объёмы
+  experiments: Эксперименты
+  release: Релиз 2.2.1
+  languages: Язык
+  reference: Справочник
+  light: Светлая тема
+  dark: Тёмная тема
+  headline: Синтетические котировки для тестирования торговых программ
+  intro: Создайте ряд свечей, который можно повторить, откройте его на офлайн-графике или проверьте, как по-разному может пойти цена при одних и тех же настройках.
+  first_chart: Построить первый график
+  compare_paths: Посмотреть 32 траектории
+  try: Что вы хотите проверить?
+  command_text: Три команды создадут 240 часовых свечей и откроют график с переключателями индикаторов. Попробуйте полосы Боллинджера или SMA 50 / 200.
+  terminal: Терминал
+  copy: Копировать
+  copied: Команды скопированы.
+  chart_alt: Свечи и объёмы с полосами Боллинджера и скользящими средними за 50 и 200 баров.
+  cases:
+    - {"title": "Проверить импорт котировок", "text": "Сохраните один CSV и воспроизведите его после изменения парсера.", "path": "quick-start/", "link": "Сгенерировать и повторить"}
+    - {"title": "Проверить индикатор", "text": "Включайте линии на одних и тех же свечах и смотрите, с какого бара появляются значения.", "path": "reference/#charts", "link": "Открыть инструкцию"}
+    - {"title": "Испытать торговое правило", "text": "Прогоните свою стратегию на разных ценовых траекториях в собственном тестере.", "path": "experiments/#monte-carlo", "link": "Запустить Монте-Карло"}
+    - {"title": "Сравнить с реальным рынком", "text": "Посмотрите на часовых данных BTC/USD с Bitstamp, какие свойства следующего месяца воспроизвёл сценарий.", "path": "experiments/#bitstamp", "link": "Разобрать пример BTC/USD"}
+zh-CN:
+  name: 简体中文
+  home: /zh-CN/
+  prefix: /zh-CN/
+  company_url: https://fuzzy-technologies.com/zh-cn/
+  skip: 跳到正文
+  nav: 项目导航
+  product: 项目概览
+  start: 快速入门
+  model: 价格与成交量
+  experiments: 实验
+  release: 2.2.1 版本说明
+  languages: 语言
+  reference: 使用手册
+  light: 浅色主题
+  dark: 深色主题
+  headline: 为交易软件测试生成合成行情
+  intro: 生成可以复现的 K 线序列，在离线图表中查看，或保持参数不变，比较多条不同的价格路径。
+  first_chart: 生成第一张图
+  compare_paths: 比较 32 条价格路径
+  try: 想测试什么？
+  command_text: 用以下三条命令生成 240 根小时 K 线并打开带指标开关的图表。试试布林带或 50、200 周期移动平均线。
+  terminal: 终端
+  copy: 复制
+  copied: 已复制命令。
+  chart_alt: 含成交量、布林带及 50、200 周期均线的 K 线图。
+  cases:
+    - {"title": "测试 CSV 导入程序", "text": "保存固定样本。修改解析程序后，重放同一份数据。", "path": "quick-start/", "link": "生成并重放"}
+    - {"title": "检查技术指标", "text": "在同一组 K 线上切换指标，检查曲线从哪根 K 线开始出现。", "path": "reference/#charts", "link": "查看图表操作"}
+    - {"title": "对交易规则做压力测试", "text": "将多条模拟价格路径分别输入自己的回测程序，比较规则的表现。", "path": "experiments/#monte-carlo", "link": "运行蒙特卡洛模拟"}
+    - {"title": "与真实市场比较", "text": "查看 Bitstamp 的 BTC/USD 小时线实例，了解哪些统计特征能够在下一月份重现。", "path": "experiments/#bitstamp", "link": "阅读 BTC/USD 实验"}

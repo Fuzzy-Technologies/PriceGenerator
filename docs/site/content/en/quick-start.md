@@ -1,17 +1,24 @@
+---
+layout: default
+lang: en
+route: quick-start
+title: "Reproduce a synthetic OHLCV scenario"
+permalink: /en/quick-start/
+redirect_from:
+  - /docs/site/content/en/quick-start.html
+---
 # Reproduce a synthetic OHLCV scenario
 
-![PriceGenerator by Fuzzy Technologies. Synthetic market data generator.](../../../assets/pricegenerator-product-card.webp)
-
-[Русский](../ru/quick-start.md) · [简体中文](../zh-CN/quick-start.md)
-
-[Scientific guide](scenario-guide.md) · [What's new in 2.1](release-2-1.md)
+[Scientific guide](https://fuzzy-technologies.com/PriceGenerator/en/scenario-guide/) · [What's new in 2.2.1](https://fuzzy-technologies.com/PriceGenerator/en/release-2-2/)
 
 Generate a seeded series, replay it from a manifest, and render it without
 opening a browser. Use this fixture for software tests and controlled
 experiments. Its timestamps are synthetic, and its prices reflect the
 configured model assumptions.
 
-## Install PriceGenerator 2.2
+## Install PriceGenerator 2.2.1
+
+[PriceGenerator 2.2.1 on PyPI](https://pypi.org/project/pricegenerator/2.2.1/)
 
 Use CPython 3.10–3.15 and a fresh environment.
 
@@ -21,10 +28,10 @@ python -m venv .venv
 
 Activate the environment with `. .venv/bin/activate` on POSIX or
 `.\.venv\Scripts\Activate.ps1` in Windows PowerShell. The version check
-should print `2.2.0`.
+should print `2.2.1`.
 
 ```sh
-python -m pip install pricegenerator==2.2.0
+python -m pip install pricegenerator==2.2.1
 python -m pip check
 python -I -c "from importlib.metadata import version; print(version('pricegenerator'))"
 mkdir pg-example
@@ -83,7 +90,7 @@ manifest = CreateManifest(config, prices)
 if Fingerprint(Replay(manifest)) != Fingerprint(prices):
     raise RuntimeError("Replay changed the canonical OHLCV fingerprint")
 
-WriteCSV(prices, "python-prices.csv")
+WriteCSV(prices, "python-prices.csv", volume_as_count=True)
 Chart(prices, "python-chart.svg", view=False)
 Chart(prices, "python-analysis.html", analysis=True, view=False)
 print(manifest["fingerprint"])
@@ -106,7 +113,7 @@ The repository's market and indicator figures use a different fixture. Their
 script starts with a seeded path, then adds a deliberate session gap and
 zero-volume bars. From the tagged checkout root, run
 `python -m tools.chart_examples --output-dir pg-figures --html` to rebuild the
-SVG, HTML and provenance notes. [Figure recipe](https://github.com/Fuzzy-Technologies/PriceGenerator/blob/v2.0.0/tools/chart_examples.py) · [Market figure notes](https://github.com/Fuzzy-Technologies/PriceGenerator/blob/v2.0.0/docs/examples/modern-market.md)
+SVG, HTML and provenance notes. [Figure recipe](https://github.com/Fuzzy-Technologies/PriceGenerator/blob/v2.2.1/tools/chart_examples.py) · [Market figure notes](https://fuzzy-technologies.com/PriceGenerator/en/reference/#charts)
 
 ## Exchange bars with MetaTrader 5
 
@@ -115,7 +122,7 @@ PriceGenerator writes UTF-8 comma-separated rows with the header
 numbers with a decimal point. For imports from a broker, first convert the
 format explicitly and declare the source timezone for naive timestamps.
 Keep session gaps and validate them against the known interval.
-[Canonical data and CSV contract](https://github.com/Fuzzy-Technologies/PriceGenerator/blob/v2.0.0/docs/data-contract.md)
+[Canonical data and CSV contract](https://fuzzy-technologies.com/PriceGenerator/en/reference/#csv)
 
 An adapter that loads a custom MT5 symbol through `CustomRatesReplace` needs
 minute bars aligned to M1 opening times. Generate M1 directly, as above.
@@ -132,3 +139,5 @@ This example verifies the CSV on the Python side. Terminal import, bar
 round-trip checks and strategy-tester settings belong to a separate integration
 test. Real-tick testing requires a separate tick history.
 [MQL5 guide to custom-symbol history](https://www.mql5.com/en/book/advanced/custom_symbols/custom_symbols_rates)
+
+[Русский](../ru/quick-start.md) · [简体中文](../zh-CN/quick-start.md)

@@ -1,0 +1,22 @@
+---
+layout: default
+---
+{% assign ui = site.data.product[page.lang] %}
+<section class="intro">
+  <h1>{{ ui.headline }}</h1>
+  <p class="hero-lead">{{ ui.intro }}</p>
+  <div class="hero-actions"><a class="button-neon" href="{{ ui.prefix | append: 'quick-start/' | relative_url }}">{{ ui.first_chart }} →</a><a class="button-neon" href="{{ ui.prefix | append: 'experiments/' | relative_url }}#monte-carlo">{{ ui.compare_paths }} →</a></div>
+</section>
+<figure class="product-image"><a href="{{ ui.prefix | append: 'quick-start/' | relative_url }}"><img class="project-art" src="{{ '/docs/assets/pricegenerator-product-card.webp' | relative_url }}" width="1774" height="887" alt="PriceGenerator · Fuzzy Technologies"></a></figure>
+<section><h2>{{ ui.try }}</h2>
+  <div class="project-grid cases">{% for task in ui.cases %}
+    <article class="project-card"><h3>{{ task.title }}</h3><p>{{ task.text }}</p><a href="{{ ui.prefix | append: task.path | relative_url }}">{{ task.link }} →</a></article>{% endfor %}</div>
+</section>
+<section><h2>{{ ui.first_chart }}</h2><p>{{ ui.command_text }}</p>
+  <div class="code-block"><div class="code-toolbar"><span>{{ ui.terminal }}</span><button class="copy-button" type="button" data-copy="first-chart-command" hidden>{{ ui.copy }}</button></div>
+  <pre tabindex="0"><code id="first-chart-command">python -m pip install pricegenerator==2.2.1
+python -m pricegenerator generate --seed 42 --horizon 240 --output candles.csv
+python -m pricegenerator chart candles.csv --analysis --output candles.html --view</code></pre></div>
+  <span class="copy-status" role="status" data-copied="{{ ui.copied }}"></span>
+  <figure><a href="{{ '/docs/assets/pricegenerator-chart-analysis.webp' | relative_url }}"><img src="{{ '/docs/assets/pricegenerator-chart-analysis.webp' | relative_url }}" width="1160" height="862" loading="lazy" alt="{{ ui.chart_alt }}"></a><figcaption>{{ ui.chart_alt }}</figcaption></figure>
+</section>

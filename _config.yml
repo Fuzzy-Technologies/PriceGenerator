@@ -1,1 +1,23 @@
-theme: jekyll-theme-cayman
+title: PriceGenerator
+url: https://fuzzy-technologies.com
+baseurl: /PriceGenerator
+lang: en
+markdown: kramdown
+plugins:
+  - jekyll-relative-links
+  - jekyll-redirect-from
+defaults:
+  - scope:
+      path: ""
+    values:
+      layout: default
+exclude:
+  - AGENTS.md
+  - DEVELOPMENT_PROTOCOL.md
+  - PYTHON_CODE_STYLE.md
+  - tests
+  - tools
+  - pricegenerator
+  - requirements
+  - README.md
+  - README_RU.md

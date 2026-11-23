@@ -4,9 +4,9 @@ The [2.0.0 GitHub pre-release](https://github.com/Fuzzy-Technologies/PriceGenera
 records the October verification baseline. Its exact tag remains available for
 historical reproduction. For the GitHub-only 2.1.0 pre-release, verify the
 exact tagged commit with the quality and Canvas gates and test clean
-installations from both distributions in the release ZIP. The first modern
-PyPI release is tracked as 2.2.0 under [Task #109](https://github.com/Fuzzy-Technologies/PriceGenerator/issues/109).
-Verify its exact tag on the final master commit. The release workflow rejects
+installations from both distributions in the release ZIP. [Task #109](https://github.com/Fuzzy-Technologies/PriceGenerator/issues/109) records the first modern PyPI upload.
+The maintainer removed 2.2.0 from PyPI. The corrected package and localized
+guides use 2.2.1. Verify the replacement tag at the final master commit. The release workflow rejects
 PyPI publication of both GitHub pre-releases.
 
 
@@ -72,7 +72,7 @@ project or past releases is unnecessary.
    choose **Run workflow**, select `master`, enter the existing exact version
    tag, and leave **publish** unchecked.
 4. Inspect the successful run's `release-distributions` artifact, `SHA256SUMS`,
-   build/metadata logs, and all four Python verification jobs. Each job installs
+   build/metadata logs, and the verification job for each supported Python version. Each job installs
    the wheel and the sdist into separate temporary environments outside the
    checkout. It exercises modern generation, canonical CSV, manifest replay,
    CLI, SVG, offline HTML, asset hashes/notices, and actual PNG/JPEG rendering.
@@ -90,7 +90,7 @@ project or past releases is unnecessary.
    Trusted Publishing with digital attestations. It has `id-token: write` only;
    build and verification jobs have no publication identity. It never rebuilds
    or uses `skip-existing` to conceal a duplicate upload.
-7. Read back the published [project files](https://pypi.org/project/pricegenerator/#files),
+7. Read back the published [project files](https://pypi.org/project/pricegenerator/2.2.1/#files),
    version, SHA-256 hashes and provenance. Install that exact public version in a
    fresh environment and repeat the modern smoke before declaring release done.
    Record the workflow URL and final artifact hashes in the release evidence.

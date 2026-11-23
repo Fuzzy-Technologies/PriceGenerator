@@ -27,7 +27,7 @@ checksums differ.
 
 ### Verified candidate and outputs
 
-The [Git tag](https://github.com/Fuzzy-Technologies/PriceGenerator/tree/v2.2.0)
+The [Git tag](https://github.com/Fuzzy-Technologies/PriceGenerator/tree/12fe7aaca75f0996fabc6668b2dc43e765cde8da)
 resolves to `31c4df2b1229cdda554224d3fe6f930c94a9f99e`.
 The [release workflow](https://github.com/Fuzzy-Technologies/PriceGenerator/actions/runs/42262311992)
 verified clean wheel and sdist installations on CPython 3.10–3.13 with

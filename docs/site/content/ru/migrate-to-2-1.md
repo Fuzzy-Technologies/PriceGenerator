@@ -1,6 +1,13 @@
+---
+layout: default
+lang: ru
+route: migration
+title: "Переход на PriceGenerator 2.1"
+permalink: /ru/migration/
+redirect_from:
+  - /docs/site/content/ru/migrate-to-2-1.html
+---
 # Переход на PriceGenerator 2.1
-
-[English](../en/migrate-to-2-1.md) · [简体中文](../zh-CN/migrate-to-2-1.md)
 
 | Версия   | Где искать и для чего использовать                                                                                   |
 | -------- | -------------------------------------------------------------------------------------------------------------------- |
@@ -20,8 +27,8 @@
 в UTC с заголовком `datetime,open,high,low,close,volume`. Один и тот же
 `seed` в разных моделях может давать разные ряды. Для нового ряда
 сохраните манифест.
-[Формат OHLCV](../../../data-contract.md) ·
-[Переход на новый API графиков](../../../chart-migration.md)
+[Формат OHLCV](https://fuzzy-technologies.com/PriceGenerator/ru/reference/#csv) ·
+[Переход на новый API графиков](https://fuzzy-technologies.com/PriceGenerator/ru/reference/#charts)
 
 ## Если вы уже пользовались тестовой версией 2.0
 
@@ -31,15 +38,15 @@
 отдельно. HTML и SVG доступны в базовой установке, а для PNG и JPEG нужен
 `[export]`. В автоматических прогонах указывайте `--no-view` в CLI
 или `view=False` в Python.
-[Допущения модели](../../../model-regime-v2.md)
+[Допущения модели](https://fuzzy-technologies.com/PriceGenerator/ru/scenario-guide/)
 
 ## Контрольный прогон с фиксированным seed
 
-Установите пакет из [архива 2.1](release-2-1.md) в отдельное окружение и выполните команды
+Установите пакет из [архива 2.1](https://fuzzy-technologies.com/PriceGenerator/ru/release-2-1/) в отдельное окружение и выполните команды
 в новом каталоге. В быстром старте приведён порядок установки на примере
 тестового тега 2.0.
-[Установка из исходников](../../../../README_RU.md#установка) ·
-[Быстрый старт](quick-start.md)
+[Установка из исходников](https://fuzzy-technologies.com/PriceGenerator/ru/quick-start/) ·
+[Быстрый старт](https://fuzzy-technologies.com/PriceGenerator/ru/quick-start/)
 
 ```sh
 python -I -m pricegenerator generate --seed 42 --horizon 240 --start 2025-01-06T00:00:00Z --timeframe-seconds 60 --output prices.csv --manifest scenario.json
@@ -53,6 +60,8 @@ python -I -m pricegenerator chart prices.csv --output chart.svg --no-view
 файлы `prices.csv` и `replay.csv` совпадают побайтно. В анимации командной
 строки показан отдельный прогон на 2.0.0, для которого приведены команды
 и параметры экспорта.
-[Запись прогона 2.0](../../../examples/cli-demo.md)
+[Запись прогона 2.0](https://fuzzy-technologies.com/PriceGenerator/ru/quick-start/)
 
 Флаг `--analysis` добавляет кнопки индикаторов в HTML. Откройте файл в браузере и включите **Bollinger bands**. В Python тот же режим включает `analysis=True`.
+
+[English](../en/migrate-to-2-1.md) · [简体中文](../zh-CN/migrate-to-2-1.md)
