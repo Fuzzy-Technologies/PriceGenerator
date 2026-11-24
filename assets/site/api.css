@@ -1,0 +1,40 @@
+.api-page main {max-width:1300px}
+.api-page .site-header {margin-bottom:.6rem}
+.api-page .site-nav {margin:.6rem 0}
+.api-shell {display:grid;grid-template-columns:minmax(210px,260px) minmax(0,1fr);gap:clamp(1.3rem,4vw,3.8rem);align-items:start}
+.api-sidebar {position:sticky;top:1rem;max-height:calc(100vh - 2rem);overflow:auto;padding:0 .8rem 1rem 0}
+.api-search label,.api-navigation summary,.api-terms summary {color:var(--text-strong);font-weight:600}
+.api-search input {width:100%;margin:.45rem 0;padding:.6rem;background:var(--bg);color:var(--text);border:1px solid var(--border);border-radius:5px;font:inherit;font-size:.85rem}
+.api-search input:focus-visible {outline:2px solid var(--cyan)}
+.api-results {list-style:none;padding:0;margin:.25rem 0 1rem}
+.api-results a {display:block;padding:.35rem 0;overflow-wrap:anywhere;font-size:.85rem}
+.api-navigation {margin-top:1.1rem}
+.api-navigation nav {display:grid;gap:.12rem;margin:.5rem 0}
+.api-navigation nav a {padding:.37rem .65rem;border-left:2px solid transparent;color:var(--muted);font-size:.87rem}
+.api-navigation nav .current,.api-navigation nav [aria-current] {color:var(--cyan);border-color:var(--cyan)}
+.api-breadcrumb,.api-meta {font-size:.8rem;color:var(--muted)}
+.api-breadcrumb {margin:0 0 .45rem}
+.guide .api-cover {margin:1rem 0;max-width:min(100%,760px)}
+.api-toc,.api-symbol-index,.api-topics {display:flex;flex-wrap:wrap;gap:.4rem 1rem;padding:0;list-style:none}
+.api-topics {display:grid;grid-template-columns:repeat(auto-fit,minmax(min(220px,100%),1fr))}
+.api-topics a {padding:.5rem 0;border-bottom:1px solid var(--border-soft)}
+.api-content pre {padding:.85rem 1rem;line-height:1.42;font-size:.85rem}
+.api-content :is(code,h2,h3) {overflow-wrap:anywhere}
+.api-entry {padding:.5rem 0 .8rem;border-bottom:1px solid var(--border-soft)}
+.api-entry h3 {margin:.7rem 0 .3rem}
+.api-entry h3 a,.api-module h2 code {color:var(--cyan)}
+.api-meta span {display:inline-block;margin-inline-start:1rem}
+.api-terms summary,.api-navigation summary {cursor:pointer}
+.api-terms dl {display:grid;grid-template-columns:minmax(80px,max-content) minmax(0,1fr);gap:.45rem 1.15rem;align-items:baseline}
+.api-terms dd,.api-constants dd {margin:0}
+.api-constants dt {margin-top:.7rem}
+.api-facade {margin:.25rem 0}
+@media (max-width:760px) {
+  .api-shell {display:block}
+  .api-sidebar {position:static;max-height:none;padding:0 0 .8rem;margin-bottom:.8rem;border-bottom:1px solid var(--border-soft)}
+  .api-navigation {margin-top:.5rem}
+  .api-terms dl {display:block}
+  .api-terms dt {margin-top:.5rem}
+}
+.api-example {margin:1rem 0}
+.api-example summary {cursor:pointer;color:var(--text-strong)}

@@ -1,0 +1,96 @@
+generation:
+  en: Generate 240 hourly candles in batches of 48. Batch size controls memory use and preserves the price path for a fixed seed.
+  ru: Сгенерируйте 240 часовых свечей порциями по 48. Размер порции влияет на расход памяти. При том же начальном значении генератора получится тот же ряд.
+  zh-CN: 分批生成 240 根一小时 K 线，每批 48 根。调整批大小可以控制内存占用，种子相同时生成的行情一致。
+  code: |
+    from pricegenerator import GenerateChunks, GenerationConfig
+
+    config = GenerationConfig(seed=42, horizon=240)
+    print([len(batch) for batch in GenerateChunks(config, chunk_size=48)])
+market-data:
+  en: Keep a manifest alongside your test data. Replay reconstructs the candles and checks their fingerprint.
+  ru: Сохраните параметры тестового ряда в манифесте. При повторном запуске Replay восстановит свечи и сверит их контрольную сумму.
+  zh-CN: 清单可记录测试行情的生成条件。Replay 根据清单重新生成 K 线并核对校验值。
+  code: |
+    from pricegenerator import CreateManifest, Fingerprint, Generate, GenerationConfig, Replay
+
+    config = GenerationConfig(seed=7, horizon=96)
+    candles = Generate(config)
+    manifest = CreateManifest(config, candles)
+    assert Fingerprint(Replay(manifest)) == Fingerprint(candles)
+alternative-models:
+  en: Insert an opening gap at the eleventh bar. A natural log jump of −0.05 lowers the opening price by about 4.88% relative to the preceding close.
+  ru: Добавьте ценовой разрыв на открытии одиннадцатой свечи. Логарифмическое изменение −0,05 даёт цену открытия примерно на 4,88 % ниже предыдущего закрытия.
+  zh-CN: 在第 11 根 K 线设置向下跳空。对数变动为 −0.05，开盘价约比上一根收盘价低 4.88%。
+  code: |
+    from pricegenerator.extended_models import Scripted, ScriptedConfig, ScriptStep
+
+    candles = Scripted(ScriptedConfig(count=24, steps=(ScriptStep(index=10, log_jump=-0.05),)))
+    print(candles.loc[9, "close"], candles.loc[10, "open"])
+analysis:
+  en: Measure close-to-close returns over a test series. Set acf_lags to study dependence up to that many observed bars.
+  ru: Рассчитайте доходности между соседними ценами закрытия. Параметр acf_lags задаёт, на сколько свечей сдвигать ряд при оценке автокорреляции.
+  zh-CN: 用相邻收盘价计算收益率。acf_lags 指定自相关分析的最大滞后阶数，单位为实际观测到的 K 线根数。
+  code: |
+    from pricegenerator import Analyze, Generate, GenerationConfig
+
+    report = Analyze(Generate(GenerationConfig(seed=42, horizon=120)), acf_lags=5)
+    print(report.simple_returns[-3:])
+monte-carlo:
+  en: Simulate 32 paths and read the 5th, 50th and 95th percentiles of the final close. The middle value is the median across those paths at the final bar.
+  ru: Смоделируйте 32 траектории и получите 5-й, 50-й и 95-й процентили цены закрытия на последней свече. Второе число показывает медиану цен закрытия по всем 32 прогонам.
+  zh-CN: 模拟 32 条价格路径，读取最后一根 K 线收盘价的第 5、50 和 95 百分位数。中间一项是这 32 个收盘价的中位数。
+  code: |
+    from pricegenerator import GenerationConfig
+    from pricegenerator.monte_carlo import RunEnsemble
+
+    report = RunEnsemble(GenerationConfig(seed=42, horizon=120), path_count=32)
+    print([(level, row[-1]) for level, row in zip(report.quantile_levels, report.close_quantiles)])
+calibration:
+  en: Fit on earlier bars and evaluate on a later period. Here the input is a generated test fixture. For a market comparison, use your observed OHLCV history.
+  ru: Настройте модель по началу ряда и проверьте на более позднем отрезке. В примере входные свечи сгенерированы для проверки кода. Для сравнения с рынком подставьте историю торгов.
+  zh-CN: 用前一段行情拟合模型，再用后一段检验。示例用模拟数据演示调用方法。检验市场拟合效果时，请换成真实的 OHLCV 历史数据。
+  code: |
+    from pricegenerator import Generate, GenerationConfig
+    from pricegenerator.calibration import Calibrate, ChronologicalSplit
+
+    history = Generate(GenerationConfig(seed=7, horizon=240))
+    training, holdout = ChronologicalSplit(history, holdout_fraction=0.25)
+    report = Calibrate(training, holdout)
+    print(report.profile.ToConfig().volatility)
+indicators:
+  en: Compute a three-bar simple moving average of closing prices. The first two results are None because there are fewer than three observations.
+  ru: Рассчитайте простую скользящую среднюю по трём ценам закрытия. Первые два значения равны None, пока не набралось полное окно наблюдений.
+  zh-CN: 按三根 K 线的收盘价计算简单移动平均线。前两根的数据不足一个窗口，因此返回 None。
+  code: |
+    from pricegenerator.indicators import SMA
+
+    print(SMA([100.0, 101.0, 102.0, 99.0], period=3))
+charts:
+  en: Save a standalone HTML chart with price, volume and indicator controls.
+  ru: Сохраните интерактивный график свечей с объёмами и переключателями индикаторов в HTML.
+  zh-CN: 将 K 线、成交量及指标开关保存为可独立打开的交互式 HTML 图表。
+  code: |
+    from pricegenerator import Chart, Generate, GenerationConfig
+
+    candles = Generate(GenerationConfig(seed=42, horizon=120))
+    Chart(candles, "candles.html", analysis=True, view=False)
+chart-types:
+  en: Inspect the data used to draw a candle. The chart specification can also be saved as JSON.
+  ru: Посмотрите, какие данные используются для отрисовки одной свечи. Описание всего графика можно сохранить в JSON.
+  zh-CN: 查看绘制一根 K 线时使用的数据。整张图表的定义也可序列化为 JSON。
+  code: |
+    from pricegenerator import Generate, GenerationConfig
+    from pricegenerator.rendering import PrepareChart
+
+    spec = PrepareChart(Generate(GenerationConfig(seed=42, horizon=24)))
+    print(spec.candles[0].close)
+cli:
+  en: Call the command-line interface from a Python script and check its exit status.
+  ru: Вызовите команду генерации из Python и проверьте код завершения.
+  zh-CN: 从 Python 调用行情生成命令，并检查退出状态。
+  code: |
+    from pricegenerator.cli import Main
+
+    status = Main(["generate", "--seed", "42", "--horizon", "24", "--output", "sample.csv"])
+    assert status == 0

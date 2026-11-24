@@ -1,0 +1,658 @@
+{
+  "modules": {
+    "config": {
+      "en": "Settings shared by the two regime models. Choose a candle interval, price dynamics and the unit convention for synthetic volume.",
+      "ru": "Параметры двух моделей со сменой режимов. Здесь задают интервал свечи, характер движения цены и способ расчёта синтетического объёма.",
+      "zh-CN": "两种状态切换模型共用的参数。在这里设置 K 线周期、价格波动特征以及模拟成交量的计算方式。"
+    },
+    "models": {
+      "en": "The row generator behind the regime models. Use it when you need OHLCV values one candle at a time and manage the random number generator yourself.",
+      "ru": "Построчная генерация свечей в моделях со сменой режимов. Подходит, когда свечи обрабатываются по одной, а состоянием генератора случайных чисел управляет вызывающий код.",
+      "zh-CN": "状态切换模型的逐根生成接口。适合逐根处理 K 线，并由调用方管理随机数生成器的场景。"
+    },
+    "generation": {
+      "en": "Generate a complete synthetic OHLCV series on a regular UTC timeline from a single configuration.",
+      "ru": "Генерация ряда синтетических свечей по заданным параметрам. На выходе — таблица цен и объёмов с равномерным шагом времени в UTC.",
+      "zh-CN": "按给定参数生成完整的模拟行情，得到按固定 UTC 时间间隔排列的开高低收价格和成交量。"
+    },
+    "market_data": {
+      "en": "Validate timestamps, open, high, low, close and volume before analysis. These rules also apply to imported market data, which may have zero or negative prices and fractional volume.",
+      "ru": "Проверка времени, цен открытия и закрытия, максимума, минимума и объёма. Правила подходят и для биржевых данных, где встречаются нулевые или отрицательные цены и дробный объём.",
+      "zh-CN": "分析前检查时间戳、开高低收价格和成交量。导入实际行情时，价格可以为零或负数，成交量也可以有小数。"
+    },
+    "io": {
+      "en": "Exchange six-column OHLCV files with a fixed CSV header, UTC timestamps and a period as the decimal separator.",
+      "ru": "Чтение и запись свечей в CSV. У формата фиксированный заголовок из шести полей, время при записи приводится к UTC, десятичный разделитель — точка.",
+      "zh-CN": "读写六列 OHLCV 行情 CSV。表头及列序固定，写出时统一使用 UTC 时间，数值以半角句点作为小数点。"
+    },
+    "streaming": {
+      "en": "Generate long regime-model paths in memory-sized chunks or write successive OHLCV frames to a single CSV file.",
+      "ru": "Работа с длинными рядами. Свечи можно получать порциями по мере генерации или записывать несколько таблиц подряд в один CSV.",
+      "zh-CN": "分批生成较长的模拟行情，也可以把连续的多批 K 线写入同一个 CSV 文件。"
+    },
+    "scenario": {
+      "en": "Record the inputs to a regime-model run and check that replay reproduces the same candle values.",
+      "ru": "Сохранение параметров эксперимента и проверка того, что повторный запуск модели дал в точности тот же ряд свечей.",
+      "zh-CN": "保存状态切换模型的运行参数，重放时逐项核对生成的行情是否与原记录一致。"
+    },
+    "registry": {
+      "en": "Look up the available models, the questions each can answer and the evidence to check before using their output.",
+      "ru": "Справка по моделям. Для каждой указаны область применения, ограничения и проверки, которые стоит выполнить перед использованием результатов.",
+      "zh-CN": "查询各模型适用的任务、已知局限，以及使用模拟行情前应做的检验。"
+    },
+    "extended_models": {
+      "en": "Two alternatives for research and stress tests. Bootstrap resamples blocks from historical candles. Scripted paths follow a sequence of user-defined events.",
+      "ru": "Два способа построить сценарий для исследования или стресс-теста. В одном случае модель выбирает блоки из исторического ряда, в другом — строит свечи по заданному расписанию событий.",
+      "zh-CN": "可用两种方法开展研究和压力测试。可以从历史 K 线中按块重采样，或按预先设定的事件顺序构造行情。"
+    }
+  },
+  "symbols": {
+    "config.GenerationConfig": {
+      "en": "Immutable settings for a regime-model path of 1 to 1,000,000 candles. Drift and volatility are per candle. The default regime_v3 yields whole volume counts. Choose regime_v2 for continuous volume. Invalid bounds or times raise ValueError on construction.",
+      "ru": "Неизменяемые параметры ряда от 1 до 1 000 000 свечей. Дрейф и волатильность задаются на одну свечу. Модель по умолчанию regime_v3 округляет объём до целых единиц. Для непрерывного объёма предусмотрена regime_v2. При недопустимых границах или датах конструктор выдаёт ValueError.",
+      "zh-CN": "状态切换模型的固定配置，一次可生成 1 至 1,000,000 根 K 线。漂移和波动率均按单根 K 线设定。默认模型 regime_v3 输出整数成交量，regime_v2 保留小数。价格边界或时间范围不合规时，构造函数抛出 ValueError。"
+    },
+    "config.GenerationConfig.ToDict": {
+      "en": "Return a new JSON-compatible dictionary of all generation settings, including defaults and an ISO 8601 start time in UTC.",
+      "ru": "Возвращает новый словарь со всеми параметрами, включая значения по умолчанию. Словарь можно записать в JSON. Время начала представлено строкой ISO 8601 в UTC.",
+      "zh-CN": "返回可直接写入 JSON 的新字典，包含所有参数及其实际取值，包括默认值。起始时间是 UTC 的 ISO 8601 字符串。"
+    },
+    "config.GenerationConfig.FromDict": {
+      "en": "Build a validated GenerationConfig from a mapping. Omitted settings use constructor defaults. An ISO 8601 start must include its time zone and use at most six fractional digits. Unknown keys and invalid settings raise ValueError.",
+      "ru": "Создаёт GenerationConfig из словаря и проверяет параметры. Пропущенные поля получают значения по умолчанию. В строке ISO 8601 для начала ряда нужны часовой пояс и не более шести знаков дробной части секунды. Неизвестный ключ или неверное значение приводит к ValueError.",
+      "zh-CN": "从映射创建并校验 GenerationConfig，未提供的参数采用默认值。ISO 8601 起始时间必须带时区，秒的小数部分最多六位。未知字段或无效参数将引发 ValueError。"
+    },
+    "models.GenerateRows": {
+      "en": "Yield one tuple (open, high, low, close, volume) per candle using the supplied random generator. Each candle opens at the previous close. Log returns combine drift, regime-dependent noise and an occasional shock. Upper and lower wicks are sampled separately. Volume varies with the size of the realized move and persistent noise. The iterator omits timestamps.",
+      "ru": "Выдаёт по одному кортежу (open, high, low, close, volume) на свечу. Открытие равно предыдущему закрытию. Логарифмическая доходность складывается из дрейфа, случайного движения в текущем режиме и возможного скачка. Верхняя и нижняя тени разыгрываются отдельно. Объём зависит от величины движения цены и от случайных колебаний, которые частично переходят со свечи на свечу. Итератор использует переданный генератор случайных чисел, время в кортеж не входит.",
+      "zh-CN": "使用传入的随机数生成器，逐根产出 (open, high, low, close, volume) 元组，不带时间戳。每根 K 线以前收盘价开盘。对数收益由漂移、随市场状态变化的随机波动和偶发冲击共同决定。上下影线分别抽样。成交量取决于实际价格变动的幅度以及具有持续性的随机扰动。"
+    },
+    "generation.Generate": {
+      "en": "Return a pandas DataFrame with datetime, open, high, low, close and volume. The UTC grid has no missing intervals. Prices and volume use float64, including whole volume counts in regime_v3. Each call initializes its own random generator from the seed. Passing another configuration type raises TypeError.",
+      "ru": "Возвращает DataFrame со столбцами datetime, open, high, low, close и volume. Временная сетка равномерная, в UTC, без пропусков. Цены и объём хранятся как float64, в том числе целые значения объёма модели regime_v3. При каждом вызове свой генератор случайных чисел инициализируется по seed. Для другого типа конфигурации возникает TypeError.",
+      "zh-CN": "返回包含 datetime、open、high、low、close、volume 六列的 pandas DataFrame。UTC 时间轴等间隔且无缺口。价格和成交量均以 float64 存储，regime_v3 的成交量取整数值。每次调用都会根据种子单独初始化随机数生成器。配置类型不符时抛出 TypeError。"
+    },
+    "market_data.OHLCVError": {
+      "en": "ValueError subclass raised when a table or CSV violates the OHLCV contract, for example through a duplicate timestamp, negative volume or a high below the closing price.",
+      "ru": "Подкласс ValueError для ошибок в таблице свечей или CSV. Например, время повторяется, объём отрицателен или максимум свечи ниже цены закрытия.",
+      "zh-CN": "ValueError 的子类，表示行情表或 CSV 不符合 OHLCV 规则。例如，时间戳重复、成交量小于零，或最高价低于收盘价。"
+    },
+    "market_data.TimeframeNanoseconds": {
+      "en": "Convert an interval in seconds to a positive integer number of nanoseconds. Fractional seconds are valid if the result is exact and fits a pandas Timedelta. Otherwise raise OHLCVError.",
+      "ru": "Переводит интервал из секунд в целое число наносекунд. Допускает доли секунды, если результат положителен, не требует округления и помещается в pandas Timedelta. В остальных случаях выдаёт OHLCVError.",
+      "zh-CN": "把以秒为单位的周期换算成正整数纳秒。允许小数秒，但须能精确换算且在 pandas Timedelta 取值范围内，否则抛出 OHLCVError。"
+    },
+    "market_data.TimestampRange": {
+      "en": "Return a UTC pandas DatetimeIndex starting at the specified instant with one entry per period. Zero periods returns an empty index. Naive start times, negative counts and times outside the nanosecond range raise OHLCVError.",
+      "ru": "Строит DatetimeIndex в UTC с заданным началом и постоянным шагом. При нулевом числе отметок возвращает пустой индекс. Если у начала не указан часовой пояс, число отметок отрицательно или даты выходят за допустимый диапазон, возникает OHLCVError.",
+      "zh-CN": "从指定时刻起，按固定周期生成 UTC 的 pandas DatetimeIndex。条数为零时返回空索引。起点缺少时区、条数为负或时间超出纳秒时间戳范围时抛出 OHLCVError。"
+    },
+    "market_data.ValidateOHLCV": {
+      "en": "Return an independent six-column DataFrame. Times must be unique and strictly increasing. High and low must enclose the candle body, volume must be nonnegative and all values finite. Optional interval checks enforce the chosen gap policy. Violations raise OHLCVError.",
+      "ru": "Возвращает отдельную таблицу из шести столбцов. Время должно строго возрастать, минимум и максимум — охватывать тело свечи, объём — быть неотрицательным. Все цены и объёмы должны быть конечными. Если задан интервал, проверяются и пропуски. Нарушение любого из этих правил вызывает OHLCVError.",
+      "zh-CN": "返回一份独立的六列表。时间须严格递增且不得重复，最低价和最高价须覆盖 K 线实体，成交量须非负，所有价格和成交量均须为有限数值。指定周期后还会检查时间间隔。违反规则时抛出 OHLCVError。"
+    },
+    "market_data.ToDatetimeIndex": {
+      "en": "Validate the candles and return a new DataFrame indexed by UTC datetime, with open, high, low, close and volume as columns. Invalid data raise OHLCVError under the same rules as ValidateOHLCV.",
+      "ru": "Проверяет свечи по правилам ValidateOHLCV и возвращает новую таблицу. Время в UTC становится индексом, а цены и объём остаются в пяти столбцах. Ошибка в данных приводит к OHLCVError.",
+      "zh-CN": "按 ValidateOHLCV 的规则校验 K 线，再返回新的 DataFrame。UTC 时间成为索引，开高低收和成交量保留为五列。数据无效时抛出 OHLCVError。"
+    },
+    "io.ReadCSV": {
+      "en": "Read a UTF-8 comma-separated file or text stream and return a validated DataFrame. The header must be exactly datetime,open,high,low,close,volume. A malformed row, ambiguous timestamp or invalid candle raises OHLCVError.",
+      "ru": "Читает CSV в UTF-8 из файла или текстового потока и возвращает проверенный DataFrame. Первая строка должна быть ровно datetime,open,high,low,close,volume. Ошибка в строке, неоднозначное время или несогласованные цены приводят к OHLCVError.",
+      "zh-CN": "从 UTF-8 逗号分隔文件或文本流读入并返回校验过的 DataFrame。表头必须为 datetime,open,high,low,close,volume。行格式错误、时间含糊或 K 线数值违反规则时抛出 OHLCVError。"
+    },
+    "io.WriteCSV": {
+      "en": "Validate the table, then write one CSV header and UTC timestamps with nanosecond precision. Returns None. Integer volume formatting rejects fractional values with OHLCVError. A caller-owned text stream stays open.",
+      "ru": "После проверки записывает свечи в CSV с заголовком и временем в UTC с точностью до наносекунд. Возвращает None. При запросе целочисленной записи объёма дробное значение вызывает OHLCVError. Переданный текстовый поток остаётся открытым.",
+      "zh-CN": "先校验行情，再写出一行表头和精确到纳秒的 UTC 时间戳，返回 None。选择整数成交量格式后，如果原值含小数，会抛出 OHLCVError。调用方传入的文本流会保持打开。"
+    },
+    "streaming.GenerateChunks": {
+      "en": "Yield validated DataFrames with at most chunk_size candles each. Joining the chunks in order yields the same candle values and times as Generate for the same configuration. A nonpositive or non-integer chunk size raises ValueError when iteration starts.",
+      "ru": "Выдаёт проверенные таблицы не более чем по chunk_size свечей. Если соединить их по порядку, значения и время совпадут с результатом Generate при тех же настройках. При первом обращении к итератору неположительный или нецелый размер порции вызывает ValueError.",
+      "zh-CN": "分批产出经过校验的 DataFrame，每批最多 chunk_size 根 K 线。按顺序拼接各批，行情和时间戳与同一配置下 Generate 的结果一致。开始迭代时，批量大小若非正整数，将抛出 ValueError。"
+    },
+    "streaming.WriteCSVChunks": {
+      "en": "Write successive candle tables to one CSV and return None. The writer validates each chunk and the join between chunks before atomically replacing the destination. A failed write preserves the previous file. An empty input writes just the header.",
+      "ru": "Объединяет таблицы свечей в одном CSV и возвращает None. Проверяет каждую порцию и порядок времени на стыках. Готовый файл заменяет прежний одной операцией. При ошибке прежний файл сохраняется. Пустая последовательность даёт CSV с одним заголовком.",
+      "zh-CN": "将连续的多批行情写入一个 CSV，返回 None。每批数据及相邻批次交界处的时间均须通过校验，完成后才原子替换目标文件。写入失败时保留原文件，空输入只写表头。"
+    },
+    "scenario.Environment": {
+      "en": "Return a dictionary with the Python version and implementation, platform string, and installed pandas and NumPy versions used to verify a recorded run.",
+      "ru": "Возвращает словарь с версией и реализацией Python, сведениями о платформе и версиями pandas и NumPy. По этим полям при воспроизведении сверяют среду эксперимента.",
+      "zh-CN": "返回字典，记录 Python 版本及实现、运行平台以及 pandas、NumPy 的版本，供重放时核对运行环境。"
+    },
+    "scenario.Fingerprint": {
+      "en": "Return the SHA-256 digest of the validated candle values. It includes UTC timestamps as nanoseconds and the exact binary64 prices and volumes. CSV spelling and the original DataFrame index do not enter the digest.",
+      "ru": "Возвращает SHA-256 ряда после проверки свечей. В расчёт входят время в наносекундах UTC и точные значения цен и объёмов в формате float64. Запись чисел в CSV и исходный индекс DataFrame на результат не влияют.",
+      "zh-CN": "返回经校验的 K 线数据的 SHA-256 摘要，按 UTC 纳秒时间戳及价格和成交量的精确 float64 值计算。CSV 数字写法和原表索引不影响结果。"
+    },
+    "scenario.CreateManifest": {
+      "en": "Return a dictionary recording the full configuration, model, random generator, software environment and separate hashes for the scenario identity and candle values. If data is supplied its hash is recorded directly. Otherwise the function generates the candles first.",
+      "ru": "Возвращает словарь для воспроизведения эксперимента. В нём сохраняются параметры, модель, генератор случайных чисел, версии ПО и две контрольные суммы — для условий запуска и для свечей. Если передать готовый ряд, функция запишет его контрольную сумму. Если ряд опущен, сначала построит свечи.",
+      "zh-CN": "返回可用于重放实验的记录字典，包含完整配置、模型、随机数生成器、软件环境，以及运行条件和行情数据各自的摘要。传入现成行情时直接记录其摘要。未传入时先生成行情。"
+    },
+    "scenario.Replay": {
+      "en": "Regenerate a regime-model path and return its verified DataFrame. An incompatible version, altered scenario identity or different output digest raises ValueError. Disabling strict_environment relaxes only the comparison with the current environment.",
+      "ru": "Воспроизводит ряд модели со сменой режимов и возвращает проверенный DataFrame. При несовместимой версии, изменённых условиях запуска или расхождении контрольной суммы свечей возникает ValueError. Отключение strict_environment снимает только требование совпадения текущей среды с записанной.",
+      "zh-CN": "重放状态切换模型并返回核验通过的 DataFrame。版本不兼容、运行条件被改动或行情摘要不同，均会抛出 ValueError。关闭 strict_environment 仅放宽当前环境与记录环境必须一致的要求。"
+    },
+    "registry.ModelInfo": {
+      "en": "Immutable description of a model's version, random generator, supported settings, use cases, limitations and validation criteria. Obtain registered descriptions with ListModels or GetModel.",
+      "ru": "Неизменяемая карточка модели. Содержит версию, используемый генератор случайных чисел, параметры, область применения, ограничения и рекомендуемые проверки. Карточку из реестра можно получить через ListModels или GetModel.",
+      "zh-CN": "不可变的模型说明，列出版本、随机数生成器、支持的参数、适用场景、局限及检验项目。可通过 ListModels 或 GetModel 查询已登记模型的说明。"
+    },
+    "registry.ModelInfo.ToDict": {
+      "en": "Return an independent JSON-compatible dictionary. Collections of parameters, use cases, limitations and checks become lists.",
+      "ru": "Возвращает отдельный словарь, пригодный для записи в JSON. Параметры, варианты применения, ограничения и проверки представлены списками.",
+      "zh-CN": "返回可直接写入 JSON 的新字典。参数、适用场景、局限和检验项目均转为列表。"
+    },
+    "registry.ListModels": {
+      "en": "Return a tuple of four ModelInfo entries for regime_v3, regime_v2, bootstrap_v1 and scripted_v1. Each entry describes one experimental model.",
+      "ru": "Возвращает кортеж из четырёх карточек ModelInfo для экспериментальных моделей regime_v3, regime_v2, bootstrap_v1 и scripted_v1.",
+      "zh-CN": "返回包含四项 ModelInfo 的元组，分别对应 regime_v3、regime_v2、bootstrap_v1 和 scripted_v1，四者都标为实验性模型。"
+    },
+    "registry.GetModel": {
+      "en": "Look up a ModelInfo by its exact model identifier. An unknown identifier, including a historical runtime outside the registry, raises ValueError.",
+      "ru": "Находит карточку ModelInfo по точному идентификатору модели. Если модель отсутствует в реестре, в том числе относится к прежней реализации, возникает ValueError.",
+      "zh-CN": "按准确的模型标识符查询 ModelInfo。标识符未登记时抛出 ValueError，旧版但未列入当前注册表的模型也在此列。"
+    },
+    "extended_models.BootstrapConfig": {
+      "en": "Immutable settings for a path built by sampling historical candles in contiguous blocks. Sets the output length (1 to 1,000,000), starting price, time grid and random seed. The source must have enough usable rows for one full block.",
+      "ru": "Неизменяемые параметры выборки непрерывных блоков из исторических свечей. Задают длину нового ряда (от 1 до 1 000 000 свечей), исходную цену, шаг времени и начальное состояние генератора. В исходной истории должно хватать свечей хотя бы на один полный блок.",
+      "zh-CN": "按连续区块重采样历史 K 线的固定配置，指定输出根数（1 至 1,000,000）、初始价格、时间轴及随机种子。历史样本中可用的 K 线须至少够组成一个完整区块。"
+    },
+    "extended_models.BootstrapConfig.ToDict": {
+      "en": "Return all bootstrap settings as a JSON-compatible dictionary, with the new series' start time encoded in ISO 8601 UTC.",
+      "ru": "Возвращает все параметры блочной выборки в виде словаря для JSON. Время начала нового ряда записано строкой ISO 8601 в UTC.",
+      "zh-CN": "将区块重采样的全部参数转为可写入 JSON 的字典，新行情的起始时间以 UTC 的 ISO 8601 字符串表示。"
+    },
+    "extended_models.BootstrapConfig.FromDict": {
+      "en": "Rebuild the bootstrap settings from a complete JSON-compatible mapping. A missing or extra field, invalid time or invalid sample size raises ValueError.",
+      "ru": "Восстанавливает параметры блочной выборки из полного словаря в формате JSON. Лишнее или пропущенное поле, неверное время или число свечей приводит к ValueError.",
+      "zh-CN": "从符合 JSON 格式的完整映射还原重采样配置。字段缺失或多余、时间无效或根数不合规时抛出 ValueError。"
+    },
+    "extended_models.Bootstrap": {
+      "en": "Build a new OHLCV DataFrame by jointly resampling the opening gap, body, wicks and observed volume in contiguous historical blocks. Requires at least three equally spaced candles with positive prices. The first source candle supplies the previous close. Joins between blocks can interrupt longer patterns.",
+      "ru": "Строит новый DataFrame, выбирая из истории непрерывные блоки. Разрыв между закрытием и следующим открытием, тело, тени и объём каждой свечи переносятся вместе. Нужны хотя бы три свечи с равным шагом времени и положительными ценами. Первая служит только источником предыдущего закрытия. На стыках блоков длительная зависимость может нарушаться.",
+      "zh-CN": "按连续区块重采样历史行情，构造新的 OHLCV DataFrame。每根 K 线的开盘跳空、实体、上下影线和实际成交量一并抽取。至少需要三根等间隔且价格为正的 K 线。首根只提供前收盘价。较长的连续走势可能在区块接缝处中断。"
+    },
+    "extended_models.ScriptStep": {
+      "en": "Define an event on one indexed candle. A log jump changes only that candle's open relative to the preceding close. New drift or volume settings take effect on that candle and persist until another event changes them.",
+      "ru": "Задаёт событие на выбранной свече. Скачок меняет её открытие относительно предыдущего закрытия. Новые значения дрейфа и объёма действуют с этой свечи и сохраняются до следующего события, которое их изменит.",
+      "zh-CN": "定义发生在指定 K 线上的事件。对数跳幅只调整这一根相对于前收盘价的开盘价。新的漂移或成交量从该根起生效，直到后续事件再次修改。"
+    },
+    "extended_models.ScriptedConfig": {
+      "en": "Immutable settings for a deterministic stress path of 1 to 1,000,000 candles. Events must have distinct, increasing zero-based indices inside the series. Invalid events, nonpositive starting price or a wick fraction outside [0, 1) raise ValueError.",
+      "ru": "Неизменяемые параметры стресс-сценария длиной от 1 до 1 000 000 свечей. События задают в порядке возрастания номеров свечей, начиная с нуля, без повторов и выхода за конец ряда. При неверных событиях, неположительной начальной цене или значении wick_fraction вне диапазона [0, 1) возникает ValueError.",
+      "zh-CN": "确定性压力情景的固定配置，可生成 1 至 1,000,000 根 K 线。事件编号从零开始，必须递增、无重复，且位于序列内。事件无效、初始价格非正或影线比例超出 [0, 1) 时抛出 ValueError。"
+    },
+    "extended_models.ScriptedConfig.ToDict": {
+      "en": "Return a JSON-compatible dictionary with the full scenario, its UTC start time and a list of event dictionaries in execution order.",
+      "ru": "Возвращает словарь для JSON со всеми параметрами сценария, временем начала в UTC и списком событий в порядке их исполнения.",
+      "zh-CN": "返回可写入 JSON 的字典，包含全部情景参数、UTC 起始时间及按执行顺序排列的事件列表。"
+    },
+    "extended_models.ScriptedConfig.FromDict": {
+      "en": "Load a complete serialized scenario into a ScriptedConfig with validated ScriptStep objects. Missing or extra fields, malformed events or invalid event order raise ValueError.",
+      "ru": "Восстанавливает ScriptedConfig и проверяет каждое событие ScriptStep. Пропущенные или лишние поля, ошибка в описании события или в порядке событий вызывают ValueError.",
+      "zh-CN": "从完整的序列化配置还原 ScriptedConfig，并将各事件校验为 ScriptStep 对象。字段缺失或多余、事件格式错误或顺序不合法时抛出 ValueError。"
+    },
+    "extended_models.Scripted": {
+      "en": "Return a deterministic OHLCV DataFrame. An event can create an opening gap. Each close equals open × exp(current drift), prices extend above and below the body by the chosen wick fraction, and volume stays at its current setting. Paths that exceed the supported price range raise ValueError.",
+      "ru": "Строит DataFrame со свечами по расписанию событий. На открытии возможен заданный ценовой разрыв. Цена закрытия равна цене открытия, умноженной на exp(текущий дрейф). Тени задаются долей от границ тела свечи, объём сохраняет последнее заданное значение. Выход цены за представимый диапазон вызывает ValueError.",
+      "zh-CN": "按照事件表生成确定性的 OHLCV DataFrame。开盘时可设置跳空，收盘价等于开盘价乘以 exp(当前漂移)。影线按实体边缘价格的一定比例向两端延伸，成交量沿用当前设定。价格超出可表示范围时抛出 ValueError。"
+    },
+    "extended_models.CreateBootstrapManifest": {
+      "en": "Generate a bootstrap path and return a dictionary with the settings, software environment and hashes of both historical input and generated output. If supplied, data must match the generated candles or a ValueError is raised.",
+      "ru": "Строит ряд методом блочной выборки и возвращает словарь с параметрами, сведениями о среде и контрольными суммами истории и результата. Если передать готовый ряд, функция сверит его со своим. Расхождение вызывает ValueError.",
+      "zh-CN": "执行区块重采样，返回记录配置、软件环境、历史样本摘要和输出行情摘要的字典。如果传入已有结果，会与本次生成的行情核对，不符时抛出 ValueError。"
+    },
+    "extended_models.ReplayBootstrap": {
+      "en": "Rebuild the sampled OHLCV DataFrame using the recorded settings and the original source candles. The model version, current environment, source fingerprint and output fingerprint must match. A mismatch raises ValueError.",
+      "ru": "Восстанавливает DataFrame по сохранённым параметрам и исходным историческим свечам. Проверяет версию модели, текущую среду и контрольные суммы истории и результата. Расхождение вызывает ValueError.",
+      "zh-CN": "使用记录的配置和原始历史行情重建 OHLCV DataFrame。模型版本、当前环境、历史样本摘要和输出摘要均须一致，否则抛出 ValueError。"
+    },
+    "extended_models.CreateScriptedManifest": {
+      "en": "Build the scripted path and return a dictionary with its events, configuration, environment and output fingerprint. Supplying a different candle series as data raises ValueError.",
+      "ru": "Строит ряд по событиям и возвращает словарь с событиями, параметрами, средой и контрольной суммой свечей. Если дополнительно передан ряд, отличающийся от расчётного, возникает ValueError.",
+      "zh-CN": "执行预设事件，返回记录事件、配置、环境和行情摘要的字典。另行传入的行情如与本次结果不同，将抛出 ValueError。"
+    },
+    "extended_models.ReplayScripted": {
+      "en": "Regenerate a scripted OHLCV DataFrame from the recorded events. Verify the model and library versions, environment and exact output digest. A mismatch raises ValueError.",
+      "ru": "Восстанавливает таблицу свечей по сохранённым событиям. Сверяет версии модели и библиотеки, среду и контрольную сумму всего ряда. При расхождении возникает ValueError.",
+      "zh-CN": "按记录的事件重新生成 OHLCV DataFrame，并核对模型与库的版本、运行环境和整段行情的摘要。不一致时抛出 ValueError。"
+    },
+    "config.CONTINUOUS_MODEL_ID": {
+      "en": "Identifier of regime_v2, the regime model with continuous synthetic volume.",
+      "ru": "Идентификатор regime_v2, модели со сменой режимов и непрерывным синтетическим объёмом.",
+      "zh-CN": "使用连续模拟成交量的状态切换模型标识符 regime_v2。"
+    },
+    "config.COUNT_MODEL_ID": {
+      "en": "Identifier of regime_v3, the default model producing a whole synthetic count for each candle's volume.",
+      "ru": "Идентификатор модели по умолчанию regime_v3. Объём каждой свечи — целое число условных единиц.",
+      "zh-CN": "默认模型的标识符 regime_v3，每根 K 线的模拟成交量为整数。"
+    },
+    "config.REGIME_MODEL_VERSIONS": {
+      "en": "Maps regime_v2 and regime_v3 identifiers to their integer algorithm revisions, 2 and 3.",
+      "ru": "Соответствие идентификаторов regime_v2 и regime_v3 номерам версий их алгоритмов — 2 и 3.",
+      "zh-CN": "从 regime_v2、regime_v3 两个模型标识符到相应算法版本号 2、3 的映射。"
+    },
+    "config.MAX_VOLUME_COUNT": {
+      "en": "Largest permitted regime_v3 volume ceiling, 2⁵³ − 1. This bound keeps every generated integer count exactly representable in float64.",
+      "ru": "Максимальный верхний предел объёма для regime_v3, равный 2⁵³ − 1. В этом диапазоне все целые значения объёма точно представимы в float64.",
+      "zh-CN": "regime_v3 允许设定的最高成交量上限，即 2⁵³ − 1。该范围内的整数均可用 float64 精确存储。"
+    },
+    "models.RNG_ID": {
+      "en": "Identifier of the Python random.Random generator using MT19937. Scenario manifests record it to identify the generator required for replay.",
+      "ru": "Идентификатор генератора random.Random из Python с алгоритмом MT19937. Он сохраняется в описании эксперимента для воспроизведения ряда.",
+      "zh-CN": "Python random.Random 所用 MT19937 随机数生成器的标识符。运行记录据此确定重放时所需的生成器。"
+    },
+    "generation.OHLCV_COLUMNS": {
+      "en": "Column names in generation order. UTC datetime comes first, then open, high, low, close and volume.",
+      "ru": "Порядок столбцов сгенерированной таблицы. Сначала время в UTC (datetime), затем open, high, low, close и volume.",
+      "zh-CN": "生成行情的列名及顺序。首列为 UTC 时间 datetime，其后依次为 open、high、low、close 和 volume。"
+    },
+    "market_data.OHLCV_COLUMNS": {
+      "en": "Canonical order of the six OHLCV columns used to validate tables and to read and write CSV headers.",
+      "ru": "Шесть полей таблицы свечей в установленном порядке. По ним проверяется состав таблицы и формируется заголовок CSV.",
+      "zh-CN": "六列 OHLCV 数据的标准列序，用于校验行情表，也用于读写 CSV 表头。"
+    },
+    "market_data.VALUE_COLUMNS": {
+      "en": "The five numeric columns hold open, high, low, close and volume. Each is normalized to float64 by validation.",
+      "ru": "Пять числовых столбцов свечи — open, high, low, close и volume. При проверке они приводятся к float64.",
+      "zh-CN": "K 线的五个数值列，即 open、high、low、close 和 volume。校验时统一转换为 float64。"
+    },
+    "market_data.ISO_DATETIME_PATTERN": {
+      "en": "An ISO timestamp string uses T and includes seconds, up to nine fractional digits and optionally Z or an explicit offset. Omitting the offset requires assume_timezone for validation.",
+      "ru": "Формат времени в строке. Между датой и временем ставится T. Секунды обязательны, в их дробной части допустимо до девяти знаков. Суффикс Z или явное смещение задаёт пояс. Если они опущены, для проверки нужен assume_timezone.",
+      "zh-CN": "字符串时间戳的格式。日期与时间之间用 T 隔开，须写明秒，秒的小数部分最多九位。末尾可用 Z 或明确的时区偏移，未提供时须用 assume_timezone 指定原时区。"
+    },
+    "io.NUMBER_PATTERN": {
+      "en": "Accepted CSV numeric syntax for the price and volume columns, including a sign, a decimal point or scientific notation. Validation then checks that the parsed number is finite.",
+      "ru": "Допустимая запись цен и объёма в CSV, включая знак, десятичную точку и экспоненциальную форму. После разбора отдельно проверяется конечность числа.",
+      "zh-CN": "价格和成交量在 CSV 中可用的数值格式，支持正负号、小数点和科学计数法。解析后还会检查数值是否有限。"
+    },
+    "scenario.MANIFEST_VERSION": {
+      "en": "Format version for recording and replaying regime-model scenarios. It is checked independently of the library release and model identifier.",
+      "ru": "Версия формата, в котором сохраняется запуск модели со сменой режимов. При воспроизведении она проверяется наряду с версией пакета и идентификатором модели.",
+      "zh-CN": "状态切换模型运行记录的格式版本。重放时会单独核对它、软件包版本和模型标识。"
+    }
+  },
+  "terms": {
+    "seed": {
+      "en": "Integer seed for the private random generator. Reuse it with the same model, settings and environment to reproduce the same path.",
+      "ru": "Целое число, которым инициализируется генератор случайных чисел. При тех же модели, параметрах и среде тот же seed воспроизводит тот же ряд.",
+      "zh-CN": "私有随机数生成器的整数种子。模型、配置和环境相同时，使用同一种子可重现同一条行情路径。"
+    },
+    "extended_models.BootstrapConfig.seed": {
+      "en": "Nonnegative integer seed for NumPy's PCG64. It controls which historical blocks are drawn.",
+      "ru": "Неотрицательное целое число для генератора PCG64 в NumPy. От него зависит, какие именно блоки истории попадут в выборку.",
+      "zh-CN": "NumPy PCG64 使用的非负整数种子，决定从历史样本中抽取哪些连续区块。"
+    },
+    "horizon": {
+      "en": "Number of candles to generate, from 1 through 1,000,000. The final timestamp is start plus (horizon − 1) intervals.",
+      "ru": "Число свечей, от 1 до 1 000 000 включительно. Последняя отметка времени отстоит от начала на horizon − 1 интервалов.",
+      "zh-CN": "生成的 K 线根数，取值为 1 至 1,000,000（含两端）。末根时间戳比起点晚 horizon − 1 个周期。"
+    },
+    "start": {
+      "en": "Timestamp of the first candle, with an explicit time zone. The output timeline uses UTC.",
+      "ru": "Время первой свечи с явно указанным часовым поясом. В результирующем ряду время приводится к UTC.",
+      "zh-CN": "首根 K 线的时间戳，须明确指定时区。输出的时间轴统一使用 UTC。"
+    },
+    "config.GenerationConfig.start": {
+      "en": "First candle's time, with an explicit time zone and at most microsecond precision. The whole timeline must fit from 1678-01-01 inclusive to 2262-01-01 exclusive in UTC.",
+      "ru": "Время первой свечи с часовым поясом и точностью до микросекунд. Весь ряд должен укладываться в диапазон от 1 января 1678 года включительно до 1 января 2262 года по UTC, не включая эту дату.",
+      "zh-CN": "首根 K 线的时间，须带时区且精度不超过微秒。转换为 UTC 后，整个序列须位于 1678-01-01（含）至 2262-01-01（不含）之间。"
+    },
+    "timeframe_seconds": {
+      "en": "Candle interval expressed in seconds. When validating data, a specified interval also determines which gaps are permitted.",
+      "ru": "Интервал между свечами в секундах. При проверке данных по нему определяют, допустимо ли расстояние между соседними отметками времени.",
+      "zh-CN": "以秒表示的 K 线周期。校验行情时，指定的周期还用于判断相邻时间戳之间的间隔是否合法。"
+    },
+    "config.GenerationConfig.timeframe_seconds": {
+      "en": "Whole seconds between generated candles, from 1 to 9,223,372,036. Changing this interval changes the time grid. Drift and volatility are specified separately per candle.",
+      "ru": "Целое число секунд между свечами, от 1 до 9 223 372 036. Параметр задаёт шаг времени. Дрейф и волатильность задаются отдельно в расчёте на свечу.",
+      "zh-CN": "相邻 K 线之间的整秒数，范围为 1 至 9,223,372,036。该值决定时间轴的间距，漂移和波动率另按单根 K 线设置。"
+    },
+    "extended_models.BootstrapConfig.timeframe_seconds": {
+      "en": "Positive whole seconds between candles of the new series. Source candle timestamps are used to verify regular spacing and are not resampled.",
+      "ru": "Шаг нового ряда в секундах, целое число от 1. По датам исходной истории проверяется регулярность, а новый ряд получает собственные отметки времени.",
+      "zh-CN": "新序列的周期，以正整数秒计。历史时间戳用于检查原序列间隔是否均匀，新 K 线使用单独生成的时间轴。"
+    },
+    "extended_models.ScriptedConfig.timeframe_seconds": {
+      "en": "Positive whole seconds between successive candle timestamps in the stress scenario.",
+      "ru": "Интервал между свечами стресс-сценария в секундах, целое число от 1.",
+      "zh-CN": "压力情景中相邻两根 K 线的时间间隔，以正整数秒计。"
+    },
+    "model": {
+      "en": "Exact identifier of the generator, such as regime_v3 or bootstrap_v1.",
+      "ru": "Точный идентификатор модели, например regime_v3 или bootstrap_v1.",
+      "zh-CN": "生成模型的完整标识符，例如 regime_v3 或 bootstrap_v1。"
+    },
+    "config.GenerationConfig.model": {
+      "en": "Select regime_v3 for whole synthetic volume counts or regime_v2 for continuous volume. Both use the same price model.",
+      "ru": "Выбор режима расчёта объёма. В regime_v3 объём выражен целым числом условных единиц, в regime_v2 он непрерывен. Цены в обеих моделях рассчитываются одинаково.",
+      "zh-CN": "选择成交量的计算方式。regime_v3 输出整数模拟成交量，regime_v2 保留连续值。两者采用相同的价格模型。"
+    },
+    "initial_price": {
+      "en": "Positive starting price, in the chosen price units. It is the reference level before sampling a gap or applying a first-candle event.",
+      "ru": "Положительная исходная цена в выбранных единицах котировки. От неё отсчитывается разрыв на первом открытии, если он предусмотрен моделью.",
+      "zh-CN": "以所选报价单位表示的正初始价格。如果模型在首根 K 线设置开盘跳空，就以此为基准。"
+    },
+    "config.GenerationConfig.initial_price": {
+      "en": "First candle's opening price. It must lie between price_floor and price_ceiling, inclusive.",
+      "ru": "Цена открытия первой свечи. Допустим весь диапазон от price_floor до price_ceiling, включая обе границы.",
+      "zh-CN": "首根 K 线的开盘价，须位于 price_floor 与 price_ceiling 之间（含两端）。"
+    },
+    "price_floor": {
+      "en": "Lower price boundary, at least 1e-100 and below the upper boundary. Proposed closes reflect at the boundary in log space. Lower wicks stop at the boundary.",
+      "ru": "Нижняя граница цены, не меньше 1e-100 и строго ниже верхней. При пересечении границы цена закрытия отражается внутрь диапазона в логарифмической шкале. Нижняя тень обрезается по границе.",
+      "zh-CN": "价格下限，至少为 1e-100 且须低于上限。拟定的收盘价越界时会在对数价格尺度上反射回区间，下影线则截在边界处。"
+    },
+    "price_ceiling": {
+      "en": "Upper price boundary, above the lower boundary and at most 1e100. Proposed closes reflect in log space. Upper wicks stop at the boundary.",
+      "ru": "Верхняя граница цены, строго выше нижней и не более 1e100. Цена закрытия отражается от границы в логарифмической шкале. Верхняя тень обрезается по границе.",
+      "zh-CN": "价格上限，须高于下限且不得超过 1e100。拟定的收盘价在对数价格尺度上反射回区间，上影线截在边界处。"
+    },
+    "drift": {
+      "en": "Constant added to the open-to-close log return each candle. A value of 0.01 corresponds to a price multiplier of exp(0.01) before other effects.",
+      "ru": "Постоянная составляющая логарифмической доходности от открытия до закрытия одной свечи. Значение 0,01 даёт множитель цены exp(0,01) до учёта остальных факторов.",
+      "zh-CN": "每根 K 线从开盘到收盘的对数收益中的固定项。取 0.01 时，在计入其他因素前，对应的价格倍数为 exp(0.01)。"
+    },
+    "config.GenerationConfig.drift": {
+      "en": "Per-candle drift in log-return units, between −2 and 2. Noise, shocks and the price bounds can change the realized return.",
+      "ru": "Дрейф на одну свечу в единицах логарифмической доходности, от −2 до 2. Фактическая доходность зависит также от случайных колебаний, скачков и границ цены.",
+      "zh-CN": "以单根 K 线对数收益为单位的漂移，范围为 −2 至 2。随机波动、冲击及价格边界都会影响实际收益。"
+    },
+    "extended_models.ScriptStep.drift": {
+      "en": "New log return per candle, effective from this candle onward. None keeps the previous drift.",
+      "ru": "Новая логарифмическая доходность на свечу, начиная с текущей. При None сохраняется прежнее значение.",
+      "zh-CN": "从该根 K 线起采用的每根对数收益。设为 None 时沿用之前的漂移。"
+    },
+    "volatility": {
+      "en": "Standard deviation of the ordinary log-return innovation per candle in the calm regime, from 0 to 2. It also sets the scale for wicks and shocks.",
+      "ru": "Стандартное отклонение случайной составляющей логарифмической доходности одной свечи в спокойном режиме, от 0 до 2. От него также зависят размеры теней и ценовых скачков.",
+      "zh-CN": "平稳状态下，单根 K 线常规随机对数收益项的标准差，范围为 0 至 2。影线和价格冲击的幅度也以此为基准。"
+    },
+    "regime_persistence": {
+      "en": "Probability from 0 to 1 of retaining the current volatility regime on a candle. The starting state is calm and the first switch is tested before generating the first candle.",
+      "ru": "Вероятность сохранить текущий режим на очередной свече, от 0 до 1. Начальное состояние спокойное. Уже перед первой свечой модель проверяет, не пора ли сменить режим.",
+      "zh-CN": "当前波动状态在下一根 K 线上延续的概率，取值为 0 至 1。初始状态平稳，生成首根 K 线前就会判定是否切换。"
+    },
+    "regime_scale": {
+      "en": "Multiplier on ordinary volatility in the stressed regime, from 1 to 100. At 1, ordinary volatility is equal in both regimes.",
+      "ru": "Множитель обычной волатильности в режиме повышенных колебаний, от 1 до 100. При 1 волатильность в двух режимах одинакова.",
+      "zh-CN": "高波动状态下常规波动率的倍数，取值为 1 至 100。设为 1 时两种状态的常规波动率相同。"
+    },
+    "shock_probability": {
+      "en": "Independent probability from 0 to 1 of adding a Gaussian shock to a candle's log return.",
+      "ru": "Вероятность дополнительного случайного скачка на каждой свече, от 0 до 1. Возникновение скачка разыгрывается независимо, а его величина имеет нормальное распределение.",
+      "zh-CN": "每根 K 线的对数收益额外出现一次正态分布冲击的概率，范围为 0 至 1，每根独立判定。"
+    },
+    "shock_scale": {
+      "en": "Multiplier from 0 to 100. A shock's log-return standard deviation equals volatility × shock_scale, using base volatility in either regime.",
+      "ru": "Множитель от 0 до 100. Стандартное отклонение ценового скачка в единицах логарифмической доходности равно volatility × shock_scale. В обоих режимах используется базовая волатильность.",
+      "zh-CN": "冲击幅度的倍数，取值为 0 至 100。冲击对应的对数收益标准差等于 volatility × shock_scale，两种状态均使用基础波动率。"
+    },
+    "wick_scale": {
+      "en": "Multiplier from 0 to 100 on current regime volatility for the size of each ordinary wick in log-price units. At zero, high and low coincide with the body edges.",
+      "ru": "Множитель от 0 до 100 для длины обычной тени в логарифмической шкале цены. Длина зависит от волатильности текущего режима. При нуле максимум и минимум совпадают с границами тела свечи.",
+      "zh-CN": "普通影线的幅度系数，取值为 0 至 100。以当前状态的波动率为基准，在对数价格尺度上计算。设为零时，最高价和最低价分别落在实体两端。"
+    },
+    "wick_outlier_probability": {
+      "en": "Probability from 0 to 1 of applying the outlier multiplier to a wick. Upper and lower wicks are drawn independently of each other and of return shocks.",
+      "ru": "Вероятность применить особый множитель к длине тени, от 0 до 1. Для верхней и нижней тени решение принимается отдельно, независимо от скачка доходности.",
+      "zh-CN": "对一条影线应用异常幅度系数的概率，范围为 0 至 1。上下影线分别判定，两者也独立于收益冲击。"
+    },
+    "wick_outlier_scale": {
+      "en": "Multiplier from 0 to 100 applied to the wick selected as an outlier. Values above 1 lengthen that wick before it is clipped to the price boundary.",
+      "ru": "Множитель от 0 до 100 для тени, выбранной как аномальная. Значение больше 1 удлиняет её до применения ценового ограничения.",
+      "zh-CN": "被选为异常影线时采用的幅度倍数，取值为 0 至 100。大于 1 时会拉长该影线，最终仍受价格上下限约束。"
+    },
+    "volume_base": {
+      "en": "Baseline synthetic volume per candle before log noise and price activity. In regime_v3 it must be at least 1, but it need not itself be a whole number. It cannot exceed volume_ceiling.",
+      "ru": "Базовый синтетический объём свечи до поправок на случайные колебания и движение цены. В regime_v3 он должен быть не меньше 1, но сам может быть дробным. Верхняя граница — volume_ceiling.",
+      "zh-CN": "未计入随机扰动和价格变动影响时，每根 K 线的基础模拟成交量。regime_v3 要求基础值至少为 1，允许小数，但不得超过 volume_ceiling。"
+    },
+    "volume_sigma": {
+      "en": "Scale of the persistent random component of log volume, from 0 to 2. At zero, that component contributes no variation.",
+      "ru": "Масштаб случайных колебаний логарифма объёма, от 0 до 2. При нуле эта составляющая не даёт разброса.",
+      "zh-CN": "对数成交量中持续性随机项的波动幅度，取值为 0 至 2。设为零时，该项不再引入变化。"
+    },
+    "volume_return_coupling": {
+      "en": "Coefficient from 0 to 10 on the candle's price activity in log volume. Activity is the absolute realized log return divided by current regime volatility, capped at 10 and set to zero when volatility is zero.",
+      "ru": "Коэффициент связи логарифма объёма с движением цены, от 0 до 10. Модель делит модуль фактической логарифмической доходности на волатильность текущего режима и ограничивает результат числом 10. При нулевой волатильности эта поправка равна нулю.",
+      "zh-CN": "价格变动对对数成交量的影响系数，取值为 0 至 10。模型用实际对数收益的绝对值除以当前状态的波动率，所得值最高按 10 计。波动率为零时，此项按零处理。"
+    },
+    "volume_persistence": {
+      "en": "Fraction from 0 to 1 of the previous log-volume noise carried into the next candle. At 1, the initial zero noise is retained and no new noise enters.",
+      "ru": "Доля случайного отклонения логарифма объёма, которая переходит в следующую свечу, от 0 до 1. При 1 сохраняется начальное нулевое отклонение и новый шум не добавляется.",
+      "zh-CN": "上根 K 线的对数成交量随机扰动在下一根中保留的比例，范围为 0 至 1。设为 1 时，一直沿用初始的零扰动，也不再引入新的随机扰动。"
+    },
+    "volume_ceiling": {
+      "en": "Maximum synthetic volume per candle. For regime_v3 this must be an integer no greater than 2⁵³ − 1 so the count remains exact in float64. For regime_v2, base and ceiling must lie within [1e-100, 1e100].",
+      "ru": "Максимальный синтетический объём свечи. Для regime_v3 это целое число не больше 2⁵³ − 1, чтобы объём точно представлялся в float64. Для regime_v2 база и верхняя граница должны лежать в диапазоне от 1e-100 до 1e100.",
+      "zh-CN": "单根 K 线的模拟成交量上限。regime_v3 要求上限为不超过 2⁵³ − 1 的整数，以便 float64 精确存储。regime_v2 的基础值和上限均须位于 [1e-100, 1e100]。"
+    },
+    "configuration": {
+      "en": "Mapping of GenerationConfig field names to values. Omitted fields take their defaults. For a saved configuration use the dictionary returned by ToDict.",
+      "ru": "Словарь параметров GenerationConfig. Для пропущенных полей используются значения по умолчанию. Сохранённую конфигурацию можно передать в том виде, в котором её вернул ToDict.",
+      "zh-CN": "以 GenerationConfig 字段名为键的映射，省略的字段取默认值。还原已保存的配置时，可直接传入 ToDict 返回的字典。"
+    },
+    "config": {
+      "en": "GenerationConfig instance defining the model and candle series, including its length, time grid and seed.",
+      "ru": "Объект GenerationConfig с параметрами модели и ряда, включая число свечей, шаг времени и начальное состояние генератора случайных чисел.",
+      "zh-CN": "GenerationConfig 实例，指定模型、K 线根数、时间间隔和随机种子等参数。"
+    },
+    "models.GenerateRows.config": {
+      "en": "GenerationConfig specifying all candle dynamics and the number of rows. This low-level iterator consumes the separately supplied rng.",
+      "ru": "Объект GenerationConfig задаёт число строк и правила расчёта свечей. Случайные числа этот итератор берёт из отдельно переданного rng.",
+      "zh-CN": "GenerationConfig 指定各根 K 线的生成规则和行数。这个底层迭代器从单独传入的 rng 取随机数。"
+    },
+    "extended_models.Bootstrap.config": {
+      "en": "BootstrapConfig with the new time grid, initial price, sample size, seed and block length. None selects the defaults.",
+      "ru": "BootstrapConfig с временной сеткой нового ряда, исходной ценой, числом свечей, начальным состоянием генератора и длиной блока. При None действуют значения по умолчанию.",
+      "zh-CN": "BootstrapConfig，给出新时间轴、初始价格、抽样根数、随机种子及区块长度。设为 None 时使用默认配置。"
+    },
+    "extended_models.Scripted.config": {
+      "en": "ScriptedConfig defining initial price, timeline, drift, wicks, volume and event schedule. None selects the default constant-price path.",
+      "ru": "ScriptedConfig с начальной ценой, временной сеткой, дрейфом, тенями, объёмом и расписанием событий. При None применяется сценарий по умолчанию с неизменной ценой закрытия.",
+      "zh-CN": "ScriptedConfig，定义初始价格、时间轴、漂移、影线、成交量及事件表。设为 None 时，使用收盘价保持不变的默认情景。"
+    },
+    "extended_models.CreateBootstrapManifest.config": {
+      "en": "BootstrapConfig used both to resample the source and to record every input required for replay.",
+      "ru": "Параметры BootstrapConfig, по которым функция строит новую выборку и которые сохраняет для её воспроизведения.",
+      "zh-CN": "BootstrapConfig 配置，用来重采样历史行情，并记录重放所需的全部参数。"
+    },
+    "extended_models.CreateScriptedManifest.config": {
+      "en": "ScriptedConfig containing the initial settings and the complete event schedule to record.",
+      "ru": "Объект ScriptedConfig с начальными параметрами и полным расписанием событий для сохранения.",
+      "zh-CN": "待记录的 ScriptedConfig，包含初始设置及完整事件表。"
+    },
+    "rng": {
+      "en": "Random number generator identifier recorded for the model. The value is none for the deterministic scripted model.",
+      "ru": "Идентификатор генератора случайных чисел модели. Для сценария по расписанию без случайной составляющей указывается none.",
+      "zh-CN": "模型登记的随机数生成器标识。按事件表生成的确定性模型使用 none。"
+    },
+    "models.GenerateRows.rng": {
+      "en": "An initialized random.Random instance. Its existing state is consumed as rows are requested. For the standard seeded path, pass Random(config.seed).",
+      "ru": "Инициализированный экземпляр random.Random. При чтении строк его состояние меняется. Чтобы получить тот же ряд, что и при обычной генерации, передайте Random(config.seed).",
+      "zh-CN": "已初始化的 random.Random 实例。每取一行都会推进其当前状态。要复现标准生成路径，传入 Random(config.seed)。"
+    },
+    "periods": {
+      "en": "Nonnegative integer number of timestamps. The starting timestamp counts as the first entry when the count is positive.",
+      "ru": "Неотрицательное целое число отметок времени. Если их больше нуля, начальный момент входит в это число.",
+      "zh-CN": "时间戳个数，须为非负整数。个数大于零时，起始时刻算作第一项。"
+    },
+    "frame": {
+      "en": "A pandas DataFrame with exactly datetime, open, high, low, close and volume. The time values belong in a column and the volume unit should match the source series.",
+      "ru": "DataFrame с шестью столбцами datetime, open, high, low, close и volume. Время передают в отдельном столбце, объём — в единицах исходного ряда.",
+      "zh-CN": "pandas DataFrame，须恰有 datetime、open、high、low、close 和 volume 六列。时间存放在列中，成交量沿用数据来源的单位。"
+    },
+    "assume_timezone": {
+      "en": "Time zone to apply to timestamps without an offset. Leave unset for timezone-aware values. Mixed aware and naive timestamps, ambiguous local times and nonexistent times are rejected.",
+      "ru": "Часовой пояс для отметок без смещения относительно UTC. Если пояс уже указан в данных, параметр можно опустить. Смешение двух форматов, двусмысленное или несуществующее местное время считаются ошибкой.",
+      "zh-CN": "为未带时区的时间戳指定原时区。时间戳已带时区时可省略。不能混用有时区和无时区的时间戳，也不能使用夏令时切换时重复或不存在的当地时刻。"
+    },
+    "allow_gaps": {
+      "en": "With a declared timeframe, True permits whole missing intervals and False requires exactly one interval between adjacent candles. False requires timeframe_seconds. Without a timeframe only chronological order is checked for spacing.",
+      "ru": "Если интервал задан, True допускает пропуск целого числа интервалов, а False требует ровно один интервал между соседними свечами. Для False обязателен timeframe_seconds. Без заданного шага проверяется только порядок отметок времени.",
+      "zh-CN": "指定周期时，True 允许跳过整数个周期，False 要求相邻 K 线恰好相隔一个周期。使用 False 必须提供 timeframe_seconds。未指定周期时，只检查时间先后顺序。"
+    },
+    "source": {
+      "en": "Path to a UTF-8 OHLCV CSV or an already open text stream positioned at the header.",
+      "ru": "Путь к CSV со свечами в UTF-8 или открытый текстовый поток, установленный в начало заголовка.",
+      "zh-CN": "UTF-8 行情 CSV 的路径，或已打开且当前位置在表头的文本流。"
+    },
+    "destination": {
+      "en": "Output CSV path or an already open text stream for writing. The caller retains ownership of a supplied stream.",
+      "ru": "Путь для записи CSV или открытый текстовый поток. Закрывать переданный поток должен вызывающий код.",
+      "zh-CN": "输出 CSV 的路径，或已打开以供写入的文本流。传入的流由调用方负责关闭。"
+    },
+    "streaming.WriteCSVChunks.destination": {
+      "en": "Destination file path. Its parent directory must exist. After all checks, the completed temporary file replaces this path in one operation.",
+      "ru": "Путь к итоговому файлу. Родительский каталог должен существовать. После проверки всех данных временный файл заменяет целевой одной операцией.",
+      "zh-CN": "目标文件路径，所在目录须已存在。全部数据通过校验后，以一次操作将临时文件替换为最终文件。"
+    },
+    "volume_as_count": {
+      "en": "Write whole volumes without a decimal point. If a volume has a fractional part, enabling this option raises OHLCVError instead of rounding it.",
+      "ru": "Записывать целые объёмы без десятичной точки. Если в ряду встречается дробный объём, при включённом параметре возникает OHLCVError. Округление не применяется.",
+      "zh-CN": "以不带小数点的形式写出整数成交量。启用该选项后，遇到带小数部分的原值会抛出 OHLCVError，不会将其取整。"
+    },
+    "chunk_size": {
+      "en": "Maximum number of candles in each yielded frame. A positive integer, default 10,000. The final chunk can be shorter.",
+      "ru": "Максимальное число свечей в одной порции. Положительное целое, по умолчанию 10 000. Последняя порция может быть короче.",
+      "zh-CN": "每批 DataFrame 的最大 K 线根数，须为正整数，默认为 10,000。最后一批可以少于此数。"
+    },
+    "chunks": {
+      "en": "Iterable of OHLCV DataFrames in time order. Nonempty chunks must follow one another under the same interval and gap policy.",
+      "ru": "Последовательность таблиц OHLCV в хронологическом порядке. Интервал и правила пропусков применяются также между соседними непустыми порциями.",
+      "zh-CN": "按时间先后排列的一系列 OHLCV DataFrame。相邻非空批次之间也必须满足相同的周期和缺口规则。"
+    },
+    "data": {
+      "en": "OHLCV DataFrame whose exact timestamps, prices and volumes are used to compute a fingerprint.",
+      "ru": "Таблица OHLCV, по точным отметкам времени, ценам и объёмам которой вычисляется контрольная сумма.",
+      "zh-CN": "供计算摘要的 OHLCV DataFrame。计算使用精确的时间戳、价格及成交量。"
+    },
+    "scenario.CreateManifest.data": {
+      "en": "Optional existing OHLCV output. Its fingerprint is recorded as supplied. Omit to generate the output directly from config.",
+      "ru": "Готовая таблица свечей, если она уже есть. В описание эксперимента попадёт контрольная сумма именно этой таблицы. Если параметр опущен, ряд будет сгенерирован по config.",
+      "zh-CN": "可选的现有 OHLCV 输出。记录中采用所传数据本身的摘要。省略时，根据 config 生成一遍行情。"
+    },
+    "extended_models.CreateBootstrapManifest.data": {
+      "en": "Optional expected OHLCV series. Its fingerprint must match the new bootstrap run exactly.",
+      "ru": "Ожидаемая таблица свечей для сверки, если она уже есть. Её контрольная сумма должна совпасть с результатом новой блочной выборки.",
+      "zh-CN": "可选的预期行情，其摘要必须与本次区块重采样的结果完全一致。"
+    },
+    "extended_models.CreateScriptedManifest.data": {
+      "en": "Optional expected OHLCV series. Its fingerprint must match the result of executing the recorded events.",
+      "ru": "Ожидаемая таблица свечей для сверки. Её контрольная сумма должна совпасть с результатом исполнения заданных событий.",
+      "zh-CN": "可选的预期行情，其摘要须与执行给定事件后生成的结果一致。"
+    },
+    "metadata": {
+      "en": "Optional JSON object for provenance. If provided, profile_reference must be a lowercase 64-character SHA-256 digest and becomes part of the scenario identity.",
+      "ru": "Необязательный JSON-объект со сведениями о происхождении эксперимента. Если задано поле profile_reference, оно должно содержать SHA-256 из 64 строчных шестнадцатеричных знаков и входит в контрольную сумму условий запуска.",
+      "zh-CN": "记录实验来源的可选 JSON 对象。其中如含 profile_reference，须填写 64 位小写十六进制 SHA-256 摘要，该值会计入运行条件的摘要。"
+    },
+    "manifest": {
+      "en": "The complete saved manifest for this model, including its settings, version and fingerprints. Use the dictionary returned by the corresponding creation function.",
+      "ru": "Полное сохранённое описание запуска для этой модели, включая параметры, версию и контрольные суммы. Подходит словарь, возвращённый соответствующей функцией создания манифеста.",
+      "zh-CN": "该模型完整的运行记录，包括配置、版本及摘要。可直接使用对应创建函数返回的字典。"
+    },
+    "strict_environment": {
+      "en": "True requires an exact match to the recorded environment. False attempts replay in the current environment and still requires the recorded library version, matching scenario identity and an identical output digest.",
+      "ru": "При True текущая среда должна точно совпадать с записанной. При False допустима иная среда, но по-прежнему проверяются версия библиотеки, идентичность сценария и контрольная сумма данных.",
+      "zh-CN": "True 要求当前环境与记录完全一致。False 允许在不同环境尝试重放，但仍会校验库版本、模型及情景标识和输出行情摘要。"
+    },
+    "version": {
+      "en": "Integer revision of this model's algorithm. For example, regime_v3 has revision 3. The package release is versioned independently.",
+      "ru": "Целый номер версии алгоритма конкретной модели. Например, у regime_v3 это 3. У пакета собственная нумерация версий.",
+      "zh-CN": "该模型算法的整数版本号，例如 regime_v3 的版本号为 3。软件包发行版本另行编号。"
+    },
+    "status": {
+      "en": "Maturity label assigned by the registry. In this release all four models have experimental status.",
+      "ru": "Статус зрелости модели в реестре. У всех четырёх моделей в этом выпуске стоит experimental.",
+      "zh-CN": "注册表标记的模型成熟度。本版本的四种模型均标为 experimental（实验性）。"
+    },
+    "supported_parameters": {
+      "en": "Names of configuration fields accepted by the model.",
+      "ru": "Имена параметров, которые поддерживает эта модель.",
+      "zh-CN": "该模型可接受的配置字段名。"
+    },
+    "suitability": {
+      "en": "Research or testing uses the model is designed to serve.",
+      "ru": "Исследовательские и тестовые задачи, для которых предназначена модель.",
+      "zh-CN": "该模型适用的研究或测试任务。"
+    },
+    "limitations": {
+      "en": "Known constraints on how to interpret the synthetic candles and what they can establish about a market.",
+      "ru": "Известные ограничения модели, которые учитывают, когда по синтетическим свечам делают выводы о рынке.",
+      "zh-CN": "解读模拟 K 线及据此推断市场特征时，须考虑的已知局限。"
+    },
+    "required_validation": {
+      "en": "Checks to perform for the intended application, such as OHLCV invariants, temporal dependence or validation on held-out market data.",
+      "ru": "Проверки перед применением модели. В зависимости от задачи это могут быть согласованность цен, зависимость между свечами или сравнение с отдельным отрезком рыночной истории.",
+      "zh-CN": "应用前应做的检验，例如 K 线内部数值是否一致、序列的时间依赖性如何，或结果能否通过留出历史样本的验证。"
+    },
+    "count": {
+      "en": "Number of candles to generate in the new series, from 1 to 1,000,000 inclusive.",
+      "ru": "Число свечей в новом ряду, от 1 до 1 000 000 включительно.",
+      "zh-CN": "新序列的 K 线根数，范围为 1 至 1,000,000（含两端）。"
+    },
+    "block_length": {
+      "en": "Number of consecutive historical candles per sampled block. Between 1 and the source row count minus one. Blocks do not wrap from the last row to the first.",
+      "ru": "Число соседних исторических свечей в одном блоке. Минимум — 1, максимум — число строк исходной истории минус одна. Блок не может перейти с конца истории на её начало.",
+      "zh-CN": "每个抽样区块中连续历史 K 线的根数，最少为 1，最多为原始行数减 1。区块不会从样本末尾绕回开头。"
+    },
+    "values": {
+      "en": "Complete JSON-compatible mapping produced by the configuration's ToDict method. Every field must be present, including an ISO 8601 start time with time zone.",
+      "ru": "Полный словарь в формате JSON, возвращаемый методом ToDict этого класса. Нужны все поля, включая строку ISO 8601 со временем начала и часовым поясом.",
+      "zh-CN": "由本配置的 ToDict 方法返回的完整映射，须符合 JSON 格式。须保留所有字段，包括带时区的 ISO 8601 起始时间。"
+    },
+    "reference": {
+      "en": "Historical OHLCV table on a regular time grid with at least three rows and strictly positive prices. Sampled volumes keep the original units and may include fractions or zeros.",
+      "ru": "Историческая таблица OHLCV как минимум из трёх свечей, с равным шагом времени и строго положительными ценами. Единицы исходного объёма сохраняются. Допустимы нулевые и дробные значения.",
+      "zh-CN": "历史 OHLCV 表，须至少有三根等间隔 K 线，且价格严格为正。成交量沿用来源数据的单位，允许为零或带小数。"
+    },
+    "index": {
+      "en": "Zero-based number of the candle where the event takes effect. Each event in the path must have its own number below count.",
+      "ru": "Номер свечи, на которой происходит событие. Нумерация с нуля, номер меньше count. На один номер допускается одно событие.",
+      "zh-CN": "事件生效的 K 线编号，从 0 开始且小于 count。同一个编号只能安排一个事件。"
+    },
+    "log_jump": {
+      "en": "One-candle opening gap in natural log units. The open equals the previous close × exp(log_jump). For a 10% gap up use log(1.10).",
+      "ru": "Разрыв на открытии одной свечи в единицах натурального логарифма. Цена открытия равна предыдущему закрытию, умноженному на exp(log_jump). Для скачка вверх на 10% задайте ln(1,10).",
+      "zh-CN": "单根 K 线以自然对数表示的开盘跳空幅度。开盘价等于前收盘价乘以 exp(log_jump)。若要高开 10%，取 ln(1.10)。"
+    },
+    "volume": {
+      "en": "Nonnegative volume per candle in the chosen units. The scripted model preserves the specified value, including any fractional part.",
+      "ru": "Неотрицательный объём на одну свечу в выбранных единицах. Сценарная модель сохраняет заданное значение, в том числе дробное.",
+      "zh-CN": "以所选单位表示的单根 K 线成交量，必须非负。按事件表生成时保留设定值，包括小数部分。"
+    },
+    "extended_models.ScriptStep.volume": {
+      "en": "New nonnegative volume per candle from this event onward. None keeps the previous setting. Fractional values are accepted.",
+      "ru": "Новый неотрицательный объём на свечу с момента события. При None сохраняется прежний объём. Допускаются дробные значения.",
+      "zh-CN": "从该事件起生效的单根 K 线成交量，须非负，可有小数。设为 None 时沿用之前的值。"
+    },
+    "wick_fraction": {
+      "en": "Fraction from 0 inclusive to 1 exclusive. High equals the upper edge of the body × (1 + fraction), low equals the lower edge × (1 − fraction).",
+      "ru": "Доля от 0 включительно до 1, не включая 1. Максимум равен верхней границе тела, умноженной на (1 + доля), минимум — нижней границе, умноженной на (1 − доля).",
+      "zh-CN": "影线比例，范围为 0（含）至 1（不含）。最高价等于实体上沿价格乘以（1 + 比例），最低价等于实体下沿价格乘以（1 − 比例）。"
+    },
+    "steps": {
+      "en": "Tuple of ScriptStep events, in ascending candle order and without duplicate indices. An empty tuple leaves the initial drift and volume in effect throughout.",
+      "ru": "Кортеж событий ScriptStep в порядке возрастания номеров свечей, без повторов. При пустом кортеже дрейф и объём сохраняют начальные значения на всём интервале.",
+      "zh-CN": "由 ScriptStep 事件组成的元组，按 K 线编号升序排列且不得重复。空元组表示整个情景沿用初始漂移和成交量。"
+    },
+    "market_data.TimeframeNanoseconds.timeframe_seconds": {
+      "en": "Positive interval in seconds, given as a real number. An exact whole number of nanoseconds must fit in a signed 64-bit duration.",
+      "ru": "Положительный интервал в секундах. После точного перевода в наносекунды должно получиться целое число, помещающееся в 64-битный знаковый тип.",
+      "zh-CN": "以秒表示的正实数间隔。换算后须恰为整数纳秒，且不超过 64 位有符号时长的上限。"
+    },
+    "market_data.TimestampRange.timeframe_seconds": {
+      "en": "Spacing of the requested timestamps in seconds. Fractional seconds are allowed down to exact nanoseconds.",
+      "ru": "Шаг между отметками времени в секундах. Допускаются дробные значения вплоть до целой наносекунды.",
+      "zh-CN": "相邻时间戳的间隔，以秒计。允许小数秒，最小可精确到一纳秒。"
+    }
+  }
+}

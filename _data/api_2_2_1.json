@@ -1,0 +1,1847 @@
+{
+  "version": "2.2.1",
+  "topics": [
+    "generation",
+    "market-data",
+    "alternative-models",
+    "analysis",
+    "monte-carlo",
+    "calibration",
+    "indicators",
+    "charts",
+    "chart-types",
+    "cli"
+  ],
+  "modules": {
+    "config": {
+      "topic": "generation",
+      "domain": "market",
+      "file": "config.py",
+      "entries": [
+        {
+          "key": "config.GenerationConfig",
+          "name": "GenerationConfig",
+          "kind": "class",
+          "signature": "GenerationConfig(\n    seed: int = 0,\n    horizon: int = 150,\n    start: datetime = datetime(2000, 1, 1, tzinfo=timezone.utc),\n    timeframe_seconds: int = 3600,\n    model: str = COUNT_MODEL_ID,\n    initial_price: float = 100.0,\n    price_floor: float = 1e-06,\n    price_ceiling: float = 1000000000000.0,\n    drift: float = 0.0,\n    volatility: float = 0.01,\n    regime_persistence: float = 0.95,\n    regime_scale: float = 3.0,\n    shock_probability: float = 0.01,\n    shock_scale: float = 5.0,\n    wick_scale: float = 0.5,\n    wick_outlier_probability: float = 0.01,\n    wick_outlier_scale: float = 5.0,\n    volume_base: float = 1000.0,\n    volume_sigma: float = 0.25,\n    volume_return_coupling: float = 1.0,\n    volume_persistence: float = 0.5,\n    volume_ceiling: float = 1000000000000.0,\n)",
+          "terms": [
+            "seed",
+            "horizon",
+            "start",
+            "timeframe_seconds",
+            "model",
+            "initial_price",
+            "price_floor",
+            "price_ceiling",
+            "drift",
+            "volatility",
+            "regime_persistence",
+            "regime_scale",
+            "shock_probability",
+            "shock_scale",
+            "wick_scale",
+            "wick_outlier_probability",
+            "wick_outlier_scale",
+            "volume_base",
+            "volume_sigma",
+            "volume_return_coupling",
+            "volume_persistence",
+            "volume_ceiling"
+          ],
+          "line": 17
+        },
+        {
+          "key": "config.GenerationConfig.ToDict",
+          "name": "GenerationConfig.ToDict",
+          "kind": "method",
+          "signature": "GenerationConfig.ToDict() -> dict[str, Any]",
+          "terms": [],
+          "line": 131
+        },
+        {
+          "key": "config.GenerationConfig.FromDict",
+          "name": "GenerationConfig.FromDict",
+          "kind": "method",
+          "signature": "GenerationConfig.FromDict(configuration: Mapping[str, Any]) -> 'GenerationConfig'",
+          "terms": [
+            "configuration"
+          ],
+          "line": 140
+        }
+      ],
+      "constants": [
+        {
+          "name": "CONTINUOUS_MODEL_ID",
+          "line": 10,
+          "value": "'regime_v2'"
+        },
+        {
+          "name": "COUNT_MODEL_ID",
+          "line": 11,
+          "value": "'regime_v3'"
+        },
+        {
+          "name": "REGIME_MODEL_VERSIONS",
+          "line": 12,
+          "value": "{CONTINUOUS_MODEL_ID: 2, COUNT_MODEL_ID: 3}"
+        },
+        {
+          "name": "MAX_VOLUME_COUNT",
+          "line": 13,
+          "value": "2 ** 53 - 1"
+        }
+      ]
+    },
+    "generation": {
+      "topic": "generation",
+      "domain": "market",
+      "file": "generation.py",
+      "entries": [
+        {
+          "key": "generation.Generate",
+          "name": "Generate",
+          "kind": "function",
+          "signature": "Generate(config: GenerationConfig) -> pd.DataFrame",
+          "terms": [
+            "config"
+          ],
+          "line": 14
+        }
+      ],
+      "constants": [
+        {
+          "name": "OHLCV_COLUMNS",
+          "line": 11,
+          "value": "['datetime', 'open', 'high', 'low', 'close', 'volume']"
+        }
+      ]
+    },
+    "models": {
+      "topic": "generation",
+      "domain": "market",
+      "file": "models.py",
+      "entries": [
+        {
+          "key": "models.GenerateRows",
+          "name": "GenerateRows",
+          "kind": "function",
+          "signature": "GenerateRows(\n    config: GenerationConfig,\n    rng: Random,\n) -> Iterator[tuple[float, float, float, float, float]]",
+          "terms": [
+            "config",
+            "rng"
+          ],
+          "line": 25
+        }
+      ],
+      "constants": [
+        {
+          "name": "RNG_ID",
+          "line": 10,
+          "value": "'python.random.Random/MT19937'"
+        }
+      ]
+    },
+    "streaming": {
+      "topic": "generation",
+      "domain": "market",
+      "file": "streaming.py",
+      "entries": [
+        {
+          "key": "streaming.GenerateChunks",
+          "name": "GenerateChunks",
+          "kind": "function",
+          "signature": "GenerateChunks(config, *, chunk_size=10000)",
+          "terms": [
+            "config",
+            "chunk_size"
+          ],
+          "line": 18
+        },
+        {
+          "key": "streaming.WriteCSVChunks",
+          "name": "WriteCSVChunks",
+          "kind": "function",
+          "signature": "WriteCSVChunks(chunks, destination, *, timeframe_seconds=None, allow_gaps=True)",
+          "terms": [
+            "chunks",
+            "destination",
+            "timeframe_seconds",
+            "allow_gaps"
+          ],
+          "line": 49
+        }
+      ],
+      "constants": []
+    },
+    "registry": {
+      "topic": "generation",
+      "domain": "market",
+      "file": "registry.py",
+      "entries": [
+        {
+          "key": "registry.ModelInfo",
+          "name": "ModelInfo",
+          "kind": "class",
+          "signature": "ModelInfo(\n    model: str,\n    version: int,\n    rng: str,\n    status: str,\n    supported_parameters: tuple[str, ...],\n    suitability: tuple[str, ...],\n    limitations: tuple[str, ...],\n    required_validation: tuple[str, ...],\n)",
+          "terms": [
+            "model",
+            "version",
+            "rng",
+            "status",
+            "supported_parameters",
+            "suitability",
+            "limitations",
+            "required_validation"
+          ],
+          "line": 9
+        },
+        {
+          "key": "registry.ModelInfo.ToDict",
+          "name": "ModelInfo.ToDict",
+          "kind": "method",
+          "signature": "ModelInfo.ToDict() -> dict",
+          "terms": [],
+          "line": 21
+        },
+        {
+          "key": "registry.ListModels",
+          "name": "ListModels",
+          "kind": "function",
+          "signature": "ListModels() -> tuple[ModelInfo, ...]",
+          "terms": [],
+          "line": 54
+        },
+        {
+          "key": "registry.GetModel",
+          "name": "GetModel",
+          "kind": "function",
+          "signature": "GetModel(model: str) -> ModelInfo",
+          "terms": [
+            "model"
+          ],
+          "line": 60
+        }
+      ],
+      "constants": []
+    },
+    "market_data": {
+      "topic": "market-data",
+      "domain": "market",
+      "file": "market_data.py",
+      "entries": [
+        {
+          "key": "market_data.OHLCVError",
+          "name": "OHLCVError",
+          "kind": "class",
+          "signature": "class OHLCVError(ValueError)",
+          "terms": [],
+          "line": 20
+        },
+        {
+          "key": "market_data.TimeframeNanoseconds",
+          "name": "TimeframeNanoseconds",
+          "kind": "function",
+          "signature": "TimeframeNanoseconds(timeframe_seconds)",
+          "terms": [
+            "timeframe_seconds"
+          ],
+          "line": 24
+        },
+        {
+          "key": "market_data.TimestampRange",
+          "name": "TimestampRange",
+          "kind": "function",
+          "signature": "TimestampRange(start, periods, timeframe_seconds)",
+          "terms": [
+            "start",
+            "periods",
+            "timeframe_seconds"
+          ],
+          "line": 47
+        },
+        {
+          "key": "market_data.ValidateOHLCV",
+          "name": "ValidateOHLCV",
+          "kind": "function",
+          "signature": "ValidateOHLCV(frame, *, assume_timezone=None, timeframe_seconds=None, allow_gaps=True)",
+          "terms": [
+            "frame",
+            "assume_timezone",
+            "timeframe_seconds",
+            "allow_gaps"
+          ],
+          "line": 184
+        },
+        {
+          "key": "market_data.ToDatetimeIndex",
+          "name": "ToDatetimeIndex",
+          "kind": "function",
+          "signature": "ToDatetimeIndex(frame, *, assume_timezone=None, timeframe_seconds=None, allow_gaps=True)",
+          "terms": [
+            "frame",
+            "assume_timezone",
+            "timeframe_seconds",
+            "allow_gaps"
+          ],
+          "line": 237
+        }
+      ],
+      "constants": [
+        {
+          "name": "OHLCV_COLUMNS",
+          "line": 12,
+          "value": "('datetime', 'open', 'high', 'low', 'close', 'volume')"
+        },
+        {
+          "name": "VALUE_COLUMNS",
+          "line": 13,
+          "value": "OHLCV_COLUMNS[1:]"
+        },
+        {
+          "name": "ISO_DATETIME_PATTERN",
+          "line": 14,
+          "value": "re.compile('\\\\d{4}-\\\\d{2}-\\\\d{2}T\\\\d{2}:\\\\d{2}:\\\\d{2}(?:\\\\.\\\\d{1,9})?(?:Z|[+-]\\\\d{2}:\\\\d{2})?\\\\Z')"
+        }
+      ]
+    },
+    "io": {
+      "topic": "market-data",
+      "domain": "market",
+      "file": "io.py",
+      "entries": [
+        {
+          "key": "io.ReadCSV",
+          "name": "ReadCSV",
+          "kind": "function",
+          "signature": "ReadCSV(source, *, assume_timezone=None, timeframe_seconds=None, allow_gaps=True)",
+          "terms": [
+            "source",
+            "assume_timezone",
+            "timeframe_seconds",
+            "allow_gaps"
+          ],
+          "line": 25
+        },
+        {
+          "key": "io.WriteCSV",
+          "name": "WriteCSV",
+          "kind": "function",
+          "signature": "WriteCSV(\n    frame,\n    destination,\n    *,\n    assume_timezone=None,\n    timeframe_seconds=None,\n    allow_gaps=True,\n    volume_as_count=False,\n)",
+          "terms": [
+            "frame",
+            "destination",
+            "assume_timezone",
+            "timeframe_seconds",
+            "allow_gaps",
+            "volume_as_count"
+          ],
+          "line": 57
+        }
+      ],
+      "constants": [
+        {
+          "name": "NUMBER_PATTERN",
+          "line": 13,
+          "value": "re.compile('[+-]?(?:\\\\d+(?:\\\\.\\\\d*)?|\\\\.\\\\d+)(?:[eE][+-]?\\\\d+)?\\\\Z')"
+        }
+      ]
+    },
+    "scenario": {
+      "topic": "market-data",
+      "domain": "market",
+      "file": "scenario.py",
+      "entries": [
+        {
+          "key": "scenario.Environment",
+          "name": "Environment",
+          "kind": "function",
+          "signature": "Environment() -> dict[str, str]",
+          "terms": [],
+          "line": 21
+        },
+        {
+          "key": "scenario.Fingerprint",
+          "name": "Fingerprint",
+          "kind": "function",
+          "signature": "Fingerprint(data: pd.DataFrame) -> str",
+          "terms": [
+            "data"
+          ],
+          "line": 33
+        },
+        {
+          "key": "scenario.CreateManifest",
+          "name": "CreateManifest",
+          "kind": "function",
+          "signature": "CreateManifest(\n    config: GenerationConfig,\n    data: pd.DataFrame | None = None,\n    *,\n    metadata: Mapping[str, Any] | None = None,\n) -> dict[str, Any]",
+          "terms": [
+            "config",
+            "data",
+            "metadata"
+          ],
+          "line": 72
+        },
+        {
+          "key": "scenario.Replay",
+          "name": "Replay",
+          "kind": "function",
+          "signature": "Replay(manifest: Mapping[str, Any], *, strict_environment: bool = True) -> pd.DataFrame",
+          "terms": [
+            "manifest",
+            "strict_environment"
+          ],
+          "line": 99
+        }
+      ],
+      "constants": [
+        {
+          "name": "MANIFEST_VERSION",
+          "line": 18,
+          "value": "1"
+        }
+      ]
+    },
+    "extended_models": {
+      "topic": "alternative-models",
+      "domain": "market",
+      "file": "extended_models.py",
+      "entries": [
+        {
+          "key": "extended_models.BootstrapConfig",
+          "name": "BootstrapConfig",
+          "kind": "class",
+          "signature": "BootstrapConfig(\n    count: int = 150,\n    seed: int = 0,\n    block_length: int = 1,\n    initial_price: float = 100.0,\n    start: datetime = datetime(2000, 1, 1, tzinfo=timezone.utc),\n    timeframe_seconds: int = 3600,\n)",
+          "terms": [
+            "count",
+            "seed",
+            "block_length",
+            "initial_price",
+            "start",
+            "timeframe_seconds"
+          ],
+          "line": 90
+        },
+        {
+          "key": "extended_models.BootstrapConfig.ToDict",
+          "name": "BootstrapConfig.ToDict",
+          "kind": "method",
+          "signature": "BootstrapConfig.ToDict() -> dict",
+          "terms": [],
+          "line": 124
+        },
+        {
+          "key": "extended_models.BootstrapConfig.FromDict",
+          "name": "BootstrapConfig.FromDict",
+          "kind": "method",
+          "signature": "BootstrapConfig.FromDict(values: Mapping) -> 'BootstrapConfig'",
+          "terms": [
+            "values"
+          ],
+          "line": 133
+        },
+        {
+          "key": "extended_models.Bootstrap",
+          "name": "Bootstrap",
+          "kind": "function",
+          "signature": "Bootstrap(reference: pd.DataFrame, config: BootstrapConfig | None = None) -> pd.DataFrame",
+          "terms": [
+            "reference",
+            "config"
+          ],
+          "line": 145
+        },
+        {
+          "key": "extended_models.ScriptStep",
+          "name": "ScriptStep",
+          "kind": "class",
+          "signature": "ScriptStep(\n    index: int,\n    log_jump: float = 0.0,\n    drift: float | None = None,\n    volume: float | None = None,\n)",
+          "terms": [
+            "index",
+            "log_jump",
+            "drift",
+            "volume"
+          ],
+          "line": 204
+        },
+        {
+          "key": "extended_models.ScriptedConfig",
+          "name": "ScriptedConfig",
+          "kind": "class",
+          "signature": "ScriptedConfig(\n    count: int = 150,\n    initial_price: float = 100.0,\n    start: datetime = datetime(2000, 1, 1, tzinfo=timezone.utc),\n    timeframe_seconds: int = 3600,\n    drift: float = 0.0,\n    wick_fraction: float = 0.01,\n    volume: float = 1000.0,\n    steps: tuple[ScriptStep, ...] = (),\n)",
+          "terms": [
+            "count",
+            "initial_price",
+            "start",
+            "timeframe_seconds",
+            "drift",
+            "wick_fraction",
+            "volume",
+            "steps"
+          ],
+          "line": 226
+        },
+        {
+          "key": "extended_models.ScriptedConfig.ToDict",
+          "name": "ScriptedConfig.ToDict",
+          "kind": "method",
+          "signature": "ScriptedConfig.ToDict() -> dict",
+          "terms": [],
+          "line": 265
+        },
+        {
+          "key": "extended_models.ScriptedConfig.FromDict",
+          "name": "ScriptedConfig.FromDict",
+          "kind": "method",
+          "signature": "ScriptedConfig.FromDict(values: Mapping) -> 'ScriptedConfig'",
+          "terms": [
+            "values"
+          ],
+          "line": 275
+        },
+        {
+          "key": "extended_models.Scripted",
+          "name": "Scripted",
+          "kind": "function",
+          "signature": "Scripted(config: ScriptedConfig | None = None) -> pd.DataFrame",
+          "terms": [
+            "config"
+          ],
+          "line": 294
+        },
+        {
+          "key": "extended_models.CreateBootstrapManifest",
+          "name": "CreateBootstrapManifest",
+          "kind": "function",
+          "signature": "CreateBootstrapManifest(\n    reference: pd.DataFrame,\n    config: BootstrapConfig,\n    data: pd.DataFrame | None = None,\n) -> dict",
+          "terms": [
+            "reference",
+            "config",
+            "data"
+          ],
+          "line": 334
+        },
+        {
+          "key": "extended_models.ReplayBootstrap",
+          "name": "ReplayBootstrap",
+          "kind": "function",
+          "signature": "ReplayBootstrap(manifest: Mapping, reference: pd.DataFrame) -> pd.DataFrame",
+          "terms": [
+            "manifest",
+            "reference"
+          ],
+          "line": 350
+        },
+        {
+          "key": "extended_models.CreateScriptedManifest",
+          "name": "CreateScriptedManifest",
+          "kind": "function",
+          "signature": "CreateScriptedManifest(config: ScriptedConfig, data: pd.DataFrame | None = None) -> dict",
+          "terms": [
+            "config",
+            "data"
+          ],
+          "line": 366
+        },
+        {
+          "key": "extended_models.ReplayScripted",
+          "name": "ReplayScripted",
+          "kind": "function",
+          "signature": "ReplayScripted(manifest: Mapping) -> pd.DataFrame",
+          "terms": [
+            "manifest"
+          ],
+          "line": 404
+        }
+      ],
+      "constants": []
+    },
+    "analysis": {
+      "topic": "analysis",
+      "domain": "research",
+      "file": "analysis.py",
+      "entries": [
+        {
+          "key": "analysis.Estimate",
+          "name": "Estimate",
+          "kind": "class",
+          "signature": "Estimate(value: float | None, reason: str | None = None)",
+          "terms": [
+            "value",
+            "reason"
+          ],
+          "line": 11
+        },
+        {
+          "key": "analysis.OutlierEventSummary",
+          "name": "OutlierEventSummary",
+          "kind": "class",
+          "signature": "OutlierEventSummary(\n    definition: str,\n    trials: int,\n    upper_count: int,\n    lower_count: int,\n    either_count: int,\n    both_count: int,\n    upper_frequency: Estimate,\n    lower_frequency: Estimate,\n    either_frequency: Estimate,\n    both_frequency: Estimate,\n)",
+          "terms": [
+            "definition",
+            "trials",
+            "upper_count",
+            "lower_count",
+            "either_count",
+            "both_count",
+            "upper_frequency",
+            "lower_frequency",
+            "either_frequency",
+            "both_frequency"
+          ],
+          "line": 19
+        },
+        {
+          "key": "analysis.OutlierEventSummary.ToDict",
+          "name": "OutlierEventSummary.ToDict",
+          "kind": "method",
+          "signature": "OutlierEventSummary.ToDict() -> dict",
+          "terms": [],
+          "line": 33
+        },
+        {
+          "key": "analysis.Distribution",
+          "name": "Distribution",
+          "kind": "class",
+          "signature": "Distribution(\n    name: str,\n    count: int,\n    excluded: int,\n    mean: Estimate,\n    variance: Estimate,\n    standard_deviation: Estimate,\n    skewness: Estimate,\n    excess_kurtosis: Estimate,\n    minimum: Estimate,\n    maximum: Estimate,\n    quantiles: tuple[tuple[float, Estimate], ...],\n    lower_tail_mean: Estimate,\n    upper_tail_mean: Estimate,\n    tukey_outlier_fraction: Estimate,\n    three_sigma_fraction: Estimate,\n)",
+          "terms": [
+            "name",
+            "count",
+            "excluded",
+            "mean",
+            "variance",
+            "standard_deviation",
+            "skewness",
+            "excess_kurtosis",
+            "minimum",
+            "maximum",
+            "quantiles",
+            "lower_tail_mean",
+            "upper_tail_mean",
+            "tukey_outlier_fraction",
+            "three_sigma_fraction"
+          ],
+          "line": 40
+        },
+        {
+          "key": "analysis.ProportionBand",
+          "name": "ProportionBand",
+          "kind": "class",
+          "signature": "ProportionBand(count: int, trials: int, confidence: float, lower: float, upper: float)",
+          "terms": [
+            "count",
+            "trials",
+            "confidence",
+            "lower",
+            "upper"
+          ],
+          "line": 61
+        },
+        {
+          "key": "analysis.PricePathSummary",
+          "name": "PricePathSummary",
+          "kind": "class",
+          "signature": "PricePathSummary(\n    start_datetime: str,\n    end_datetime: str,\n    elapsed_seconds: float,\n    first_close: float,\n    last_close: float,\n    close_range: Estimate,\n    endpoint_change: Estimate,\n    endpoint_return: Estimate,\n    up_candles: int,\n    down_candles: int,\n    doji_candles: int,\n    longest_up_run: int,\n    longest_down_run: int,\n    total_volume: Estimate,\n)",
+          "terms": [
+            "start_datetime",
+            "end_datetime",
+            "elapsed_seconds",
+            "first_close",
+            "last_close",
+            "close_range",
+            "endpoint_change",
+            "endpoint_return",
+            "up_candles",
+            "down_candles",
+            "doji_candles",
+            "longest_up_run",
+            "longest_down_run",
+            "total_volume"
+          ],
+          "line": 72
+        },
+        {
+          "key": "analysis.AnalysisReport",
+          "name": "AnalysisReport",
+          "kind": "class",
+          "signature": "AnalysisReport(\n    candle_count: int,\n    cadence_regular: bool,\n    distributions: tuple[Distribution, ...],\n    simple_returns: tuple[float | None, ...],\n    log_returns: tuple[float | None, ...],\n    return_reasons: tuple[str | None, ...],\n    log_return_reasons: tuple[str | None, ...],\n    return_acf: tuple[Estimate, ...],\n    absolute_return_acf: tuple[Estimate, ...],\n    squared_return_acf: tuple[Estimate, ...],\n    drawdown: tuple[float | None, ...],\n    maximum_drawdown: Estimate,\n    maximum_drawdown_duration_bars: Estimate,\n    volume_absolute_return_correlation: Estimate,\n    volume_range_correlation: Estimate,\n    up_candle_fraction: Estimate,\n    zero_volume_fraction: Estimate,\n    path: PricePathSummary,\n    notes: tuple[str, ...],\n)",
+          "terms": [
+            "candle_count",
+            "cadence_regular",
+            "distributions",
+            "simple_returns",
+            "log_returns",
+            "return_reasons",
+            "log_return_reasons",
+            "return_acf",
+            "absolute_return_acf",
+            "squared_return_acf",
+            "drawdown",
+            "maximum_drawdown",
+            "maximum_drawdown_duration_bars",
+            "volume_absolute_return_correlation",
+            "volume_range_correlation",
+            "up_candle_fraction",
+            "zero_volume_fraction",
+            "path",
+            "notes"
+          ],
+          "line": 92
+        },
+        {
+          "key": "analysis.AnalysisReport.ToDict",
+          "name": "AnalysisReport.ToDict",
+          "kind": "method",
+          "signature": "AnalysisReport.ToDict() -> dict",
+          "terms": [],
+          "line": 115
+        },
+        {
+          "key": "analysis.AnalysisReport.ToJSON",
+          "name": "AnalysisReport.ToJSON",
+          "kind": "method",
+          "signature": "AnalysisReport.ToJSON() -> str",
+          "terms": [],
+          "line": 120
+        },
+        {
+          "key": "analysis.AnalysisReport.Summary",
+          "name": "AnalysisReport.Summary",
+          "kind": "method",
+          "signature": "AnalysisReport.Summary() -> tuple[str, ...]",
+          "terms": [],
+          "line": 125
+        },
+        {
+          "key": "analysis.Describe",
+          "name": "Describe",
+          "kind": "function",
+          "signature": "Describe(values, name: str = 'values') -> Distribution",
+          "terms": [
+            "values",
+            "name"
+          ],
+          "line": 171
+        },
+        {
+          "key": "analysis.SummarizeOutlierEvents",
+          "name": "SummarizeOutlierEvents",
+          "kind": "function",
+          "signature": "SummarizeOutlierEvents(upper_flags, lower_flags, *, definition: str) -> OutlierEventSummary",
+          "terms": [
+            "upper_flags",
+            "lower_flags",
+            "definition"
+          ],
+          "line": 220
+        },
+        {
+          "key": "analysis.ProportionInterval",
+          "name": "ProportionInterval",
+          "kind": "function",
+          "signature": "ProportionInterval(count: int, trials: int, *, confidence: float = 0.99) -> ProportionBand",
+          "terms": [
+            "count",
+            "trials",
+            "confidence"
+          ],
+          "line": 250
+        },
+        {
+          "key": "analysis.ProbabilityTolerance",
+          "name": "ProbabilityTolerance",
+          "kind": "function",
+          "signature": "ProbabilityTolerance(trials: int, *, confidence: float = 0.99) -> float",
+          "terms": [
+            "trials",
+            "confidence"
+          ],
+          "line": 265
+        },
+        {
+          "key": "analysis.ACF",
+          "name": "ACF",
+          "kind": "function",
+          "signature": "ACF(values, lags: int = 10) -> tuple[Estimate, ...]",
+          "terms": [
+            "values",
+            "lags"
+          ],
+          "line": 273
+        },
+        {
+          "key": "analysis.Analyze",
+          "name": "Analyze",
+          "kind": "function",
+          "signature": "Analyze(frame, *, acf_lags: int = 10) -> AnalysisReport",
+          "terms": [
+            "frame",
+            "acf_lags"
+          ],
+          "line": 325
+        }
+      ],
+      "constants": []
+    },
+    "fuzzy_diagnostics": {
+      "topic": "analysis",
+      "domain": "research",
+      "file": "fuzzy_diagnostics.py",
+      "entries": [
+        {
+          "key": "fuzzy_diagnostics.RegimeTermGrade",
+          "name": "RegimeTermGrade",
+          "kind": "class",
+          "signature": "RegimeTermGrade(variable: str, term: str, coordinate: float, grade: float)",
+          "terms": [
+            "variable",
+            "term",
+            "coordinate",
+            "grade"
+          ],
+          "line": 22
+        },
+        {
+          "key": "fuzzy_diagnostics.RegimeRuleFiring",
+          "name": "RegimeRuleFiring",
+          "kind": "class",
+          "signature": "RegimeRuleFiring(\n    name: str,\n    consequent: str,\n    antecedent_grade: float,\n    weight: float,\n    firing_strength: float,\n)",
+          "terms": [
+            "name",
+            "consequent",
+            "antecedent_grade",
+            "weight",
+            "firing_strength"
+          ],
+          "line": 32
+        },
+        {
+          "key": "fuzzy_diagnostics.RegimeDiagnostic",
+          "name": "RegimeDiagnostic",
+          "kind": "class",
+          "signature": "RegimeDiagnostic(\n    profile_id: str,\n    fuzzyroutines_version: str,\n    method: str,\n    volatility_ratio: float,\n    activity_ratio: float,\n    score: float,\n    input_grades: tuple[RegimeTermGrade, ...],\n    rules: tuple[RegimeRuleFiring, ...],\n)",
+          "terms": [
+            "profile_id",
+            "fuzzyroutines_version",
+            "method",
+            "volatility_ratio",
+            "activity_ratio",
+            "score",
+            "input_grades",
+            "rules"
+          ],
+          "line": 43
+        },
+        {
+          "key": "fuzzy_diagnostics.RegimeDiagnostic.ToDict",
+          "name": "RegimeDiagnostic.ToDict",
+          "kind": "method",
+          "signature": "RegimeDiagnostic.ToDict() -> dict",
+          "terms": [],
+          "line": 55
+        },
+        {
+          "key": "fuzzy_diagnostics.DiagnoseRegime",
+          "name": "DiagnoseRegime",
+          "kind": "function",
+          "signature": "DiagnoseRegime(volatility_ratio: float, activity_ratio: float) -> RegimeDiagnostic",
+          "terms": [
+            "volatility_ratio",
+            "activity_ratio"
+          ],
+          "line": 99
+        }
+      ],
+      "constants": [
+        {
+          "name": "PROFILE_ID",
+          "line": 10,
+          "value": "'relative-market-stress-v1'"
+        },
+        {
+          "name": "FUZZYROUTINES_VERSION",
+          "line": 11,
+          "value": "'2.1.0'"
+        }
+      ]
+    },
+    "monte_carlo": {
+      "topic": "monte-carlo",
+      "domain": "research",
+      "file": "monte_carlo.py",
+      "entries": [
+        {
+          "key": "monte_carlo.EnsembleReport",
+          "name": "EnsembleReport",
+          "kind": "class",
+          "signature": "EnsembleReport(\n    configuration: GenerationConfig,\n    path_count: int,\n    close_quantiles: tuple[tuple[float, ...], ...],\n    maximum_drawdowns: tuple[float, ...],\n    drawdown_quantiles: tuple[float, ...],\n    environment: tuple[tuple[str, str], ...],\n    quantile_levels: tuple[float, ...] = QUANTILE_LEVELS,\n    quantile_method: str = QUANTILE_METHOD,\n    metric_version: str = METRIC_VERSION,\n    seed_derivation: str = SEED_DERIVATION,\n    rng: str = RNG_ID,\n    library_version: str = __version__,\n)",
+          "terms": [
+            "configuration",
+            "path_count",
+            "close_quantiles",
+            "maximum_drawdowns",
+            "drawdown_quantiles",
+            "environment",
+            "quantile_levels",
+            "quantile_method",
+            "metric_version",
+            "seed_derivation",
+            "rng",
+            "library_version"
+          ],
+          "line": 34
+        },
+        {
+          "key": "monte_carlo.EnsembleReport.ToDict",
+          "name": "EnsembleReport.ToDict",
+          "kind": "method",
+          "signature": "EnsembleReport.ToDict() -> dict[str, Any]",
+          "terms": [],
+          "line": 55
+        },
+        {
+          "key": "monte_carlo.DerivePathSeed",
+          "name": "DerivePathSeed",
+          "kind": "function",
+          "signature": "DerivePathSeed(root_seed: int, path_index: int) -> int",
+          "terms": [
+            "root_seed",
+            "path_index"
+          ],
+          "line": 65
+        },
+        {
+          "key": "monte_carlo.RunEnsemble",
+          "name": "RunEnsemble",
+          "kind": "function",
+          "signature": "RunEnsemble(config: GenerationConfig, *, path_count: int, workers: int = 1) -> EnsembleReport",
+          "terms": [
+            "config",
+            "path_count",
+            "workers"
+          ],
+          "line": 106
+        },
+        {
+          "key": "monte_carlo.CreateEnsembleManifest",
+          "name": "CreateEnsembleManifest",
+          "kind": "function",
+          "signature": "CreateEnsembleManifest(report: EnsembleReport) -> dict[str, Any]",
+          "terms": [
+            "report"
+          ],
+          "line": 171
+        },
+        {
+          "key": "monte_carlo.ReplayEnsemble",
+          "name": "ReplayEnsemble",
+          "kind": "function",
+          "signature": "ReplayEnsemble(\n    manifest: Mapping[str, Any],\n    *,\n    workers: int = 1,\n    strict_environment: bool = True,\n) -> EnsembleReport",
+          "terms": [
+            "manifest",
+            "workers",
+            "strict_environment"
+          ],
+          "line": 193
+        },
+        {
+          "key": "monte_carlo.ChartEnsemble",
+          "name": "ChartEnsemble",
+          "kind": "function",
+          "signature": "ChartEnsemble(report: EnsembleReport, output: str | Path) -> Path",
+          "terms": [
+            "report",
+            "output"
+          ],
+          "line": 246
+        }
+      ],
+      "constants": [
+        {
+          "name": "SEED_DERIVATION",
+          "line": 23,
+          "value": "'pricegenerator-monte-carlo-path-seed-v1'"
+        },
+        {
+          "name": "QUANTILE_LEVELS",
+          "line": 24,
+          "value": "(0.05, 0.5, 0.95)"
+        },
+        {
+          "name": "QUANTILE_METHOD",
+          "line": 25,
+          "value": "'linear'"
+        },
+        {
+          "name": "MAX_ENSEMBLE_PATHS",
+          "line": 26,
+          "value": "10000"
+        },
+        {
+          "name": "MAX_ENSEMBLE_CANDLES",
+          "line": 27,
+          "value": "1000000"
+        },
+        {
+          "name": "MAX_ENSEMBLE_WORKERS",
+          "line": 28,
+          "value": "8"
+        },
+        {
+          "name": "METRIC_VERSION",
+          "line": 29,
+          "value": "'close-ensemble-v1'"
+        },
+        {
+          "name": "MANIFEST_VERSION",
+          "line": 30,
+          "value": "1"
+        }
+      ]
+    },
+    "calibration": {
+      "topic": "calibration",
+      "domain": "research",
+      "file": "calibration.py",
+      "entries": [
+        {
+          "key": "calibration.Profile",
+          "name": "Profile",
+          "kind": "class",
+          "signature": "Profile(\n    schema_version: int,\n    model: str,\n    model_version: int,\n    source_start: str,\n    source_end: str,\n    timeframe_seconds: float,\n    source_rows: int,\n    source_fingerprint: str,\n    drift: float,\n    volatility: float,\n    volume_base: float,\n    data_schema: str = 'datetime:UTC-ns;OHLCV:float64/v1',\n    estimator: str = 'body-log-return-population-moments/volume-arithmetic-mean/v1',\n    source_semantics: str = 'training-only; regular bars; candle-body returns exclude inter-bar price gaps',\n)",
+          "terms": [
+            "schema_version",
+            "model",
+            "model_version",
+            "source_start",
+            "source_end",
+            "timeframe_seconds",
+            "source_rows",
+            "source_fingerprint",
+            "drift",
+            "volatility",
+            "volume_base",
+            "data_schema",
+            "estimator",
+            "source_semantics"
+          ],
+          "line": 41
+        },
+        {
+          "key": "calibration.Profile.ToDict",
+          "name": "Profile.ToDict",
+          "kind": "method",
+          "signature": "Profile.ToDict() -> dict",
+          "terms": [],
+          "line": 119
+        },
+        {
+          "key": "calibration.Profile.FromDict",
+          "name": "Profile.FromDict",
+          "kind": "method",
+          "signature": "Profile.FromDict(values: Mapping) -> 'Profile'",
+          "terms": [
+            "values"
+          ],
+          "line": 125
+        },
+        {
+          "key": "calibration.Profile.Reference",
+          "name": "Profile.Reference",
+          "kind": "method",
+          "signature": "Profile.Reference() -> str",
+          "terms": [],
+          "line": 137
+        },
+        {
+          "key": "calibration.Profile.ToConfig",
+          "name": "Profile.ToConfig",
+          "kind": "method",
+          "signature": "Profile.ToConfig(base: GenerationConfig | None = None) -> GenerationConfig",
+          "terms": [
+            "base"
+          ],
+          "line": 144
+        },
+        {
+          "key": "calibration.Profile.ManifestMetadata",
+          "name": "Profile.ManifestMetadata",
+          "kind": "method",
+          "signature": "Profile.ManifestMetadata() -> dict",
+          "terms": [],
+          "line": 162
+        },
+        {
+          "key": "calibration.ExtractProfile",
+          "name": "ExtractProfile",
+          "kind": "function",
+          "signature": "ExtractProfile(frame: pd.DataFrame, *, model: str = CONTINUOUS_MODEL_ID) -> Profile",
+          "terms": [
+            "frame",
+            "model"
+          ],
+          "line": 170
+        },
+        {
+          "key": "calibration.ChronologicalSplit",
+          "name": "ChronologicalSplit",
+          "kind": "function",
+          "signature": "ChronologicalSplit(\n    frame: pd.DataFrame,\n    *,\n    holdout_fraction: float = 0.25,\n) -> tuple[pd.DataFrame, pd.DataFrame]",
+          "terms": [
+            "frame",
+            "holdout_fraction"
+          ],
+          "line": 197
+        },
+        {
+          "key": "calibration.CalibrationReport",
+          "name": "CalibrationReport",
+          "kind": "class",
+          "signature": "CalibrationReport(\n    profile: Profile,\n    training: ComparisonReport,\n    holdout: ComparisonReport,\n    training_manifest_json: str,\n    holdout_manifest_json: str,\n)",
+          "terms": [
+            "profile",
+            "training",
+            "holdout",
+            "training_manifest_json",
+            "holdout_manifest_json"
+          ],
+          "line": 214
+        },
+        {
+          "key": "calibration.CalibrationReport.ToDict",
+          "name": "CalibrationReport.ToDict",
+          "kind": "method",
+          "signature": "CalibrationReport.ToDict() -> dict",
+          "terms": [],
+          "line": 223
+        },
+        {
+          "key": "calibration.Calibrate",
+          "name": "Calibrate",
+          "kind": "function",
+          "signature": "Calibrate(\n    training: pd.DataFrame,\n    holdout: pd.DataFrame,\n    *,\n    base: GenerationConfig | None = None,\n    tolerances: Mapping[str, float] | None = None,\n) -> CalibrationReport",
+          "terms": [
+            "training",
+            "holdout",
+            "base",
+            "tolerances"
+          ],
+          "line": 232
+        }
+      ],
+      "constants": []
+    },
+    "evaluation": {
+      "topic": "calibration",
+      "domain": "research",
+      "file": "evaluation.py",
+      "entries": [
+        {
+          "key": "evaluation.MeanInterval",
+          "name": "MeanInterval",
+          "kind": "class",
+          "signature": "MeanInterval(\n    lower: float,\n    upper: float,\n    confidence: float,\n    resamples: int,\n    seed: int,\n    block_length: int,\n    observations: int,\n    method: str = 'moving-block percentile bootstrap of mean',\n    rng: str = 'numpy.PCG64',\n    numpy_version: str = np.__version__,\n)",
+          "terms": [
+            "lower",
+            "upper",
+            "confidence",
+            "resamples",
+            "seed",
+            "block_length",
+            "observations",
+            "method",
+            "rng",
+            "numpy_version"
+          ],
+          "line": 18
+        },
+        {
+          "key": "evaluation.MeanInterval.ToDict",
+          "name": "MeanInterval.ToDict",
+          "kind": "method",
+          "signature": "MeanInterval.ToDict() -> dict",
+          "terms": [],
+          "line": 32
+        },
+        {
+          "key": "evaluation.BootstrapMeanInterval",
+          "name": "BootstrapMeanInterval",
+          "kind": "function",
+          "signature": "BootstrapMeanInterval(\n    values: Sequence[float],\n    *,\n    seed: int,\n    confidence: float = 0.95,\n    resamples: int = 2000,\n    block_length: int = 1,\n) -> MeanInterval",
+          "terms": [
+            "values",
+            "seed",
+            "confidence",
+            "resamples",
+            "block_length"
+          ],
+          "line": 38
+        },
+        {
+          "key": "evaluation.MetricComparison",
+          "name": "MetricComparison",
+          "kind": "class",
+          "signature": "MetricComparison(\n    name: str,\n    reference: float | None,\n    synthetic: float | None,\n    difference: float | None,\n    absolute_tolerance: float | None,\n    within_tolerance: bool | None,\n    reason: str | None,\n)",
+          "terms": [
+            "name",
+            "reference",
+            "synthetic",
+            "difference",
+            "absolute_tolerance",
+            "within_tolerance",
+            "reason"
+          ],
+          "line": 84
+        },
+        {
+          "key": "evaluation.ComparisonReport",
+          "name": "ComparisonReport",
+          "kind": "class",
+          "signature": "ComparisonReport(\n    reference_fingerprint: str,\n    synthetic_fingerprint: str,\n    reference_rows: int,\n    synthetic_rows: int,\n    metrics: tuple[MetricComparison, ...],\n    reference_analysis_json: str,\n    synthetic_analysis_json: str,\n    environment_json: str,\n    metric_version: str = 'comparison_v1',\n    library_version: str = __version__,\n)",
+          "terms": [
+            "reference_fingerprint",
+            "synthetic_fingerprint",
+            "reference_rows",
+            "synthetic_rows",
+            "metrics",
+            "reference_analysis_json",
+            "synthetic_analysis_json",
+            "environment_json",
+            "metric_version",
+            "library_version"
+          ],
+          "line": 97
+        },
+        {
+          "key": "evaluation.ComparisonReport.ToDict",
+          "name": "ComparisonReport.ToDict",
+          "kind": "method",
+          "signature": "ComparisonReport.ToDict() -> dict",
+          "terms": [],
+          "line": 111
+        },
+        {
+          "key": "evaluation.Compare",
+          "name": "Compare",
+          "kind": "function",
+          "signature": "Compare(\n    reference: pd.DataFrame,\n    synthetic: pd.DataFrame,\n    *,\n    tolerances: Mapping[str, float] | None = None,\n) -> ComparisonReport",
+          "terms": [
+            "reference",
+            "synthetic",
+            "tolerances"
+          ],
+          "line": 139
+        }
+      ],
+      "constants": []
+    },
+    "indicators": {
+      "topic": "indicators",
+      "domain": "chart",
+      "file": "indicators.py",
+      "entries": [
+        {
+          "key": "indicators.IndicatorSeries",
+          "name": "IndicatorSeries",
+          "kind": "class",
+          "signature": "IndicatorSeries(\n    key: str,\n    label: str,\n    values: tuple[float | None, ...],\n    group: str,\n    kind: str = 'line',\n    reasons: tuple[str | None, ...] = (),\n)",
+          "terms": [
+            "key",
+            "label",
+            "values",
+            "group",
+            "kind",
+            "reasons"
+          ],
+          "line": 13
+        },
+        {
+          "key": "indicators.IndicatorReport",
+          "name": "IndicatorReport",
+          "kind": "class",
+          "signature": "IndicatorReport(series: tuple[IndicatorSeries, ...], notes: tuple[str, ...])",
+          "terms": [
+            "series",
+            "notes"
+          ],
+          "line": 25
+        },
+        {
+          "key": "indicators.IndicatorReport.ToDict",
+          "name": "IndicatorReport.ToDict",
+          "kind": "method",
+          "signature": "IndicatorReport.ToDict() -> dict",
+          "terms": [],
+          "line": 31
+        },
+        {
+          "key": "indicators.IndicatorReport.ToJSON",
+          "name": "IndicatorReport.ToJSON",
+          "kind": "method",
+          "signature": "IndicatorReport.ToJSON() -> str",
+          "terms": [],
+          "line": 36
+        },
+        {
+          "key": "indicators.SMA",
+          "name": "SMA",
+          "kind": "function",
+          "signature": "SMA(values, period: int) -> tuple[float | None, ...]",
+          "terms": [
+            "values",
+            "period"
+          ],
+          "line": 80
+        },
+        {
+          "key": "indicators.WMA",
+          "name": "WMA",
+          "kind": "function",
+          "signature": "WMA(values, period: int) -> tuple[float | None, ...]",
+          "terms": [
+            "values",
+            "period"
+          ],
+          "line": 89
+        },
+        {
+          "key": "indicators.HMA",
+          "name": "HMA",
+          "kind": "function",
+          "signature": "HMA(values, period: int) -> tuple[float | None, ...]",
+          "terms": [
+            "values",
+            "period"
+          ],
+          "line": 101
+        },
+        {
+          "key": "indicators.VWMA",
+          "name": "VWMA",
+          "kind": "function",
+          "signature": "VWMA(values, volume, period: int) -> tuple[float | None, ...]",
+          "terms": [
+            "values",
+            "volume",
+            "period"
+          ],
+          "line": 117
+        },
+        {
+          "key": "indicators.Bollinger",
+          "name": "Bollinger",
+          "kind": "function",
+          "signature": "Bollinger(\n    values,\n    period: int = 20,\n    deviations: float = 2.0,\n) -> tuple[tuple[float | None, ...], ...]",
+          "terms": [
+            "values",
+            "period",
+            "deviations"
+          ],
+          "line": 158
+        },
+        {
+          "key": "indicators.SmoothedMA",
+          "name": "SmoothedMA",
+          "kind": "function",
+          "signature": "SmoothedMA(values, period: int) -> tuple[float | None, ...]",
+          "terms": [
+            "values",
+            "period"
+          ],
+          "line": 173
+        },
+        {
+          "key": "indicators.Alligator",
+          "name": "Alligator",
+          "kind": "function",
+          "signature": "Alligator(high, low) -> tuple[tuple[float | None, ...], ...]",
+          "terms": [
+            "high",
+            "low"
+          ],
+          "line": 214
+        },
+        {
+          "key": "indicators.PSAR",
+          "name": "PSAR",
+          "kind": "function",
+          "signature": "PSAR(\n    high,\n    low,\n    *,\n    step: float = 0.02,\n    maximum: float = 0.2,\n) -> tuple[tuple[float | None, ...], ...]",
+          "terms": [
+            "high",
+            "low",
+            "step",
+            "maximum"
+          ],
+          "line": 228
+        },
+        {
+          "key": "indicators.ZigZag",
+          "name": "ZigZag",
+          "kind": "function",
+          "signature": "ZigZag(values, deviation: float = 0.05) -> tuple[float | None, ...]",
+          "terms": [
+            "values",
+            "deviation"
+          ],
+          "line": 314
+        },
+        {
+          "key": "indicators.Indicators",
+          "name": "Indicators",
+          "kind": "function",
+          "signature": "Indicators(frame, *, zigzag_deviation: float = 0.05) -> IndicatorReport",
+          "terms": [
+            "frame",
+            "zigzag_deviation"
+          ],
+          "line": 423
+        }
+      ],
+      "constants": []
+    },
+    "rendering.api": {
+      "topic": "charts",
+      "domain": "chart",
+      "file": "rendering/api.py",
+      "entries": [
+        {
+          "key": "rendering.api.PrepareChart",
+          "name": "PrepareChart",
+          "kind": "function",
+          "signature": "PrepareChart(data, *, analysis: bool = False, **options) -> ChartSpec",
+          "terms": [
+            "data",
+            "analysis",
+            "options"
+          ],
+          "line": 12
+        },
+        {
+          "key": "rendering.api.Chart",
+          "name": "Chart",
+          "kind": "function",
+          "signature": "Chart(\n    data,\n    output: str | Path | None = None,\n    *,\n    format: str | None = None,\n    view: bool | None = None,\n    quality: int = 90,\n    analysis: bool = False,\n    markdown_report: str | Path | None = None,\n    **options,\n) -> Path",
+          "terms": [
+            "data",
+            "output",
+            "format",
+            "view",
+            "quality",
+            "analysis",
+            "markdown_report",
+            "options"
+          ],
+          "line": 63
+        },
+        {
+          "key": "rendering.api.DisplayChart",
+          "name": "DisplayChart",
+          "kind": "function",
+          "signature": "DisplayChart(data, *, format: str = 'html', analysis: bool = False, **options)",
+          "terms": [
+            "data",
+            "format",
+            "analysis",
+            "options"
+          ],
+          "line": 137
+        }
+      ],
+      "constants": []
+    },
+    "rendering.adapters": {
+      "topic": "charts",
+      "domain": "chart",
+      "file": "rendering/adapters.py",
+      "entries": [
+        {
+          "key": "rendering.adapters.FromDataFrame",
+          "name": "FromDataFrame",
+          "kind": "function",
+          "signature": "FromDataFrame(\n    prices,\n    *,\n    assume_timezone: str | None = None,\n    title: str = 'PriceGenerator',\n    markers=None,\n    lines=(),\n    series=(),\n    summary=(),\n    theme: str = 'dark',\n    width: int = 1280,\n    height: int = 760,\n    price_precision: int = 2,\n    show_controls: bool = True,\n) -> ChartSpec",
+          "terms": [
+            "prices",
+            "assume_timezone",
+            "title",
+            "markers",
+            "lines",
+            "series",
+            "summary",
+            "theme",
+            "width",
+            "height",
+            "price_precision",
+            "show_controls"
+          ],
+          "line": 174
+        },
+        {
+          "key": "rendering.adapters.IndicatorOverlays",
+          "name": "IndicatorOverlays",
+          "kind": "function",
+          "signature": "IndicatorOverlays(report) -> tuple[ChartSeries, ...]",
+          "terms": [
+            "report"
+          ],
+          "line": 217
+        },
+        {
+          "key": "rendering.adapters.MarketOverlays",
+          "name": "MarketOverlays",
+          "kind": "function",
+          "signature": "MarketOverlays(\n    frame,\n    *,\n    split_counts=(),\n    zigzag_deviation: float = 0.05,\n) -> tuple[ChartSeries, ...]",
+          "terms": [
+            "frame",
+            "split_counts",
+            "zigzag_deviation"
+          ],
+          "line": 223
+        },
+        {
+          "key": "rendering.adapters.RenderMarkdown",
+          "name": "RenderMarkdown",
+          "kind": "function",
+          "signature": "RenderMarkdown(spec: ChartSpec) -> str",
+          "terms": [
+            "spec"
+          ],
+          "line": 267
+        },
+        {
+          "key": "rendering.adapters.SaveMarkdown",
+          "name": "SaveMarkdown",
+          "kind": "function",
+          "signature": "SaveMarkdown(spec: ChartSpec, path: str | Path) -> Path",
+          "terms": [
+            "spec",
+            "path"
+          ],
+          "line": 276
+        },
+        {
+          "key": "rendering.adapters.NotebookHTML",
+          "name": "NotebookHTML",
+          "kind": "function",
+          "signature": "NotebookHTML(spec: ChartSpec) -> str",
+          "terms": [
+            "spec"
+          ],
+          "line": 285
+        },
+        {
+          "key": "rendering.adapters.DisplayChart",
+          "name": "DisplayChart",
+          "kind": "function",
+          "signature": "DisplayChart(spec: ChartSpec, *, format: str = 'html') -> Any",
+          "terms": [
+            "spec",
+            "format"
+          ],
+          "line": 299
+        }
+      ],
+      "constants": []
+    },
+    "rendering.interactive": {
+      "topic": "charts",
+      "domain": "chart",
+      "file": "rendering/interactive.py",
+      "entries": [
+        {
+          "key": "rendering.interactive.RenderInteractive",
+          "name": "RenderInteractive",
+          "kind": "function",
+          "signature": "RenderInteractive(spec: ChartSpec) -> str",
+          "terms": [
+            "spec"
+          ],
+          "line": 88
+        },
+        {
+          "key": "rendering.interactive.SaveInteractive",
+          "name": "SaveInteractive",
+          "kind": "function",
+          "signature": "SaveInteractive(spec: ChartSpec, path: str | Path) -> Path",
+          "terms": [
+            "spec",
+            "path"
+          ],
+          "line": 205
+        }
+      ],
+      "constants": []
+    },
+    "rendering.static": {
+      "topic": "charts",
+      "domain": "chart",
+      "file": "rendering/static.py",
+      "entries": [
+        {
+          "key": "rendering.static.RenderSVG",
+          "name": "RenderSVG",
+          "kind": "function",
+          "signature": "RenderSVG(spec: ChartSpec) -> str",
+          "terms": [
+            "spec"
+          ],
+          "line": 68
+        },
+        {
+          "key": "rendering.static.SaveSVG",
+          "name": "SaveSVG",
+          "kind": "function",
+          "signature": "SaveSVG(spec: ChartSpec, path: str | Path) -> Path",
+          "terms": [
+            "spec",
+            "path"
+          ],
+          "line": 256
+        }
+      ],
+      "constants": []
+    },
+    "rendering.exports": {
+      "topic": "charts",
+      "domain": "chart",
+      "file": "rendering/exports.py",
+      "entries": [
+        {
+          "key": "rendering.exports.RenderPNG",
+          "name": "RenderPNG",
+          "kind": "function",
+          "signature": "RenderPNG(spec: ChartSpec) -> bytes",
+          "terms": [
+            "spec"
+          ],
+          "line": 25
+        },
+        {
+          "key": "rendering.exports.SavePNG",
+          "name": "SavePNG",
+          "kind": "function",
+          "signature": "SavePNG(spec: ChartSpec, path: str | Path) -> Path",
+          "terms": [
+            "spec",
+            "path"
+          ],
+          "line": 34
+        },
+        {
+          "key": "rendering.exports.RenderJPEG",
+          "name": "RenderJPEG",
+          "kind": "function",
+          "signature": "RenderJPEG(spec: ChartSpec, *, quality: int = 90) -> bytes",
+          "terms": [
+            "spec",
+            "quality"
+          ],
+          "line": 43
+        },
+        {
+          "key": "rendering.exports.SaveJPEG",
+          "name": "SaveJPEG",
+          "kind": "function",
+          "signature": "SaveJPEG(spec: ChartSpec, path: str | Path, *, quality: int = 90) -> Path",
+          "terms": [
+            "spec",
+            "path",
+            "quality"
+          ],
+          "line": 63
+        }
+      ],
+      "constants": []
+    },
+    "rendering.theme": {
+      "topic": "charts",
+      "domain": "chart",
+      "file": "rendering/theme.py",
+      "entries": [
+        {
+          "key": "rendering.theme.BrandingData",
+          "name": "BrandingData",
+          "kind": "function",
+          "signature": "BrandingData() -> dict[str, str]",
+          "terms": [],
+          "line": 38
+        }
+      ],
+      "constants": [
+        {
+          "name": "THEMES",
+          "line": 9,
+          "value": ""
+        }
+      ]
+    },
+    "rendering.spec": {
+      "topic": "chart-types",
+      "domain": "chart",
+      "file": "rendering/spec.py",
+      "entries": [
+        {
+          "key": "rendering.spec.ChartCandle",
+          "name": "ChartCandle",
+          "kind": "class",
+          "signature": "ChartCandle(datetime: str, open: float, high: float, low: float, close: float, volume: float)",
+          "terms": [
+            "datetime",
+            "open",
+            "high",
+            "low",
+            "close",
+            "volume"
+          ],
+          "line": 92
+        },
+        {
+          "key": "rendering.spec.ChartSeries",
+          "name": "ChartSeries",
+          "kind": "class",
+          "signature": "ChartSeries(\n    key: str,\n    label: str,\n    values: tuple[float | None, ...],\n    color: str | None = None,\n    kind: str = 'line',\n    visible: bool = True,\n    group: str | None = None,\n    width: float = 1.8,\n    dashed: bool = False,\n)",
+          "terms": [
+            "key",
+            "label",
+            "values",
+            "color",
+            "kind",
+            "visible",
+            "group",
+            "width",
+            "dashed"
+          ],
+          "line": 118
+        },
+        {
+          "key": "rendering.spec.ChartMarker",
+          "name": "ChartMarker",
+          "kind": "class",
+          "signature": "ChartMarker(candle_index: int, text: str, position: str = 'above', color: str | None = None)",
+          "terms": [
+            "candle_index",
+            "text",
+            "position",
+            "color"
+          ],
+          "line": 168
+        },
+        {
+          "key": "rendering.spec.ChartSpec",
+          "name": "ChartSpec",
+          "kind": "class",
+          "signature": "ChartSpec(\n    candles: tuple[ChartCandle, ...],\n    title: str = 'PriceGenerator',\n    series: tuple[ChartSeries, ...] = (),\n    markers: tuple[ChartMarker, ...] = (),\n    summary: tuple[str, ...] = (),\n    theme: str = 'dark',\n    width: int = 1280,\n    height: int = 760,\n    price_precision: int = 2,\n    show_controls: bool = True,\n)",
+          "terms": [
+            "candles",
+            "title",
+            "series",
+            "markers",
+            "summary",
+            "theme",
+            "width",
+            "height",
+            "price_precision",
+            "show_controls"
+          ],
+          "line": 207
+        },
+        {
+          "key": "rendering.spec.ChartSpec.ToDict",
+          "name": "ChartSpec.ToDict",
+          "kind": "method",
+          "signature": "ChartSpec.ToDict() -> dict[str, Any]",
+          "terms": [],
+          "line": 271
+        },
+        {
+          "key": "rendering.spec.ChartSpec.ToJSON",
+          "name": "ChartSpec.ToJSON",
+          "kind": "method",
+          "signature": "ChartSpec.ToJSON() -> str",
+          "terms": [],
+          "line": 279
+        },
+        {
+          "key": "rendering.spec.ChartSpec.FromDict",
+          "name": "ChartSpec.FromDict",
+          "kind": "method",
+          "signature": "ChartSpec.FromDict(data: Mapping[str, Any]) -> 'ChartSpec'",
+          "terms": [
+            "data"
+          ],
+          "line": 297
+        }
+      ],
+      "constants": [
+        {
+          "name": "SCHEMA_VERSION",
+          "line": 12,
+          "value": "1"
+        }
+      ]
+    },
+    "cli": {
+      "topic": "cli",
+      "domain": "chart",
+      "file": "cli.py",
+      "entries": [
+        {
+          "key": "cli.Main",
+          "name": "Main",
+          "kind": "function",
+          "signature": "Main(argv: list[str] | None = None) -> int",
+          "terms": [
+            "argv"
+          ],
+          "line": 272
+        }
+      ],
+      "constants": []
+    },
+    "rendering.__main__": {
+      "topic": "cli",
+      "domain": "chart",
+      "file": "rendering/__main__.py",
+      "entries": [
+        {
+          "key": "rendering.__main__.Main",
+          "name": "Main",
+          "kind": "function",
+          "signature": "Main(argv: list[str] | None = None) -> int",
+          "terms": [
+            "argv"
+          ],
+          "line": 6
+        }
+      ],
+      "constants": []
+    }
+  },
+  "aliases": {
+    "pricegenerator.__version__": "_version.__version__",
+    "pricegenerator.GenerationConfig": "config.GenerationConfig",
+    "pricegenerator.Generate": "generation.Generate",
+    "pricegenerator.CreateManifest": "scenario.CreateManifest",
+    "pricegenerator.Replay": "scenario.Replay",
+    "pricegenerator.Fingerprint": "scenario.Fingerprint",
+    "pricegenerator.ValidateOHLCV": "market_data.ValidateOHLCV",
+    "pricegenerator.ReadCSV": "io.ReadCSV",
+    "pricegenerator.WriteCSV": "io.WriteCSV",
+    "pricegenerator.Analyze": "analysis.Analyze",
+    "pricegenerator.Indicators": "indicators.Indicators",
+    "pricegenerator.Chart": "rendering.api.Chart",
+    "pricegenerator.DisplayChart": "rendering.api.DisplayChart",
+    "pricegenerator.GenerateChunks": "streaming.GenerateChunks",
+    "pricegenerator.WriteCSVChunks": "streaming.WriteCSVChunks",
+    "pricegenerator.rendering.Chart": "rendering.api.Chart",
+    "pricegenerator.rendering.DisplayChart": "rendering.api.DisplayChart",
+    "pricegenerator.rendering.PrepareChart": "rendering.api.PrepareChart",
+    "pricegenerator.rendering.ChartCandle": "rendering.spec.ChartCandle",
+    "pricegenerator.rendering.ChartMarker": "rendering.spec.ChartMarker",
+    "pricegenerator.rendering.ChartSeries": "rendering.spec.ChartSeries",
+    "pricegenerator.rendering.ChartSpec": "rendering.spec.ChartSpec",
+    "pricegenerator.rendering.RenderSVG": "rendering.static.RenderSVG",
+    "pricegenerator.rendering.SaveSVG": "rendering.static.SaveSVG",
+    "pricegenerator.rendering.RenderPNG": "rendering.exports.RenderPNG",
+    "pricegenerator.rendering.SavePNG": "rendering.exports.SavePNG",
+    "pricegenerator.rendering.RenderJPEG": "rendering.exports.RenderJPEG",
+    "pricegenerator.rendering.SaveJPEG": "rendering.exports.SaveJPEG"
+  }
+}

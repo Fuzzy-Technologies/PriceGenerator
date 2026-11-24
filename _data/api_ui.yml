@@ -1,0 +1,90 @@
+en:
+  title: Python API reference
+  open: Open the Python API reference
+  intro: "Build a reproducible price series, inspect its trading volume or run the same model across many price paths. Choose a topic or search for a Python name."
+  search: Search the API
+  placeholder: Name or market term
+  empty: No matching entries
+  topics: In this reference
+  index: Overview
+  contents: On this page
+  examples: Try it in Python
+  example_note: This example creates 120 hourly candles. With the same settings, seed and software environment, you can reproduce the series.
+  shortcuts: Common imports
+  imports: Available through
+  source: Source
+  params: Parameters
+  fields: Fields
+  constants: Module constants
+  version_label: Installed package version
+  logo_alt: Alice with simulated market price paths
+  generation: Generate candles
+  market-data: Validate, save and replay OHLCV
+  alternative-models: Bootstrap and scripted scenarios
+  analysis: Describe a price series
+  monte-carlo: Monte Carlo price paths
+  calibration: Fit and compare with market data
+  indicators: Technical indicators
+  charts: Build and export charts
+  chart-types: Chart data types
+  cli: Command-line entry points
+ru:
+  title: Справочник Python API
+  open: Открыть справочник Python API
+  intro: "Здесь можно узнать, как сгенерировать свечи, исследовать объём торгов или сравнить несколько вариантов движения цены. Выберите раздел или найдите функцию по имени."
+  search: Поиск по справочнику
+  placeholder: Имя или термин
+  empty: Совпадений нет
+  topics: Разделы справочника
+  index: Обзор
+  contents: На этой странице
+  examples: Попробовать в Python
+  example_note: Пример создаёт 120 часовых свечей. Чтобы получить тот же ряд, повторите запуск с теми же настройками и начальным значением генератора в том же программном окружении.
+  shortcuts: Что можно импортировать напрямую
+  imports: Также доступно через
+  source: Исходный код
+  params: Параметры
+  fields: Поля
+  constants: Константы модуля
+  version_label: Версия установленного пакета
+  logo_alt: Алиса и графики смоделированных ценовых траекторий
+  generation: Генерация свечей
+  market-data: Проверка, запись и воспроизведение OHLCV
+  alternative-models: Бутстреп и заданные сценарии
+  analysis: Анализ ценового ряда
+  monte-carlo: Ценовые траектории Монте-Карло
+  calibration: Калибровка и сравнение с рынком
+  indicators: Индикаторы технического анализа
+  charts: Построение и экспорт графиков
+  chart-types: Типы данных для графика
+  cli: Вызов команд из Python
+zh-CN:
+  title: Python API 参考手册
+  open: 查阅 Python API 手册
+  intro: "从生成可复现的 K 线开始，也可以直接查找成交量分析、行情模拟或绘图函数。按主题浏览，或输入 Python 名称和金融术语搜索。"
+  search: 搜索 API
+  placeholder: 函数名或金融术语
+  empty: 未找到匹配项
+  topics: 手册目录
+  index: 概览
+  contents: 本页目录
+  examples: Python 示例
+  example_note: 示例生成 120 根一小时 K 线。在相同的软件环境下，使用同一组参数和随机种子即可复现这段行情。
+  shortcuts: 常用导入方式
+  imports: 也可通过以下名称访问
+  source: 查看源码
+  params: 参数
+  fields: 字段
+  constants: 模块常量
+  version_label: 已安装的软件包版本
+  logo_alt: Alice 与模拟价格走势图
+  generation: 生成 K 线
+  market-data: 校验、保存与重放 OHLCV 数据
+  alternative-models: 自助抽样与自定义情景
+  analysis: 行情统计分析
+  monte-carlo: 蒙特卡洛价格路径
+  calibration: 模型校准与行情对比
+  indicators: 技术指标
+  charts: 绘制与导出图表
+  chart-types: 图表数据类型
+  cli: 在 Python 中调用命令行入口

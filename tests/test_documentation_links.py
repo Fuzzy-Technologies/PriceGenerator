@@ -105,6 +105,11 @@ def test_PublicGuidesKeepTheReadersLanguage():
                     assert (root / path.lstrip("/")).is_file(), (page, path)
                     continue
 
+                if path.startswith("/api/"):
+                    assert path.startswith(f"/api/2.2.1/{lang.lower()}/"), (page, path)
+                    assert (root / path.lstrip("/") / "index.html").is_file(), (page, path)
+                    continue
+
                 assert path in routes, (page, path)
                 destination_lang = path.strip("/").split("/")[0] or "en"
 

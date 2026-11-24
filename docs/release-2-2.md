@@ -69,6 +69,6 @@ overview sits below the chart. Expand **Detailed statistics** for the full repor
 
 [Run the full experiment](https://fuzzy-technologies.com/PriceGenerator/en/experiments/#bundle) ·
 [Compare two CSV files](https://fuzzy-technologies.com/PriceGenerator/en/experiments/#compare) ·
-[Upgrade from 1.4.93](https://fuzzy-technologies.com/PriceGenerator/en/migration/)
+[Python API reference](https://fuzzy-technologies.com/PriceGenerator/api/2.2.1/en/) · [Upgrade from 1.4.93](https://fuzzy-technologies.com/PriceGenerator/en/migration/)
 
 [Русский](https://fuzzy-technologies.com/PriceGenerator/ru/release-2-2/) · [简体中文](https://fuzzy-technologies.com/PriceGenerator/zh-CN/release-2-2/)

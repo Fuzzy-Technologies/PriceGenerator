@@ -1,0 +1,598 @@
+{
+  "modules": {
+    "indicators": {
+      "en": "Compute technical indicators for an ordered price series. A period counts observed bars, even across a gap in trading. Each output keeps one position per input bar, with None where a value is undefined.",
+      "ru": "Расчёт технических индикаторов по ряду цен. Период измеряется числом свечей и не увеличивается из-за перерыва в торгах. Каждой исходной свече соответствует одно место в результате. Если значение рассчитать нельзя, на его месте стоит None.",
+      "zh-CN": "按顺序对价格序列计算技术指标。周期按实际观测到的 K 线根数计算，交易中断时不会补线。每个输出序列与输入逐根对齐，无法计算的位置记为 None。"
+    },
+    "cli": {
+      "en": "Run the same generation, replay, validation, analysis, comparison, charting and Monte Carlo commands as python -m pricegenerator. Pass a list of command-line arguments to call them from Python.",
+      "ru": "Команды python -m pricegenerator доступны и из Python. Они позволяют сгенерировать свечи, воспроизвести эксперимент, проверить или сравнить ряды, рассчитать статистику, построить график и провести серию прогонов Монте-Карло.",
+      "zh-CN": "在 Python 中传入命令行参数列表，即可调用 python -m pricegenerator 提供的功能，包括生成行情、重现实验、校验和比较序列、统计分析、绘图及蒙特卡洛模拟。"
+    },
+    "rendering.__main__": {
+      "en": "Use python -m pricegenerator.rendering to chart a price CSV. This entry point accepts the arguments of the chart subcommand.",
+      "ru": "Построение графика по CSV с котировками через python -m pricegenerator.rendering. Параметры те же, что у команды chart.",
+      "zh-CN": "运行 python -m pricegenerator.rendering 可将行情 CSV 文件绘制成图。该入口使用 chart 子命令的参数。"
+    },
+    "rendering.api": {
+      "en": "Prepare a chart once, then save an interactive HTML document or a static image, or display it in a notebook. Request analysis explicitly when you need indicator controls and summary statistics.",
+      "ru": "Подготовьте график один раз, чтобы затем сохранить его в HTML или как изображение либо показать в Jupyter. Для переключателей индикаторов и статистики по ряду включите параметр analysis.",
+      "zh-CN": "先准备图表数据，即可导出交互式 HTML、保存静态图像，或在笔记本中显示。需要切换技术指标并查看行情统计时，请启用 analysis。"
+    },
+    "rendering.adapters": {
+      "en": "Convert a pandas OHLCV table, dated annotations and indicator values into chart layers. The same snapshot supplies a Markdown report or a notebook view.",
+      "ru": "Преобразование таблицы OHLCV, меток с датами и значений индикаторов в элементы графика. Из подготовленных данных можно также получить отчёт в Markdown или вывести график в Jupyter.",
+      "zh-CN": "将 pandas 行情表、带时间戳的标注和指标值转换为图层。用同一份图表数据也可以生成 Markdown 报告或在笔记本中绘图。"
+    },
+    "rendering.exports": {
+      "en": "Export a static chart as PNG or JPEG with the optional pricegenerator[export] dependencies. The saved image uses the SVG layout, including any visible overlays and report text supplied in the specification.",
+      "ru": "Статический график можно сохранить в PNG или JPEG, установив pricegenerator[export]. В изображение попадают те же элементы, что и в SVG, включая видимые индикаторы и заданный в спецификации текст отчёта.",
+      "zh-CN": "安装 pricegenerator[export] 后即可导出 PNG 或 JPEG。静态图像采用 SVG 的布局，包含图表配置中已启用的图层和已填写的报告文字。"
+    },
+    "rendering.interactive": {
+      "en": "Build a self-contained HTML chart for exploring individual candles and trading volume, switching indicator groups, and exporting the current view from the browser.",
+      "ru": "Автономный HTML-график позволяет изучать отдельные свечи и объёмы торгов, включать группы индикаторов и сохранять выбранный фрагмент из браузера.",
+      "zh-CN": "生成可离线打开的交互式 HTML 图表，用于查看单根 K 线与成交量、切换指标组，以及在浏览器中导出当前视图。"
+    },
+    "rendering.static": {
+      "en": "Draw a portable SVG with candles, volume, visible overlays and annotations. The renderer works without a browser and lays out any accompanying report below the chart.",
+      "ru": "Построение SVG со свечами, объёмом, видимыми линиями, точками и метками. Для построения не нужен браузер. Если есть текст отчёта, он размещается под графиком.",
+      "zh-CN": "直接绘制 SVG 文件，其中包括 K 线、成交量、可见图层和标注。渲染无需浏览器，若配置中包含报告文字，会排在图表下方。"
+    },
+    "rendering.spec": {
+      "en": "Describe a chart with plain Python objects. The specification fixes candle order, time zone, price and volume fields, overlay alignment, and presentation options so different renderers can use the same inputs.",
+      "ru": "Описание графика на Python. Спецификация задаёт порядок свечей, приводя время к UTC, проверяет цены и объёмы, привязывает линии к свечам и хранит настройки оформления для всех форматов вывода.",
+      "zh-CN": "用 Python 对象描述图表。图表配置校验 K 线顺序和量价字段，将时间统一为 UTC，并规定图层的对齐方式和显示选项，供不同的渲染器共用。"
+    },
+    "rendering.theme": {
+      "en": "Access the dark and light chart palettes and the packaged Fuzzy Technologies artwork used in chart files.",
+      "ru": "Цветовые палитры тёмной и светлой тем и фирменные изображения Fuzzy Technologies, встроенные в графики.",
+      "zh-CN": "提供图表的深色和浅色配色，以及随包分发的 Fuzzy Technologies 品牌图形。"
+    }
+  },
+  "symbols": {
+    "indicators.IndicatorSeries": {
+      "en": "One named indicator series, aligned with the input bars. Read values[i] for the value on bar i and, when supplied, reasons[i] for the reason it is missing. The standard report distinguishes warm-up bars from inactive PSAR directions and unconfirmed ZigZag pivots.",
+      "ru": "Один именованный ряд индикатора. Элемент values[i] относится к свече с индексом i. Если он пуст, в стандартном отчёте поле reasons[i] поясняет причину. Например, для средней могло не хватить первых свечей, а для ZigZag разворот ещё не подтвердился.",
+      "zh-CN": "保存一个与 K 线逐根对齐的指标序列。values[i] 是第 i 根 K 线对应的指标值。标准报告还会在 reasons[i] 说明缺值原因，例如均线数据不足、PSAR 处于另一方向，或 ZigZag 拐点尚未确认。"
+    },
+    "indicators.IndicatorReport": {
+      "en": "The collection returned by Indicators. Use series for the aligned values, graphics groups and gap explanations, and notes for the calculation conventions. It can be serialized independently of the input OHLCV table.",
+      "ru": "Результат функции Indicators. В series находятся ряды индикаторов, группы для отображения и пояснения к пропускам. В notes описаны правила расчёта. Отчёт можно сохранить отдельно от исходной таблицы котировок.",
+      "zh-CN": "Indicators 返回的指标报告。series 包含各指标逐根对齐的数值、显示分组和缺值说明，notes 记录计算规则。报告可独立于原始行情表保存。"
+    },
+    "indicators.IndicatorReport.ToDict": {
+      "en": "Return a detached dictionary with the series records and calculation notes. Use it to inspect individual values or extract explanations for gaps.",
+      "ru": "Возвращает отдельный словарь с рядами индикаторов и правилами расчёта. Из него удобно выбрать значения одного индикатора или узнать причину пропуска.",
+      "zh-CN": "返回独立的字典，包含各指标的记录及计算说明，可从中提取所需数值或查询缺值原因。"
+    },
+    "indicators.IndicatorReport.ToJSON": {
+      "en": "Return a compact JSON string with stable key ordering. Missing indicator readings are JSON null. This method writes no file.",
+      "ru": "Возвращает компактную строку JSON с устойчивым порядком ключей. Пропущенные значения представлены как null. Строку можно записать в файл или передать другому приложению.",
+      "zh-CN": "返回键顺序固定的紧凑 JSON 字符串，缺失的指标值用 null 表示。调用方可以自行保存或传输该字符串。"
+    },
+    "indicators.SMA": {
+      "en": "Return one simple moving average per observation. Each value is the arithmetic mean of the last period observations including the current one. An incomplete window or a window containing missing data yields None.",
+      "ru": "Возвращает простую скользящую среднюю для каждой позиции ряда. В расчёт входят текущая и предшествующие свечи, всего period наблюдений. Пока окно не заполнено или в нём есть пропуск, результат равен None.",
+      "zh-CN": "返回逐根对齐的简单移动平均值，以当前观测及其之前共 period 个观测的算术平均数计算。窗口不足或含缺值时返回 None。"
+    },
+    "indicators.WMA": {
+      "en": "Return a linearly weighted moving average over each complete trailing window. The oldest observation has weight 1 and the newest has weight period. The result has one entry per input, with None for incomplete windows or windows with gaps.",
+      "ru": "Возвращает взвешенную скользящую среднюю. В пределах окна вес линейно возрастает от 1 у самого давнего наблюдения до period у текущего. Длина ряда сохраняется. Неполные окна и окна с пропусками дают None.",
+      "zh-CN": "计算线性加权移动平均值。完整窗口内最早观测的权重为 1，当前观测的权重为 period。结果与输入等长，窗口不足或含缺值时记为 None。"
+    },
+    "indicators.HMA": {
+      "en": "Return Hull’s moving average on the original bars. Compute 2 × WMA(n/2) − WMA(n), then smooth that difference with WMA(√n). Both shorter window lengths are rounded down to at least one bar. With complete input, the first value is available after n + floor(√n) − 1 observations.",
+      "ru": "Возвращает скользящую среднюю Халла без сдвига по времени. Сначала вычисляется разность 2 × WMA(n/2) − WMA(n), затем она сглаживается с помощью WMA(√n). Обе короткие длины окна округляются вниз, минимум до одной свечи. Для первого значения нужны n + floor(√n) − 1 наблюдений без пропусков.",
+      "zh-CN": "计算赫尔移动平均线，结果保持在原 K 线位置。先计算 2 × WMA(n/2) − WMA(n)，再用 WMA(√n) 平滑。两个较短的周期均向下取整，最小为 1。数据完整时，第 n + floor(√n) − 1 个观测产生首个有效值。"
+    },
+    "indicators.VWMA": {
+      "en": "Return a moving average weighted by bar volume, calculated as the sum of price × volume divided by total volume over the same window. Weights must be nonnegative and aligned with prices. A missing input, incomplete window or zero total volume gives None at that bar.",
+      "ru": "Возвращает скользящую среднюю, взвешенную по объёму. В каждом окне сумма произведений цены на объём делится на суммарный объём. Каждой цене должен соответствовать неотрицательный объём. При неполном окне, пропуске или нулевом суммарном объёме значение равно None.",
+      "zh-CN": "计算成交量加权移动平均值，即窗口内价格与成交量乘积之和除以该窗口的总成交量。成交量必须非负并与价格逐根对齐。窗口不足、数据缺失或总成交量为零时，该位置返回 None。"
+    },
+    "indicators.Bollinger": {
+      "en": "Return three aligned series in the order lower band, middle band, upper band. The middle band is the trailing SMA. Each outer band lies deviations population standard deviations from it (ddof=0). Defaults are 20 observations and two standard deviations. Incomplete windows yield None.",
+      "ru": "Возвращает три ряда в порядке «нижняя полоса, средняя линия, верхняя полоса». Основа полос Боллинджера — простая скользящая средняя. Расстояние от неё до каждой границы равно deviations стандартным отклонениям, рассчитанным с делителем n (ddof=0). По умолчанию окно составляет 20 наблюдений, множитель равен 2. Для неполных окон возвращается None.",
+      "zh-CN": "按下轨、中轨、上轨的顺序返回三条布林带。中轨为简单移动平均线，上下轨与中轨相距 deviations 倍窗口内的总体标准差（ddof=0）。默认周期为 20，倍数为 2。窗口不足时返回 None。"
+    },
+    "indicators.SmoothedMA": {
+      "en": "Return a smoothed moving average (SMMA). Start each uninterrupted run with an SMA over period observations. Subsequent values equal the previous average plus (current − previous average) / period. A missing value restarts the warm-up.",
+      "ru": "Возвращает сглаженную скользящую среднюю (SMMA). В начале каждого непрерывного участка берётся простая средняя за period наблюдений. Затем к предыдущей средней прибавляется (текущее значение − предыдущая средняя) / period. После пропуска окно для первого значения набирается заново.",
+      "zh-CN": "返回平滑移动平均线（SMMA）。每段连续数据以 period 个观测的简单平均值为起点，随后每次在前一均值上加上（当前值 − 前一均值）/ period。遇到缺值后重新积累初始窗口。"
+    },
+    "indicators.Alligator": {
+      "en": "Return the Alligator’s jaw, teeth and lips, in that order. Each is an SMMA of (high + low) / 2. Their periods are 13, 8 and 5 bars and their values are plotted 8, 5 and 3 bars later, respectively, within the supplied timeline. The shifted endpoints do not create extra candles.",
+      "ru": "Возвращает три линии индикатора «Аллигатор» в порядке «челюсть, зубы, губы». Для каждой сглаживается середина ценового диапазона свечи (high + low) / 2. Периоды равны 13, 8 и 5 свечам. На графике линии сдвигаются вправо на 8, 5 и 3 свечи соответственно, в пределах исходного ряда.",
+      "zh-CN": "依次返回鳄鱼指标的下颌线、牙齿线和嘴唇线。三条线均以每根 K 线的中间价 (high + low) / 2 计算 SMMA，周期分别为 13、8、5 根，绘图时分别向后移动 8、5、3 根。仅在原有时间轴内移位，不延长 K 线序列。"
+    },
+    "indicators.PSAR": {
+      "en": "Return two aligned Parabolic SAR series, first for an uptrend and then for a downtrend. Only the active side has a value. Direction is initialized from two consecutive bars and a missing high or low restarts it. In a rising trend the SAR is capped at the prior two lows, with the opposite rule in a falling trend. A reversal requires trading through the SAR.",
+      "ru": "Возвращает два ряда параболического индикатора SAR, сначала для растущего, затем для падающего тренда. Значение есть только у действующего направления. Для его определения нужны две свечи подряд, после пропуска расчёт начинается заново. При росте SAR ограничивается минимумами двух предыдущих свечей, при снижении — их максимумами. Направление меняется при пересечении уровня, простого касания недостаточно.",
+      "zh-CN": "依次返回上升趋势和下降趋势的抛物线转向指标（SAR），每根 K 线只有当前趋势一侧有值。初始方向由两根连续 K 线确定，最高价或最低价缺失时重新开始。上升时 SAR 不能高于前两根 K 线的最低价，下降时不能低于前两根的最高价。价格穿过 SAR 水平才触发反转。"
+    },
+    "indicators.ZigZag": {
+      "en": "Return confirmed turning prices at their original bar positions and None elsewhere. A later move of at least deviation in the opposite direction confirms a pivot. The final candidate remains absent. In a backtest, the plotted bar predates confirmation. Any missing or nonpositive input makes the entire result undefined.",
+      "ru": "Возвращает цены подтверждённых разворотов на тех свечах, где образовались экстремумы. На остальных позициях стоит None. Разворот подтверждается лишь последующим движением цены в обратную сторону на величину deviation или больше. Последний неподтверждённый экстремум опускается. Для бэктеста важно, что на самой свече экстремума разворот ещё не был известен. При пропуске или неположительной цене весь результат состоит из None.",
+      "zh-CN": "在极值所属的 K 线上返回已确认的转折价格，其余位置为 None。只有后续价格反向变动至少达到 deviation 才能确认拐点，末端尚待确认的极值不会输出。回测时应按确认时间使用信号，在极值出现的当根 K 线上尚无法知道它是拐点。输入若含缺值或非正价格，整条结果均为 None。"
+    },
+    "indicators.Indicators": {
+      "en": "Validate an OHLCV table and return an IndicatorReport with 17 series. It includes SMA at 5, 20, 50 and 200 bars, HMA and VWMA at 5 and 20, Bollinger bands, Parabolic SAR, Alligator and confirmed ZigZag pivots. Each series carries a reason for each missing value.",
+      "ru": "Проверяет таблицу OHLCV и возвращает IndicatorReport с 17 рядами. В отчёт входят SMA с периодами 5, 20, 50 и 200 свечей, HMA и VWMA с периодами 5 и 20, полосы Боллинджера, Parabolic SAR, «Аллигатор» и подтверждённые экстремумы ZigZag. Для каждого пропуска указана причина.",
+      "zh-CN": "校验 OHLCV 行情表并返回含 17 个序列的 IndicatorReport，包括 5、20、50、200 周期的 SMA，5、20 周期的 HMA 和 VWMA，布林带、抛物线 SAR、鳄鱼指标及 ZigZag 的已确认拐点。每个缺值位置均附有原因。"
+    },
+    "cli.Main": {
+      "en": "Run one CLI command from a Python argument list, starting with the subcommand name. For example, [\"chart\", \"bars.csv\", \"--analysis\", \"--output\", \"chart.html\", \"--no-view\"] creates an HTML chart with switchable indicators. Successful execution returns 0. Argparse exits with status 2 for invalid arguments and expected input or I/O errors.",
+      "ru": "Выполняет команду по списку аргументов, начиная с названия подкоманды. Например, [\"chart\", \"bars.csv\", \"--analysis\", \"--output\", \"chart.html\", \"--no-view\"] сохранит HTML-график с переключателями индикаторов. При успехе функция возвращает 0. При неверных аргументах и ожидаемых ошибках ввода-вывода argparse завершает вызов с кодом 2.",
+      "zh-CN": "传入以子命令名开头的参数列表即可执行一条命令。例如 [\"chart\", \"bars.csv\", \"--analysis\", \"--output\", \"chart.html\", \"--no-view\"] 会生成可切换指标的 HTML 图表。成功时返回 0。参数有误或发生可预期的输入输出错误时，argparse 以状态码 2 退出。"
+    },
+    "rendering.__main__.Main": {
+      "en": "Run the chart subcommand from Python. Start the argument list with the input CSV path and omit the word chart. Returns 0 on success and uses the same argument handling as cli.Main.",
+      "ru": "Запускает команду построения графика из Python. Первым аргументом передайте путь к исходному CSV. Слово chart подставляется автоматически. При успехе функция возвращает 0. Правила обработки аргументов те же, что у cli.Main.",
+      "zh-CN": "在 Python 中调用 chart 子命令。参数列表从输入 CSV 路径开始，函数会自动补上 chart。成功时返回 0，参数处理方式与 cli.Main 相同。"
+    },
+    "rendering.api.PrepareChart": {
+      "en": "Create a validated ChartSpec from an OHLCV DataFrame. Set analysis=True to include summary statistics and switchable historical overlays. A ChartSpec input can be reused as is or copied with changed display settings. Analysis requires the source table.",
+      "ru": "Готовит проверенную спецификацию ChartSpec по таблице OHLCV. Параметр analysis=True добавляет статистику и переключаемые линии анализа. Готовую ChartSpec можно использовать повторно или скопировать с другими настройками оформления. Для расчёта аналитики нужна исходная таблица.",
+      "zh-CN": "将 OHLCV 数据表整理为经过校验的 ChartSpec。设置 analysis=True 可附加行情统计和可切换的分析图层。已有的 ChartSpec 可直接复用，也可复制后调整显示选项。计算分析结果需要原始数据表。"
+    },
+    "rendering.api.Chart": {
+      "en": "Save a chart and return its Path. HTML is interactive and opens in a browser by default. Set view=False for batch jobs. Omitting output creates a temporary HTML file. SVG, PNG and JPEG require an explicit path, and PNG/JPEG require pricegenerator[export]. Set analysis=True on an OHLCV table for indicators and statistics.",
+      "ru": "Сохраняет график и возвращает путь к файлу (Path). Интерактивный HTML по умолчанию открывается в браузере. Для пакетной обработки задайте view=False. Без output создаётся временный HTML-файл. Для SVG, PNG и JPEG укажите путь явно, для PNG и JPEG также установите pricegenerator[export]. Чтобы добавить индикаторы и статистику по таблице OHLCV, включите analysis=True.",
+      "zh-CN": "保存图表并返回文件路径（Path）。交互式 HTML 默认会在浏览器中打开，批量运行时可设置 view=False。省略 output 会创建临时 HTML 文件。SVG、PNG 和 JPEG 需指定路径，PNG 和 JPEG 还需安装 pricegenerator[export]。对 OHLCV 表设置 analysis=True 即可加入指标和统计信息。"
+    },
+    "rendering.api.DisplayChart": {
+      "en": "Display an OHLCV table or an existing ChartSpec in a notebook with pricegenerator[notebook] installed. The default HTML view is interactive. Choose format=\"svg\" for a static chart. Returns the result of IPython.display.display, normally a display handle in Jupyter.",
+      "ru": "Показывает график по таблице OHLCV или готовой ChartSpec в Jupyter. Для этого установите pricegenerator[notebook]. По умолчанию строится интерактивный график в HTML, для статического задайте format=\"svg\". Возвращает результат IPython.display.display, в Jupyter это обычно объект для обновления вывода.",
+      "zh-CN": "安装 pricegenerator[notebook] 后，可在笔记本中显示 OHLCV 表或已有 ChartSpec。默认显示交互式 HTML，设置 format=\"svg\" 可改为静态图。返回 IPython.display.display 的结果，在 Jupyter 中通常是可用于更新输出的显示句柄。"
+    },
+    "rendering.adapters.FromDataFrame": {
+      "en": "Take a copy of the OHLCV rows and return a ChartSpec. Times must increase and be unique. For local times without an offset, provide assume_timezone. Custom markers and lines match candle timestamps exactly, including when only selected bars are annotated. Supply computed series to add indicators.",
+      "ru": "Преобразует копию таблицы OHLCV в ChartSpec. Время свечей должно строго возрастать. Для местного времени без смещения укажите assume_timezone. Собственные линии и метки привязываются по точному времени свечи, даже если размечена лишь часть ряда. Готовые индикаторы можно передать в series.",
+      "zh-CN": "复制 OHLCV 数据行并返回 ChartSpec。时间戳必须严格递增且唯一，未注明时区的本地时间需通过 assume_timezone 指定时区。自定义标注和曲线按时间戳精确匹配，即使仅标记了部分 K 线也可对齐。已算好的指标可通过 series 传入。"
+    },
+    "rendering.adapters.IndicatorOverlays": {
+      "en": "Convert an IndicatorReport to a tuple of ChartSeries, preserving bar alignment, gaps, plotting style and group names. All returned layers start hidden. Use the HTML indicator controls to show a group.",
+      "ru": "Преобразует IndicatorReport в кортеж ChartSeries. Сохраняет привязку к свечам, пропуски, способ отображения и названия групп. Изначально все слои скрыты. В HTML нужную группу можно включить на панели индикаторов.",
+      "zh-CN": "将 IndicatorReport 转为 ChartSeries 元组，保留与 K 线的对齐关系、缺值、绘制方式和分组。所有图层初始均隐藏，可在 HTML 图表的指标面板中按组打开。"
+    },
+    "rendering.adapters.MarketOverlays": {
+      "en": "Return chart layers for close extrema, the line between the first and last close, each bar’s high/low midpoint, and technical indicators. Optionally add endpoint lines for consecutive segments. The extrema and endpoint lines depend on the complete period. ZigZag connects confirmed turning points retrospectively using elapsed UTC time.",
+      "ru": "Возвращает слои с минимальной и максимальной ценами закрытия, прямой между первым и последним закрытием, серединой диапазона каждой свечи и техническими индикаторами. Можно построить отдельные прямые по участкам ряда. Границы и прямые по крайним точкам становятся известны лишь по окончании соответствующего периода. ZigZag соединяет подтверждённые экстремумы задним числом с учётом времени между ними.",
+      "zh-CN": "返回价格图层，包括收盘价的最高与最低水平、首尾收盘价连线、每根 K 线的高低价中点及技术指标。也可对连续分段分别绘制首尾连线。极值和首尾连线需看完整段行情才能确定。ZigZag 按实际经过的 UTC 时间回溯连接已确认的拐点。"
+    },
+    "rendering.adapters.RenderMarkdown": {
+      "en": "Return a Markdown string containing the chart title and the summary lines already in the specification. Embedded HTML characters are escaped. Add analysis when preparing the chart if you want its statistical report here.",
+      "ru": "Возвращает строку Markdown с заголовком графика и текстом из поля summary. Символы HTML экранируются. Чтобы сюда попала статистика, включите analysis при подготовке графика по таблице.",
+      "zh-CN": "返回由图表标题和配置中已有的 summary 文字组成的 Markdown 字符串，其中的 HTML 特殊字符会被转义。需要行情统计时，请在从数据表准备图表时启用 analysis。"
+    },
+    "rendering.adapters.SaveMarkdown": {
+      "en": "Write the title and existing summary to a UTF-8 Markdown file and return its Path. Use a separate path from the chart file when saving both.",
+      "ru": "Записывает заголовок и готовую сводку в файл Markdown в кодировке UTF-8. Возвращает Path. Для отчёта и графика укажите разные пути.",
+      "zh-CN": "将标题及已有摘要写入 UTF-8 编码的 Markdown 文件，返回 Path。若同时保存图表，请给报告另设文件路径。"
+    },
+    "rendering.adapters.NotebookHTML": {
+      "en": "Return HTML for an isolated iframe containing the interactive chart. This lets several offline charts coexist in one notebook. To show it immediately, call DisplayChart.",
+      "ru": "Возвращает HTML для встраивания интерактивного графика в отдельный iframe. Так в одном блокноте могут работать несколько автономных графиков. Для немедленного вывода используйте DisplayChart.",
+      "zh-CN": "返回一段 iframe 嵌入代码，将交互式图表隔离在独立页面内，可在同一笔记本中放置多个离线图表。若要直接显示，可调用 DisplayChart。"
+    },
+    "rendering.adapters.DisplayChart": {
+      "en": "Display a prepared ChartSpec through IPython. Choose interactive HTML or inline SVG. Requires pricegenerator[notebook] and returns the result of the IPython display call, typically a display handle in Jupyter.",
+      "ru": "Выводит готовую ChartSpec средствами IPython как интерактивный HTML или встроенный SVG. Требуется pricegenerator[notebook]. Возвращает результат вызова IPython, обычно объект для обновления вывода в Jupyter.",
+      "zh-CN": "通过 IPython 显示已准备好的 ChartSpec，可选交互式 HTML 或内嵌 SVG。需安装 pricegenerator[notebook]。返回 IPython 显示函数的结果，在 Jupyter 中通常为显示句柄。"
+    },
+    "rendering.exports.RenderPNG": {
+      "en": "Return PNG image bytes using the static SVG layout. The image contains candles, volume and any visible layers. A supplied summary appears below the plot. Requires pricegenerator[export].",
+      "ru": "Возвращает PNG в виде байтов. Изображение строится по статическому SVG и включает свечи, объём и видимые слои. Если задан текст сводки, он помещается под графиком. Требуется pricegenerator[export].",
+      "zh-CN": "按静态 SVG 的布局返回 PNG 图像字节，包含 K 线、成交量及可见图层。若已提供摘要，会显示在图表下方。需安装 pricegenerator[export]。"
+    },
+    "rendering.exports.SavePNG": {
+      "en": "Write the static PNG image to the chosen path and return a Path. Use it to save a reproducible view of the visible series without opening a browser.",
+      "ru": "Сохраняет статический график в PNG и возвращает Path. Состав изображения определяется настройками видимости в спецификации. Браузер для сохранения не нужен.",
+      "zh-CN": "将静态 PNG 图像写入指定位置并返回 Path。可见序列由图表配置决定，导出过程无需打开浏览器。"
+    },
+    "rendering.exports.RenderJPEG": {
+      "en": "Return RGB JPEG image bytes from the same static view as PNG. Transparent pixels are composited onto the selected theme’s background. Quality is an integer from 1 to 95. Requires pricegenerator[export].",
+      "ru": "Возвращает JPEG в виде байтов RGB-изображения. Состав графика тот же, что у статического PNG. Прозрачные участки накладываются на фон выбранной темы. Качество задаётся целым числом от 1 до 95. Требуется pricegenerator[export].",
+      "zh-CN": "从与静态 PNG 相同的图表生成 RGB 格式的 JPEG 字节。透明部分与所选主题的背景色合成，质量取 1 至 95 的整数。需安装 pricegenerator[export]。"
+    },
+    "rendering.exports.SaveJPEG": {
+      "en": "Write the static JPEG at the requested quality and return its Path. This uses the raster export dependencies and does not launch a browser.",
+      "ru": "Сохраняет статический график в JPEG с заданным качеством и возвращает Path. Для этого используются зависимости из pricegenerator[export]. Запуск браузера не требуется.",
+      "zh-CN": "按指定质量写入静态 JPEG 文件，并返回 Path。导出使用 pricegenerator[export] 提供的依赖，无需启动浏览器。"
+    },
+    "rendering.interactive.RenderInteractive": {
+      "en": "Return a complete offline HTML document with candle and volume panels. Readers can inspect bars, zoom, switch theme and toggle supplied overlay groups. The browser’s Export PNG control saves the current price and volume view, including selected layers, without the range slider or report.",
+      "ru": "Возвращает готовую HTML-страницу с графиками цены и объёма. На ней можно изучить отдельную свечу, увеличить фрагмент, сменить тему и включить нужные группы индикаторов. Кнопка Export PNG сохраняет видимый фрагмент графиков цены и объёма вместе с выбранными слоями. Ползунок и отчёт в снимок не попадают.",
+      "zh-CN": "返回可离线打开的完整 HTML 页面，含 K 线和成交量两个面板。可查看单根 K 线、缩放、切换主题及已有的指标组。浏览器中的 Export PNG 按钮保存当前范围内的量价图及已选图层，图像中不包含区间滑块或统计报告。"
+    },
+    "rendering.interactive.SaveInteractive": {
+      "en": "Write a self-contained HTML chart to a UTF-8 file and return its Path. Open the saved file in a browser to explore it. Data and chart scripts are included in the file.",
+      "ru": "Записывает автономную HTML-страницу в кодировке UTF-8 и возвращает Path. График можно открыть в браузере прямо из файла. Данные и сценарии для работы графика уже встроены в страницу.",
+      "zh-CN": "将独立的 HTML 图表写入 UTF-8 文件并返回 Path。行情数据和绘图脚本都已嵌入，直接用浏览器打开即可查看。"
+    },
+    "rendering.static.RenderSVG": {
+      "en": "Return SVG text showing candle bodies from open to close, wicks from low to high, and a separate volume panel. Rising candles have hollow bodies and falling candles are filled. Visible overlays, annotations and any supplied summary are included. No optional raster dependencies are needed.",
+      "ru": "Возвращает текст SVG. Тело свечи ограничено ценами открытия и закрытия, тени показывают максимум и минимум. У растущей свечи тело полое, у падающей — закрашенное. Ниже расположен график объёма. В изображение также входят видимые слои, метки и заданная в спецификации сводка. Дополнительные пакеты для растрового экспорта не требуются.",
+      "zh-CN": "返回 SVG 文本。K 线实体两端对应开盘价和收盘价，影线延伸至最高价和最低价。上涨 K 线为空心，下跌 K 线为实心，下方单独显示成交量。图中还包含可见图层、标注和已提供的摘要，无需安装额外的栅格图像依赖。"
+    },
+    "rendering.static.SaveSVG": {
+      "en": "Write the complete vector chart as UTF-8 SVG and return its Path. The file can be viewed offline or embedded in documentation.",
+      "ru": "Сохраняет векторный график в SVG в кодировке UTF-8 и возвращает Path. Файл можно открыть без интернета или вставить в документацию.",
+      "zh-CN": "以 UTF-8 编码写入完整的 SVG 矢量图并返回 Path，可离线查看或嵌入文档。"
+    },
+    "rendering.spec.ChartCandle": {
+      "en": "One validated OHLCV bar for a chart. The timestamp is normalized to UTC with millisecond precision. The low and high must enclose both open and close. Volume must be finite and nonnegative. Fractional volume from imported markets is accepted.",
+      "ru": "Одна свеча OHLCV для графика. Время приводится к UTC с точностью до миллисекунд. Цены открытия и закрытия должны лежать между минимумом и максимумом свечи. Объём должен быть конечным и неотрицательным. Для импортированных данных допускается дробный объём.",
+      "zh-CN": "表示图表上的一根 OHLCV K 线。时间统一为 UTC，精度为毫秒。开盘价和收盘价必须位于最低价和最高价之间。成交量必须是有限的非负数，导入行情时也可使用小数成交量。"
+    },
+    "rendering.spec.ChartSeries": {
+      "en": "Describe a named line or point layer with one value per candle. Use None for gaps. The key identifies a layer across the chart, while its group lets related layers share one toggle in HTML. Static export draws layers marked visible.",
+      "ru": "Описывает именованный ряд линией или точками. На каждую свечу приходится одно значение, пропуски задаются как None. Ключ идентифицирует ряд на графике. Несколько рядов одной группы можно включать в HTML одним переключателем. В статический экспорт входят видимые ряды.",
+      "zh-CN": "描述一条以折线或点显示的具名序列。每根 K 线对应一个值，缺值用 None 表示。键用于区分图层，同组的图层可在 HTML 中一起切换。静态导出只绘制配置为可见的图层。"
+    },
+    "rendering.spec.ChartMarker": {
+      "en": "Attach a plain-text annotation to a candle by its zero-based index. Choose a position above, below or near the middle of the candle, and optionally set a color.",
+      "ru": "Привязывает текстовую метку к свече по индексу с нуля. Метка может располагаться над свечой, под ней или в центре. При необходимости можно задать цвет.",
+      "zh-CN": "按从零开始的 K 线索引添加纯文本标注。标注可放在 K 线上方、下方或中部，也可指定颜色。"
+    },
+    "rendering.spec.ChartSpec": {
+      "en": "A validated snapshot shared by HTML, SVG and raster exports. Provide at least one candle with strictly increasing timestamps, unique series keys and one value per candle in every overlay. Every marker must reference a candle in this snapshot.",
+      "ru": "Проверенная спецификация графика для HTML, SVG и растровых изображений. Нужна хотя бы одна свеча, время свечей должно строго возрастать. У рядов должны быть уникальные ключи и по одному значению на свечу. Метка может ссылаться только на свечу этого графика.",
+      "zh-CN": "HTML、SVG 和栅格图像共用的图表配置。至少需要一根 K 线，时间戳必须严格递增。每个图层的键必须唯一，每根 K 线应有一个对应值。所有标注均须引用配置中实际存在的 K 线。"
+    },
+    "rendering.spec.ChartSpec.ToDict": {
+      "en": "Return a detached dictionary containing the chart’s data, display settings and schema_version. Use it with FromDict to store and restore the same chart.",
+      "ru": "Возвращает отдельный словарь с данными, настройками оформления и номером схемы schema_version. Сохранённые в таком виде данные можно передать в FromDict, чтобы восстановить график.",
+      "zh-CN": "返回独立的字典，包含图表数据、显示选项及 schema_version。保存后可交给 FromDict 重建同一张图表。"
+    },
+    "rendering.spec.ChartSpec.ToJSON": {
+      "en": "Return a compact JSON string containing the entire chart and its schema version. Characters significant inside HTML script elements are escaped. A JSON decoder restores the original text.",
+      "ru": "Возвращает компактную строку JSON со всеми данными графика и версией схемы. Символы, значимые внутри элемента script, экранируются. При чтении JSON восстанавливается исходный текст.",
+      "zh-CN": "返回包含完整图表及结构版本号的紧凑 JSON 字符串。对 HTML 脚本元素中有特殊含义的字符进行转义，解码 JSON 即可恢复原文。"
+    },
+    "rendering.spec.ChartSpec.FromDict": {
+      "en": "Restore a validated ChartSpec from the dictionary produced by ToDict or by decoding ToJSON. A missing or unsupported schema_version, unknown fields, or inconsistent chart data raises ValueError.",
+      "ru": "Восстанавливает ChartSpec из словаря ToDict или после разбора строки ToJSON. При отсутствии или неподдерживаемой версии схемы, неизвестном поле либо некорректных данных графика возникает ValueError.",
+      "zh-CN": "从 ToDict 的字典或解码 ToJSON 得到的对象重建 ChartSpec，并重新校验图表。若缺少 schema_version、版本不受支持、含未知字段或数据不一致，会引发 ValueError。"
+    },
+    "rendering.spec.SCHEMA_VERSION": {
+      "en": "Version number of the serialized ChartSpec layout. ChartSpec.FromDict accepts version 1 in this release.",
+      "ru": "Версия формата сериализации ChartSpec. В этом выпуске ChartSpec.FromDict принимает версию 1.",
+      "zh-CN": "ChartSpec 序列化格式的版本号。本版本的 ChartSpec.FromDict 接受版本 1。"
+    },
+    "rendering.theme.BrandingData": {
+      "en": "Return a fresh dictionary with wordmark and emblem keys. Each value is a PNG data URI suitable for embedding directly in an offline chart or document.",
+      "ru": "Возвращает новый словарь с ключами wordmark и emblem. Каждое значение содержит PNG в виде data URI. Его можно встроить непосредственно в автономный график или документ.",
+      "zh-CN": "返回带有 wordmark 和 emblem 两个键的新字典。值为 PNG 的 data URI，可直接嵌入离线图表或文档。"
+    },
+    "rendering.theme.THEMES": {
+      "en": "Read-only palettes named dark and light. Each maps roles such as up, down, grid and background to hexadecimal colors.",
+      "ru": "Две палитры только для чтения, dark и light. Каждому элементу графика сопоставлен цвет в шестнадцатеричном формате, например растущей и падающей свече, сетке или фону.",
+      "zh-CN": "包含 dark 和 light 两套只读配色。每套配色将上涨、下跌、网格、背景等图表元素映射为十六进制颜色值。"
+    }
+  },
+  "terms": {
+    "argv": {
+      "en": "List of argument strings, starting with the subcommand. Pass None to read the process command line.",
+      "ru": "Список строк, начиная с названия подкоманды. При None аргументы читаются из командной строки процесса.",
+      "zh-CN": "从子命令名开始的字符串列表。传入 None 时读取当前进程的命令行。"
+    },
+    "rendering.__main__.Main.argv": {
+      "en": "Chart arguments starting with the input CSV path. Omit the subcommand name. None reads the process command line.",
+      "ru": "Аргументы построения графика, начиная с пути к CSV. Название подкоманды подставляется автоматически. При None используется командная строка процесса.",
+      "zh-CN": "从输入 CSV 路径开始的绘图参数，不含子命令名。传入 None 时读取当前进程的命令行。"
+    },
+    "values": {
+      "en": "Input observations in time order, one real number or missing value per bar. None, NaN and pandas.NA denote missing observations. Infinity is rejected.",
+      "ru": "Исходные значения по порядку свечей. Допустимы вещественные числа и пропуски None, NaN или pandas.NA. Бесконечные значения недопустимы.",
+      "zh-CN": "按时间排列的观测值，每根 K 线对应一个实数或缺值。缺值可用 None、NaN 或 pandas.NA 表示，不接受无穷值。"
+    },
+    "period": {
+      "en": "Positive whole number of observations in the trailing calculation window, including the current observation.",
+      "ru": "Длина скользящего окна в наблюдениях, включая текущее. Задаётся целым положительным числом.",
+      "zh-CN": "包含当前观测在内的回看窗口长度，以观测个数计，取正整数。"
+    },
+    "volume": {
+      "en": "One nonnegative trading volume per observation, in the same order as the prices. The values serve as weights.",
+      "ru": "Неотрицательные объёмы торгов в том же порядке, что и цены. Каждому наблюдению соответствует один объём, который служит весом.",
+      "zh-CN": "与价格逐根对齐的非负成交量，每个观测的成交量用作对应权重。"
+    },
+    "deviations": {
+      "en": "Nonnegative multiplier for the population standard deviation in each Bollinger window. At the default 2.0, the bands are two standard deviations from the mean.",
+      "ru": "Неотрицательный множитель стандартного отклонения в окне полос Боллинджера. При значении 2.0 границы отстоят от средней на два стандартных отклонения.",
+      "zh-CN": "布林带窗口内总体标准差的非负倍数。默认值 2.0 表示上下轨距均线两个标准差。"
+    },
+    "high": {
+      "en": "Sequence of per-bar high prices, aligned with low. A high must be at least the low for that bar.",
+      "ru": "Ряд максимумов свечей, согласованный по позициям с low. Максимум каждой свечи должен быть не ниже её минимума.",
+      "zh-CN": "与 low 逐根对齐的最高价序列，每根 K 线的最高价必须大于或等于其最低价。"
+    },
+    "low": {
+      "en": "Sequence of per-bar low prices, aligned with high. A low must be no greater than the high for that bar.",
+      "ru": "Ряд минимумов свечей, согласованный по позициям с high. Минимум каждой свечи должен быть не выше её максимума.",
+      "zh-CN": "与 high 逐根对齐的最低价序列，每根 K 线的最低价必须小于或等于其最高价。"
+    },
+    "step": {
+      "en": "Initial SAR acceleration factor and the increment applied when the trend reaches a new extreme. Must be positive and no greater than maximum.",
+      "ru": "Начальное значение коэффициента ускорения SAR и его приращение при обновлении экстремума по направлению тренда. Должно быть больше нуля и не превышать maximum.",
+      "zh-CN": "SAR 加速因子的初始值，也是同向趋势创出新极值时的增量。必须大于零且不超过 maximum。"
+    },
+    "maximum": {
+      "en": "Upper bound on the SAR acceleration factor, from step through 1 inclusive.",
+      "ru": "Верхний предел коэффициента ускорения SAR, от step до 1 включительно.",
+      "zh-CN": "SAR 加速因子的上限，取值介于 step 与 1 之间，含两端。"
+    },
+    "deviation": {
+      "en": "Minimum relative reversal from the current extreme needed to confirm a ZigZag pivot. Use a fraction strictly between 0 and 1, for example 0.05 for 5%.",
+      "ru": "Минимальное относительное движение от экстремума в обратную сторону для подтверждения разворота ZigZag. Задаётся долей строго между 0 и 1, например 0.05 означает 5%.",
+      "zh-CN": "确认 ZigZag 拐点所需的最小反向变动幅度，以相对于当前极值的比例表示。取值须大于 0、小于 1，例如 0.05 表示 5%。"
+    },
+    "zigzag_deviation": {
+      "en": "Relative reversal threshold for the ZigZag series, strictly between 0 and 1. The default 0.05 requires a 5% move from the extreme.",
+      "ru": "Порог подтверждения разворота ZigZag, доля строго между 0 и 1. По умолчанию 0.05 означает движение на 5% от экстремума.",
+      "zh-CN": "ZigZag 的反转确认阈值，取值须大于 0、小于 1。默认的 0.05 表示从极值向反方向变动 5%。"
+    },
+    "frame": {
+      "en": "OHLCV DataFrame with datetime, open, high, low, close and volume columns. Rows must be ordered in time and pass the package’s market-data checks.",
+      "ru": "Таблица OHLCV со столбцами datetime, open, high, low, close и volume. Свечи должны быть упорядочены по времени и соответствовать правилам ValidateOHLCV.",
+      "zh-CN": "包含 datetime、open、high、low、close 和 volume 列的 OHLCV 数据表。K 线须按时间排序并通过行情校验。"
+    },
+    "key": {
+      "en": "Stable identifier for a series, distinct from its human-readable label.",
+      "ru": "Идентификатор ряда для программного обращения. Отображаемое название хранится отдельно.",
+      "zh-CN": "供程序识别序列的固定键，显示名称另存于 label。"
+    },
+    "label": {
+      "en": "Human-readable name of an indicator or overlay, used in chart legends and controls.",
+      "ru": "Название индикатора или ряда для легенды графика и элементов управления.",
+      "zh-CN": "图例和图表控件中显示的指标或序列名称。"
+    },
+    "group": {
+      "en": "Name used to toggle related indicator or overlay series together in the HTML chart.",
+      "ru": "Название группы рядов, которые можно вместе включать и выключать на HTML-графике.",
+      "zh-CN": "用于在 HTML 图表中统一切换一组指标或数据序列的组名。"
+    },
+    "kind": {
+      "en": "Drawing style, either line for a connected line or points for individual markers.",
+      "ru": "Способ отображения ряда. Значение line задаёт линию, points — отдельные точки.",
+      "zh-CN": "绘制方式。line 显示折线，points 显示独立的数据点。"
+    },
+    "reasons": {
+      "en": "Per-bar explanations corresponding to missing indicator values. The standard report uses None on bars with a reading. The sequence may be omitted on a custom series.",
+      "ru": "Пояснения причин пропусков по свечам. Там, где значение рассчитано, стандартный отчёт ставит None. Для собственного ряда поле можно опустить.",
+      "zh-CN": "按 K 线记录指标缺值原因。对于已有读数的位置，标准报告填入 None。自定义序列可省略此字段。"
+    },
+    "indicators.IndicatorSeries.values": {
+      "en": "Computed indicator values aligned with the input bars. None marks a warm-up bar, an inactive series or another undefined reading. Consult reasons for the explanation.",
+      "ru": "Значения индикатора, по одному на исходную свечу. None может означать нехватку наблюдений, неактивное направление или другую причину отсутствия значения. Пояснение содержится в reasons.",
+      "zh-CN": "与输入 K 线逐根对齐的指标值。None 表示初始数据不足、该方向未启用或其他无法计算的情况，具体原因见 reasons。"
+    },
+    "indicators.IndicatorReport.series": {
+      "en": "IndicatorSeries records containing the numeric series, chart groups and per-bar explanations for gaps.",
+      "ru": "Объекты IndicatorSeries со значениями индикаторов, группами для графика и причинами пропусков по свечам.",
+      "zh-CN": "由 IndicatorSeries 记录组成，包含指标数值、图表分组及各根 K 线上的缺值原因。"
+    },
+    "notes": {
+      "en": "Calculation conventions that accompany the indicator results, including warm-up, shifts and pivot confirmation.",
+      "ru": "Пояснения к расчёту индикаторов, в том числе о начальных пропусках, сдвигах и подтверждении разворотов.",
+      "zh-CN": "随指标结果提供的计算说明，包括初始窗口、移位和拐点确认规则。"
+    },
+    "data": {
+      "en": "An OHLCV pandas DataFrame or a previously prepared ChartSpec. The table is required when analysis=True.",
+      "ru": "Таблица OHLCV в pandas или готовая спецификация ChartSpec. Для режима analysis=True передайте таблицу.",
+      "zh-CN": "pandas 的 OHLCV 数据表或已有的 ChartSpec。启用 analysis=True 时须传入数据表。"
+    },
+    "analysis": {
+      "en": "Set True when supplying OHLCV data to include grouped technical indicators and statistics for the full input series. False produces the basic chart.",
+      "ru": "При значении True к графику по таблице OHLCV добавляются группы технических индикаторов и статистика за весь период. При False строится базовый график.",
+      "zh-CN": "对 OHLCV 表设为 True 可附加分组技术指标及整个输入区间的统计。设为 False 则生成基础图表。"
+    },
+    "options": {
+      "en": "For an OHLCV DataFrame, pass FromDataFrame options such as title, theme or markers. For an existing ChartSpec, pass the specification fields to replace.",
+      "ru": "Для таблицы OHLCV доступны параметры FromDataFrame, например title, theme и markers. Для готовой ChartSpec укажите поля спецификации, значения которых нужно заменить.",
+      "zh-CN": "对于 OHLCV 表，传入 FromDataFrame 的选项，例如 title、theme 或 markers。对于已有的 ChartSpec，传入希望替换的配置字段。"
+    },
+    "output": {
+      "en": "Destination path for the chart. The suffix selects the format unless format is explicit. Omitting the path creates a temporary HTML file.",
+      "ru": "Путь для сохранения графика. Если format не задан, формат определяется по расширению. Без пути создаётся временный HTML-файл.",
+      "zh-CN": "图表的输出路径。未设置 format 时按后缀选择格式。省略路径会创建临时 HTML 文件。"
+    },
+    "format": {
+      "en": "Notebook output type. Use html for an interactive view or svg for a static vector graphic.",
+      "ru": "Формат вывода в блокноте. Значение html задаёт интерактивный график, svg — статический векторный.",
+      "zh-CN": "笔记本中的显示格式。html 为交互式图表，svg 为静态矢量图。"
+    },
+    "rendering.api.Chart.format": {
+      "en": "File format, html, svg, png or jpeg. The htm and jpg aliases are accepted. An explicit format must agree with the output filename suffix, if present.",
+      "ru": "Формат файла, html, svg, png или jpeg. Допускаются также htm и jpg. При явном указании формат должен совпадать с расширением имени файла, если оно есть.",
+      "zh-CN": "文件格式，可选 html、svg、png 或 jpeg，也接受 htm 和 jpg。如文件名带后缀，显式指定的格式必须与其一致。"
+    },
+    "view": {
+      "en": "Whether to open the saved chart in the default browser. None opens HTML automatically and leaves static formats on disk. Set False for unattended runs.",
+      "ru": "Открывать ли сохранённый график в браузере по умолчанию. При None открываются только HTML-файлы. Для автоматических прогонов задайте False.",
+      "zh-CN": "是否用默认浏览器打开已保存的图表。设为 None 时，仅 HTML 会自动打开。无人值守运行可设为 False。"
+    },
+    "quality": {
+      "en": "JPEG encoding quality from 1 to 95 inclusive, as an integer. The default is 90.",
+      "ru": "Качество кодирования JPEG, целое число от 1 до 95 включительно. По умолчанию 90.",
+      "zh-CN": "JPEG 编码质量，取 1 至 95 的整数，含两端。默认值为 90。"
+    },
+    "markdown_report": {
+      "en": "Optional path for the chart title and summary in Markdown. When a chart output path is supplied, use a different file for the report.",
+      "ru": "Путь для отдельного файла Markdown с заголовком и сводкой. Если указан путь к графику, отчёт нужно сохранять в другой файл.",
+      "zh-CN": "可选的 Markdown 报告路径，内容为图表标题和摘要。若指定了图表输出路径，报告需另存为不同文件。"
+    },
+    "prices": {
+      "en": "Nonempty OHLCV DataFrame with unique column names and strictly increasing, unique candle times. The expected columns are datetime, open, high, low, close and volume.",
+      "ru": "Непустая таблица OHLCV с уникальными именами столбцов и строго возрастающим временем свечей. Нужны столбцы datetime, open, high, low, close и volume.",
+      "zh-CN": "非空 OHLCV 数据表，列名不得重复，K 线时间必须严格递增且唯一。须包含 datetime、open、high、low、close 和 volume 列。"
+    },
+    "assume_timezone": {
+      "en": "Time zone for timestamps that have no offset, for example Europe/London. Times with offsets are converted to UTC. Ambiguous or nonexistent local times are rejected.",
+      "ru": "Часовой пояс для дат без смещения, например Europe/London. Время с указанным смещением переводится в UTC. Местное время, которое при переводе часов повторяется или пропускается, вызывает ошибку.",
+      "zh-CN": "为未注明偏移的时间戳指定时区，例如 Europe/London。已带偏移的时间会转换为 UTC。夏令时切换造成的歧义时间或不存在的时间会被拒绝。"
+    },
+    "title": {
+      "en": "Title displayed on the chart and used as the heading of a separately exported Markdown report.",
+      "ru": "Заголовок графика. Он же используется в отдельном отчёте Markdown.",
+      "zh-CN": "图表标题，同时用作单独导出的 Markdown 报告标题。"
+    },
+    "markers": {
+      "en": "Text annotations referencing existing candles. A marker can sit above, in the center of or below its candle.",
+      "ru": "Текстовые метки, привязанные к существующим свечам. Метку можно поместить над свечой, в центре или под свечой.",
+      "zh-CN": "关联已有 K 线的文字标注，可放在对应 K 线的上方、中部或下方。"
+    },
+    "rendering.adapters.FromDataFrame.markers": {
+      "en": "Optional DataFrame with datetime and at least one of markersUpper, markersCenter or markersLower for text above, inside or below candles. Each timestamp must match one candle. Empty text is skipped.",
+      "ru": "Необязательная таблица с datetime и хотя бы одним столбцом markersUpper, markersCenter или markersLower для подписей над свечой, в центре и под свечой. Время строки должно совпадать с временем свечи. Пустая подпись пропускается.",
+      "zh-CN": "可选的数据表，含 datetime 以及 markersUpper、markersCenter、markersLower 中的至少一列，分别对应 K 线上方、中部和下方的文字。每个时间戳必须匹配一根已有 K 线，空白标注会跳过。"
+    },
+    "lines": {
+      "en": "Sequence of DataFrames with a datetime column and one or more named numeric columns. Each numeric column becomes a layer. Missing candle timestamps leave gaps in that layer.",
+      "ru": "Последовательность таблиц с datetime и одним или несколькими именованными числовыми столбцами. Каждый такой столбец образует отдельную линию. Если для свечи нет строки, на линии остаётся разрыв.",
+      "zh-CN": "一组数据表，每张表都包含 datetime 和一个或多个具名数值列。每个数值列形成单独的图层，缺少相应时间戳的位置留空。"
+    },
+    "series": {
+      "en": "ChartSeries overlays. Each series has a unique key and supplies exactly one value or None per candle.",
+      "ru": "Ряды ChartSeries для наложения на график. У каждого ряда свой ключ и ровно одно значение или None на каждую свечу.",
+      "zh-CN": "叠加在图表上的 ChartSeries 序列。每个序列须有唯一键，每根 K 线须对应一个值或 None。"
+    },
+    "summary": {
+      "en": "Sequence of report text lines. HTML places the details behind an expandable section. Static exports place the text below the plot.",
+      "ru": "Строки текстовой сводки. На HTML-странице подробности можно развернуть. В статическом изображении текст размещается под графиком.",
+      "zh-CN": "报告的逐行文字。HTML 将详细内容放入可展开的区域，静态导出则把这些文字排在图表下方。"
+    },
+    "theme": {
+      "en": "Initial palette, dark or light. The default is dark. Readers can switch it on an interactive chart.",
+      "ru": "Начальная цветовая тема, dark или light. По умолчанию используется тёмная. На интерактивном графике тему можно переключить.",
+      "zh-CN": "初始配色可选 dark 或 light，默认为深色。交互式图表允许切换主题。"
+    },
+    "width": {
+      "en": "Chart width in pixels, an integer from 480 to 16384 inclusive.",
+      "ru": "Ширина графика в пикселях, целое число от 480 до 16384 включительно.",
+      "zh-CN": "图表宽度，以像素计，取 480 至 16384 的整数，含两端。"
+    },
+    "height": {
+      "en": "Chart height in pixels, from 360 to 16384 inclusive. A static export can be taller when the legend or summary needs extra space.",
+      "ru": "Высота графика в пикселях, целое число от 360 до 16384 включительно. Статическое изображение может быть выше, если нужно место для легенды или сводки.",
+      "zh-CN": "图表高度，以像素计，取 360 至 16384 的整数，含两端。静态导出会根据图例或摘要所需的空间增加总高度。"
+    },
+    "price_precision": {
+      "en": "Number of decimal places for ordinary displayed prices, from 0 to 12. This is a label setting. The underlying candle values retain their precision.",
+      "ru": "Число знаков после запятой в обычных подписях цен, от 0 до 12. Настройка относится к отображению. Сами цены в свечах сохраняют свою точность.",
+      "zh-CN": "普通价格标签显示的小数位数，取 0 至 12。此选项控制显示精度，K 线中的价格数据保留原精度。"
+    },
+    "show_controls": {
+      "en": "Whether to display the interactive chart’s control bar, including zoom, theme and image export actions.",
+      "ru": "Показывать ли панель управления интерактивным графиком, в том числе кнопки масштаба, темы и экспорта изображения.",
+      "zh-CN": "是否显示交互式图表的工具栏，包括缩放、主题切换和图像导出按钮。"
+    },
+    "report": {
+      "en": "IndicatorReport produced by Indicators, containing computed, bar-aligned indicator series.",
+      "ru": "Отчёт IndicatorReport, полученный с помощью Indicators. Содержит значения индикаторов с привязкой к исходным свечам.",
+      "zh-CN": "由 Indicators 产生的 IndicatorReport，其中包含已计算且与 K 线逐根对齐的指标序列。"
+    },
+    "split_counts": {
+      "en": "Lengths of consecutive candle segments. Every length must be a positive integer and the total must equal the candle count. Leave empty to omit segment endpoint lines.",
+      "ru": "Длины последовательных участков ряда в свечах. Это целые положительные числа, в сумме равные числу свечей. Если оставить список пустым, прямые для отдельных участков не строятся.",
+      "zh-CN": "依次划分各段的 K 线根数。各段长度须为正整数，总和须等于 K 线总数。留空时不绘制分段首尾连线。"
+    },
+    "spec": {
+      "en": "A validated ChartSpec containing the candles, annotations, overlays and display settings for this chart.",
+      "ru": "Проверенная спецификация ChartSpec со свечами, метками, рядами и настройками оформления графика.",
+      "zh-CN": "经过校验的 ChartSpec，包含 K 线、标注、叠加图层和本图的显示设置。"
+    },
+    "path": {
+      "en": "Destination filename or pathlib.Path. Its parent directory must exist. The save operation replaces an existing file at this path.",
+      "ru": "Имя выходного файла или объект pathlib.Path. Каталог должен существовать. Если файл по этому пути уже есть, он будет перезаписан.",
+      "zh-CN": "目标文件名或 pathlib.Path，对应目录必须存在。若该路径已有文件，保存操作将覆盖其内容。"
+    },
+    "datetime": {
+      "en": "ISO 8601 timestamp for this bar with an explicit UTC offset or Z. Precision must not be finer than one millisecond. Internally it is normalized to UTC.",
+      "ru": "Время свечи в формате ISO 8601 с явным смещением или Z. Точность не выше миллисекунды. Для графика время приводится к UTC.",
+      "zh-CN": "该根 K 线的 ISO 8601 时间戳，须显式带有 UTC 偏移或 Z。精度不得细于毫秒，内部统一转换为 UTC。"
+    },
+    "open": {
+      "en": "Opening price of the candle, one end of the candle body. It must fall within the interval from low to high.",
+      "ru": "Цена открытия свечи, одна из границ её тела. Должна лежать между low и high включительно.",
+      "zh-CN": "K 线的开盘价，构成实体的一端，必须位于 low 至 high 的闭区间内。"
+    },
+    "close": {
+      "en": "Closing price of the candle, the other end of the candle body. It must fall within the interval from low to high.",
+      "ru": "Цена закрытия свечи, вторая граница её тела. Должна лежать между low и high включительно.",
+      "zh-CN": "K 线的收盘价，构成实体的另一端，必须位于 low 至 high 的闭区间内。"
+    },
+    "rendering.spec.ChartCandle.high": {
+      "en": "Highest price during this bar, at or above both open and close.",
+      "ru": "Наибольшая цена за период свечи. Она должна быть не ниже ни цены открытия, ни цены закрытия.",
+      "zh-CN": "该根 K 线区间内的最高价，必须同时大于或等于开盘价和收盘价。"
+    },
+    "rendering.spec.ChartCandle.low": {
+      "en": "Lowest price during this bar, at or below both open and close.",
+      "ru": "Наименьшая цена за период свечи. Она должна быть не выше ни цены открытия, ни цены закрытия.",
+      "zh-CN": "该根 K 线区间内的最低价，必须同时小于或等于开盘价和收盘价。"
+    },
+    "rendering.spec.ChartCandle.volume": {
+      "en": "Nonnegative traded quantity during this bar, in the unit used by the source data. The chart accepts fractional quantities for markets quoted in such units.",
+      "ru": "Неотрицательный объём торгов за период свечи в единицах исходных данных. График допускает дробное количество, если так представлен объём на данном рынке.",
+      "zh-CN": "该根 K 线区间内的非负成交量，单位沿用输入行情。若市场按可拆分单位记录成交，图表也接受小数数量。"
+    },
+    "rendering.spec.ChartSeries.key": {
+      "en": "Unique chart identifier, at most 80 characters. Start with an ASCII letter, then use ASCII letters, digits, underscores, dots or hyphens.",
+      "ru": "Уникальный на графике ключ длиной до 80 символов. Первый символ — латинская буква. Далее допустимы латинские буквы, цифры, подчёркивание, точка и дефис.",
+      "zh-CN": "图表内唯一的标识符，最多 80 个字符，以 ASCII 字母开头，后续可用 ASCII 字母、数字、下划线、点或连字符。"
+    },
+    "rendering.spec.ChartSeries.values": {
+      "en": "A finite number or None for each candle in the same order. None leaves a gap in the layer.",
+      "ru": "Конечное число или None для каждой свечи в том же порядке. На месте None линия прерывается или пропускается точка.",
+      "zh-CN": "按 K 线顺序逐根给出有限数值或 None，值为 None 的位置在图层中留空。"
+    },
+    "rendering.spec.ChartSeries.width": {
+      "en": "Stroke width for the series, greater than 0 and no more than 20. This controls the overlay, independently of chart width.",
+      "ru": "Толщина штриха ряда, больше 0 и не больше 20. Настраивается отдельно от ширины всего графика.",
+      "zh-CN": "图层的线宽，取值大于 0 且不超过 20，可独立于整幅图表的宽度设置。"
+    },
+    "color": {
+      "en": "Optional six-digit hexadecimal color in #RRGGBB form. None uses the renderer’s default color for the element.",
+      "ru": "Цвет в шестнадцатеричном формате #RRGGBB. При None используется цвет по умолчанию для этого элемента графика.",
+      "zh-CN": "可选的六位十六进制颜色，格式为 #RRGGBB。设为 None 时使用该元素的默认颜色。"
+    },
+    "visible": {
+      "en": "Initial visibility in HTML and whether the series is drawn in a static export.",
+      "ru": "Видимость ряда при открытии HTML и признак включения в статическое изображение.",
+      "zh-CN": "图层在 HTML 中的初始可见状态，也决定静态图是否绘制该序列。"
+    },
+    "dashed": {
+      "en": "Whether to use a dashed stroke for the line overlay.",
+      "ru": "Рисовать ли линию этого ряда пунктиром.",
+      "zh-CN": "是否以虚线绘制该折线图层。"
+    },
+    "candle_index": {
+      "en": "Zero-based position of the annotated candle. It must refer to an existing candle in the enclosing ChartSpec.",
+      "ru": "Индекс подписываемой свечи, начиная с нуля. Свеча с этим индексом должна присутствовать в ChartSpec.",
+      "zh-CN": "标注所指 K 线的位置，从零开始，必须指向当前 ChartSpec 中已有的 K 线。"
+    },
+    "text": {
+      "en": "Plain text to display next to the selected candle.",
+      "ru": "Текст подписи к выбранной свече.",
+      "zh-CN": "在所选 K 线旁显示的纯文本。"
+    },
+    "position": {
+      "en": "Marker position relative to its candle, one of above, center or below.",
+      "ru": "Положение метки относительно свечи. Возможны above (сверху), center (в центре) и below (снизу).",
+      "zh-CN": "标注相对于 K 线的位置，可选 above（上方）、center（中部）或 below（下方）。"
+    },
+    "candles": {
+      "en": "One or more ChartCandle records in strictly increasing time order. Duplicate candle timestamps are invalid.",
+      "ru": "Одна или несколько свечей ChartCandle в строго возрастающем порядке времени. Совпадающие отметки времени недопустимы.",
+      "zh-CN": "按时间严格递增排列的一根或多根 ChartCandle 记录，时间戳不得重复。"
+    },
+    "rendering.spec.ChartSpec.FromDict.data": {
+      "en": "Mapping with schema_version and chart fields. Use ChartSpec.ToDict() or decode the JSON returned by ChartSpec.ToJSON().",
+      "ru": "Словарь с полем schema_version и данными графика. Его можно получить через ChartSpec.ToDict() или при разборе JSON, который возвращает ChartSpec.ToJSON().",
+      "zh-CN": "包含 schema_version 和各图表字段的映射。可使用 ChartSpec.ToDict()，也可先解码 ChartSpec.ToJSON() 返回的字符串。"
+    }
+  }
+}
