@@ -1,0 +1,72 @@
+---
+layout: default
+---
+{% assign lang = page.lang %}
+{% assign words = site.data.api_ui[lang] %}
+{% assign catalog = site.data.api_2_2_1 %}
+{% assign topic = page.api_topic %}
+{% assign topics = catalog.topics %}
+<div class="api-shell">
+<aside class="api-sidebar">
+  <form role="search" class="api-search" hidden>
+    <label for="api-query">{{ words.search }}</label>
+    <input id="api-query" type="search" autocomplete="off" placeholder="{{ words.placeholder }}">
+    <ul class="api-results" hidden></ul><p class="api-no-results" role="status" hidden>{{ words.empty }}</p>
+  </form>
+  <details class="api-navigation" open><summary>{{ words.topics }}</summary>
+    <nav aria-label="{{ words.topics }}"><a href="{% include api_url.html locale=lang %}"{% if topic == 'index' %} aria-current="page"{% endif %}>{{ words.index }}</a>
+    {% for slug in topics %}<a href="{% include api_url.html locale=lang topic=slug %}"{% if topic == slug %} aria-current="page"{% endif %}>{{ words[slug] }}</a>{% endfor %}</nav>
+  </details>
+</aside>
+<div class="api-content">
+  <p class="api-breadcrumb">{% if topic == 'index' %}PriceGenerator 2.2.1{% else %}<a href="{% include api_url.html locale=lang %}">{{ words.title }}</a> <span> / 2.2.1</span>{% endif %}</p>
+  {% if topic == 'index' %}
+  <h1>{{ words.title }}</h1><p class="api-lead">{{ words.intro }}</p>
+  <img class="project-art api-cover" src="{{ '/docs/assets/pricegenerator-product-card.webp' | relative_url }}" width="1774" height="887" alt="{{ words.logo_alt }}">
+  <h2>{{ words.examples }}</h2><p>{{ words.example_note }}</p>
+  <pre tabindex="0"><code>from pricegenerator import Generate, GenerationConfig
+
+config = GenerationConfig(seed=42, horizon=120, timeframe_seconds=3600)
+candles = Generate(config)
+print(candles.head())</code></pre>
+  <div class="api-topics">{% for slug in topics %}<a href="{% include api_url.html locale=lang topic=slug %}">{{ words[slug] }} →</a>{% endfor %}</div>
+  <h2>{{ words.shortcuts }}</h2>
+  {% for facade in catalog.aliases %}{% assign mod = facade[1] | split: '.' | pop | join: '.' %}{% assign origin = catalog.modules[mod] %}
+  {% if origin %}<div class="api-facade"><a href="{% include api_url.html locale=lang topic=origin.topic %}#{{ facade[1] }}"><code>{{ facade[0] }}</code></a></div>
+  {% else %}<div class="api-facade" id="{{ facade[1] }}"><code>{{ facade[0] }}</code> · {{ words.version_label }}</div>{% endif %}{% endfor %}
+  {% else %}
+  <h1>{{ words[topic] }}</h1>
+  <nav class="api-toc" aria-label="{{ words.contents }}">{% for pair in catalog.modules %}{% assign module = pair[1] %}{% if module.topic == topic %}<a href="#module-{{ pair[0] }}"><code>{{ pair[0] }}</code></a>{% endif %}{% endfor %}</nav>
+  {% assign example = site.data.api_examples[topic] %}
+  <details class="api-example"><summary>{{ words.examples }}</summary>
+  <p>{{ example[lang] | escape }}</p><pre tabindex="0"><code>{{ example.code | strip | escape }}</code></pre></details>
+  {% for pair in catalog.modules %}{% assign mod_id = pair[0] %}{% assign module = pair[1] %}{% if module.topic == topic %}
+    {% assign copy = site.data.api_copy[module.domain] %}{% assign source = 'https://github.com/Fuzzy-Technologies/PriceGenerator/blob/v2.2.1/pricegenerator/' | append: module.file %}
+    <section class="api-module" aria-labelledby="module-{{ mod_id }}"><h2 id="module-{{ mod_id }}"><code>pricegenerator.{{ mod_id }}</code></h2>
+    <p class="api-description">{{ copy.modules[mod_id][lang] | escape }}</p>
+    <ul class="api-symbol-index">{% for entry in module.entries %}<li><a href="#{{ entry.key }}"><code>{{ entry.name }}</code></a></li>{% endfor %}</ul>
+    {% for entry in module.entries %}
+      <section class="api-entry" aria-labelledby="{{ entry.key }}"><h3 id="{{ entry.key }}"><a href="#{{ entry.key }}"><code>{{ entry.name }}</code></a></h3>
+      <p class="api-description">{{ copy.symbols[entry.key][lang] | escape }}</p>
+      <pre tabindex="0"><code>{{ entry.signature | escape }}</code></pre>
+      {% unless entry.terms == empty %}<details class="api-terms"><summary>{% if entry.kind == 'class' %}{{ words.fields }}{% else %}{{ words.params }}{% endif %} ({{ entry.terms | size }})</summary>
+      <dl>{% for field in entry.terms %}{% assign term = entry.key | append: '.' | append: field %}{% assign desc = copy.terms[term] | default: copy.terms[field] %}
+      <dt><code>{{ field }}</code></dt><dd>{{ desc[lang] | escape }}</dd>{% endfor %}</dl></details>{% endunless %}
+      <p class="api-meta"><a href="{{ source }}#L{{ entry.line }}">{{ words.source }} ↗</a>
+      {% for alias in catalog.aliases %}{% if alias[1] == entry.key %}<span>{{ words.imports }} <code>{{ alias[0] }}</code></span>{% endif %}{% endfor %}</p>
+      </section>
+    {% endfor %}
+    {% unless module.constants == empty %}<h3>{{ words.constants }}</h3><dl class="api-constants">{% for constant in module.constants %}
+    {% assign key = mod_id | append: '.' | append: constant.name %}<dt id="{{ key }}"><a href="{{ source }}#L{{ constant.line }}"><code>{{ constant.name }}</code></a>{% if constant.value != empty %} <code>= {{ constant.value | escape }}</code>{% endif %}</dt>{% if copy.symbols[key] %}<dd>{{ copy.symbols[key][lang] | escape }}</dd>{% endif %}{% endfor %}</dl>{% endunless %}
+    </section>
+  {% endif %}{% endfor %}
+  {% endif %}
+</div></div>
+<template id="api-search-data">
+{% for pair in catalog.modules %}{% assign module = pair[1] %}{% assign copy = site.data.api_copy[module.domain] %}{% capture dest %}{% include api_url.html locale=lang topic=module.topic %}{% endcapture %}
+<a href="{{ dest }}#module-{{ pair[0] }}" data-name="{{ pair[0] }}" data-terms="{{ copy.modules[pair[0]][lang] | escape }}">pricegenerator.{{ pair[0] }}</a>
+{% for entry in module.entries %}<a href="{{ dest }}#{{ entry.key }}" data-name="{{ entry.name }}" data-aliases="{% for alias in catalog.aliases %}{% if alias[1] == entry.key %}{{ alias[0] }} {% endif %}{% endfor %}" data-terms="{{ entry.terms | join: ' ' | escape }} {{ copy.symbols[entry.key][lang] | escape }}">pricegenerator.{{ entry.key }}</a>{% endfor %}
+{% for constant in module.constants %}<a href="{{ dest }}#{{ pair[0] }}.{{ constant.name }}" data-name="{{ constant.name }}">pricegenerator.{{ pair[0] }}.{{ constant.name }}</a>{% endfor %}
+{% endfor %}
+<a href="{% include api_url.html locale=lang %}#_version.__version__" data-name="__version__">pricegenerator.__version__</a>
+</template>

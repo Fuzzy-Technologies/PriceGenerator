@@ -5,7 +5,7 @@ layout: default
 <section class="intro">
   <h1>{{ ui.headline }}</h1>
   <p class="hero-lead">{{ ui.intro }}</p>
-  <div class="hero-actions"><a class="button-neon" href="{{ ui.prefix | append: 'quick-start/' | relative_url }}">{{ ui.first_chart }} →</a><a class="button-neon" href="{{ ui.prefix | append: 'experiments/' | relative_url }}#monte-carlo">{{ ui.compare_paths }} →</a></div>
+  <div class="hero-actions"><a class="button-neon" href="{{ ui.prefix | append: 'quick-start/' | relative_url }}">{{ ui.first_chart }} →</a><a class="button-neon" href="{{ ui.prefix | append: 'experiments/' | relative_url }}#monte-carlo">{{ ui.compare_paths }} →</a><a class="button-neon" href="{% include api_url.html locale=page.lang %}">{{ site.data.api_ui[page.lang].open }} →</a></div>
 </section>
 <figure class="product-image"><a href="{{ ui.prefix | append: 'quick-start/' | relative_url }}"><img class="project-art" src="{{ '/docs/assets/pricegenerator-product-card.webp' | relative_url }}" width="1774" height="887" alt="PriceGenerator · Fuzzy Technologies"></a></figure>
 <section><h2>{{ ui.try }}</h2>

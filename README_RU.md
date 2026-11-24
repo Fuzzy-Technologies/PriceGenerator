@@ -2,7 +2,7 @@
 
 ![Алиса на обложке PriceGenerator, генератора котировок Fuzzy Technologies.](https://fuzzy-technologies.com/PriceGenerator/docs/assets/pricegenerator-product-card.webp)
 
-[English](https://fuzzy-technologies.com/PriceGenerator/) · [Русский](https://fuzzy-technologies.com/PriceGenerator/ru/) · [简体中文](https://fuzzy-technologies.com/PriceGenerator/zh-CN/) · [Быстрый старт](https://fuzzy-technologies.com/PriceGenerator/ru/quick-start/)
+[English](https://fuzzy-technologies.com/PriceGenerator/) · [Русский](https://fuzzy-technologies.com/PriceGenerator/ru/) · [简体中文](https://fuzzy-technologies.com/PriceGenerator/zh-CN/) · [Быстрый старт](https://fuzzy-technologies.com/PriceGenerator/ru/quick-start/) · [Справочник Python API](https://fuzzy-technologies.com/PriceGenerator/api/2.2.1/ru/)
 
 PriceGenerator генерирует котировки для тестирования торговых программ. Задайте начальную цену, интервал свечи и волатильность, чтобы получить свечи и объём в CSV. Один и тот же ряд можно использовать после каждой правки программы, а несколько разных рядов — загрузить в свой тестер и сравнить результаты стратегии.
 
@@ -97,7 +97,7 @@ python -m pip install -r requirements.txt
 python -m pytest -q tests
 ```
 
-Инструкции для разработчиков собраны в `AGENTS.md` в корне репозитория. [Сборка справочника API](https://fuzzy-technologies.com/PriceGenerator/ru/reference/#development) · [Сборка пакета](https://fuzzy-technologies.com/PriceGenerator/ru/reference/#packaging) · [Проверка модели](https://fuzzy-technologies.com/PriceGenerator/ru/reference/#validation)
+Инструкции для разработчиков собраны в `AGENTS.md` в корне репозитория. [Справочник Python API](https://fuzzy-technologies.com/PriceGenerator/api/2.2.1/ru/) · [Сборка пакета](https://fuzzy-technologies.com/PriceGenerator/ru/reference/#packaging) · [Проверка модели](https://fuzzy-technologies.com/PriceGenerator/ru/reference/#validation)
 
 В Python доступны экспериментальные модули `pricegenerator.calibration`, `pricegenerator.evaluation`, `pricegenerator.extended_models` и `pricegenerator.registry` для оценки параметров, сравнения с историей и работы с другими моделями. Большие ряды можно генерировать и записывать по частям с помощью `GenerateChunks` и `WriteCSVChunks`.
 
