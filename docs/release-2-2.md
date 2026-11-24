@@ -11,8 +11,6 @@ redirect_from:
 
 [Package 2.2.1 on PyPI](https://pypi.org/project/pricegenerator/2.2.1/)
 
-Version 2.2.1 publishes the illustrated guides in English, Russian and Simplified Chinese and repairs the package links. The examples below use the 2.2 candle model.
-
 PriceGenerator makes synthetic market candles for testing trading systems.
 In 2.2 you can put a historical series beside a generated one and see
 where they differ. You can also share a complete experiment so a colleague
@@ -27,19 +25,13 @@ can reproduce the same candles, charts and comparison.
 - **Share an experiment.** The worked example creates two synthetic series
   and saves the settings, comparison and charts together. A colleague can
   use the saved settings to replay the experiment and check the results.
-- **Get started in Russian.** The quick start and guides now explain how to
-  work with candles, reproduce a run and exchange data with MetaTrader 5
-  using familiar market-data terms.
-
-Synthetic volume is now a whole-number activity count. Imported asset quantities keep their precision.
+- **Generate whole-number volumes.** The default candle model records a count for each bar. Imported market data keeps its original units and precision, including fractional quantities such as BTC.
 
 ## How to read the chart
 
-We ran the same scenario settings 32 times, with different random price
-moves in each run. The candles and volume show one run. The three lines
-summarize the closing prices across all 32 runs, one hour at a time.
+We ran the same scenario 32 times. The candles and volume bars show the first run. Each thin grey line follows one of the other 31 runs. The three coloured lines show how closing prices are distributed across all 32 runs at each hour.
 
-![One simulated price series and three lines summarizing 32 runs](https://fuzzy-technologies.com/PriceGenerator/docs/assets/pricegenerator-2-2-experiment-quantiles.svg)
+[![Hourly candles and volume for path 00, 31 grey price paths and three coloured percentile lines.](https://fuzzy-technologies.com/PriceGenerator/docs/assets/monte-carlo-32-paths.svg)](https://fuzzy-technologies.com/PriceGenerator/docs/assets/monte-carlo-32-paths.svg)
 
 Pick the last hour. Sort its 32 closing prices from lowest to highest.
 The purple line marks the middle at **101.27**. The blue and yellow lines
@@ -58,7 +50,7 @@ the resulting HTML chart in your browser. The chart works offline.
 ```sh
 python -m pip install pricegenerator==2.2.1
 pricegenerator generate --seed 42 --horizon 240 --start 2025-01-06T00:00:00Z --timeframe-seconds 3600 --output candles.csv
-pricegenerator chart candles.csv --output candles.html --analysis --no-view
+pricegenerator chart candles.csv --output candles.html --analysis --view
 ```
 
 **Want indicator buttons?** Rebuild the HTML from the same CSV with
@@ -77,7 +69,6 @@ overview sits below the chart. Expand **Detailed statistics** for the full repor
 
 [Run the full experiment](https://fuzzy-technologies.com/PriceGenerator/en/experiments/#bundle) ·
 [Compare two CSV files](https://fuzzy-technologies.com/PriceGenerator/en/experiments/#compare) ·
-[Upgrade from 1.4.93](https://fuzzy-technologies.com/PriceGenerator/en/migration/) ·
-[Verification details](https://fuzzy-technologies.com/PriceGenerator/en/experiments/#bundle)
+[Upgrade from 1.4.93](https://fuzzy-technologies.com/PriceGenerator/en/migration/)
 
 [Русский](https://fuzzy-technologies.com/PriceGenerator/ru/release-2-2/) · [简体中文](https://fuzzy-technologies.com/PriceGenerator/zh-CN/release-2-2/)

@@ -19,9 +19,9 @@ PriceGenerator 可以生成 K 线行情和成交量，用来测试交易软件�
 
 ## 蒙特卡洛图怎么看？
 
-图上的 K 线和量柱始终来自第一条模拟路径。三条曲线则用到了全部 32 条路径。读图时可以先选定一个小时，再比较此时三条线各自对应的价格。
+图中的 K 线和成交量柱来自第一条模拟路径，其余 31 条路径的小时收盘价用灰色细线表示。想看某一小时的价格分布，可以比较三条彩色曲线在这一刻对应的价格。
 
-![第一条模拟路径的 K 线与成交量，叠加按 32 条路径的小时收盘价计算的三条分位数曲线。](https://fuzzy-technologies.com/PriceGenerator/docs/assets/pricegenerator-2-2-experiment-quantiles.svg)
+[![00 号路径的小时 K 线和成交量柱、其余 31 条路径的灰色收盘价曲线，以及三条彩色分位数线。](https://fuzzy-technologies.com/PriceGenerator/docs/assets/monte-carlo-32-paths.svg)](https://fuzzy-technologies.com/PriceGenerator/docs/assets/monte-carlo-32-paths.svg)
 
 以最后一小时为例，紫线为 **101.27**，是该小时 32 个收盘价的中位数。蓝线 **75.01** 和黄线 **150.46** 分别是第 5 和第 95 百分位数。其他小时各自重新计算，曲线间距反映的是这一时刻模拟价格的分散程度。[如何取出每条路径的行情数据](https://fuzzy-technologies.com/PriceGenerator/zh-CN/experiments/#paths)
 
