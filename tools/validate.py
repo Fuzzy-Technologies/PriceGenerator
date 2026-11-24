@@ -34,6 +34,7 @@ def Main() -> None:
     Run("ruff", "check", "--config", "pyproject.toml", "pricegenerator", "tools", "tests")
     Run("tools.markdown_tables")
     Run("tools.documentation_links")
+    Run("tools.api_reference", "--check-copy")
 
     if arguments.tests:
         Run("pytest", "-q", *arguments.tests)

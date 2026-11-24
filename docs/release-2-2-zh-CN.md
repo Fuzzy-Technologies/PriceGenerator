@@ -40,6 +40,6 @@ pricegenerator chart candles.csv --output candles.html --analysis --no-view
 
 ![小时 K 线图叠加布林带和两条均线，下方为同一时段的成交量。](https://fuzzy-technologies.com/PriceGenerator/docs/assets/pricegenerator-chart-analysis.webp)
 
-[快速入门](https://fuzzy-technologies.com/PriceGenerator/zh-CN/quick-start/) · [比较两份 CSV](https://fuzzy-technologies.com/PriceGenerator/zh-CN/experiments/#compare) · [迁移 1.4.93 脚本](https://fuzzy-technologies.com/PriceGenerator/zh-CN/migration/)
+[快速入门](https://fuzzy-technologies.com/PriceGenerator/zh-CN/quick-start/) · [比较两份 CSV](https://fuzzy-technologies.com/PriceGenerator/zh-CN/experiments/#compare) · [Python API 参考手册](https://fuzzy-technologies.com/PriceGenerator/api/2.2.1/zh-cn/) · [迁移 1.4.93 脚本](https://fuzzy-technologies.com/PriceGenerator/zh-CN/migration/)
 
 [English](https://fuzzy-technologies.com/PriceGenerator/en/release-2-2/) · [Русский](https://fuzzy-technologies.com/PriceGenerator/ru/release-2-2/)

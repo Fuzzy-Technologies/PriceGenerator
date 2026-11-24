@@ -1,0 +1,4 @@
+{%- assign api_slug = include.locale | downcase -%}
+{%- assign api_path = '/api/2.2.1/' | append: api_slug | append: '/' -%}
+{%- if include.topic and include.topic != 'index' -%}{%- assign api_path = api_path | append: include.topic | append: '/' -%}{%- endif -%}
+{{- api_path | relative_url -}}

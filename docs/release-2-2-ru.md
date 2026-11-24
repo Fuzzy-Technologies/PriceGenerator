@@ -42,6 +42,6 @@ pricegenerator chart candles.csv --output candles.html --analysis --no-view
 
 ![Часовые свечи, полосы Боллинджера и две скользящие средние. Под ценой показан объём.](https://fuzzy-technologies.com/PriceGenerator/docs/assets/pricegenerator-chart-analysis.webp)
 
-[Быстрый старт](https://fuzzy-technologies.com/PriceGenerator/ru/quick-start/) · [Сравнить два CSV](https://fuzzy-technologies.com/PriceGenerator/ru/experiments/#compare) · [Перенести проект с 1.4.93](https://fuzzy-technologies.com/PriceGenerator/ru/migration/)
+[Быстрый старт](https://fuzzy-technologies.com/PriceGenerator/ru/quick-start/) · [Сравнить два CSV](https://fuzzy-technologies.com/PriceGenerator/ru/experiments/#compare) · [Справочник Python API](https://fuzzy-technologies.com/PriceGenerator/api/2.2.1/ru/) · [Перенести проект с 1.4.93](https://fuzzy-technologies.com/PriceGenerator/ru/migration/)
 
 [English](https://fuzzy-technologies.com/PriceGenerator/en/release-2-2/) · [简体中文](https://fuzzy-technologies.com/PriceGenerator/zh-CN/release-2-2/)

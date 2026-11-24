@@ -45,7 +45,7 @@ The Python calibration API fits selected training moments and can score a later 
 ## Source and verification
 {: #development }
 
-Install a local checkout with `python -m pip install .`. To build the public Python API reference, install `.[docs]` and run `python PDocBuilder.py` from the checkout root. The generated index is `build/docs-api/pricegenerator.html`. The current model and chart contracts are covered by the release tests. The earlier series used a mutable generator and different CLI flags. [Migrate an existing script](https://fuzzy-technologies.com/PriceGenerator/en/migration/).
+Browse the [Python API reference for PriceGenerator 2.2.1](https://fuzzy-technologies.com/PriceGenerator/api/2.2.1/en/). Each entry gives the calling signature and explains the inputs, the result and any market conventions that affect interpretation. For example, [RunEnsemble](https://fuzzy-technologies.com/PriceGenerator/api/2.2.1/en/monte-carlo/#monte_carlo.RunEnsemble) describes how closing prices are combined across simulated paths. [Migrate an existing script](https://fuzzy-technologies.com/PriceGenerator/en/migration/).
 
 
 ## Validation and release checks
