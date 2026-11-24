@@ -48,7 +48,7 @@ Python 接口支持用一段历史行情估计参数，然后用另一段行情�
 ## 查阅 Python API
 {: #development }
 
-在源码根目录运行 `python -m pip install .` 可以安装本地版本。要生成 API 手册，先运行 `python -m pip install ".[docs]"`，再执行 `python PDocBuilder.py`。用浏览器打开 `build/docs-api/pricegenerator.html` 即可查阅。[如何迁移 1.4.93 的脚本](https://fuzzy-technologies.com/PriceGenerator/zh-CN/migration/)
+[PriceGenerator 2.2.1 Python API 参考手册](https://fuzzy-technologies.com/PriceGenerator/api/2.2.1/zh-cn/)按主题介绍函数、类、参数及返回结果，涉及价格、收益率或成交量时也说明计算口径。例如，[RunEnsemble](https://fuzzy-technologies.com/PriceGenerator/api/2.2.1/zh-cn/monte-carlo/#monte_carlo.RunEnsemble) 介绍如何汇总多条模拟路径上同一时刻的收盘价。旧版脚本可参阅[从 1.4.93 迁移](https://fuzzy-technologies.com/PriceGenerator/zh-CN/migration/)。
 
 ## 如何检验模拟结果
 {: #validation }

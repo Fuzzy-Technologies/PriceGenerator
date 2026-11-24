@@ -1,0 +1,12 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>PriceGenerator</title>
+<link rel="canonical" href="{{ page.redirect.to | escape }}">
+<meta name="robots" content="noindex">
+<script>
+  const destination = new URL(document.querySelector('link[rel="canonical"]').href);
+  if (!destination.hash) destination.hash = location.hash;
+  if (!destination.search) destination.search = location.search;
+  location.replace(destination.href);
+</script>
+<noscript><meta http-equiv="refresh" content="0;url={{ page.redirect.to | escape }}"></noscript>
+</head><body><a href="{{ page.redirect.to | escape }}">{{ page.redirect.to | escape }}</a></body></html>

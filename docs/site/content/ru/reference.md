@@ -48,7 +48,7 @@ python -m pricegenerator chart candles.csv --analysis --output chart.html --view
 ## Справочник Python API
 {: #development }
 
-Чтобы установить пакет из своей рабочей копии, выполните в корне проекта `python -m pip install .`. Для сборки справочника установите `python -m pip install ".[docs]"` и запустите `python PDocBuilder.py`. Откройте файл `build/docs-api/pricegenerator.html` в браузере. [Как перейти с API версии 1.4.93](https://fuzzy-technologies.com/PriceGenerator/ru/migration/)
+В [справочнике Python API для версии 2.2.1](https://fuzzy-technologies.com/PriceGenerator/api/2.2.1/ru/) описаны функции и классы библиотеки. В каждой статье указано, какие данные передать и как прочитать результат. Например, в разделе [RunEnsemble](https://fuzzy-technologies.com/PriceGenerator/api/2.2.1/ru/monte-carlo/#monte_carlo.RunEnsemble) разобрано, как сравнить цены закрытия по нескольким траекториям. [Как перенести скрипт с версии 1.4.93](https://fuzzy-technologies.com/PriceGenerator/ru/migration/).
 
 ## Как оценить сходство с рынком
 {: #validation }

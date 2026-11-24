@@ -2,7 +2,7 @@
 
 ![PriceGenerator by Fuzzy Technologies. Synthetic market data generator.](https://fuzzy-technologies.com/PriceGenerator/docs/assets/pricegenerator-product-card.webp)
 
-[English](https://fuzzy-technologies.com/PriceGenerator/) · [Русский](https://fuzzy-technologies.com/PriceGenerator/ru/) · [简体中文](https://fuzzy-technologies.com/PriceGenerator/zh-CN/) · [Quick start](https://fuzzy-technologies.com/PriceGenerator/en/quick-start/)
+[English](https://fuzzy-technologies.com/PriceGenerator/) · [Русский](https://fuzzy-technologies.com/PriceGenerator/ru/) · [简体中文](https://fuzzy-technologies.com/PriceGenerator/zh-CN/) · [Quick start](https://fuzzy-technologies.com/PriceGenerator/en/quick-start/) · [Python API reference](https://fuzzy-technologies.com/PriceGenerator/api/2.2.1/en/)
 
 
 Reproducible synthetic OHLCV scenarios for trading-system tests and quantitative

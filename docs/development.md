@@ -76,20 +76,26 @@ Windows with Python 3.14 and 3.15. Require the relevant hosted quality checks an
 chart runtime check in branch protection/rulesets; committing a workflow does
 not configure those repository settings.
 
-## Build the public API reference
+## Maintain the published Python API reference
 
-From the checkout root, install the documentation extra and run the builder:
+The [2.2.1 Python API reference](https://fuzzy-technologies.com/PriceGenerator/api/2.2.1/en/)
+documents both the package-level imports and module-qualified APIs. The versioned URLs identify
+the release. The corresponding `/api/latest/` URLs follow the current edition.
+
+Edit the English, Russian and Simplified Chinese descriptions in `_data/api_copy/`.
+The catalog and routes are generated from the Python files at Git tag `v2.2.1`.
+Run the following from the repository root with the release tag available:
 
 ```bash
-python -m pip install -c requirements/modern.txt '.[docs]'
-python PDocBuilder.py
+python tools/api_reference.py --check
+jekyll build
+python tools/check_api_site.py _site
 ```
 
-Open `build/docs-api/pricegenerator.html`. The page is generated from the
-checkout's `pricegenerator.__all__`, signatures and docstrings. The build
-fails if the page lacks an entry for any declared export. Module-qualified
-research APIs remain covered by their own guides. Generated HTML stays under
-the ignored `build/` directory, leaving documentation sources in `docs/`.
+Run `python tools/api_reference.py` to regenerate the inventory and routes. The source quality gate checks translations and routes even in a shallow checkout.
+The last command checks the rendered pages and link targets. For a local view of the root
+exports in a development checkout, install `.[docs]`, run `python PDocBuilder.py` and
+open `build/docs-api/pricegenerator.html`.
 
 ## Chart runtime gate
 
