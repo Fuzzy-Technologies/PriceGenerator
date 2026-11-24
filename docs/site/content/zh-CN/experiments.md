@@ -29,9 +29,9 @@ python -m pricegenerator replay-ensemble ensemble-manifest.json --output replaye
 
 32 组行情都会完整生成。默认图上的 K 线和量柱来自**编号 00 的路径**，三条分位数曲线则用到了全部路径的收盘价。JSON 报告保留分位数、各条路径的最大价格回撤和复现行情所需的参数。每条路径的 CSV 需要单独导出。
 
-下图中，每条线都是某一次模拟在 120 个小时内的收盘价走势。青色的 00 号路径就是默认图用 K 线显示的那组行情。所有路径的起始价都是 100。
+下图用 K 线和成交量柱展示 00 号路径。其余 31 条路径各用一条灰色细线表示，沿线可以看到这条路径逐小时的收盘价。蓝线、紫线和金线分别表示第 5 百分位数、中位数和第 95 百分位数，每个小时都用该时刻的 32 个收盘价重新计算。
 
-![32 条模拟路径的小时收盘价，青色为 00 号路径。](https://fuzzy-technologies.com/PriceGenerator/docs/assets/monte-carlo-32-paths.svg)
+[![00 号路径的小时 K 线和成交量柱、其余 31 条路径的灰色收盘价曲线，以及三条彩色分位数线。](https://fuzzy-technologies.com/PriceGenerator/docs/assets/monte-carlo-32-paths.svg)](https://fuzzy-technologies.com/PriceGenerator/docs/assets/monte-carlo-32-paths.svg)
 
 **[下载全部 32 份 CSV（ZIP）](https://fuzzy-technologies.com/PriceGenerator/docs/assets/monte-carlo-32-paths.zip)**。文件按 `path-00.csv` 到 `path-31.csv` 编号，每份有 120 根小时 K 线，包含开盘价、最高价、最低价、收盘价和成交量。
 

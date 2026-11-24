@@ -26,9 +26,9 @@ The JSON report includes the maximum **price** drawdown of each path. To measure
 
 All 32 paths are generated in full. The standard chart shows the candles and volume of **path 00** and three percentiles calculated across all paths. The report stores those percentiles, one maximum drawdown per path and the settings needed to reproduce each series. You can reproduce the full OHLCV data for any path from those settings and its index.
 
-In the figure below, each line follows the closes of one path for all 120 hours. The highlighted line is path 00, the one shown as candles on the standard chart. All lines start at the common opening price of 100.
+The candles and volume bars below show path 00. Each thin grey line follows the hourly closing prices of one of the other 31 paths. At any hour, the blue line marks the 5th percentile, the purple line the median and the gold line the 95th percentile across all 32 closes.
 
-![All 32 closing-price paths over 120 hours, with path 00 highlighted.](https://fuzzy-technologies.com/PriceGenerator/docs/assets/monte-carlo-32-paths.svg)
+[![Hourly candles and volume for path 00, 31 grey price paths and three coloured percentile lines.](https://fuzzy-technologies.com/PriceGenerator/docs/assets/monte-carlo-32-paths.svg)](https://fuzzy-technologies.com/PriceGenerator/docs/assets/monte-carlo-32-paths.svg)
 
 **[Download the 32 OHLCV files (ZIP)](https://fuzzy-technologies.com/PriceGenerator/docs/assets/monte-carlo-32-paths.zip)** for this exact example. Each file from `path-00.csv` to `path-31.csv` contains 120 hourly candles with opens, highs, lows, closes and volumes.
 
