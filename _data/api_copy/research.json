@@ -7,8 +7,8 @@
     },
     "evaluation": {
       "en": "Compare a reference series with a synthetic one using seven named metrics. Set an absolute tolerance for each quantity of interest, or use block resampling to assess how precisely a separate sample mean is estimated.",
-      "ru": "Сопоставьте исторический и синтетический ряды по семи показателям. Для интересующих показателей можно задать абсолютные допуски. Отдельная функция оценивает неопределённость среднего методом блочного бутстрэпа.",
-      "zh-CN": "用七项指标比较参考行情与合成行情，可分别设定允许的绝对偏差。模块还提供移动区块自助法，用于估计一组观测值的均值区间。"
+      "ru": "Сравнение двух рядов по семи показателям. Для каждого показателя можно задать допустимое расхождение. Отдельная функция строит доверительный интервал для среднего методом блочного бутстрапа.",
+      "zh-CN": "按七项指标比较参考行情与模拟行情，可为每项指标指定允许的绝对偏差。另一个函数用分块自助法估计均值的置信区间。"
     },
     "calibration": {
       "en": "Fit three observable quantities on a training window of equally spaced bars. A later window tests how closely a new synthetic path matches selected features of the held-out history.",
@@ -34,8 +34,8 @@
     },
     "analysis.OutlierEventSummary": {
       "en": "Counts and observed frequencies for two aligned event flags. The union counts a bar once if either flag is set, and the intersection counts bars with both flags.",
-      "ru": "Число и частота событий по двум наборам признаков. В объединении бар учитывается один раз, если выполнено хотя бы одно условие. В пересечение попадают бары, на которых выполнены оба.",
-      "zh-CN": "汇总两组逐根对齐的事件标记。任一条件成立时，该根 K 线在并集中只计一次，两个条件同时成立时计入交集。"
+      "ru": "Число и доля наблюдений, на которых сработал каждый из двух признаков. Отдельно подсчитаны случаи, когда сработал хотя бы один и когда сработали оба.",
+      "zh-CN": "记录两个条件分别成立的次数和频率，并另外统计至少一个成立、两个同时成立的情况。"
     },
     "analysis.OutlierEventSummary.ToDict": {
       "en": "Return a fresh dictionary with the event definition, trial and event counts, and each frequency’s value or reason.",
@@ -79,18 +79,18 @@
     },
     "analysis.Describe": {
       "en": "Return sample statistics for a numeric sequence, excluding None and nonfinite values. Variance uses n−1, quantiles use linear interpolation and the tail means include observations on the empirical 5th and 95th percentile boundaries.",
-      "ru": "Рассчитывает выборочную статистику по числовому ряду. Значения None, NaN и бесконечности исключаются. Дисперсия вычисляется с делителем n−1, квантили — линейной интерполяцией. В средние по хвостам входят и наблюдения на границах 5-го и 95-го процентилей.",
-      "zh-CN": "汇总数列的样本统计量，并剔除 None、NaN 和无穷值。样本方差使用 n−1 作分母，分位数采用线性插值。两端尾均值包含恰好位于第 5 和第 95 百分位边界的观测值。"
+      "ru": "Рассчитывает описательную статистику ряда, пропуская None, NaN и бесконечности. Для выборочной дисперсии используется делитель n−1. Квантили вычисляются линейной интерполяцией. Для среднего по нижнему хвосту берутся все значения не выше 5-го процентиля, по верхнему — все значения не ниже 95-го.",
+      "zh-CN": "计算一组数值的描述统计量，忽略 None、NaN 和无穷值。样本方差以 n−1 为分母，分位数用线性插值。下尾均值取不高于第 5 百分位数的所有观测，上尾均值取不低于第 95 百分位数的所有观测。"
     },
     "analysis.SummarizeOutlierEvents": {
       "en": "Return counts and frequencies for upper, lower, either and simultaneous events defined by the caller. Supply equally long sequences of booleans and a nonempty definition. An empty sample yields zero counts and undefined frequencies.",
-      "ru": "Подсчитывает, как часто встречаются верхнее и нижнее события, хотя бы одно из них и оба одновременно. Нужны два булевых ряда одинаковой длины и текстовое определение события. Для пустой выборки счётчики равны нулю, частоты не определены.",
-      "zh-CN": "按调用方给出的判定规则，统计上侧、下侧、任一侧以及两侧同时发生的次数和频率。两组标记须等长且为布尔值，规则说明不能为空。空样本的次数为零，频率无定义。"
+      "ru": "Считает, на скольких свечах сработал первый признак, второй, хотя бы один из них или оба сразу. Например, можно передать отдельные признаки необычно длинной верхней и нижней тени. Два ряда должны состоять из True и False и иметь одинаковую длину. В definition укажите, какие события вы считаете. Для пустого ряда счётчики равны нулю, частоты не определены.",
+      "zh-CN": "统计每个条件、至少一个条件、两个条件同时满足的次数和频率。例如，可分别标记上影线异常长和下影线异常长的 K 线。两组标记必须等长且只含布尔值，definition 用于说明判定条件。空样本的次数为零，频率无定义。"
     },
     "analysis.ProportionInterval": {
       "en": "Return a two-sided Hoeffding interval for an independent Bernoulli event rate. The half-width is √(ln(2/(1−confidence))/(2·trials)). Bounds are clipped to [0, 1]. Requires at least one trial and a valid event count.",
-      "ru": "Строит двусторонний интервал Хёффдинга для вероятности события в независимых испытаниях Бернулли. Его полуширина равна √(ln(2/(1−confidence))/(2·trials)), границы ограничены отрезком [0, 1]. Нужно хотя бы одно испытание, а число событий не может превышать число испытаний.",
-      "zh-CN": "为独立伯努利试验的事件概率计算双侧 Hoeffding 区间。半宽为 √(ln(2/(1−confidence))/(2·trials))，两端限制在 [0, 1]。至少需要一次试验，事件次数须介于零和试验总数之间。"
+      "ru": "Строит двусторонний интервал Хёффдинга для вероятности события в независимых испытаниях Бернулли. До ограничения границ интервал имеет полуширину √(ln(2/(1−confidence))/(2·trials)), результат ограничивается отрезком [0, 1]. Нужно хотя бы одно испытание, а число событий не может превышать число испытаний.",
+      "zh-CN": "为独立伯努利试验的事件概率计算双侧 Hoeffding 区间。截取边界前，半宽为 √(ln(2/(1−confidence))/(2·trials))，两端限制在 [0, 1]。至少需要一次试验，事件次数须介于零和试验总数之间。"
     },
     "analysis.ProbabilityTolerance": {
       "en": "Return an absolute tolerance for an observed proportion from independent Bernoulli trials. It equals the Hoeffding half-width capped at 1. Choose sample size and confidence before observing outcomes.",
@@ -99,18 +99,18 @@
     },
     "analysis.ACF": {
       "en": "Return one autocorrelation estimate per observation lag, starting at lag 1. The series is centered on its overall mean and every lag uses the same full-sample denominator. A missing or nonfinite observation invalidates all lags. Constant series and lags at least as long as the sample are undefined.",
-      "ru": "Возвращает коэффициенты автокорреляции начиная с первого лага. Лаг измеряется в наблюдениях. Для всех лагов используются общее выборочное среднее и один знаменатель по всему ряду. Пропуск, NaN или бесконечность нарушает непрерывность ряда и делает все оценки неопределёнными. Для постоянного ряда и лагов длиной с выборку или больше коэффициент также не определён.",
+      "ru": "Возвращает автокорреляцию для лагов от 1 до lags. Один лаг — одно наблюдение. Для всех лагов среднее и сумма квадратов отклонений в знаменателе берутся по всему ряду. Если ряд постоянный или содержит хотя бы один пропуск либо бесконечность, ни один коэффициент не определён. Для лага не меньше длины ряда коэффициент также не определён.",
       "zh-CN": "从一阶滞后开始，按观测个数计算自相关。各阶均以全样本均值中心化，并共用全样本平方离差和作分母。序列中只要有一个缺失值或非有限值，各阶均无法计算。常数序列和达到或超过样本长度的滞后阶数也没有有效估计。"
     },
     "analysis.Analyze": {
       "en": "Return an AnalysisReport for at least one validated candle. Simple and log returns use adjacent observed closes. Undefined returns retain their bar positions. Drawdown uses strictly positive closes and starts at the first close. Irregular series retain their observed cadence.",
-      "ru": "Возвращает AnalysisReport по одной или нескольким свечам OHLCV. Простая и логарифмическая доходности рассчитываются между соседними закрытиями, неопределённые значения сохраняют своё место в ряду. Просадка отсчитывается от первой цены закрытия и требует положительных цен закрытия на всём отрезке. Бары с неравномерным шагом анализируются в исходном порядке.",
-      "zh-CN": "用一根或多根有效 K 线生成 AnalysisReport。简单收益率和对数收益率根据相邻收盘价计算，无法计算的值保留在对应位置。回撤从第一根 K 线的收盘价起算，要求全段收盘价均为正。时间间隔不均匀的行情沿用原有观测顺序。"
+      "ru": "Рассчитывает статистику для одной или нескольких свечей OHLCV. Простую и логарифмическую доходности считает по соседним ценам закрытия. Просадку на каждой свече считает от самой высокой цены закрытия, достигнутой к этой свече. Например, при закрытиях 100, 120 и 90 максимальная просадка равна 25 %. Для расчёта просадки все цены закрытия должны быть положительными. Пропущенные интервалы не заполняются.",
+      "zh-CN": "对一根或多根 K 线计算统计指标。简单收益率和对数收益率均按相邻两根的收盘价计算。每根 K 线的回撤以样本起点至当前的最高收盘价为基准。例如，收盘价依次为 100、120、90 时，最大回撤为 25%。计算回撤要求全部收盘价均为正。时间有缺口时只分析已有的 K 线。"
     },
     "evaluation.MeanInterval": {
       "en": "Percentile interval for a sample mean, with bounds in the observation units. Stores the seed, block length, resample count and NumPy version needed to repeat the estimate.",
-      "ru": "Процентильный бутстрэп-интервал для среднего в единицах наблюдаемой величины. Вместе с границами сохраняются зерно генератора, длина блока, число повторных выборок и версия NumPy.",
-      "zh-CN": "样本均值的百分位自助置信区间，上下限与观测值同单位。记录随机种子、区块长度、重抽样次数及 NumPy 版本，便于复算。"
+      "ru": "Доверительный интервал для среднего, полученный процентильным бутстрапом. Границы интервала выражены в тех же единицах, что и исходные наблюдения. Для повторного расчёта сохраняются seed, длина блока, число повторных выборок и версия NumPy.",
+      "zh-CN": "用自助样本均值的分位数估计均值的置信区间。区间上下限与原始观测同单位，同时保留随机种子、块长、重复抽样次数和 NumPy 版本，便于复算。"
     },
     "evaluation.MeanInterval.ToDict": {
       "en": "Return the interval bounds and all resampling settings in a fresh dictionary.",
@@ -119,8 +119,8 @@
     },
     "evaluation.BootstrapMeanInterval": {
       "en": "Estimate uncertainty in the arithmetic mean of at least two finite observations. Draw overlapping contiguous blocks with replacement, without wrapping at the ends. One observation per block gives independent resampling. Use longer blocks for dependence within each block. The bounds are empirical percentiles of the resampled means. Their coverage depends on the sample and block length.",
-      "ru": "Оценивает неопределённость среднего арифметического по двум или более конечным наблюдениям. Последовательные блоки выбираются с возвращением из перекрывающихся отрезков ряда. При длине блока 1 наблюдения выбираются по отдельности, при большей длине сохраняется зависимость внутри блока. Границы интервала берутся по процентилям полученных средних. Фактический уровень покрытия зависит от выборки и длины блока.",
-      "zh-CN": "用至少两个有限观测值估计算术均值的不确定性。从原序列可重叠的连续区块中有放回抽样，区块不会跨越原序列首尾。块长为 1 时逐个抽取观测值，较长区块可保留块内的相关结构。区间上下限取自重抽样均值的经验分位数，实际覆盖率取决于样本和区块长度。"
+      "ru": "Строит доверительный интервал для среднего арифметического методом блочного бутстрапа. Из исходного ряда случайно выбираются с возвращением блоки из block_length соседних наблюдений. При длине блока 1 значения выбираются по одному. Для каждой повторной выборки вычисляется среднее, а по полученным средним — границы интервала. Нужны хотя бы два конечных наблюдения. Фактическое покрытие интервала зависит от данных и длины блока.",
+      "zh-CN": "用分块自助法估计算术均值的置信区间。从原序列中有放回地抽取连续的观测片段，每段含 block_length 个观测值。块长为 1 时逐个抽取。计算各次重抽样的均值，再取相应分位数作为区间上下限。输入至少需要两个有限观测值，实际覆盖率取决于样本和块长。"
     },
     "evaluation.MetricComparison": {
       "en": "One metric from each series, their signed difference and an optional tolerance decision. A positive difference means the synthetic value is larger.",
@@ -139,18 +139,18 @@
     },
     "evaluation.Compare": {
       "en": "Compare log-return mean and sample deviation, average body-to-range ratio, mean volume, lag-one squared-return autocorrelation, volume versus absolute-return correlation, and maximum price drawdown. Bars are analyzed independently in each series. Supply matching units and comparable sampling intervals. A tolerance decision is available when both estimates and its threshold exist.",
-      "ru": "Сравнивает семь показателей двух рядов. Это среднее и выборочное стандартное отклонение логарифмических доходностей, средняя доля тела свечи в её диапазоне, средний объём, автокорреляция квадратов доходностей с лагом 1, корреляция объёма с модулем доходности и максимальная просадка цены. Статистика рассчитывается отдельно по каждому ряду. Для интерпретации нужны сопоставимые интервалы свечей и единицы измерения. Проверка допуска требует двух определённых оценок и заданного порога.",
-      "zh-CN": "分别统计两组行情，比较的七项指标包括对数收益率的均值和样本标准差、实体占振幅的平均比例、平均成交量、收益率平方的一阶自相关、成交量与收益率绝对值的相关性，以及最大价格回撤。应使用可比的 K 线周期和相同的计量单位。只有两侧指标均可计算且已设容差时，才给出该项判定。"
+      "ru": "Сравнивает семь показателей. По логарифмическим доходностям между закрытиями рассчитывает среднее и выборочное стандартное отклонение. По простым доходностям — автокорреляцию их квадратов с лагом в одну свечу и корреляцию между объёмом и модулем доходности. Ещё три показателя — средняя доля тела свечи в диапазоне high − low, средний объём и максимальная просадка по ценам закрытия. Ряды сравниваются по их статистике, поэтому даты могут различаться. Для содержательного сравнения берите один интервал свечей и сопоставимые единицы объёма.",
+      "zh-CN": "比较七项指标。先按相邻收盘价计算对数收益率，比较其均值和样本标准差。用简单收益率计算两项相关指标：收益率平方的一阶自相关、成交量与收益率绝对值的相关系数。其余三项是 K 线实体长度占高低价差的平均比例、平均成交量和按收盘价计算的最大回撤。各项统计量分别在两组行情上计算，日期无需一一对应。比较时应选相同的 K 线周期，并统一成交量单位。"
     },
     "calibration.Profile": {
       "en": "Versioned fit for equally spaced training bars. Records mean and population standard deviation of log(close/open), mean volume, and exactly which history supplied them. Price gaps between bars are outside this return definition.",
-      "ru": "Профиль модели, оценённый на обучающем отрезке свечей с постоянным шагом. Хранит среднее и стандартное отклонение с делителем n для ln(close/open), средний объём и сведения об исходном ряде. Такая доходность относится к телу свечи и исключает ценовой разрыв между барами.",
-      "zh-CN": "从等间隔训练 K 线得到的带版本参数档案。保存 ln(收盘价/开盘价) 的均值、以 n 为分母的标准差、平均成交量和训练数据的标识。该收益率仅覆盖单根 K 线的开盘到收盘，跨 K 线的跳空不计入其中。"
+      "ru": "Параметры, оценённые по историческим свечам с равным шагом. Профиль хранит среднее и стандартное отклонение ln(close/open) с делителем n при расчёте дисперсии, средний объём за свечу и сведения об исходных данных. Доходность здесь измеряется от открытия до закрытия одной свечи. Гэп между свечами в неё не входит.",
+      "zh-CN": "记录从等间隔历史 K 线估计出的参数，包括 ln(收盘价/开盘价) 的均值、用 n 作方差分母计算的标准差、每根 K 线的平均成交量，以及训练数据的来源。这里计算单根 K 线开盘至收盘的对数收益率，跨 K 线的跳空不计入。"
     },
     "calibration.Profile.ToDict": {
       "en": "Return every profile field in a fresh JSON-compatible dictionary accepted by FromDict.",
       "ru": "Возвращает все поля профиля в новом словаре. Его можно записать в JSON и затем передать в FromDict.",
-      "zh-CN": "返回包含全部参数档案字段的新字典，可序列化为 JSON，并用 FromDict 读回。"
+      "zh-CN": "返回包含全部参数记录字段的新字典，可序列化为 JSON，并用 FromDict 读回。"
     },
     "calibration.Profile.FromDict": {
       "en": "Restore a Profile from its complete serialized fields. Raises ValueError for missing or unknown fields, unsupported versions, or inconsistent source windows and parameter values.",
@@ -160,41 +160,41 @@
     "calibration.Profile.Reference": {
       "en": "Return the hexadecimal SHA-256 digest of the complete serialized profile. Use it to identify this fit, including its source, when recording a scenario.",
       "ru": "Возвращает SHA-256 всего сериализованного профиля в шестнадцатеричном виде. По нему можно однозначно указать в сценарии набор оценок вместе с их источником.",
-      "zh-CN": "返回完整参数档案的十六进制 SHA-256 摘要。记录场景时可用它标识这次拟合及其数据来源。"
+      "zh-CN": "返回完整参数记录的十六进制 SHA-256 摘要。记录场景时可用它标识这次拟合及其数据来源。"
     },
     "calibration.Profile.ToConfig": {
       "en": "Return a new generation configuration for the same model with fitted drift, volatility and mean volume. Regime scale is set to 1, shock and wick-outlier probabilities to 0, and volume noise, persistence and return coupling to 0. The resulting volume is constant under the model’s bounds and rounding.",
-      "ru": "Создаёт новую конфигурацию той же модели с оценками дрейфа, волатильности и среднего объёма. Множитель режима равен 1, вероятности шоков и выбросов теней обнулены. Шум и инерция объёма, а также его связь с доходностью отключены. Объём получается постоянным с учётом ограничений и округления модели.",
-      "zh-CN": "返回同一模型的新生成配置，采用估计出的漂移、波动率和平均成交量。状态倍率设为 1，价格冲击和异常影线的概率设为 0。成交量的噪声、持续性及其与收益率的联动也设为 0，因此在模型的限幅和舍入规则下，各根 K 线的成交量恒定。"
+      "ru": "Создаёт конфигурацию с оценками дрейфа, волатильности и среднего объёма. Волатильность в двух режимах становится одинаковой. Случайные скачки цены и выбросы теней отключены. Объём на всех свечах постоянный, с учётом округления и ограничений выбранной модели.",
+      "zh-CN": "根据拟合出的漂移、波动率和平均成交量创建配置。两个状态采用相同的波动率，不再产生额外的价格冲击或异常影线。由于成交量的随机波动和价格联动项均已关闭，各根 K 线的成交量相同，具体取值遵循所选模型的取整和限幅规则。"
     },
     "calibration.Profile.ManifestMetadata": {
       "en": "Return the profile, its digest, the three fitted parameter names, the fixed restrictions and the parameters the fit cannot identify. This dictionary can be attached to a scenario manifest.",
-      "ru": "Возвращает словарь для паспорта сценария. В нём содержатся профиль и его контрольная сумма, три оценённых параметра, фиксированные настройки и перечень параметров, которые по такой выборочной статистике определить нельзя.",
-      "zh-CN": "返回可写入场景清单的字典，包含参数档案、摘要、三个已拟合参数的名称、固定约束及该方法无法识别的参数。"
+      "ru": "Возвращает словарь для манифеста сценария. В нём сохранены сам профиль и его контрольная сумма. Отдельно указано, какие три параметра оценены по данным, какие настройки зафиксированы и какие характеристики рынка этот метод не определяет.",
+      "zh-CN": "返回可写入情景清单的字典，包含拟合参数及其校验值，并分别列出由数据估计的三个参数、固定设置和这种方法无法估计的参数。"
     },
     "calibration.ExtractProfile": {
       "en": "Estimate mean log(close/open), its population standard deviation, and arithmetic mean volume. Return a Profile for regime_v2 (default) or regime_v3. Requires at least three equally spaced training bars, strictly positive OHLC prices and a mean volume in the selected model’s supported range.",
-      "ru": "Оценивает среднее ln(close/open), его стандартное отклонение с делителем n и среднее арифметическое объёма. Возвращает Profile для regime_v2 по умолчанию или для явно заданной regime_v3. Нужны минимум три равноотстоящие свечи, строго положительные цены OHLC и средний объём в пределах, допустимых для модели.",
-      "zh-CN": "估计 ln(收盘价/开盘价) 的均值和总体标准差，以及成交量的算术均值。返回 regime_v2（默认）或 regime_v3 的 Profile。训练样本至少包含三根等间隔 K 线，所有 OHLC 价格均须大于零，平均成交量须落在所选模型支持的范围内。"
+      "ru": "По истории оценивает три параметра — среднее и стандартное отклонение логарифмической доходности от открытия до закрытия, а также средний объём за свечу. При расчёте дисперсии используется делитель n. По умолчанию профиль строится для regime_v2, при необходимости можно указать regime_v3. Нужны минимум три свечи с равным шагом, строго положительные цены OHLC и допустимый для модели средний объём.",
+      "zh-CN": "用历史 K 线估计三个参数：开盘至收盘对数收益率的均值和标准差，以及每根 K 线的平均成交量。计算标准差时，方差的分母取 n。默认使用 regime_v2，也可指定 regime_v3。样本至少包含三根等间隔 K 线，所有 OHLC 价格须为正，平均成交量须在模型允许的范围内。"
     },
     "calibration.ChronologicalSplit": {
       "en": "Return two detached DataFrames in time order. The first floor(n·(1−holdout_fraction)) bars form the training window and all remaining bars go to the holdout window. Raises ValueError if either part contains fewer than three bars.",
-      "ru": "Делит ряд по времени и возвращает два независимых DataFrame. В обучающую выборку попадают первые floor(n·(1−holdout_fraction)) баров, в контрольную — остальные. В каждой части должно остаться не менее трёх баров, иначе возникает ValueError.",
-      "zh-CN": "按时间顺序返回两个独立的 DataFrame。前 floor(n·(1−holdout_fraction)) 根 K 线作为训练集，其余作为留出集。任一部分少于三根时抛出 ValueError。"
+      "ru": "Делит ряд на две непересекающиеся выборки в хронологическом порядке. Первые floor(n·(1−holdout_fraction)) свечей попадают в обучающую, остальные — в контрольную. Возвращает две отдельные таблицы DataFrame. В каждой должно быть хотя бы три свечи.",
+      "zh-CN": "按时间顺序划分训练集和留出集。前 floor(n·(1−holdout_fraction)) 根 K 线用于拟合，其余用于检验。两段不重叠，分别返回为 DataFrame，每段至少需要三根 K 线。"
     },
     "calibration.CalibrationReport": {
       "en": "Fit, training and holdout comparison reports, plus one replayable scenario manifest for each window. Read the holdout metrics to evaluate a path generated with parameters learned from earlier bars.",
-      "ru": "Хранит профиль, результаты сравнения на обучающей и контрольной выборках и паспорт сценария для каждого периода. По контрольному отчёту видно, как параметры, оценённые на более раннем отрезке, описывают свойства нового ряда.",
+      "ru": "Хранит профиль, результаты сравнения на обучающей и контрольной выборках и манифест сценария для каждого периода. По контрольному отчёту видно, как параметры, оценённые на более раннем отрезке, описывают свойства нового ряда.",
       "zh-CN": "保存拟合参数、训练段和留出段各自的比较报告，以及两份可重放的场景清单。留出段指标用于评估早期数据拟合出的参数在后续样本上的表现。"
     },
     "calibration.CalibrationReport.ToDict": {
       "en": "Return the profile, separate comparison results, decoded manifests and a statement of the fit’s scope as a nested dictionary.",
-      "ru": "Возвращает вложенный словарь с профилем, двумя результатами сравнения, паспортами сценариев и пояснением о пределах применимости этой оценки.",
-      "zh-CN": "返回嵌套字典，包含参数档案、两段各自的比较结果、已解析的场景清单和对拟合范围的说明。"
+      "ru": "Возвращает вложенный словарь с профилем, двумя результатами сравнения, манифестами сценариев и пояснением о пределах применимости этой оценки.",
+      "zh-CN": "返回嵌套字典，包含参数记录、两段各自的比较结果、已解析的场景清单和对拟合范围的说明。"
     },
     "calibration.Calibrate": {
       "en": "Fit the training window only, then generate one path for each window, starting at its observed open and using consecutive seeds. Return both comparisons and replay manifests. The training window must precede the holdout. Each needs at least three bars, the same regular whole-second cadence and a start aligned to a microsecond.",
-      "ru": "Оценивает параметры только по обучающей выборке, затем генерирует по одной траектории для каждого периода. Начальные цены берутся из первых открытий соответствующих выборок, значения seed различаются на единицу. Возвращает результаты обоих сравнений и паспорта для повторения расчёта. Контрольный период должен начинаться после обучающего. В каждом нужно не менее трёх свечей, шаг должен быть одинаковым и выражаться в целых секундах, а начальные метки времени — иметь точность не мельче микросекунды.",
+      "ru": "Оценивает параметры на раннем отрезке истории. Затем строит по одному синтетическому ряду для обучающего и контрольного периодов и сравнивает каждый с соответствующей историей. Начальная цена каждого ряда равна открытию его первой исторической свечи, значения seed различаются на единицу. Возвращает оба сравнения и манифесты для их воспроизведения. Контрольный период должен начинаться после обучающего. В каждом отрезке нужны минимум три свечи, одинаковый для обоих отрезков шаг в целых секундах и начальная отметка времени с точностью до микросекунды.",
       "zh-CN": "仅用训练段拟合参数，再分别为训练段和留出段各生成一条路径。两条路径从各自样本的首个开盘价起步，种子相差 1。返回两份比较报告及相应的重放清单。训练段须严格早于留出段，每段至少三根 K 线，两段使用相同的整秒固定周期，起始时间须对齐至微秒。"
     },
     "monte_carlo.EnsembleReport": {
@@ -209,22 +209,22 @@
     },
     "monte_carlo.DerivePathSeed": {
       "en": "Derive one unsigned 256-bit seed from an integer root seed and a nonnegative path index using SHA-256. Increasing path count or changing worker order preserves the seed for an existing index.",
-      "ru": "Вычисляет 256-битное беззнаковое зерно генератора по исходному целому seed и неотрицательному номеру траектории с помощью SHA-256. При добавлении траекторий или изменении порядка расчёта прежние номера получают те же значения.",
-      "zh-CN": "用 SHA-256 从整数根种子和非负路径编号派生出一个 256 位无符号种子。增加路径数或改变计算顺序后，已有编号的种子保持一致。"
+      "ru": "По исходному seed эксперимента и номеру траектории вычисляет отдельный 256-битный seed с помощью SHA-256. Нумерация начинается с нуля. Добавление новых траекторий и порядок вычислений на уже полученные значения не влияют.",
+      "zh-CN": "根据实验的初始随机种子和从 0 开始的路径编号，用 SHA-256 生成本条路径的 256 位无符号整数种子。增加路径数或改变计算顺序，已有编号对应的种子仍然相同。"
     },
     "monte_carlo.RunEnsemble": {
       "en": "Generate 2–10,000 OHLCV paths under the same configuration. Return the 5th, 50th and 95th percentiles of closes at each bar and the distribution of per-path maximum price drawdowns. Total bars across all paths are limited to 1,000,000. Use one worker in an interactive session, or up to eight processes from a guarded script.",
-      "ru": "Генерирует от 2 до 10 000 траекторий OHLCV с одинаковыми настройками модели. Возвращает 5-й, 50-й и 95-й процентили цены закрытия на каждом баре и распределение максимальных ценовых просадок по траекториям. Во всём ансамбле допускается до 1 000 000 свечей. В интерактивной сессии используйте один процесс. В скрипте можно запустить до восьми процессов, поместив вызов под проверку __name__ == \"__main__\".",
-      "zh-CN": "用同一配置生成 2 至 10,000 条 OHLCV 路径，返回各根 K 线收盘价的第 5、50、95 百分位数，以及各路径最大价格回撤的分布。全部路径合计最多 1,000,000 根 K 线。交互环境用单进程，脚本可在 __name__ == \"__main__\" 入口保护下使用最多八个进程。"
+      "ru": "Генерирует от 2 до 10 000 ценовых траекторий по одной модели. У каждой свой seed. На каждой свече сравнивает цены закрытия всех траекторий и возвращает 5-й процентиль, медиану и 95-й процентиль. Отдельно рассчитывает максимальную просадку каждой траектории по ценам закрытия. Общий предел — 1 000 000 свечей на все траектории. Для интерактивного сеанса используйте workers=1. В скрипте можно задействовать до восьми процессов, поместив вызов под проверку __name__ == \"__main__\".",
+      "zh-CN": "按同一组模型参数生成 2 至 10,000 条价格路径，每条路径使用各自的随机种子。在每个时点，取所有路径的收盘价计算第 5 百分位数、中位数和第 95 百分位数。另外按收盘价计算每条路径的最大回撤。全部路径合计最多 1,000,000 根 K 线。交互环境使用 workers=1。脚本可启用最多八个进程，此时应在 __name__ == \"__main__\" 条件下调用。"
     },
     "monte_carlo.CreateEnsembleManifest": {
       "en": "Return a replay manifest containing the configuration, path count and software versions, plus SHA-256 digests of the experiment identity and reported quantiles and drawdowns. Individual OHLCV rows can be verified separately with a single-path manifest.",
-      "ru": "Создаёт паспорт для повторения эксперимента. В словаре сохраняются параметры, число траекторий, версии ПО и две суммы SHA-256 — для исходных условий и для итоговых квантилей и просадок. Для проверки каждой свечи отдельной траектории предусмотрен её собственный паспорт.",
+      "ru": "Создаёт манифест для повторения эксперимента. В словаре сохраняются параметры, число траекторий, версии ПО и две суммы SHA-256 — для исходных условий и для итоговых квантилей и просадок. Для проверки каждой свечи отдельной траектории предусмотрен её собственный манифест.",
       "zh-CN": "返回重放清单，记录配置、路径数、软件版本，以及实验输入和汇总结果各自的 SHA-256 摘要。结果摘要覆盖分位数和回撤。如需逐根核对某条路径的 OHLCV，可另建单路径清单。"
     },
     "monte_carlo.ReplayEnsemble": {
       "en": "Regenerate an EnsembleReport from its manifest. By default the recorded environment must match. Allowing an environment change still requires compatible manifest and metric versions and an exact match of the output digest. A failed verification raises ValueError.",
-      "ru": "Повторяет расчёт по паспорту и возвращает EnsembleReport. По умолчанию сверяются сведения о программной среде. Даже если разрешить другую среду, версии схемы и метрик должны быть совместимы, а контрольная сумма результата — совпасть в точности. При расхождении возникает ValueError.",
+      "ru": "Повторяет расчёт по манифесту и возвращает EnsembleReport. По умолчанию сверяются сведения о программной среде. Даже если разрешить другую среду, версии схемы и метрик должны быть совместимы, а контрольная сумма результата — совпасть в точности. При расхождении возникает ValueError.",
       "zh-CN": "根据清单重新计算并返回 EnsembleReport，默认要求软件环境与记录一致。即使允许环境变化，清单及指标版本仍须兼容，重算结果的摘要也须完全匹配。验证失败时抛出 ValueError。"
     },
     "monte_carlo.ChartEnsemble": {
@@ -234,8 +234,8 @@
     },
     "monte_carlo.SEED_DERIVATION": {
       "en": "Identifier for the SHA-256 scheme that converts a root seed and a path index into a reproducible path seed.",
-      "ru": "Идентификатор схемы SHA-256, по которой исходный seed и номер траектории преобразуются в воспроизводимое зерно этой траектории.",
-      "zh-CN": "标识种子派生规则的名称。该规则以 SHA-256 将根种子和路径编号映射为可复现的路径种子。"
+      "ru": "Обозначение алгоритма, который вычисляет seed каждой траектории по исходному seed и номеру траектории.",
+      "zh-CN": "标识种子派生规则的名称。该规则以 SHA-256 将初始随机种子和路径编号映射为可复现的路径种子。"
     },
     "monte_carlo.QUANTILE_LEVELS": {
       "en": "Ordered levels (0.05, 0.50, 0.95) used both for pointwise closing prices and for the sample of per-path maximum drawdowns.",
@@ -269,8 +269,8 @@
     },
     "monte_carlo.MANIFEST_VERSION": {
       "en": "Schema version of the ensemble replay manifest, currently 1.",
-      "ru": "Версия схемы паспорта ансамбля для повторного расчёта. В этом выпуске равна 1.",
-      "zh-CN": "集合模拟重放清单的格式版本，本版为 1。"
+      "ru": "Версия схемы манифеста ансамбля для повторного расчёта. В этом выпуске равна 1.",
+      "zh-CN": "多路径模拟重放清单的格式版本，本版为 1。"
     },
     "fuzzy_diagnostics.RegimeTermGrade": {
       "en": "Membership of one input in an ordinary or elevated fuzzy term, together with the coordinate actually evaluated after capping the observed ratio at 2.",
@@ -321,8 +321,8 @@
     },
     "analysis.OutlierEventSummary.definition": {
       "en": "Nonempty description of the upper and lower events as defined by the caller.",
-      "ru": "Непустое текстовое определение верхнего и нижнего событий, заданное пользователем.",
-      "zh-CN": "调用方对上侧和下侧事件判定规则的非空文字说明。"
+      "ru": "Условие, по которому выставлены флаги upper_flags и lower_flags. В отчёте сохраняется текст пользователя.",
+      "zh-CN": "说明 upper_flags 和 lower_flags 分别标记什么，报告保留调用方填写的文字。"
     },
     "analysis.OutlierEventSummary.trials": {
       "en": "Number of paired upper and lower observations, including pairs in which neither event occurred.",
@@ -331,33 +331,33 @@
     },
     "analysis.OutlierEventSummary.upper_count": {
       "en": "Number of observations where the upper event occurred, including simultaneous events.",
-      "ru": "Число наблюдений с верхним событием, включая совместные с нижним.",
-      "zh-CN": "上侧事件发生的观测数，包含上下侧同时发生的观测。"
+      "ru": "Число наблюдений с первым признаком, в том числе тех, где сработали оба.",
+      "zh-CN": "第一个条件满足的观测数，包括同时满足两个条件的观测。"
     },
     "analysis.OutlierEventSummary.lower_count": {
       "en": "Number of observations where the lower event occurred, including simultaneous events.",
-      "ru": "Число наблюдений с нижним событием, включая совместные с верхним.",
-      "zh-CN": "下侧事件发生的观测数，包含上下侧同时发生的观测。"
+      "ru": "Число наблюдений со вторым признаком, в том числе тех, где сработали оба.",
+      "zh-CN": "第二个条件满足的观测数，包括同时满足两个条件的观测。"
     },
     "analysis.OutlierEventSummary.either_count": {
       "en": "Number of pairs with at least one event.",
-      "ru": "Число пар, в которых зафиксировано хотя бы одно событие.",
-      "zh-CN": "至少一侧事件发生的观测对数。"
+      "ru": "Число наблюдений, где хотя бы один признак равен True.",
+      "zh-CN": "至少满足一个条件的观测数。"
     },
     "analysis.OutlierEventSummary.both_count": {
       "en": "Number of pairs where upper and lower events both occurred.",
-      "ru": "Число пар, в которых одновременно произошли верхнее и нижнее события.",
-      "zh-CN": "上、下侧事件同时发生的观测对数。"
+      "ru": "Число наблюдений, где оба признака равны True.",
+      "zh-CN": "两个条件同时满足的观测数。"
     },
     "analysis.OutlierEventSummary.upper_frequency": {
       "en": "Upper-event count divided by the total paired observations.",
-      "ru": "Доля наблюдений с верхним событием среди всех пар.",
-      "zh-CN": "上侧事件次数占全部配对观测的比例。"
+      "ru": "Доля наблюдений, для которых upper_flags равен True.",
+      "zh-CN": "第一个条件满足的观测数占全部观测数的比例。"
     },
     "analysis.OutlierEventSummary.lower_frequency": {
       "en": "Lower-event count divided by the total paired observations.",
-      "ru": "Доля наблюдений с нижним событием среди всех пар.",
-      "zh-CN": "下侧事件次数占全部配对观测的比例。"
+      "ru": "Доля наблюдений, для которых lower_flags равен True.",
+      "zh-CN": "第二个条件满足的观测数占全部观测数的比例。"
     },
     "analysis.OutlierEventSummary.either_frequency": {
       "en": "Fraction of all paired observations with at least one event.",
@@ -391,13 +391,13 @@
     },
     "analysis.Distribution.variance": {
       "en": "Sample variance with denominator n−1, in squared input units. Requires at least two observations.",
-      "ru": "Выборочная дисперсия с делителем n−1 в квадрате исходных единиц. Требуется не менее двух наблюдений.",
+      "ru": "Выборочная дисперсия с делителем n−1. Единица измерения — квадрат единицы исходных значений. Нужны как минимум два наблюдения.",
       "zh-CN": "以 n−1 为分母的样本方差，单位为原单位的平方。至少需要两个观测值。"
     },
     "analysis.Distribution.standard_deviation": {
       "en": "Sample standard deviation with denominator n−1, in the original units.",
-      "ru": "Выборочное стандартное отклонение с делителем n−1 в исходных единицах.",
-      "zh-CN": "样本标准差对应 n−1 分母，单位与原变量相同。"
+      "ru": "Корень из выборочной дисперсии (ddof=1), в тех же единицах, что и исходные значения.",
+      "zh-CN": "样本方差的平方根（ddof=1），单位与原始观测值相同。"
     },
     "analysis.Distribution.skewness": {
       "en": "Adjusted Fisher sample skewness. Requires at least three observations with nonzero variance.",
@@ -442,7 +442,7 @@
     "analysis.Distribution.three_sigma_fraction": {
       "en": "Fraction whose absolute deviation from the mean exceeds three population standard deviations (denominator n).",
       "ru": "Доля наблюдений, отклонение которых от среднего по модулю превышает три стандартных отклонения, рассчитанных с делителем n.",
-      "zh-CN": "与均值的绝对偏差超过三个总体标准差的观测占比，此处标准差以 n 为分母。"
+      "zh-CN": "与均值的距离超过三个标准差的观测所占的比例。此处用样本自身计算标准差，方差的分母为 n。"
     },
     "analysis.ProportionBand.count": {
       "en": "Integer number of event occurrences, from zero to the number of trials inclusive.",
@@ -551,13 +551,13 @@
     },
     "analysis.AnalysisReport.distributions": {
       "en": "Statistics for returns, bodies, wicks, ranges, their candle-range fractions and volume. Return samples start at the second bar.",
-      "ru": "Статистика доходностей, тел и теней свечей, размаха, долей тела и теней в размахе и объёма. Выборки доходностей начинаются со второй свечи.",
-      "zh-CN": "汇总收益率、实体、上下影线、振幅、实体及影线占振幅的比例和成交量。收益率样本从第二根 K 线开始。"
+      "ru": "Описательная статистика доходностей, объёма и размеров свечей. Размах свечи равен high − low в единицах цены. Доли тела и теней рассчитаны относительно этого размаха. Для расчёта доходности нужны две соседние цены закрытия, поэтому выборка начинается со второй свечи.",
+      "zh-CN": "汇总收益率、成交量以及 K 线实体和影线的统计量。range 是最高价与最低价之差，以价格单位计。实体和影线的占比均以该价差为分母。收益率按相邻收盘价计算，从第二根 K 线起有值。"
     },
     "analysis.AnalysisReport.simple_returns": {
       "en": "Aligned close-to-close returns Cₜ/Cₜ₋₁−1. The first entry, zero denominators and nonfinite results are marked None.",
       "ru": "Ряд простых доходностей Cₜ/Cₜ₋₁−1 по соседним закрытиям. Для первого бара, нулевой предыдущей цены и переполнения записывается None.",
-      "zh-CN": "逐根对齐的简单收益率 Cₜ/Cₜ₋₁−1。首根、前收盘价为零或结果非有限时记为 None。"
+      "zh-CN": "按相邻两根 K 线的收盘价计算简单收益率 Cₜ/Cₜ₋₁−1。首根、上一根收盘价为零或计算结果溢出时，对应位置为 None。"
     },
     "analysis.AnalysisReport.log_returns": {
       "en": "Aligned differences ln(Cₜ)−ln(Cₜ₋₁). Each pair needs positive closes. The first entry is None.",
@@ -591,13 +591,13 @@
     },
     "analysis.AnalysisReport.drawdown": {
       "en": "Price drawdown per bar as 1−close/running_peak_close. The first close sets the initial peak. If any close is nonpositive the entire series is undefined.",
-      "ru": "Просадка цены на каждом баре равна 1−close/running_peak_close. Первой вершиной служит первая цена закрытия. Если хотя бы одна цена закрытия неположительна, весь ряд просадок не определён.",
-      "zh-CN": "每根 K 线的价格回撤，等于 1 减去当前收盘价与迄今最高收盘价之比。首根收盘价为初始峰值。任一收盘价非正时，整段回撤均无定义。"
+      "ru": "Для каждой свечи — величина снижения от наивысшей цены закрытия с начала ряда. Расчёт ведётся по формуле 1 − Cₜ / max(C₀, …, Cₜ). На новом максимуме просадка равна нулю. Если хотя бы одна цена закрытия неположительна, для всех свечей возвращается None.",
+      "zh-CN": "逐根计算价格回撤，公式为 1 − Cₜ / max(C₀, …, Cₜ)。收盘价创出新高时，回撤为零。样本中只要有一个收盘价不大于零，整列都返回 None。"
     },
     "analysis.AnalysisReport.maximum_drawdown": {
       "en": "Largest peak-to-trough drop in closing price, as a nonnegative fraction. Measuring a strategy drawdown would require its equity curve and trading results.",
-      "ru": "Наибольшее снижение цены закрытия относительно достигнутого к тому моменту максимума, в долях единицы. Для расчёта просадки стратегии нужен отдельный ряд её капитала с учётом сделок.",
-      "zh-CN": "从先前收盘价高点到随后低点的最大跌幅，以非负小数表示。策略回撤需另用计入交易结果的策略权益曲线计算。"
+      "ru": "Максимальное относительное снижение цены от достигнутого ранее максимума закрытий. Например, снижение со 120 до 90 даёт 0,25. Для просадки стратегии такой расчёт нужно делать по кривой её капитала.",
+      "zh-CN": "按收盘价计算的最大回撤，以非负小数表示。例如，从此前的收盘高点 120 跌到 90，回撤为 0.25。评估交易策略时，应对策略自身的权益曲线计算回撤。"
     },
     "analysis.AnalysisReport.maximum_drawdown_duration_bars": {
       "en": "Longest consecutive count of closes strictly below their running peak. Includes an unfinished drawdown at the end of the series.",
@@ -607,12 +607,12 @@
     "analysis.AnalysisReport.volume_absolute_return_correlation": {
       "en": "Pearson correlation of a bar’s volume with its absolute simple close-to-close return, from the second bar onward using valid pairs.",
       "ru": "Корреляция Пирсона между объёмом бара и модулем его простой доходности относительно предыдущего закрытия. Берутся пригодные пары начиная со второго бара.",
-      "zh-CN": "从第二根 K 线起，按有效配对计算当根成交量与简单收益率绝对值之间的 Pearson 相关系数。"
+      "zh-CN": "从第二根 K 线起，按有效配对计算当根成交量与简单收益率绝对值的皮尔逊相关系数。"
     },
     "analysis.AnalysisReport.volume_range_correlation": {
       "en": "Pearson correlation of volume with high−low on the same bar. Requires at least two valid pairs and variation on both sides.",
-      "ru": "Корреляция Пирсона между объёмом и размахом high−low той же свечи. Нужны минимум две пригодные пары и ненулевой разброс обеих величин.",
-      "zh-CN": "同一根 K 线成交量与最高价减最低价之间的 Pearson 相关系数，至少需要两对有效观测且两列均有变化。"
+      "ru": "Корреляция Пирсона между объёмом и диапазоном цены (high − low) на одной и той же свече. Нужны как минимум две пары наблюдений. Если одна из величин постоянна, корреляция не определена.",
+      "zh-CN": "同一根 K 线的成交量与高低价差（最高价减最低价）之间的皮尔逊相关系数。至少需要两对有效观测，且成交量和高低价差都不能是常数。"
     },
     "analysis.AnalysisReport.up_candle_fraction": {
       "en": "Fraction of all bars closing above their opens.",
@@ -646,18 +646,18 @@
     },
     "analysis.SummarizeOutlierEvents.upper_flags": {
       "en": "One strict True/False flag per observation indicating an upper event.",
-      "ru": "Ряд булевых признаков верхнего события, по одному True или False на наблюдение.",
-      "zh-CN": "每次观测对应一个严格的布尔标记，表示上侧事件是否发生。"
+      "ru": "Первый ряд признаков. Для каждого наблюдения укажите True, если условие выполнено, иначе False.",
+      "zh-CN": "第一组布尔标记，每个观测对应一个值，满足条件记为 True，否则为 False。"
     },
     "analysis.SummarizeOutlierEvents.lower_flags": {
       "en": "One strict True/False flag per observation indicating a lower event, aligned with upper_flags.",
-      "ru": "Ряд булевых признаков нижнего события. Порядок и длина должны совпадать с upper_flags.",
-      "zh-CN": "每次观测对应一个严格的布尔标记，表示下侧事件是否发生，须与 upper_flags 逐项对齐。"
+      "ru": "Второй ряд признаков, по одному True или False на каждое наблюдение, в том же порядке, что и upper_flags.",
+      "zh-CN": "第二组布尔标记，与 upper_flags 逐项对应且长度相同。"
     },
     "analysis.SummarizeOutlierEvents.definition": {
       "en": "Nonempty description of the upper and lower events as defined by the caller.",
-      "ru": "Непустое текстовое определение верхнего и нижнего событий, заданное пользователем.",
-      "zh-CN": "调用方对上侧和下侧事件判定规则的非空文字说明。"
+      "ru": "Непустое описание того, какие события обозначают upper_flags и lower_flags.",
+      "zh-CN": "对两组标记各自判定条件的说明，不能为空。"
     },
     "analysis.ProportionInterval.count": {
       "en": "Integer number of event occurrences, from zero to the number of trials inclusive.",
@@ -726,13 +726,13 @@
     },
     "evaluation.MeanInterval.seed": {
       "en": "Nonnegative integer seed for the NumPy PCG64 generator used in resampling.",
-      "ru": "Неотрицательное целое зерно генератора NumPy PCG64, используемого для повторных выборок.",
+      "ru": "Начальное значение генератора случайных чисел NumPy PCG64 для повторных выборок. Целое неотрицательное число.",
       "zh-CN": "重抽样使用的 NumPy PCG64 随机种子，须为非负整数。"
     },
     "evaluation.MeanInterval.block_length": {
       "en": "Length of each contiguous sampled block in observations, from 1 to the input length inclusive.",
-      "ru": "Длина непрерывного отрезка, выбираемого при бутстрэпе, в наблюдениях. От 1 до длины исходного ряда включительно.",
-      "zh-CN": "每个连续抽样区块的观测个数，最小为 1，最大为原序列长度。"
+      "ru": "Число соседних наблюдений в одном блоке. Для блочного бутстрапа допустима длина от 1 до длины исходного ряда включительно.",
+      "zh-CN": "每次连续抽取的观测值个数，最少为 1，最多等于原序列长度。"
     },
     "evaluation.MeanInterval.observations": {
       "en": "Number of original scalar observations. Each resample is trimmed to this length.",
@@ -741,8 +741,8 @@
     },
     "evaluation.MeanInterval.method": {
       "en": "Name of the interval estimator, the moving-block percentile bootstrap of the mean.",
-      "ru": "Название метода построения интервала для среднего — процентильный бутстрэп со скользящими блоками.",
-      "zh-CN": "区间估计方法的名称，即针对均值的移动区块百分位自助法。"
+      "ru": "Название метода, которым построен интервал для среднего. Используется процентильный бутстрап со скользящими блоками.",
+      "zh-CN": "区间估计方法的名称。先用移动块自助法重抽样，再用各次样本均值的分位数确定区间上下限。"
     },
     "evaluation.MeanInterval.rng": {
       "en": "Resampling generator identifier, numpy.PCG64.",
@@ -761,7 +761,7 @@
     },
     "evaluation.BootstrapMeanInterval.seed": {
       "en": "Nonnegative integer seed for the NumPy PCG64 generator used in resampling.",
-      "ru": "Неотрицательное целое зерно генератора NumPy PCG64, используемого для повторных выборок.",
+      "ru": "Начальное значение генератора случайных чисел NumPy PCG64 для повторных выборок. Целое неотрицательное число.",
       "zh-CN": "重抽样使用的 NumPy PCG64 随机种子，须为非负整数。"
     },
     "evaluation.BootstrapMeanInterval.confidence": {
@@ -776,8 +776,8 @@
     },
     "evaluation.BootstrapMeanInterval.block_length": {
       "en": "Length of each contiguous sampled block in observations, from 1 to the input length inclusive.",
-      "ru": "Длина непрерывного отрезка, выбираемого при бутстрэпе, в наблюдениях. От 1 до длины исходного ряда включительно.",
-      "zh-CN": "每个连续抽样区块的观测个数，最小为 1，最大为原序列长度。"
+      "ru": "Число соседних наблюдений в одном блоке. Для блочного бутстрапа допустима длина от 1 до длины исходного ряда включительно.",
+      "zh-CN": "每次连续抽取的观测值个数，最少为 1，最多等于原序列长度。"
     },
     "evaluation.MetricComparison.name": {
       "en": "Key used in tolerances. Supported keys are log_return_mean, log_return_std, body_fraction_mean, volume_mean, squared_return_acf_lag1, volume_absolute_return_correlation and maximum_drawdown.",
@@ -867,12 +867,12 @@
     "evaluation.Compare.reference": {
       "en": "Valid reference OHLCV DataFrame, commonly a historical sample. Its metrics are computed independently of the synthetic timestamps.",
       "ru": "Эталонный DataFrame со свечами OHLCV, например исторические котировки. Статистика рассчитывается независимо от меток времени синтетических баров.",
-      "zh-CN": "合规的参考 OHLCV DataFrame，通常取自历史行情。计算参考指标时不要求与合成序列的时间戳逐一对应。"
+      "zh-CN": "通过校验的参考 OHLCV DataFrame，通常取自历史行情。计算参考指标时不要求与合成序列的时间戳逐一对应。"
     },
     "evaluation.Compare.synthetic": {
       "en": "Valid OHLCV DataFrame for the synthetic series. Use the same price and volume conventions as for the reference.",
       "ru": "DataFrame с синтетическими свечами OHLCV. Единицы цены и объёма должны быть сопоставимы с эталонным рядом.",
-      "zh-CN": "合规的合成 OHLCV DataFrame，应与参考序列采用相同的价格和成交量口径。"
+      "zh-CN": "通过校验的模拟 OHLCV DataFrame，应与参考序列采用相同的价格和成交量口径。"
     },
     "evaluation.Compare.tolerances": {
       "en": "Optional mapping from metric keys to finite, nonnegative absolute tolerances specified before evaluation. For example, 0.005 for log_return_std is an absolute difference in per-bar log-return volatility.",
@@ -882,7 +882,7 @@
     "calibration.Profile.schema_version": {
       "en": "Version of the serialized profile schema. This release accepts the integer 1.",
       "ru": "Версия схемы сериализации профиля. В этом выпуске поддерживается целое число 1.",
-      "zh-CN": "参数档案的序列化格式版本，本版接受整数 1。"
+      "zh-CN": "参数记录的序列化格式版本，本版接受整数 1。"
     },
     "calibration.Profile.model": {
       "en": "Regime generator to fit. Select regime_v2 for continuous synthetic volume or regime_v3 for whole synthetic volume counts.",
@@ -926,8 +926,8 @@
     },
     "calibration.Profile.volatility": {
       "en": "Population standard deviation of per-bar open-to-close log returns. The value is on the training bar’s timescale.",
-      "ru": "Стандартное отклонение логарифмических доходностей от открытия до закрытия с делителем n. Масштаб времени — одна обучающая свеча.",
-      "zh-CN": "单根 K 线开盘至收盘对数收益率的总体标准差，使用 n 作分母，时间尺度为一个训练 K 线周期。"
+      "ru": "Стандартное отклонение значений ln(close/open) по обучающей выборке. Дисперсия рассчитывается с делителем n. Волатильность выражена в расчёте на одну свечу.",
+      "zh-CN": "训练样本中各根 K 线开盘至收盘对数收益率的标准差，计算方差时除以 n。该波动率对应一个 K 线周期。"
     },
     "calibration.Profile.volume_base": {
       "en": "Arithmetic mean of volume per training bar, in the data source’s volume unit. For regime_v3 it must lie between 1 and 2⁵³−1 inclusive.",
@@ -941,8 +941,8 @@
     },
     "calibration.Profile.estimator": {
       "en": "Identifier for the versioned estimators of candle-body log-return moments and arithmetic mean volume.",
-      "ru": "Идентификатор версии метода, которым получены моменты логарифмической доходности тела свечи и средний арифметический объём.",
-      "zh-CN": "标识估计方法及其版本，涵盖实体对数收益率的矩和成交量的算术均值。"
+      "ru": "Идентификатор метода, которым оценены средняя логарифмическая доходность от открытия до закрытия, её стандартное отклонение и средний объём за свечу.",
+      "zh-CN": "估计方法及其版本标识，说明如何计算单根 K 线开盘至收盘对数收益率的均值、标准差和每根 K 线的平均成交量。"
     },
     "calibration.Profile.source_semantics": {
       "en": "Fixed description of the training sample and the within-bar return definition, which excludes inter-bar gaps.",
@@ -982,7 +982,7 @@
     "calibration.CalibrationReport.profile": {
       "en": "Frozen profile estimated exclusively from the chronological training window.",
       "ru": "Неизменяемый профиль, оценённый исключительно по обучающему периоду.",
-      "zh-CN": "仅依据训练时间窗口估计的不可变参数档案。"
+      "zh-CN": "仅依据训练时间窗口估计的不可变参数记录。"
     },
     "calibration.CalibrationReport.training": {
       "en": "Comparison between the historical training bars and a synthetic path generated for that window.",
@@ -996,18 +996,18 @@
     },
     "calibration.CalibrationReport.training_manifest_json": {
       "en": "JSON replay manifest for the training-window synthetic path and its fitted profile metadata.",
-      "ru": "Паспорт синтетической траектории обучающего периода с метаданными профиля, сериализованный в JSON.",
-      "zh-CN": "训练段合成路径的 JSON 重放清单，含拟合参数档案的元数据。"
+      "ru": "Манифест синтетической траектории обучающего периода с метаданными профиля, сериализованный в JSON.",
+      "zh-CN": "训练段合成路径的 JSON 重放清单，含拟合参数记录的元数据。"
     },
     "calibration.CalibrationReport.holdout_manifest_json": {
       "en": "JSON replay manifest for the independently seeded holdout path and its training-derived metadata.",
-      "ru": "Паспорт синтетической траектории контрольного периода в формате JSON. Содержит её seed и сведения о профиле, оценённом на обучающем периоде.",
+      "ru": "Манифест синтетической траектории контрольного периода в формате JSON. Содержит её seed и сведения о профиле, оценённом на обучающем периоде.",
       "zh-CN": "留出段合成路径的 JSON 重放清单，含该路径的种子及源自训练段的参数元数据。"
     },
     "calibration.Calibrate.training": {
       "en": "Earlier, equally spaced OHLCV training window. The model learns its three moments exclusively from these bars.",
       "ru": "Более ранний ряд равноотстоящих обучающих свечей OHLCV. Только по ним оцениваются три параметра профиля.",
-      "zh-CN": "时间上较早的等间隔 OHLCV 训练窗口，档案的三个参数均只通过这段数据估计。"
+      "zh-CN": "时间较早的等间隔 OHLCV 行情。漂移、波动率和平均成交量都只用这段数据估计。"
     },
     "calibration.Calibrate.holdout": {
       "en": "Later OHLCV window at the same cadence. Its timestamps and first open initialize the holdout simulation, and its observations serve to evaluate the fit.",
@@ -1027,7 +1027,7 @@
     "monte_carlo.EnsembleReport.configuration": {
       "en": "Full generation settings shared by all paths, including the root seed, bar interval and horizon.",
       "ru": "Полная конфигурация, общая для всех траекторий, включая исходный seed, интервал и число свечей.",
-      "zh-CN": "全部路径共用的完整生成配置，包括根种子、K 线周期及每条路径的根数。"
+      "zh-CN": "全部路径共用的完整生成配置，包括初始随机种子、K 线周期及每条路径的根数。"
     },
     "monte_carlo.EnsembleReport.path_count": {
       "en": "Number of paths generated under the same settings, an integer from 2 to 10,000. The product with horizon must be at most 1,000,000.",
@@ -1036,8 +1036,8 @@
     },
     "monte_carlo.EnsembleReport.close_quantiles": {
       "en": "Three sequences of closing prices in P05, P50, P95 order. Each position compares the closes from every path at that bar. A quantile line can draw its values from different paths at different times.",
-      "ru": "Три ряда цен закрытия в порядке P05, P50, P95. В каждой позиции сравниваются цены всех траекторий на соответствующем баре. В разные моменты значения одной квантильной линии могут определяться разными траекториями.",
-      "zh-CN": "三个收盘价序列，依次为 P05、P50、P95。各位置取同一根 K 线上全部路径的收盘价求分位数，同一条分位线在不同时点可由不同路径决定。"
+      "ru": "Три ряда квантилей (P05, медиана и P95). Каждое значение рассчитано по ценам закрытия всех траекторий на одной и той же свече. Поэтому медианная линия может переходить от одной траектории к другой или проходить между ними.",
+      "zh-CN": "三个分位数序列，依次为第 5 百分位数、中位数和第 95 百分位数。每个值都取自同一时点所有路径的收盘价。把中位数连成线后，它可以穿过不同的路径，也可以落在两条路径之间。"
     },
     "monte_carlo.EnsembleReport.maximum_drawdowns": {
       "en": "Maximum price drawdown for each path in index order, expressed as a nonnegative fraction of its running peak close. A one-bar path has drawdown zero. Strategy drawdown requires the strategy’s own equity series.",
@@ -1067,12 +1067,12 @@
     "monte_carlo.EnsembleReport.metric_version": {
       "en": "Identifier for the ensemble metric definitions, close-ensemble-v1 in this release.",
       "ru": "Версия правил расчёта показателей ансамбля. В этом выпуске используется close-ensemble-v1.",
-      "zh-CN": "标识集合模拟指标计算口径的版本，本版为 close-ensemble-v1。"
+      "zh-CN": "标识多路径模拟指标计算口径的版本，本版为 close-ensemble-v1。"
     },
     "monte_carlo.EnsembleReport.seed_derivation": {
       "en": "Versioned rule that maps the root seed and path index to the path seed.",
-      "ru": "Идентификатор версии правила, которое по исходному seed и номеру траектории вычисляет её собственное зерно.",
-      "zh-CN": "将根种子和路径编号映射到路径种子的规则标识，含版本信息。"
+      "ru": "Версия алгоритма, который вычисляет seed каждой траектории по её номеру и исходному seed эксперимента.",
+      "zh-CN": "将初始随机种子和路径编号映射到路径种子的规则标识，含版本信息。"
     },
     "monte_carlo.EnsembleReport.rng": {
       "en": "Identifier of the random number generator that draws innovations along each path.",
@@ -1086,8 +1086,8 @@
     },
     "monte_carlo.DerivePathSeed.root_seed": {
       "en": "Integer seed shared by the experiment. Its sign is preserved by the derivation scheme.",
-      "ru": "Целое исходное зерно эксперимента. Схема вычисления зерна траектории учитывает знак числа.",
-      "zh-CN": "整个实验共用的整数根种子，派生时保留其符号。"
+      "ru": "Исходный seed эксперимента, целое число. Положительные и отрицательные значения обрабатываются с учётом знака.",
+      "zh-CN": "整个实验共用的整数初始随机种子，派生时保留其符号。"
     },
     "monte_carlo.DerivePathSeed.path_index": {
       "en": "Zero-based path number, a nonnegative integer. Use the same index to regenerate that member.",
@@ -1097,7 +1097,7 @@
     "monte_carlo.RunEnsemble.config": {
       "en": "GenerationConfig carrying the root seed and common settings such as the number of bars per path.",
       "ru": "GenerationConfig с исходным seed и общими настройками, в том числе числом свечей в каждой траектории.",
-      "zh-CN": "含根种子及共用设置的 GenerationConfig，其中包括每条路径的 K 线根数。"
+      "zh-CN": "含初始随机种子及共用设置的 GenerationConfig，其中包括每条路径的 K 线根数。"
     },
     "monte_carlo.RunEnsemble.path_count": {
       "en": "Number of paths generated under the same settings, an integer from 2 to 10,000. The product with horizon must be at most 1,000,000.",
@@ -1116,8 +1116,8 @@
     },
     "monte_carlo.ReplayEnsemble.manifest": {
       "en": "Complete ensemble manifest from CreateEnsembleManifest, including both experiment and output digests.",
-      "ru": "Полный паспорт ансамбля из CreateEnsembleManifest с контрольными суммами условий эксперимента и численного результата.",
-      "zh-CN": "CreateEnsembleManifest 生成的完整集合模拟清单，含实验输入摘要及结果摘要。"
+      "ru": "Полный манифест ансамбля из CreateEnsembleManifest с контрольными суммами условий эксперимента и численного результата.",
+      "zh-CN": "CreateEnsembleManifest 生成的完整多路径模拟清单，含实验输入摘要及结果摘要。"
     },
     "monte_carlo.ReplayEnsemble.workers": {
       "en": "Integer from 1 to 8. One runs serially, larger values request separate worker processes. Worker count does not affect the results.",
