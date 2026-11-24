@@ -7,18 +7,18 @@
     },
     "models": {
       "en": "The row generator behind the regime models. Use it when you need OHLCV values one candle at a time and manage the random number generator yourself.",
-      "ru": "Построчная генерация свечей в моделях со сменой режимов. Подходит, когда свечи обрабатываются по одной, а состоянием генератора случайных чисел управляет вызывающий код.",
-      "zh-CN": "状态切换模型的逐根生成接口。适合逐根处理 K 线，并由调用方管理随机数生成器的场景。"
+      "ru": "Генерация свечей по одной. Этот модуль нужен, если вы сами передаёте генератор случайных чисел и обрабатываете каждую свечу по мере её появления.",
+      "zh-CN": "按传入的随机数生成器逐根生成 K 线，适用于边生成边处理行情的程序。"
     },
     "generation": {
       "en": "Generate a complete synthetic OHLCV series on a regular UTC timeline from a single configuration.",
-      "ru": "Генерация ряда синтетических свечей по заданным параметрам. На выходе — таблица цен и объёмов с равномерным шагом времени в UTC.",
-      "zh-CN": "按给定参数生成完整的模拟行情，得到按固定 UTC 时间间隔排列的开高低收价格和成交量。"
+      "ru": "Генерация свечей с постоянным интервалом. Функция возвращает таблицу OHLCV с отметками времени в UTC.",
+      "zh-CN": "按固定周期生成模拟 K 线，返回带 UTC 时间戳的开盘价、最高价、最低价、收盘价和成交量。"
     },
     "market_data": {
       "en": "Validate timestamps, open, high, low, close and volume before analysis. These rules also apply to imported market data, which may have zero or negative prices and fractional volume.",
       "ru": "Проверка времени, цен открытия и закрытия, максимума, минимума и объёма. Правила подходят и для биржевых данных, где встречаются нулевые или отрицательные цены и дробный объём.",
-      "zh-CN": "分析前检查时间戳、开高低收价格和成交量。导入实际行情时，价格可以为零或负数，成交量也可以有小数。"
+      "zh-CN": "校验每根 K 线的时间、开盘价、最高价、最低价、收盘价和成交量。也可读取含零价、负价或小数成交量的行情数据。"
     },
     "io": {
       "en": "Exchange six-column OHLCV files with a fixed CSV header, UTC timestamps and a period as the decimal separator.",
@@ -27,8 +27,8 @@
     },
     "streaming": {
       "en": "Generate long regime-model paths in memory-sized chunks or write successive OHLCV frames to a single CSV file.",
-      "ru": "Работа с длинными рядами. Свечи можно получать порциями по мере генерации или записывать несколько таблиц подряд в один CSV.",
-      "zh-CN": "分批生成较长的模拟行情，也可以把连续的多批 K 线写入同一个 CSV 文件。"
+      "ru": "Генерация длинного ряда частями. Можно сразу обработать очередную таблицу со свечами или записать все части в один CSV.",
+      "zh-CN": "长时间序列可以分批生成。每批 K 线生成后即可处理，也可以将各批依次写入同一个 CSV 文件。"
     },
     "scenario": {
       "en": "Record the inputs to a regime-model run and check that replay reproduces the same candle values.",
@@ -42,8 +42,8 @@
     },
     "extended_models": {
       "en": "Two alternatives for research and stress tests. Bootstrap resamples blocks from historical candles. Scripted paths follow a sequence of user-defined events.",
-      "ru": "Два способа построить сценарий для исследования или стресс-теста. В одном случае модель выбирает блоки из исторического ряда, в другом — строит свечи по заданному расписанию событий.",
-      "zh-CN": "可用两种方法开展研究和压力测试。可以从历史 K 线中按块重采样，或按预先设定的事件顺序构造行情。"
+      "ru": "Блочный бутстрап строит новый ряд из отрезков исторических данных. Отрезки выбираются случайно с возвращением, поэтому один отрезок может встретиться несколько раз. Для стресс-теста с заранее известными событиями можно задать, на какой свече изменятся цена или объём.",
+      "zh-CN": "分块自助法（block bootstrap）从历史行情中有放回地抽取连续片段，再拼成新的价格路径。同一片段可能多次入选。如果要测试特定事件，也可以指定在哪根 K 线上跳空或改变成交量。"
     }
   },
   "symbols": {
@@ -64,8 +64,8 @@
     },
     "models.GenerateRows": {
       "en": "Yield one tuple (open, high, low, close, volume) per candle using the supplied random generator. Each candle opens at the previous close. Log returns combine drift, regime-dependent noise and an occasional shock. Upper and lower wicks are sampled separately. Volume varies with the size of the realized move and persistent noise. The iterator omits timestamps.",
-      "ru": "Выдаёт по одному кортежу (open, high, low, close, volume) на свечу. Открытие равно предыдущему закрытию. Логарифмическая доходность складывается из дрейфа, случайного движения в текущем режиме и возможного скачка. Верхняя и нижняя тени разыгрываются отдельно. Объём зависит от величины движения цены и от случайных колебаний, которые частично переходят со свечи на свечу. Итератор использует переданный генератор случайных чисел, время в кортеж не входит.",
-      "zh-CN": "使用传入的随机数生成器，逐根产出 (open, high, low, close, volume) 元组，不带时间戳。每根 K 线以前收盘价开盘。对数收益由漂移、随市场状态变化的随机波动和偶发冲击共同决定。上下影线分别抽样。成交量取决于实际价格变动的幅度以及具有持续性的随机扰动。"
+      "ru": "Для первой свечи цена открытия равна initial_price, для каждой следующей — закрытию предыдущей. Модель складывает дрейф, случайное изменение цены и возможный скачок в логарифмической шкале, затем применяет ценовые границы. Верхнюю и нижнюю тени рассчитывает по отдельности. Объём зависит от величины получившегося изменения и от случайных колебаний объёма на соседних свечах. На каждом шаге итератор возвращает (open, high, low, close, volume). Время в этот кортеж не входит.",
+      "zh-CN": "首根 K 线以 initial_price 开盘，此后每根的开盘价等于上一根的收盘价。模型在对数价格上叠加漂移、当前状态下的随机波动和可能出现的冲击，再按价格上下限处理越界值。上下影线分别抽样。成交量受本根 K 线的实际价格变动和延续至本期的随机扰动影响。每次迭代返回 (open, high, low, close, volume)，不含时间戳。"
     },
     "generation.Generate": {
       "en": "Return a pandas DataFrame with datetime, open, high, low, close and volume. The UTC grid has no missing intervals. Prices and volume use float64, including whole volume counts in regime_v3. Each call initializes its own random generator from the seed. Passing another configuration type raises TypeError.",
@@ -89,18 +89,18 @@
     },
     "market_data.ValidateOHLCV": {
       "en": "Return an independent six-column DataFrame. Times must be unique and strictly increasing. High and low must enclose the candle body, volume must be nonnegative and all values finite. Optional interval checks enforce the chosen gap policy. Violations raise OHLCVError.",
-      "ru": "Возвращает отдельную таблицу из шести столбцов. Время должно строго возрастать, минимум и максимум — охватывать тело свечи, объём — быть неотрицательным. Все цены и объёмы должны быть конечными. Если задан интервал, проверяются и пропуски. Нарушение любого из этих правил вызывает OHLCVError.",
-      "zh-CN": "返回一份独立的六列表。时间须严格递增且不得重复，最低价和最高价须覆盖 K 线实体，成交量须非负，所有价格和成交量均须为有限数值。指定周期后还会检查时间间隔。违反规则时抛出 OHLCVError。"
+      "ru": "Проверяет свечи и возвращает новую таблицу из шести столбцов. Время должно строго возрастать. Цены открытия и закрытия должны лежать между минимумом и максимумом свечи, объём должен быть неотрицательным. Все числа должны быть конечными. Если задан интервал, расстояние между соседними отметками должно быть ему кратно. При allow_gaps=False пропуск свечи вызывает OHLCVError.",
+      "zh-CN": "校验 K 线并返回新的六列数据表。时间须严格递增，开盘价和收盘价须介于最低价和最高价之间，成交量须非负，所有价格和成交量均须为有限数值。若指定周期，相邻时间戳之差须为该周期的整数倍。设置 allow_gaps=False 时，缺少一根 K 线也会抛出 OHLCVError。"
     },
     "market_data.ToDatetimeIndex": {
       "en": "Validate the candles and return a new DataFrame indexed by UTC datetime, with open, high, low, close and volume as columns. Invalid data raise OHLCVError under the same rules as ValidateOHLCV.",
       "ru": "Проверяет свечи по правилам ValidateOHLCV и возвращает новую таблицу. Время в UTC становится индексом, а цены и объём остаются в пяти столбцах. Ошибка в данных приводит к OHLCVError.",
-      "zh-CN": "按 ValidateOHLCV 的规则校验 K 线，再返回新的 DataFrame。UTC 时间成为索引，开高低收和成交量保留为五列。数据无效时抛出 OHLCVError。"
+      "zh-CN": "按 ValidateOHLCV 的规则校验 K 线，返回以 UTC 时间为索引的新 DataFrame。五个数据列为开盘价、最高价、最低价、收盘价和成交量。数据无效时抛出 OHLCVError。"
     },
     "io.ReadCSV": {
       "en": "Read a UTF-8 comma-separated file or text stream and return a validated DataFrame. The header must be exactly datetime,open,high,low,close,volume. A malformed row, ambiguous timestamp or invalid candle raises OHLCVError.",
       "ru": "Читает CSV в UTF-8 из файла или текстового потока и возвращает проверенный DataFrame. Первая строка должна быть ровно datetime,open,high,low,close,volume. Ошибка в строке, неоднозначное время или несогласованные цены приводят к OHLCVError.",
-      "zh-CN": "从 UTF-8 逗号分隔文件或文本流读入并返回校验过的 DataFrame。表头必须为 datetime,open,high,low,close,volume。行格式错误、时间含糊或 K 线数值违反规则时抛出 OHLCVError。"
+      "zh-CN": "从 UTF-8 文件或文本流读取行情并返回校验过的 DataFrame。CSV 表头须为 datetime,open,high,low,close,volume。行格式错误、本地时间有歧义或价格违反 OHLC 约束时，抛出 OHLCVError。"
     },
     "io.WriteCSV": {
       "en": "Validate the table, then write one CSV header and UTC timestamps with nanosecond precision. Returns None. Integer volume formatting rejects fractional values with OHLCVError. A caller-owned text stream stays open.",
@@ -109,12 +109,12 @@
     },
     "streaming.GenerateChunks": {
       "en": "Yield validated DataFrames with at most chunk_size candles each. Joining the chunks in order yields the same candle values and times as Generate for the same configuration. A nonpositive or non-integer chunk size raises ValueError when iteration starts.",
-      "ru": "Выдаёт проверенные таблицы не более чем по chunk_size свечей. Если соединить их по порядку, значения и время совпадут с результатом Generate при тех же настройках. При первом обращении к итератору неположительный или нецелый размер порции вызывает ValueError.",
-      "zh-CN": "分批产出经过校验的 DataFrame，每批最多 chunk_size 根 K 线。按顺序拼接各批，行情和时间戳与同一配置下 Generate 的结果一致。开始迭代时，批量大小若非正整数，将抛出 ValueError。"
+      "ru": "По очереди возвращает таблицы, в каждой не больше chunk_size свечей. Если соединить их в исходном порядке, время, цены и объёмы совпадут с результатом Generate при тех же параметрах. Если chunk_size не является положительным целым числом, при первом обращении к итератору возникнет ValueError.",
+      "zh-CN": "逐批返回 DataFrame，每批最多 chunk_size 根 K 线。按生成顺序拼接后，时间、价格和成交量都与同一配置下 Generate 的输出一致。chunk_size 必须是正整数，否则在开始迭代时抛出 ValueError。"
     },
     "streaming.WriteCSVChunks": {
       "en": "Write successive candle tables to one CSV and return None. The writer validates each chunk and the join between chunks before atomically replacing the destination. A failed write preserves the previous file. An empty input writes just the header.",
-      "ru": "Объединяет таблицы свечей в одном CSV и возвращает None. Проверяет каждую порцию и порядок времени на стыках. Готовый файл заменяет прежний одной операцией. При ошибке прежний файл сохраняется. Пустая последовательность даёт CSV с одним заголовком.",
+      "ru": "Записывает таблицы со свечами по очереди в один CSV. Проверяет данные внутри каждой таблицы и порядок времени при переходе к следующей. Только после проверки всех частей заменяет прежний файл. Если таблиц нет, записывает один заголовок. Возвращает None.",
       "zh-CN": "将连续的多批行情写入一个 CSV，返回 None。每批数据及相邻批次交界处的时间均须通过校验，完成后才原子替换目标文件。写入失败时保留原文件，空输入只写表头。"
     },
     "scenario.Environment": {
@@ -159,8 +159,8 @@
     },
     "extended_models.BootstrapConfig": {
       "en": "Immutable settings for a path built by sampling historical candles in contiguous blocks. Sets the output length (1 to 1,000,000), starting price, time grid and random seed. The source must have enough usable rows for one full block.",
-      "ru": "Неизменяемые параметры выборки непрерывных блоков из исторических свечей. Задают длину нового ряда (от 1 до 1 000 000 свечей), исходную цену, шаг времени и начальное состояние генератора. В исходной истории должно хватать свечей хотя бы на один полный блок.",
-      "zh-CN": "按连续区块重采样历史 K 线的固定配置，指定输出根数（1 至 1,000,000）、初始价格、时间轴及随机种子。历史样本中可用的 K 线须至少够组成一个完整区块。"
+      "ru": "Параметры блочного бутстрапа. Можно задать длину нового ряда (от 1 до 1 000 000 свечей), начальную цену, интервал, seed и длину блока. Блок должен уместиться в историческом ряду после первой свечи.",
+      "zh-CN": "分块自助法的参数，包括输出长度（1 至 1,000,000 根 K 线）、初始价格、K 线周期、随机种子和块长。历史样本的第一根仅用于取得收盘价，其余 K 线至少要够一个完整的块。"
     },
     "extended_models.BootstrapConfig.ToDict": {
       "en": "Return all bootstrap settings as a JSON-compatible dictionary, with the new series' start time encoded in ISO 8601 UTC.",
@@ -174,18 +174,18 @@
     },
     "extended_models.Bootstrap": {
       "en": "Build a new OHLCV DataFrame by jointly resampling the opening gap, body, wicks and observed volume in contiguous historical blocks. Requires at least three equally spaced candles with positive prices. The first source candle supplies the previous close. Joins between blocks can interrupt longer patterns.",
-      "ru": "Строит новый DataFrame, выбирая из истории непрерывные блоки. Разрыв между закрытием и следующим открытием, тело, тени и объём каждой свечи переносятся вместе. Нужны хотя бы три свечи с равным шагом времени и положительными ценами. Первая служит только источником предыдущего закрытия. На стыках блоков длительная зависимость может нарушаться.",
-      "zh-CN": "按连续区块重采样历史行情，构造新的 OHLCV DataFrame。每根 K 线的开盘跳空、实体、上下影线和实际成交量一并抽取。至少需要三根等间隔且价格为正的 K 线。首根只提供前收盘价。较长的连续走势可能在区块接缝处中断。"
+      "ru": "Строит новый ценовой ряд методом блочного бутстрапа. Из истории берёт подряд несколько свечей и переносит на новый уровень цен относительный гэп на открытии, изменение от открытия до закрытия и размеры теней. Объём переносится в исходных единицах. Нужны как минимум три свечи с равным шагом и положительными ценами. Закрытие первой служит базой для расчёта гэпа второй. Связь между соседними свечами из разных блоков может нарушиться.",
+      "zh-CN": "从历史行情中有放回地抽取连续的 K 线片段，把每根 K 线的相对跳空幅度、开盘到收盘的相对变动和上下影线的相对长度换算到新的价格水平，成交量按原值复制。输入至少需要三根等间隔且价格为正的 K 线。第一根只用来计算第二根的开盘跳空。拼接不同片段时，原有的跨期关联可能中断。"
     },
     "extended_models.ScriptStep": {
       "en": "Define an event on one indexed candle. A log jump changes only that candle's open relative to the preceding close. New drift or volume settings take effect on that candle and persist until another event changes them.",
       "ru": "Задаёт событие на выбранной свече. Скачок меняет её открытие относительно предыдущего закрытия. Новые значения дрейфа и объёма действуют с этой свечи и сохраняются до следующего события, которое их изменит.",
-      "zh-CN": "定义发生在指定 K 线上的事件。对数跳幅只调整这一根相对于前收盘价的开盘价。新的漂移或成交量从该根起生效，直到后续事件再次修改。"
+      "zh-CN": "在指定 K 线上设置事件。log_jump 只影响这一根的开盘价。新的漂移或成交量从本根起生效，直到后续事件再次修改。"
     },
     "extended_models.ScriptedConfig": {
       "en": "Immutable settings for a deterministic stress path of 1 to 1,000,000 candles. Events must have distinct, increasing zero-based indices inside the series. Invalid events, nonpositive starting price or a wick fraction outside [0, 1) raise ValueError.",
-      "ru": "Неизменяемые параметры стресс-сценария длиной от 1 до 1 000 000 свечей. События задают в порядке возрастания номеров свечей, начиная с нуля, без повторов и выхода за конец ряда. При неверных событиях, неположительной начальной цене или значении wick_fraction вне диапазона [0, 1) возникает ValueError.",
-      "zh-CN": "确定性压力情景的固定配置，可生成 1 至 1,000,000 根 K 线。事件编号从零开始，必须递增、无重复，且位于序列内。事件无效、初始价格非正或影线比例超出 [0, 1) 时抛出 ValueError。"
+      "ru": "Параметры стресс-сценария длиной от 1 до 1 000 000 свечей. Номера свечей отсчитываются от нуля. События перечисляют по порядку, без повторов и в пределах ряда. При недопустимом событии, неположительной начальной цене или wick_fraction вне диапазона [0, 1) возникает ValueError.",
+      "zh-CN": "设定长度为 1 至 1,000,000 根 K 线的压力测试情景。K 线从 0 开始编号。事件按所在 K 线的编号递增排列，同一根只能设置一个事件。事件越界或无效、初始价格非正、wick_fraction 超出 [0, 1) 时，抛出 ValueError。"
     },
     "extended_models.ScriptedConfig.ToDict": {
       "en": "Return a JSON-compatible dictionary with the full scenario, its UTC start time and a list of event dictionaries in execution order.",
@@ -229,8 +229,8 @@
     },
     "config.COUNT_MODEL_ID": {
       "en": "Identifier of regime_v3, the default model producing a whole synthetic count for each candle's volume.",
-      "ru": "Идентификатор модели по умолчанию regime_v3. Объём каждой свечи — целое число условных единиц.",
-      "zh-CN": "默认模型的标识符 regime_v3，每根 K 线的模拟成交量为整数。"
+      "ru": "Идентификатор модели по умолчанию, regime_v3. Объём каждой свечи — целое число условных единиц. Соответствие акциям или контрактам задаёт пользователь.",
+      "zh-CN": "默认模型 regime_v3 的标识。每根 K 线的模拟成交量均为整数，单位可根据测试场景约定为股、张等。"
     },
     "config.REGIME_MODEL_VERSIONS": {
       "en": "Maps regime_v2 and regime_v3 identifiers to their integer algorithm revisions, 2 and 3.",
@@ -239,7 +239,7 @@
     },
     "config.MAX_VOLUME_COUNT": {
       "en": "Largest permitted regime_v3 volume ceiling, 2⁵³ − 1. This bound keeps every generated integer count exactly representable in float64.",
-      "ru": "Максимальный верхний предел объёма для regime_v3, равный 2⁵³ − 1. В этом диапазоне все целые значения объёма точно представимы в float64.",
+      "ru": "Наибольший допустимый объём одной свечи в regime_v3, равный 2⁵³ − 1. В этом диапазоне все целые значения точно представимы в float64.",
       "zh-CN": "regime_v3 允许设定的最高成交量上限，即 2⁵³ − 1。该范围内的整数均可用 float64 精确存储。"
     },
     "models.RNG_ID": {
@@ -347,32 +347,32 @@
     "price_floor": {
       "en": "Lower price boundary, at least 1e-100 and below the upper boundary. Proposed closes reflect at the boundary in log space. Lower wicks stop at the boundary.",
       "ru": "Нижняя граница цены, не меньше 1e-100 и строго ниже верхней. При пересечении границы цена закрытия отражается внутрь диапазона в логарифмической шкале. Нижняя тень обрезается по границе.",
-      "zh-CN": "价格下限，至少为 1e-100 且须低于上限。拟定的收盘价越界时会在对数价格尺度上反射回区间，下影线则截在边界处。"
+      "zh-CN": "价格下限，至少为 1e-100 且须低于上限。初步算出的收盘价越界时会在对数价格尺度上反射回区间，下影线则截在边界处。"
     },
     "price_ceiling": {
       "en": "Upper price boundary, above the lower boundary and at most 1e100. Proposed closes reflect in log space. Upper wicks stop at the boundary.",
       "ru": "Верхняя граница цены, строго выше нижней и не более 1e100. Цена закрытия отражается от границы в логарифмической шкале. Верхняя тень обрезается по границе.",
-      "zh-CN": "价格上限，须高于下限且不得超过 1e100。拟定的收盘价在对数价格尺度上反射回区间，上影线截在边界处。"
+      "zh-CN": "价格上限，须高于下限且不得超过 1e100。初步算出的收盘价在对数价格尺度上反射回区间，上影线截在边界处。"
     },
     "drift": {
       "en": "Constant added to the open-to-close log return each candle. A value of 0.01 corresponds to a price multiplier of exp(0.01) before other effects.",
       "ru": "Постоянная составляющая логарифмической доходности от открытия до закрытия одной свечи. Значение 0,01 даёт множитель цены exp(0,01) до учёта остальных факторов.",
-      "zh-CN": "每根 K 线从开盘到收盘的对数收益中的固定项。取 0.01 时，在计入其他因素前，对应的价格倍数为 exp(0.01)。"
+      "zh-CN": "每根 K 线从开盘到收盘的对数收益率中的固定项。取 0.01 时，在计入其他因素前，对应的价格倍数为 exp(0.01)。"
     },
     "config.GenerationConfig.drift": {
       "en": "Per-candle drift in log-return units, between −2 and 2. Noise, shocks and the price bounds can change the realized return.",
       "ru": "Дрейф на одну свечу в единицах логарифмической доходности, от −2 до 2. Фактическая доходность зависит также от случайных колебаний, скачков и границ цены.",
-      "zh-CN": "以单根 K 线对数收益为单位的漂移，范围为 −2 至 2。随机波动、冲击及价格边界都会影响实际收益。"
+      "zh-CN": "以单根 K 线对数收益率为单位的漂移，范围为 −2 至 2。随机波动、冲击及价格边界都会影响实际收益。"
     },
     "extended_models.ScriptStep.drift": {
       "en": "New log return per candle, effective from this candle onward. None keeps the previous drift.",
-      "ru": "Новая логарифмическая доходность на свечу, начиная с текущей. При None сохраняется прежнее значение.",
-      "zh-CN": "从该根 K 线起采用的每根对数收益。设为 None 时沿用之前的漂移。"
+      "ru": "Логарифмическая доходность от открытия до закрытия для этой и последующих свечей. Если передать None, прежнее значение сохранится.",
+      "zh-CN": "从本根 K 线起采用的开盘至收盘对数收益率。设为 None 时沿用原值。"
     },
     "volatility": {
       "en": "Standard deviation of the ordinary log-return innovation per candle in the calm regime, from 0 to 2. It also sets the scale for wicks and shocks.",
       "ru": "Стандартное отклонение случайной составляющей логарифмической доходности одной свечи в спокойном режиме, от 0 до 2. От него также зависят размеры теней и ценовых скачков.",
-      "zh-CN": "平稳状态下，单根 K 线常规随机对数收益项的标准差，范围为 0 至 2。影线和价格冲击的幅度也以此为基准。"
+      "zh-CN": "平稳状态下，单根 K 线常规随机对数收益率项的标准差，范围为 0 至 2。影线和价格冲击的幅度也以此为基准。"
     },
     "regime_persistence": {
       "en": "Probability from 0 to 1 of retaining the current volatility regime on a candle. The starting state is calm and the first switch is tested before generating the first candle.",
@@ -387,12 +387,12 @@
     "shock_probability": {
       "en": "Independent probability from 0 to 1 of adding a Gaussian shock to a candle's log return.",
       "ru": "Вероятность дополнительного случайного скачка на каждой свече, от 0 до 1. Возникновение скачка разыгрывается независимо, а его величина имеет нормальное распределение.",
-      "zh-CN": "每根 K 线的对数收益额外出现一次正态分布冲击的概率，范围为 0 至 1，每根独立判定。"
+      "zh-CN": "每根 K 线的对数收益率额外出现一次正态分布冲击的概率，范围为 0 至 1，每根独立判定。"
     },
     "shock_scale": {
       "en": "Multiplier from 0 to 100. A shock's log-return standard deviation equals volatility × shock_scale, using base volatility in either regime.",
       "ru": "Множитель от 0 до 100. Стандартное отклонение ценового скачка в единицах логарифмической доходности равно volatility × shock_scale. В обоих режимах используется базовая волатильность.",
-      "zh-CN": "冲击幅度的倍数，取值为 0 至 100。冲击对应的对数收益标准差等于 volatility × shock_scale，两种状态均使用基础波动率。"
+      "zh-CN": "冲击幅度的倍数，取值为 0 至 100。冲击对应的对数收益率标准差等于 volatility × shock_scale，两种状态均使用基础波动率。"
     },
     "wick_scale": {
       "en": "Multiplier from 0 to 100 on current regime volatility for the size of each ordinary wick in log-price units. At zero, high and low coincide with the body edges.",
@@ -411,18 +411,18 @@
     },
     "volume_base": {
       "en": "Baseline synthetic volume per candle before log noise and price activity. In regime_v3 it must be at least 1, but it need not itself be a whole number. It cannot exceed volume_ceiling.",
-      "ru": "Базовый синтетический объём свечи до поправок на случайные колебания и движение цены. В regime_v3 он должен быть не меньше 1, но сам может быть дробным. Верхняя граница — volume_ceiling.",
-      "zh-CN": "未计入随机扰动和价格变动影响时，每根 K 线的基础模拟成交量。regime_v3 要求基础值至少为 1，允许小数，但不得超过 volume_ceiling。"
+      "ru": "Базовый объём одной свечи до поправок на движение цены и случайные колебания. Для regime_v3 это число от 1 до volume_ceiling. Параметр может быть дробным, округляется уже рассчитанный объём.",
+      "zh-CN": "每根 K 线的基准成交量，尚未计入价格变动和随机扰动。regime_v3 要求该值介于 1 与 volume_ceiling 之间。参数本身可以带小数，最终生成的成交量才取整。"
     },
     "volume_sigma": {
       "en": "Scale of the persistent random component of log volume, from 0 to 2. At zero, that component contributes no variation.",
-      "ru": "Масштаб случайных колебаний логарифма объёма, от 0 до 2. При нуле эта составляющая не даёт разброса.",
-      "zh-CN": "对数成交量中持续性随机项的波动幅度，取值为 0 至 2。设为零时，该项不再引入变化。"
+      "ru": "Параметр случайных колебаний логарифма объёма, от 0 до 2. Стандартное отклонение нового случайного слагаемого на каждой свече равно volume_sigma × √(1 − volume_persistence²).",
+      "zh-CN": "控制对数成交量的随机波动，取值为 0 至 2。每根 K 线新增扰动的标准差为 volume_sigma × √(1 − volume_persistence²)。"
     },
     "volume_return_coupling": {
       "en": "Coefficient from 0 to 10 on the candle's price activity in log volume. Activity is the absolute realized log return divided by current regime volatility, capped at 10 and set to zero when volatility is zero.",
       "ru": "Коэффициент связи логарифма объёма с движением цены, от 0 до 10. Модель делит модуль фактической логарифмической доходности на волатильность текущего режима и ограничивает результат числом 10. При нулевой волатильности эта поправка равна нулю.",
-      "zh-CN": "价格变动对对数成交量的影响系数，取值为 0 至 10。模型用实际对数收益的绝对值除以当前状态的波动率，所得值最高按 10 计。波动率为零时，此项按零处理。"
+      "zh-CN": "价格变动对对数成交量的影响系数，取值为 0 至 10。模型用实际对数收益率的绝对值除以当前状态的波动率，所得值最高按 10 计。波动率为零时，此项按零处理。"
     },
     "volume_persistence": {
       "en": "Fraction from 0 to 1 of the previous log-volume noise carried into the next candle. At 1, the initial zero noise is retained and no new noise enters.",
@@ -521,12 +521,12 @@
     },
     "chunk_size": {
       "en": "Maximum number of candles in each yielded frame. A positive integer, default 10,000. The final chunk can be shorter.",
-      "ru": "Максимальное число свечей в одной порции. Положительное целое, по умолчанию 10 000. Последняя порция может быть короче.",
+      "ru": "Сколько свечей может быть в одной части ряда. Положительное целое число, по умолчанию 10 000. В последней части свечей может оказаться меньше.",
       "zh-CN": "每批 DataFrame 的最大 K 线根数，须为正整数，默认为 10,000。最后一批可以少于此数。"
     },
     "chunks": {
       "en": "Iterable of OHLCV DataFrames in time order. Nonempty chunks must follow one another under the same interval and gap policy.",
-      "ru": "Последовательность таблиц OHLCV в хронологическом порядке. Интервал и правила пропусков применяются также между соседними непустыми порциями.",
+      "ru": "Таблицы OHLCV в хронологическом порядке. Правила для интервала и пропущенных свечей действуют и на границе между двумя непустыми таблицами.",
       "zh-CN": "按时间先后排列的一系列 OHLCV DataFrame。相邻非空批次之间也必须满足相同的周期和缺口规则。"
     },
     "data": {
@@ -601,8 +601,8 @@
     },
     "block_length": {
       "en": "Number of consecutive historical candles per sampled block. Between 1 and the source row count minus one. Blocks do not wrap from the last row to the first.",
-      "ru": "Число соседних исторических свечей в одном блоке. Минимум — 1, максимум — число строк исходной истории минус одна. Блок не может перейти с конца истории на её начало.",
-      "zh-CN": "每个抽样区块中连续历史 K 线的根数，最少为 1，最多为原始行数减 1。区块不会从样本末尾绕回开头。"
+      "ru": "Длина блока в свечах. Минимум — одна свеча, максимум — число исторических свечей минус одна. Каждый блок целиком лежит внутри исходной истории.",
+      "zh-CN": "每次连续抽取的 K 线根数，最少为 1，最多为历史 K 线总数减 1。每个片段都完整地落在原始样本内。"
     },
     "values": {
       "en": "Complete JSON-compatible mapping produced by the configuration's ToDict method. Every field must be present, including an ISO 8601 start time with time zone.",
@@ -621,8 +621,8 @@
     },
     "log_jump": {
       "en": "One-candle opening gap in natural log units. The open equals the previous close × exp(log_jump). For a 10% gap up use log(1.10).",
-      "ru": "Разрыв на открытии одной свечи в единицах натурального логарифма. Цена открытия равна предыдущему закрытию, умноженному на exp(log_jump). Для скачка вверх на 10% задайте ln(1,10).",
-      "zh-CN": "单根 K 线以自然对数表示的开盘跳空幅度。开盘价等于前收盘价乘以 exp(log_jump)。若要高开 10%，取 ln(1.10)。"
+      "ru": "Логарифм отношения цены открытия к предыдущей цене закрытия. Для первой свечи базой служит initial_price. Чтобы задать гэп вверх на 10 %, используйте ln(1,10).",
+      "zh-CN": "开盘价与上一根 K 线收盘价之比的自然对数。首根 K 线以 initial_price 为基准。例如，向上跳空 10% 对应 ln(1.10)。"
     },
     "volume": {
       "en": "Nonnegative volume per candle in the chosen units. The scripted model preserves the specified value, including any fractional part.",
